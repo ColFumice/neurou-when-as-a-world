@@ -1,0 +1,64 @@
+{
+  "command": [
+    "C:\\Program Files\\nodejs\\node.exe",
+    "quality-review/b2-5c-2c/client-real-http-retention-final.cjs"
+  ],
+  "cwd": "D:\\Project\\A_New_Begin\\Neurou_official",
+  "actualExitCode": 0,
+  "startedUtc": "2026-10-11T10:09:39.901Z",
+  "completedUtc": "2026-10-11T10:09:55.024Z",
+  "sourceBefore": [
+    {
+      "path": "server/src/RelayStorage.ts",
+      "sha256": "78ad6663951c166c16eb74dee259f62d8fde58484f0d778162c2f1dd3cb4e0d7"
+    },
+    {
+      "path": "server/shared-dist/src/RelayStorage.js",
+      "sha256": "e53d008671c4f6c2575a7c05440a4af674202bd32779ae31387be6a203624eaf"
+    },
+    {
+      "path": "src/presentation/RealCommitRelayAdapter.ts",
+      "sha256": "ec4b5d8cb11caf06f499d65706a64cd880ce8c7f3ba849ff557225cebd9fd9a9"
+    },
+    {
+      "path": "src/presentation/RealSharedServiceSessionAdapter.ts",
+      "sha256": "8a1b8d778fc1d25e4c93855a2929b2c7fe3dded476599b250863a163edd2c452"
+    }
+  ],
+  "sourceAfter": [
+    {
+      "path": "server/src/RelayStorage.ts",
+      "sha256": "78ad6663951c166c16eb74dee259f62d8fde58484f0d778162c2f1dd3cb4e0d7"
+    },
+    {
+      "path": "server/shared-dist/src/RelayStorage.js",
+      "sha256": "e53d008671c4f6c2575a7c05440a4af674202bd32779ae31387be6a203624eaf"
+    },
+    {
+      "path": "src/presentation/RealCommitRelayAdapter.ts",
+      "sha256": "ec4b5d8cb11caf06f499d65706a64cd880ce8c7f3ba849ff557225cebd9fd9a9"
+    },
+    {
+      "path": "src/presentation/RealSharedServiceSessionAdapter.ts",
+      "sha256": "8a1b8d778fc1d25e4c93855a2929b2c7fe3dded476599b250863a163edd2c452"
+    }
+  ],
+  "harness": {
+    "path": "quality-review/b2-5c-2c/client-real-http-retention-final.cjs",
+    "sha256": "3c1394d2b479deaf040efa03ab2514c4cd6e8b1182e1f165297540e3e4698e13"
+  },
+  "originalHarness": {
+    "path": "quality-review/b2-5c-2c/client-real-http.cjs",
+    "sha256": "bb413efa3cc6614159361ca651e8b2b836581a77d63f597456769a0b9e0d488f"
+  },
+  "harnessDifference": "Exactly three output/cache path substitutions; all case bodies and assertions unchanged.",
+  "log": {
+    "path": "quality-review/b2-5c-2c/evidence/after-retention-fix/client-real-http.log",
+    "sha256": "bb290f956b757cd103e6295c6fb0825542f34253bb5a0a70c673bf8e743d7b6a"
+  },
+  "result": {
+    "path": "quality-review/b2-5c-2c/evidence/after-retention-fix/client-real-http-results.json",
+    "sha256": "28f280fbcc185c74089a44c625432838f0265ebdb87feb8db8631a2a46fee9c1"
+  },
+  "limits": "Actual production adapters with real loopback HTTP/PG; test-only crypto/WAL cache capabilities. No production key delivery, full dual replay or LAN certification."
+}

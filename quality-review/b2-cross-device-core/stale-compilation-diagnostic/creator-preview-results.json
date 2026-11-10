@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "evidenceKind": "ProductionAcceptance",
+  "capturedAt": "2026-10-10T13:57:59.438Z",
+  "scope": "B2.4c WorldFork complete state inheritance, persistent provenance, directory transaction and independent worlds",
+  "previewUrl": "http://localhost:7456/",
+  "profile": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\neurou-b24c-evidence-1791640679438",
+  "harnessSha256": "28e19e7611f280964204ebac21ea6b9303ed7f138a0d7257f3bbad3a59cf87f6",
+  "policy": "Fresh isolated userData and persistent partition per resolution; same account and same profile survive fresh BrowserWindow. Only login/prologue/published-choice/World-entry/world-exit controls plus GameCanvas keyboard edges. Native audio ended completes World; original 60 BPM output clock and unchanged natural movement/strike/reveal/media complete T6/T7. No setItem, snapshot fixture, vector input, direct director mutator, clock override, gameplay flag mutation or state injection. Read-only component/DOM/storage observation. Direct unmodified CDP PNG. Seven sections are validated; Complete/Restored only at stable boundaries. No in-progress performance hydration is claimed.",
+  "resolutions": [],
+  "rendererErrors": [],
+  "runtimeErrors": [],
+  "requests": [],
+  "actions": [],
+  "pass": false,
+  "error": "AssertionError [ERR_ASSERTION]: Stale Creator source: assets/scripts/CrossDevicePrototype.ts\n    at D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-cross-device-core\\creator-preview.cjs:82:12\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async Promise.all (index 0)\n    at async D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-cross-device-core\\creator-preview.cjs:288:24"
+}

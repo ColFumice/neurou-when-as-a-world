@@ -1,0 +1,100 @@
+﻿// ============================================================
+// invert-ripple 反色扩张滤镜圆（阶段 1 真实滤镜尝试）
+//
+// 依据：
+// - PROTOCOL 指示：参照 expanding_filtercircle_effect_code(html).txt
+//   的 ripple 模式（CSS mask + invert(1)）尝试真实反色；
+// - 名库 v2.3 冻结名 ScreenInvertRipple（消费组件，经
+//   RenderTexture 相机 + 全屏 Sprite + 本 Effect 组合实现）。
+//
+// 原理（对照参考实现）：
+//   全屏 Sprite 采样 RT（世界画面），在半径 u_centerRadius.z 内
+//   输出 invert 色，软边 smoothstep（参照 soft = 8+min(r,600)*0.02），
+//   遮罩强度 u_params.x（参照 k = nrL(1−p)）；曝光脉冲 u_params.y
+//   走全屏白化罩（参照 nrRipFlash 衰减）。
+//
+// 约束：
+//   仅表现层使用；不修改逻辑层；uniform 经代码 setProperty 驱动，
+//   不依赖编辑器 properties 面板。
+// ============================================================
+
+CCEffect %{
+  techniques:
+  - passes:
+    - vert: vs:vert
+      frag: fs:frag
+      depthStencilState:
+        depthTest: false
+        depthWrite: false
+      blendState:
+        targets:
+        - blend: true
+          blendSrc: src_alpha
+          blendDst: one_minus_src_alpha
+          blendDstAlpha: one_minus_src_alpha
+      rasterizerState:
+        cullMode: none
+      properties:
+        u_centerRadius: { value: [0, 0, 0, 8] }
+        u_params: { value: [0, 0, 1, 1] }
+}%
+
+CCProgram vs %{
+  precision highp float;
+  #include <builtin/uniforms/cc-global>
+  #if SAMPLE_FROM_RT
+    #include <common/common-define>
+  #endif
+
+  in vec3 a_position;
+  in vec2 a_texCoord;
+  in vec4 a_color;
+
+  out vec4 color;
+  out vec2 uv0;
+  out vec2 screenUV;
+
+  vec4 vert () {
+    vec4 pos = vec4(a_position, 1);
+    pos = cc_matViewProj * pos;
+    uv0 = a_texCoord;
+    screenUV = vec2(a_texCoord.x, 1.0 - a_texCoord.y);
+    #if SAMPLE_FROM_RT
+      CC_HANDLE_RT_SAMPLE_FLIP(uv0);
+    #endif
+    color = a_color;
+    return pos;
+  }
+}%
+
+CCProgram fs %{
+  precision highp float;
+
+  in vec4 color;
+  in vec2 uv0;
+  in vec2 screenUV;
+
+  #pragma builtin(local)
+  layout(set = 2, binding = 12) uniform sampler2D cc_spriteTexture;
+
+  uniform Constant {
+    // xy: 圆心（精灵局部 px，原点左下）；z: 半径 px；w: 软边 px
+    vec4 u_centerRadius;
+    // x: 反色遮罩强度 k；y: 曝光脉冲；zw: 内容尺寸 px
+    vec4 u_params;
+  };
+
+  vec4 frag () {
+    vec2 px = screenUV * u_params.zw;
+    float dist = distance(px, u_centerRadius.xy);
+    // 软边：半径内全效，边缘 smoothstep 渐出（参照 radial-gradient）
+    float edge = 1.0 - smoothstep(u_centerRadius.z - u_centerRadius.w, u_centerRadius.z, dist);
+    vec3 src = texture(cc_spriteTexture, uv0).rgb;
+    // 反色（参照 invert(1)），曝光脉冲时向白推（参照高光脉冲）
+    vec3 inverted = vec3(1.0) - src;
+    inverted = mix(inverted, vec3(1.0), u_params.y);
+    // 遮罩强度（参照 mask 渐变 alpha = k）与全屏脉冲罩取大
+    float alpha = max(u_params.x * edge, u_params.y) * color.a;
+    return vec4(inverted, alpha);
+  }
+}%

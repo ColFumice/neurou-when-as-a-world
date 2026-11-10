@@ -1,0 +1,292 @@
+======================================================================
+《雨若》R2 实施计划（DSH v1）
+======================================================================
+性质：计划，不含代码；等待 PROTOCOL 审阅后实施。
+依据：R1 冻结基线（docs/NAMEBOOK-v4.0.md / docs/spec/stage-4.md /
+      docs/refactor-r1/verdicts-refactor-r1.md）。
+范围：stage-4 §12 R2：K/L/T/W/M/C/H + 存储端口 + 层分值 + 新门禁。
+出口 AC：AC4-01 / 02 / 03 / 11 / 12 / 13 / 27 / 40。
+状态：未创建 v4/ 源码；未改 docs/、scope-statement。
+本轮不做：presentation / Tauri / 编辑器 / 8 格判定运行时 / Logo / 动态网格 /
+          Hold 运行时 / 蓝图运行时 / AI / Rain 运行时 / 事件树 UI。
+
+======================================================================
+1. R2 实施计划
+======================================================================
+
+1.1 结论
+
+R2 落地 A 类 84 / 271 项；15 个 core 文件、3 个 Node 适配器、8 个测试、
+7 个门禁工具文件、2 个 tsconfig。按 stage-4 §3 模块职责建目录，不触碰
+legacy src/ 与 assets/scripts。
+
+R2 A 类覆盖（按 stage-4 模块）：
+
+| 模块 | A 总数 | R2 实现 | R2 不实现 |
+|---|---:|---:|---:|
+| constants K | 4 | 4 | 0 |
+| ledger L | 19 | 16 | 3（RecallCount / Recall / Replay，留 R4） |
+| trace T | 13 | 13 | 0 |
+| world W | 24 | 24 | 0 |
+| timeline M | 6 | 6 | 0 |
+| chart C（含 8 格） | 38 | 13 | 25（首演/魔王曲/Logo/动态网格/Hold 等，留 R4） |
+| character H | 5 | 5 | 0 |
+| studio S | 3 | 3 | 0 |
+| R2 小计 | 112 | 84 | 28 |
+| 非 R2 模块 | 159 | 0 | 159 |
+| 合计 | 271 | 84 | 187 |
+
+注：用户 R2 范围把 LedgerStore / LedgerReader / LedgerCheckpoint /
+appendNarrativeEvent 列在“存储端口（studio S）”下；按 NAMEBOOK §1.2 这四项
+归 L，studio 只有 3 项。本计划按名库归属，不把 L 名移入 S。
+
+1.2 源码根决策（待 P-R2-01 批准）
+
+建议：新建 `v4/` 作为 v4.0 唯一源码根；legacy `src/` 保持原样。
+
+理由：
+1. `assets/scripts/src` 是指向根 `src/` 的目录联接；任何放入 `src/` 的新代码
+   会被 Cocos Creator 3.8.8 当作工程脚本编译，污染旧工程。
+2. `v4/` 与 legacy 完全隔离，R3 可在 `v4/app/` 放 Tauri/React 外壳，
+   R5 可整体归档或改名。
+3. 不移动/删除 legacy `src/`，避免破坏 assets/scripts 组合根与旧门禁。
+
+建议布局：
+
+v4/
+  core/
+    constants/ ledger/ trace/ world/ timeline/ chart/ character/ studio/
+  adapters/node/
+  tests/
+  tsconfig.json
+  tsconfig.test.json
+tools/
+  lib/
+  check-naming-v4.cjs
+  check-dependencies-v4.cjs
+  check-zero-engine-v4.cjs
+  check-ledger-single-writer-v4.cjs
+  check-all-v4.cjs
+
+R3 再增加 `v4/app/`（Tauri 2 + React 19）与 `v4/adapters/tauri/`；R2 不建。
+
+1.3 实施顺序（依赖顺序）
+
+| 阶段 | 内容 | 依赖 | 出口 |
+|---|---|---|---|
+| P0 | 目录、tsconfig、package scripts、tools/lib 骨架 | — | 目录/配置就绪（tsc 于 P1 首次通过） |
+| P1 | constants K（4 项） | — | 常量可 import |
+| P2 | ledger L 类型 + 向量派生 + store 端口（16 项） | K | typecheck |
+| P3 | timeline M（6 项） | K | typecheck |
+| P4 | world W 类型 + 移动（24 项） | K、M | typecheck |
+| P5 | trace T（13）、chart C（13）、character H（5） | K、W、M | typecheck；三模块可并行 |
+| P6 | studio S 端口（3 项） | K、L | typecheck |
+| P7 | adapters/node（3 项） | L、S | 可读写临时项目 |
+| P8 | 8 个测试 + 4 门禁 + 证据 | 全部 | AC4-01/02/03/11/12/13/27/40 通过 |
+
+关键顺序：K → L/M → W → T/C/H → S → adapters → tests。ledger 不依赖 W，
+可提前；trace/chart 依赖 W/M；adapters 只依赖端口。
+
+1.4 风险点
+
+| # | 风险 | 影响 | 缓解 |
+|---|---|---|---|
+| R2-R1 | 源码根放入 src/ 被 Cocos 编译 | 旧工程污染 | 使用 v4/（P-R2-01） |
+| R2-R2 | R2 测试用 CommonJS 编译，R3 用 ESM/Vite | 工具链分叉 | 源码只用 extensionless import；R2 单独 tsconfig.test；R3 Vite 直接消费 TS |
+| R2-R3 | A 类门禁扫描 adapters/tests 时报未注册名 | 门禁误报 | check-naming 只对 v4/core 做 A 归属校验；adapters/tests 只做禁名/零引擎检查（P-R2-03） |
+| R2-R4 | LedgerStore 内部 append 可被绕过 | 单写者失守 | 门禁同时检查 appendNarrativeEvent 与 LedgerStore.append 调用点；R4 director 接入（P-R2-10） |
+| R2-R5 | 崩溃注入需要测试钩子，可能泄漏为公开 API | A 类污染 | 钩子只放 adapter 构造参数（内联类型），不导出新类型 |
+| R2-R6 | Windows fsync / rename 语义 | AC4-03 不稳定 | 只对文件 fsync；同卷 rename；不做目录 fsync；测试在 Windows 实跑 |
+| R2-R7 | AC4-02 的 event-tree.json 需要 G 模块 | 占位 schema 漂移 | 固定空占位 `{schemaVersion:1,nodes:[],edges:[],rootNodeId:null}`（P-R2-09） |
+| R2-R8 | frame/trigger/eventtree 的 A 名在 stage-4 无模块归属 | 门禁映射缺项 | 暂映射 frame/trigger→W、eventtree→G，仅作门禁映射（P-R2-04） |
+| R2-R9 | NarrativeEvent.chartRef 与 L→C 禁止边冲突 | AC4-19 未来阻塞 | R2 不实现 chartRef；P-R2-05 裁定载体 |
+| R2-R10 | package.json 改动影响 legacy 门禁 | 旧 verify 失败 | 只追加 v4 scripts/devDeps；R2 结束重跑 legacy verify |
+
+======================================================================
+2. 源码清单
+======================================================================
+
+2.1 v4/core（15 个文件，84 项 A 名）
+
+| 路径 | 模块 | 职责一句话 | A 类名（数量） |
+|---|---|---|---|
+| v4/core/constants/index.ts | K | 冻结窗口常量与向量版本 | VectorSchemaVersion / GRID_PERFECT_WINDOW_MS / GRID_GOOD_WINDOW_MS / FRAME_ALIGNED_WINDOW_MS（4） |
+| v4/core/ledger/types.ts | L | 账本记录、20 维、位置、路线与分歧轴类型 | NarrativeEvent / Ledger / LedgerPosition / NarrativeDimension / AppendedAt / RouteSignature / RouteCoverage / DivergenceAxis（8） |
+| v4/core/ledger/vector.ts | L | 20 维校验、位置/签名/分歧轴派生 | validateNarrativeVector / deriveLedgerPosition / classifyDivergenceAxis / deriveRouteSignature（4） |
+| v4/core/ledger/store.ts | L | append-only 存储/读取/检查点/唯一追加入口 | LedgerStore / LedgerReader / LedgerCheckpoint / appendNarrativeEvent（4） |
+| v4/core/trace/types.ts | T | 痕、层级、来源、深痕/回声痕/触碰、异痕与目击 | Trace / TraceTier / TraceOrigin / DeepTrace / EchoTrace / TraceTouch / AnomalyDisclosure / AnomalyCause / WitnessSight（9） |
+| v4/core/trace/visibility.ts | T | 可见性状态与四类转换原因 | VisibilityState / VisibilityTransitionReason（2） |
+| v4/core/trace/strike.ts | T | 框对准/8 格判定结果（数值与枚举，不 import chart） | FrameAlignedStrike / GridStrike（2） |
+| v4/core/world/types.ts | W | 世界实例、视差层、坐标/刻度、生成点、感知与 Rain 状态 | WorldInstance / WorldKind / WorldMap / Layer / WorldThemeColor / SpawnPoint / SpawnZone / MapCenter / CenterDistance / EventDistance / WorldMeter / ScaleRef / MapScaleCalibration / LateralAxis / WorldFolder / InitialWorld / EmptyWorld / PerceptionMode / RainIntensity / RainModeState（20） |
+| v4/core/world/movement.ts | W | 单轴移动推进与中心距离 | moveAlongAxes / MoveInput / MovementResult / calculateCenterDistance（4） |
+| v4/core/timeline/types.ts | M | 时间轴状态机、进度/方向/映射/边界与播放状态 | TimelineStateMachine / TimelineProgress / TimelineDirection / TimelineMovementMapping / TimelineBoundary / PlaybackState（6） |
+| v4/core/chart/types.ts | C | 谱面引用/层级/成绩、键与 Pad、8 格布局 | ChartRef / ChartTier / ChartScore / ChartKeyId / ChartPadKind / GridCellId / GridRow / GridLayout / GridCell（9） |
+| v4/core/chart/layer.ts | C | 动态层、1 基索引、层分值、全屏层 | ChartLayer / ChartLayerIndex / ChartLayerScoring / FullScreenJudgementLayer（4） |
+| v4/core/character/types.ts | H | 主角纯逻辑（位置/速度/拖尾/发色/调色板），去 Cocos | Protagonist / MoveSpeed / TrailLength / HairColor / DecorationPalette（5） |
+| v4/core/studio/types.ts | S | 单机 profile 单例与项目清单 | StudioProfile / StudioProject（2） |
+| v4/core/studio/ProjectStore.ts | S | 项目创建/打开/布局端口（注入 io，不碰 fs） | ProjectStore（1） |
+
+2.2 v4/adapters/node（3 个文件，X 层，实现名不属于 A）
+
+| 路径 | 职责一句话 |
+|---|---|
+| v4/adapters/node/AtomicJsonFile.ts | JSON 原子写：临时文件 + fsync + .bak + rename；构造参数可注入 4 个崩溃钩子 |
+| v4/adapters/node/NdjsonLedgerFile.ts | NDJSON 追加 + fsync；head 原子写；SHA-256 摘要 |
+| v4/adapters/node/NodeProjectIo.ts | mkdir + 通过 AtomicJsonFile 读写 project.json / event-tree.json |
+
+2.3 v4/tests（8 个测试 + 1 个 helper）
+
+| 路径 | 覆盖 |
+|---|---|
+| v4/tests/helpers/temp-dir.ts | 临时项目目录创建/清理 |
+| v4/tests/ac4-01-studio-profile.test.ts | AC4-01 |
+| v4/tests/ac4-02-project-layout.test.ts | AC4-02 |
+| v4/tests/ac4-03-atomic-json.test.ts | AC4-03（四种崩溃情形） |
+| v4/tests/ac4-11-ledger-append-only.test.ts | AC4-11 |
+| v4/tests/ac4-12-ledger-corruption.test.ts | AC4-12 |
+| v4/tests/ac4-13-narrative-vector.test.ts | AC4-13 |
+| v4/tests/ac4-27-zero-engine.test.ts | AC4-27（调用 check-zero-engine） |
+| v4/tests/ac4-40-chart-layer-scoring.test.ts | AC4-40 |
+
+2.4 工程配置
+
+| 路径 | 职责 |
+|---|---|
+| v4/tsconfig.json | R2 类型检查（noEmit；strict；types=["node"]；include core/adapters/tests） |
+| v4/tsconfig.test.json | 测试编译（CommonJS；outDir=v4/.dist；rootDir=v4） |
+| package.json | 追加 v4 脚本与 devDependencies（@types/node）；legacy scripts 不动 |
+| .gitignore | 追加 v4/.dist/ |
+
+2.5 文件计数
+
+core 15 + adapters 3 + tests 9 + configs 2 + package/gitignore 2 = 31 个文件
+（不含 tools/ 7 个与 evidence）。
+
+======================================================================
+3. 门禁脚本清单
+======================================================================
+
+3.1 共享库
+
+| 路径 | 职责 |
+|---|---|
+| tools/lib/namebook-v4.cjs | 解析 docs/NAMEBOOK-v4.0.md §1：A 名、模块、271 计数；section→模块映射含 provisional 标记 |
+| tools/lib/module-map-v4.cjs | 路径→模块代号（K/L/T/W/M/C/H/S/R/X）；解析 stage-4 §5 矩阵为可查询表 |
+
+3.2 四个门禁 + runner
+
+| 路径 | 检查项 | 扫描范围 | 通过条件 |
+|---|---|---|---|
+| tools/check-naming-v4.cjs | 每个导出名在 A 类且模块一致；禁名表不出现；同名不跨模块；A 计数=271 | v4/core/**/*.ts | 0 ERROR |
+| tools/check-dependencies-v4.cjs | import/export-from 的模块边符合 stage-4 §5；区分 type-only 与值导入；禁止边 | v4/core/** + v4/adapters/**（adapters 按 X 行）；tests 豁免 | 0 ERROR |
+| tools/check-zero-engine-v4.cjs | K~R 零 React/Pixi/WebAudio/Tauri/Node fs/cc；零浏览器/Node 全局（fetch/window/document/AudioContext/process 等） | v4/core/**/*.ts | 0 ERROR |
+| tools/check-ledger-single-writer-v4.cjs | appendNarrativeEvent 调用只在 v4/core/director/（tests 豁免）；LedgerStore.append 调用只在 v4/core/ledger/ | v4/core/** + v4/adapters/**；tests 豁免 | 0 ERROR |
+| tools/check-all-v4.cjs | 顺序执行四门禁；汇总 ERROR/WARN；写 gates-results.json | 全工程 | 四门禁均 exit 0 |
+
+3.3 门禁口径（需 P-R2-03 确认）
+
+1. check-naming 的“A 类名存在”解释为：每个 v4/core 导出名都能在 A 类找到且
+   模块一致；不要求 271 项在 R2 全部实现。
+2. adapters/tests 不做 A 归属校验，只做禁名与零引擎检查；adapters 实现名不
+   进入 A 类。
+3. bare Rain 允许作为 PerceptionMode / TraceTier 的枚举成员；其他位置 ERROR。
+4. 同名不跨模块：解析 NAMEBOOK 时若同名出现在两个 section，直接 ERROR。
+5. check-dependencies 的 P 行“全部逻辑模块 R/I”、X 行“全部”按规则表处理；
+   R2 不实现 P/X 之外的新模块。
+6. 子域 console / weather / rain-visual / ai-adapter 不在 R2 路径内；门禁表保留。
+
+3.4 npm scripts（追加，不改 legacy）
+
+| script | 命令 |
+|---|---|
+| typecheck:v4 | tsc -p v4/tsconfig.json |
+| build:v4:test | tsc -p v4/tsconfig.test.json |
+| test:v4 | npm run build:v4:test && node --test v4/.dist/tests |
+| check:v4 | node tools/check-all-v4.cjs |
+| verify:v4 | npm run typecheck:v4 && npm run check:v4 && npm run test:v4 |
+
+======================================================================
+4. AC 覆盖表（R2 出口）
+======================================================================
+
+| AC | 实现位置（计划） | 验证方式 | 证据（计划） | R2 边界 |
+|---|---|---|---|---|
+| AC4-01 | v4/core/studio/types.ts：StudioProfile 静态单例；无账号/登录/网络导入 | ac4-01 测试断言 instance 恒等；check-naming 禁 Account*；check-zero-engine 禁 fetch/WebSocket/XMLHttpRequest | quality-review/stage-4/r2/tests/ac4-01.log；gates/check-naming.log | R2 无 UI；“无登录 UI”以无 presentation + 静态禁名证明；完整 UI 验收 R3 |
+| AC4-02 | ProjectStore.create/open + NodeProjectIo | 临时目录创建项目，断言 project.json / event-tree.json / worlds/ / media/ / drafts/ | tests/ac4-02.log；ac4-02 目录快照 | event-tree.json 为空占位（P-R2-09） |
+| AC4-03 | AtomicJsonFile：temp + fsync + .bak + rename；4 个崩溃钩子 | 四种崩溃：.bak 写前/后、rename 前/后；重开断言旧值或新值一致 | tests/ac4-03.log；四情形结果 JSON | 只测单文件 JSON；NDJSON 在 AC4-11/12 |
+| AC4-11 | LedgerStore / appendNarrativeEvent | 追加 3 条，断言序号连续、无 update/delete 方法、head 一致；check-ledger-single-writer | tests/ac4-11.log；gates/check-ledger-single-writer.log | R2 无 production 调用者；测试直接调用 appendNarrativeEvent |
+| AC4-12 | LedgerReader.readAll()：head 与末行校验；返回只读诊断 | 篡改 head 计数/末行截断，断言 ok=false、文件字节哈希不变、不截断 | tests/ac4-12.log；前后文件 SHA256 | 不自动修复、不重建 |
+| AC4-13 | validateNarrativeVector | 长度≠20、负数、NaN/Infinity、版本≠1 均拒绝；合法向量通过 | tests/ac4-13.log | 字段级 schema 由 R2 定；不新增 A 名 |
+| AC4-27 | 四门禁 + ac4-27 测试调用 check-zero-engine | check-naming/dependencies/zero-engine/single-writer 均 0 ERROR；测试进程 exit 0 | gates/*.log；gates-results.json | AC4-27 的 E1~E9 在 R2 只覆盖 E1~E4；E5 由 AC4-03 测；E8/E9 由 R2 证据脚本；E6/E7 R4（P-R2-07） |
+| AC4-40 | ChartLayerScoring（base 默认 800） | 800→400→200→100→50→25→12→6→3→1→1；min=1；recalculate 增删层重算 | tests/ac4-40.log；分值序列 JSON | Add/RemoveChartLayer 编辑器命令留 R3；R2 用 recalculate 验证 |
+
+======================================================================
+5. 常量冻结清单
+======================================================================
+
+| 常量 | R2 建议值 | 依据 | 动作 |
+|---|---:|---|---|
+| VectorSchemaVersion | 1 | R1 已冻结 | 不变；写入 constants |
+| GRID_PERFECT_WINDOW_MS | 100 | v3.21 PERFECT_WINDOW_MS=100；8 格沿用人类判定窗口 | R2 冻结；写入 constants |
+| GRID_GOOD_WINDOW_MS | 200 | v3.21 GOOD_WINDOW_MS=200 | R2 冻结；写入 constants |
+| FRAME_ALIGNED_WINDOW_MS | 100 | v3.21 RHYTHM_STRIKE_WINDOW_MS=100；框对准 + 节拍同窗口 | R2 冻结；写入 constants |
+| CHART_LAYER_BASE_SCORE | 800 | stage-4 §6 示例；AC4-40 示例链 | B 类候选；R2 仅作 ChartLayerScoring 构造默认值，不导出常量名（P-R2-06） |
+
+说明：
+1. 窗口值冻结后，stage-4 §6 的“待 R2 冻结”需更新；由 PROTOCOL/Trae 落盘，
+   DSH 只提供值与代码。
+2. `CHART_LAYER_BASE_SCORE` 若 PROTOCOL 要求成为 A 类常量，需另起 A 类追加
+   裁定；R1 已冻结，R2 不自行加名。
+3. 项目/账本 schemaVersion=1 作为模块内部常量，不作为 A 类名。
+
+======================================================================
+6. 需 PROTOCOL 裁定的事项
+======================================================================
+
+| # | 事项 | DSH 建议 | 阻塞 |
+|---|---|---|---|
+| P-R2-01 | 源码根：v4/ 还是其他 | 用 v4/；legacy src/ 不动 | 是（P0） |
+| P-R2-02 | 工具链：tsc + node:test（CommonJS 测试构建），显式 @types/node（当前 22.20.5，随 electron 传递；Node 24 运行时兼容）；不加 tsx/vitest | 采纳；R3 再切 ESM/Vite | 是（P0） |
+| P-R2-03 | check-naming 的“A 类名存在”口径；adapters/tests 是否豁免 A 归属 | 按 3.3 口径；只做禁名/零引擎 | 是（P1） |
+| P-R2-04 | frame（8）/ trigger（10）/ eventtree（5）在 stage-4 §3 无模块归属 | 暂映射 frame/trigger→W、eventtree→G，仅门禁映射，不改名 | 否（R2 不实现；门禁需） |
+| P-R2-05 | NarrativeEvent.chartRef 与 L→C 禁止边冲突 | R2 不实现 chartRef；R4 用不透明 chartId 字符串或另裁类型边 | 否（AC4-19 在 R4） |
+| P-R2-06 | CHART_LAYER_BASE_SCORE 是否升 A | R2 只作构造默认 800；如需常量名，另起 A 追加 | 否（AC4-40 可用默认值） |
+| P-R2-07 | AC4-27 写“E1~E9=0 ERROR”，R2 只能跑 E1~E4；E5 由 AC4-03，E8/E9 证据脚本，E6/E7 R4 | 明确 R2 覆盖范围；不把 E6/E7 算入 R2 出口 | 是（AC4-27 证据） |
+| P-R2-08 | AC4-01“无登录 UI”在 R2 无 UI 时如何验收 | R2 验单例 + 零网络 + 零 Account*；UI 部分 R3 | 是（AC 出口） |
+| P-R2-09 | AC4-02 的 event-tree.json 占位 schema | 固定空 DAG 占位；R3 G 模块落地后替换 | 否 |
+| P-R2-10 | 单写者强制级别：门禁级 vs 运行期 capability | R2 门禁级；LedgerStore.append 标 internal；R4 director 接入 | 是（AC4-11） |
+| P-R2-11 | TraceTier 值域：NAMEBOOK 未写值 | 用 Common / Deep / Rain；Rain 仅枚举成员，门禁白名单 | 否（R2 类型） |
+
+======================================================================
+7. 需用户确认的事项
+======================================================================
+
+| # | 事项 | 建议 |
+|---|---|---|
+| U-R2-01 | 三个判定窗口值：GRID_PERFECT=100ms / GRID_GOOD=200ms / FRAME_ALIGNED=100ms | 沿用 v3.21 手感；如要更宽松/严格请给值 |
+| U-R2-02 | 层基准分 800（AC4-40 示例链 800→400→…） | 作为 R2 默认；后续可调 |
+| U-R2-03 | AC4-01 的“无登录 UI”在 R2 只做静态/无 UI 证明，完整 UI 验收放 R3 | 接受则 R2 可按此出口 |
+
+======================================================================
+8. 证据路径（R2 完成后生成）
+======================================================================
+
+| 路径 | 内容 |
+|---|---|
+| quality-review/stage-4/r2/R2-plan-DSH-v1.txt | 本计划 |
+| quality-review/stage-4/r2/test-report.md | 测试命令、Node/tsc 版本、逐 AC 结果 |
+| quality-review/stage-4/r2/R2-completion.md | R2 完成说明：逐条 AC 的实现位置 + 验证方式 + 证据路径 |
+| quality-review/stage-4/r2/ac-coverage.md | AC4-01/02/03/11/12/13/27/40 实现位置与证据索引 |
+| quality-review/stage-4/r2/gates/check-naming.log | 门禁输出 |
+| quality-review/stage-4/r2/gates/check-dependencies.log | 门禁输出 |
+| quality-review/stage-4/r2/gates/check-zero-engine.log | 门禁输出 |
+| quality-review/stage-4/r2/gates/check-ledger-single-writer.log | 门禁输出 |
+| quality-review/stage-4/r2/gates/gates-results.json | 四门禁 ERROR/WARN/exit code 汇总 |
+| quality-review/stage-4/r2/results.json | AC→pass/fail、测试计数、失败明细 |
+| quality-review/stage-4/r2/source-hashes.json | v4/core + adapters + tools 的 SHA256 |
+| quality-review/stage-4/r2/tests/*.log | 八个测试的输出 |
+
+本计划经 PROTOCOL 审阅通过后，按 P0 → P8 实施；批准前不创建 v4/ 源码、
+不修改 docs/ 与 scope-statement。
+
+—— DSH（ARCHITECT + IMPLEMENTER）2026-10-19

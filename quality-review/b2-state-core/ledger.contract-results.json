@@ -1,0 +1,228 @@
+{
+  "category": "ContractTest",
+  "note": "Strict Ledger snapshots and real WorldClearSession/ChartPremiere with controlled storage/media fixtures. No hydration fixture constitutes Cocos preview or complete WorldState restore.",
+  "passed": 44,
+  "failed": 0,
+  "results": [
+    {
+      "name": "empty authoritative Ledger snapshot has explicit account/world/protagonist/content and no fabricated event",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "successful choice persists complete event, selected choice, crossing, entry and sequence before publishing memory",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "failed choice persistence retains every prior Ledger and crossing/choice/entry guard; retry consumes sequence once",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "hydration clone freezes full nested data and rejects in-process getters without invoking them",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "silent seed restores Ledger and guards without append, persistence, sphere callbacks or account commit",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "silent seed permits retained entry to start a fresh complete premiere and keeps stable event sequence across clock rollback",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "completed Ledger event/control are durable before account save and repeated Completed never appends again",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "failed completion Ledger persistence never commits account or consumes completion ID/sequence",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "durable completion without account record hydrates pending retry solely from original prefix fact, never auto-commits",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "durable account record plus restored completion accepts reader assembly but cannot reopen or append a second premiere",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "conflicting durable account completion cannot be accepted against restored authoritative Ledger fact",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "other character events are indexed and hydrated independently without adding to protagonist coordinate/crossing",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "Autopilot outside does not create a crossing guard; only later real Player append does",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "strict hydration rejects wrong account without mutating live state",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "strict hydration rejects wrong world without mutating live state",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "strict hydration rejects wrong protagonist without mutating live state",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "strict hydration rejects wrong content identity without mutating live state",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "strict hydration rejects wrong content revision without mutating live state",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "strict hydration rejects unknown schema without mutating live state",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "strict hydration rejects missing protagonist carrier without mutating live state",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "strict hydration rejects duplicate role without mutating live state",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "strict hydration rejects duplicate event without mutating live state",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "strict hydration rejects missing dimension without mutating live state",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "strict hydration rejects negative dimension without mutating live state",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "strict hydration rejects wrong vector version without mutating live state",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "strict hydration rejects choice altered vector without mutating live state",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "strict hydration rejects choice wrong ID without mutating live state",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "strict hydration rejects choice missing guard without mutating live state",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "strict hydration rejects missing crossing guard without mutating live state",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "strict hydration rejects missing entry without mutating live state",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "strict hydration rejects wrong entry unique key without mutating live state",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "strict hydration rejects wrong entry world without mutating live state",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "strict hydration rejects wrong entry source without mutating live state",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "strict hydration rejects wrong entry tier without mutating live state",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "strict hydration rejects wrong entry reference without mutating live state",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "strict hydration rejects wrong sequence without mutating live state",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "strict hydration rejects forged completion guard without mutating live state",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "strict hydration rejects wrong event timestamp provenance without mutating live state",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "strict hydration rejects Autopilot choice source without mutating live state",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "strict hydration rejects choice cross-role without mutating live state",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "strict hydration rejects extra top-level field without mutating live state",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "strict hydration rejects extra control field without mutating live state",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "strict hydration rejects sparse event array without mutating live state",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "published choices with indistinguishable vectors reject hydration instead of guessing a provenance",
+      "result": "PASS",
+      "category": "ContractTest"
+    }
+  ]
+}

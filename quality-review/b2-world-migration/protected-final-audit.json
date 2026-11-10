@@ -1,0 +1,194 @@
+{
+  "schemaVersion": 1,
+  "phase": "B2.4d",
+  "generatedAt": "2026-10-10T15:32:32.253Z",
+  "algorithm": "sha256",
+  "pass": false,
+  "baselinePathCount": 621,
+  "finalPathCount": 643,
+  "originalSourceCopyCount": 354,
+  "changed": [
+    "assets/scripts/CrossDevicePrototype.ts",
+    "assets/scripts/SceneBuilder.ts",
+    "assets/scripts/src/director/IntentPort.ts",
+    "assets/scripts/WorldFolderBuilder.ts",
+    "docs/NAMEBOOK.md",
+    "docs/spec/stage-1.md",
+    "src/director/IntentPort.ts"
+  ],
+  "added": [
+    "assets/scripts/src/director/RealityPauseBoundary.ts",
+    "assets/scripts/src/director/RealityPauseBoundary.ts.meta",
+    "assets/scripts/src/director/WorldMigration.ts",
+    "assets/scripts/src/director/WorldMigration.ts.meta",
+    "assets/scripts/src/presentation/SafePointDrainStorage.ts",
+    "assets/scripts/src/presentation/SafePointDrainStorage.ts.meta",
+    "assets/scripts/src/presentation/WorldMigrationContractAdapter.ts",
+    "assets/scripts/src/presentation/WorldMigrationContractAdapter.ts.meta",
+    "assets/scripts/src/presentation/WorldMigrationStorage.ts",
+    "assets/scripts/src/presentation/WorldMigrationStorage.ts.meta",
+    "assets/scripts/WorldMigrationPrototype.ts",
+    "assets/scripts/WorldMigrationPrototype.ts.meta",
+    "src/director/RealityPauseBoundary.ts",
+    "src/director/RealityPauseBoundary.ts.meta",
+    "src/director/WorldMigration.ts",
+    "src/director/WorldMigration.ts.meta",
+    "src/presentation/SafePointDrainStorage.ts",
+    "src/presentation/SafePointDrainStorage.ts.meta",
+    "src/presentation/WorldMigrationContractAdapter.ts",
+    "src/presentation/WorldMigrationContractAdapter.ts.meta",
+    "src/presentation/WorldMigrationStorage.ts",
+    "src/presentation/WorldMigrationStorage.ts.meta"
+  ],
+  "removed": [],
+  "allowedCanonicalChanged": [
+    "src/director/IntentPort.ts",
+    "assets/scripts/SceneBuilder.ts",
+    "assets/scripts/WorldFolderBuilder.ts",
+    "assets/scripts/CrossDevicePrototype.ts"
+  ],
+  "allowedChanged": [
+    "src/director/IntentPort.ts",
+    "assets/scripts/SceneBuilder.ts",
+    "assets/scripts/WorldFolderBuilder.ts",
+    "assets/scripts/CrossDevicePrototype.ts",
+    "assets/scripts/src/director/IntentPort.ts"
+  ],
+  "allowedCanonicalAdded": [
+    "src/director/WorldMigration.ts",
+    "src/director/WorldMigration.ts.meta",
+    "src/director/RealityPauseBoundary.ts",
+    "src/director/RealityPauseBoundary.ts.meta",
+    "src/presentation/SafePointDrainStorage.ts",
+    "src/presentation/SafePointDrainStorage.ts.meta",
+    "src/presentation/WorldMigrationContractAdapter.ts",
+    "src/presentation/WorldMigrationContractAdapter.ts.meta",
+    "src/presentation/WorldMigrationStorage.ts",
+    "src/presentation/WorldMigrationStorage.ts.meta",
+    "assets/scripts/WorldMigrationPrototype.ts",
+    "assets/scripts/WorldMigrationPrototype.ts.meta"
+  ],
+  "allowedAdded": [
+    "src/director/WorldMigration.ts",
+    "src/director/WorldMigration.ts.meta",
+    "src/director/RealityPauseBoundary.ts",
+    "src/director/RealityPauseBoundary.ts.meta",
+    "src/presentation/SafePointDrainStorage.ts",
+    "src/presentation/SafePointDrainStorage.ts.meta",
+    "src/presentation/WorldMigrationContractAdapter.ts",
+    "src/presentation/WorldMigrationContractAdapter.ts.meta",
+    "src/presentation/WorldMigrationStorage.ts",
+    "src/presentation/WorldMigrationStorage.ts.meta",
+    "assets/scripts/WorldMigrationPrototype.ts",
+    "assets/scripts/WorldMigrationPrototype.ts.meta",
+    "assets/scripts/src/director/WorldMigration.ts",
+    "assets/scripts/src/director/WorldMigration.ts.meta",
+    "assets/scripts/src/director/RealityPauseBoundary.ts",
+    "assets/scripts/src/director/RealityPauseBoundary.ts.meta",
+    "assets/scripts/src/presentation/SafePointDrainStorage.ts",
+    "assets/scripts/src/presentation/SafePointDrainStorage.ts.meta",
+    "assets/scripts/src/presentation/WorldMigrationContractAdapter.ts",
+    "assets/scripts/src/presentation/WorldMigrationContractAdapter.ts.meta",
+    "assets/scripts/src/presentation/WorldMigrationStorage.ts",
+    "assets/scripts/src/presentation/WorldMigrationStorage.ts.meta"
+  ],
+  "unexpectedChanged": [
+    "docs/NAMEBOOK.md",
+    "docs/spec/stage-1.md"
+  ],
+  "unexpectedAdded": [],
+  "missingNewFiles": [],
+  "oldIntentLogicPrefixUnchanged": true,
+  "onlyExpectedTypeExports": true,
+  "linksUnchanged": true,
+  "originalCopyFailures": [],
+  "immutableOriginalPathCount": 616,
+  "immutableFailures": [
+    "docs/NAMEBOOK.md",
+    "docs/spec/stage-1.md"
+  ],
+  "protectedGroups": {
+    "frozenCore": {
+      "pathCount": 472,
+      "failures": [],
+      "pass": true
+    },
+    "docsNamesReferences": {
+      "pathCount": 37,
+      "failures": [
+        "docs/NAMEBOOK.md",
+        "docs/spec/stage-1.md"
+      ],
+      "pass": false
+    },
+    "settingsScenes": {
+      "pathCount": 19,
+      "failures": [],
+      "pass": true
+    },
+    "legacyCrossDeviceCore": {
+      "pathCount": 16,
+      "failures": [],
+      "pass": true
+    }
+  },
+  "compositionChanges": [
+    {
+      "file": "assets/scripts/SceneBuilder.ts",
+      "changed": true,
+      "originalSha256": "6ab0d26731fbd69127580f87de76d778d0409b1001aba718aaf160d1f6328c8f",
+      "finalSha256": "6f0903e6af74187ec2d611607084f736552de7f1ad1bfe80cd3a3310a43f1499",
+      "review": "Authorized composition hooks and routing only; exact modifications are disclosed in code.diff. This audit does not claim every original line is preserved."
+    },
+    {
+      "file": "assets/scripts/WorldFolderBuilder.ts",
+      "changed": true,
+      "originalSha256": "978dfce0652bee29777c8e13229d63bb75dc5a308675968961a80c02f0a53040",
+      "finalSha256": "837b75c0355dc595fae1e872d8bcfc85dc914659a5f99e92416cc9231f1caae9",
+      "review": "Authorized composition hooks and routing only; exact modifications are disclosed in code.diff. This audit does not claim every original line is preserved."
+    },
+    {
+      "file": "assets/scripts/CrossDevicePrototype.ts",
+      "changed": true,
+      "originalSha256": "25612b4ab35cf03b4b9667c3e6a1245f90f9f7c0bcd8ad71d82ce0cec8c5fa4a",
+      "finalSha256": "b192b335960ce6ba5f56a6df9daadee5697d294606ef991295aeba95d19a11ce",
+      "review": "Authorized composition hooks and routing only; exact modifications are disclosed in code.diff. This audit does not claim every original line is preserved."
+    }
+  ],
+  "unreadableBefore": [],
+  "unreadableAfter": [],
+  "scope": {
+    "directories": [
+      "src",
+      "constants",
+      "assets",
+      "scripts",
+      "types",
+      "docs",
+      "settings",
+      "profiles",
+      ".trae",
+      ".creator",
+      "archive",
+      "编辑器"
+    ],
+    "rootFiles": [
+      "package.json",
+      "package-lock.json",
+      "tsconfig.json",
+      "雨若_Neurou_main_describe.docx",
+      "雨若_Neurou_core_gameplay.docx",
+      "big logo.png",
+      "small logo.png",
+      "641f3d33-4bab-4769-8f46-62a03315d1b1.jsonl"
+    ],
+    "excludedDirectoryNames": [
+      "node_modules",
+      ".git",
+      "library",
+      "temp",
+      "tmp"
+    ]
+  },
+  "limitation": "Fixed protected SHA scope and fixed six new module allowlist. Three composition roots have authorized admission/routing changes, fully shown in the original-source diff; IntentPort retains the complete normalized old prefix and appends only exact erased type exports. Every other old path must retain exact bytes. This is not a semantic proof of composition code."
+}

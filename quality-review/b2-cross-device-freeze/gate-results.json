@@ -1,0 +1,177 @@
+{
+  "schemaVersion": 1,
+  "phase": "B2.4a",
+  "generatedAt": "2026-10-10T13:02:36.620Z",
+  "projectRoot": "D:\\Project\\A_New_Begin\\Neurou_official",
+  "executionMode": "Three independent gates executed concurrently; logs preserve full stdout/stderr",
+  "sourceChanges": "None. All writes are within the new quality-review/b2-cross-device-freeze directory.",
+  "baseline": {
+    "path": "baseline-before.json",
+    "algorithm": "sha256",
+    "filePathCount": 564,
+    "uniquePhysicalFileCount": 337,
+    "junctionAliasFilePathCount": 227,
+    "junctions": [
+      {
+        "path": "assets/scripts/constants",
+        "target": "constants"
+      },
+      {
+        "path": "assets/scripts/src",
+        "target": "src"
+      }
+    ],
+    "unreadableFileCount": 0,
+    "initialPhysicalFilesUnchangedAfterGates": true
+  },
+  "gates": [
+    {
+      "command": "npm run check:naming",
+      "finishedAt": "2026-10-10T13:00:51.9695833+00:00",
+      "log": "check-naming.log",
+      "exitCode": 0,
+      "startedAt": "2026-10-10T13:00:51.2747196+00:00",
+      "status": "PASS_WITH_REVIEWED_WARNINGS",
+      "scannedTsFiles": 115,
+      "errorCount": 0,
+      "warningCount": 22,
+      "warningReview": {
+        "timingWindowCount": 4,
+        "gameplayTraceCount": 18,
+        "disposition": "Existing semantic warnings reviewed manually; no naming violation found. No source edits.",
+        "timingWindowEvidence": [
+          "src/chart/ChartScore.ts:63 judgeTimeWindow compares strike and target timestamps",
+          "src/chart/ChartPremiere.ts:457 hasAnyCandidateInWindow checks unresolved Notes inside the rhythm timing interval",
+          "src/chart/GuidanceLineRuntime.ts:159 calls judgeTimeWindow for node judgment"
+        ],
+        "gameplayTraceEvidence": [
+          "src/director/IntentPort.ts:392 bindDeepTrace receives the gameplay DeepTrace instance",
+          "src/director/IntentPort.ts:942 tracePosition is the DeepTrace world position",
+          "src/director/PuzzleHydration.ts:26 deepTraceId is puzzle snapshot identity",
+          "src/trace/TraceProximityVolume.ts:27 adjusts proximity volume relative to gameplay Trace",
+          "src/presentation/DeepTraceRevealSequence.ts:14 implements DeepTrace reveal presentation",
+          "assets/scripts/SceneBuilder.ts:670 creates an ElementEntity with elementType Trace",
+          "assets/scripts/SceneBuilder.ts:753-774 creates and binds DeepTrace and its scene node",
+          "assets/scripts/SceneBuilder.ts:1205 tracePos drives proximity distance"
+        ]
+      },
+      "warnings": [
+        {
+          "message": "WARN  src\\chart\\ChartPremiere.ts:31 [R7] 含 Window 的命名疑似用作界面窗口（界面窗口必须用 Panel / View） —— 命中: judgeTimeWindow（请人工复核语义）",
+          "semanticGroup": "TimingWindow"
+        },
+        {
+          "message": "WARN  src\\chart\\ChartPremiere.ts:323 [R7] 含 Window 的命名疑似用作界面窗口（界面窗口必须用 Panel / View） —— 命中: hasAnyCandidateInWindow（请人工复核语义）",
+          "semanticGroup": "TimingWindow"
+        },
+        {
+          "message": "WARN  src\\chart\\ChartScore.ts:63 [R7] 含 Window 的命名疑似用作界面窗口（界面窗口必须用 Panel / View） —— 命中: judgeTimeWindow（请人工复核语义）",
+          "semanticGroup": "TimingWindow"
+        },
+        {
+          "message": "WARN  src\\chart\\GuidanceLineRuntime.ts:8 [R7] 含 Window 的命名疑似用作界面窗口（界面窗口必须用 Panel / View） —— 命中: judgeTimeWindow（请人工复核语义）",
+          "semanticGroup": "TimingWindow"
+        },
+        {
+          "message": "WARN  src\\director\\IntentPort.ts:345 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: deepTraceTriggered（请人工复核语义）",
+          "semanticGroup": "GameplayTrace"
+        },
+        {
+          "message": "WARN  src\\director\\IntentPort.ts:366 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: deepTraceId（请人工复核语义）",
+          "semanticGroup": "GameplayTrace"
+        },
+        {
+          "message": "WARN  src\\director\\IntentPort.ts:392 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: bindDeepTrace（请人工复核语义）",
+          "semanticGroup": "GameplayTrace"
+        },
+        {
+          "message": "WARN  src\\director\\IntentPort.ts:942 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: tracePosition（请人工复核语义）",
+          "semanticGroup": "GameplayTrace"
+        },
+        {
+          "message": "WARN  src\\director\\PuzzleHydration.ts:14 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: deepTraceTriggered（请人工复核语义）",
+          "semanticGroup": "GameplayTrace"
+        },
+        {
+          "message": "WARN  src\\director\\PuzzleHydration.ts:26 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: deepTraceId（请人工复核语义）",
+          "semanticGroup": "GameplayTrace"
+        },
+        {
+          "message": "WARN  src\\presentation\\DeepTraceRevealSequence.ts:14 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: DeepTraceRevealSequence（请人工复核语义）",
+          "semanticGroup": "GameplayTrace"
+        },
+        {
+          "message": "WARN  src\\trace\\TraceProximityVolume.ts:27 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: TraceProximityVolume（请人工复核语义）",
+          "semanticGroup": "GameplayTrace"
+        },
+        {
+          "message": "WARN  assets\\scripts\\SceneBuilder.ts:130 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: DeepTraceRevealSequence（请人工复核语义）",
+          "semanticGroup": "GameplayTrace"
+        },
+        {
+          "message": "WARN  assets\\scripts\\SceneBuilder.ts:139 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: TraceProximityVolume（请人工复核语义）",
+          "semanticGroup": "GameplayTrace"
+        },
+        {
+          "message": "WARN  assets\\scripts\\SceneBuilder.ts:221 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: DEEP_TRACE_LATERAL（请人工复核语义）",
+          "semanticGroup": "GameplayTrace"
+        },
+        {
+          "message": "WARN  assets\\scripts\\SceneBuilder.ts:222 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: DEEP_TRACE_DEPTH（请人工复核语义）",
+          "semanticGroup": "GameplayTrace"
+        },
+        {
+          "message": "WARN  assets\\scripts\\SceneBuilder.ts:313 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: deepTraceId（请人工复核语义）",
+          "semanticGroup": "GameplayTrace"
+        },
+        {
+          "message": "WARN  assets\\scripts\\SceneBuilder.ts:670 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: concealedTraceEntity（请人工复核语义）",
+          "semanticGroup": "GameplayTrace"
+        },
+        {
+          "message": "WARN  assets\\scripts\\SceneBuilder.ts:756 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: deepTraceTriggered（请人工复核语义）",
+          "semanticGroup": "GameplayTrace"
+        },
+        {
+          "message": "WARN  assets\\scripts\\SceneBuilder.ts:757 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: deepTraceNode（请人工复核语义）",
+          "semanticGroup": "GameplayTrace"
+        },
+        {
+          "message": "WARN  assets\\scripts\\SceneBuilder.ts:774 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: bindDeepTrace（请人工复核语义）",
+          "semanticGroup": "GameplayTrace"
+        },
+        {
+          "message": "WARN  assets\\scripts\\SceneBuilder.ts:1205 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: tracePos（请人工复核语义）",
+          "semanticGroup": "GameplayTrace"
+        }
+      ]
+    },
+    {
+      "finishedAt": "2026-10-10T13:00:53.6343228+00:00",
+      "log": "typecheck.log",
+      "command": "npm run typecheck",
+      "exitCode": 0,
+      "startedAt": "2026-10-10T13:00:51.3131583+00:00",
+      "status": "PASS",
+      "scannedTsFiles": null,
+      "errorCount": 0,
+      "warningCount": 0,
+      "diagnostics": [],
+      "scanCountNote": "The existing npm run typecheck command does not print a file count; no additional count command was run.",
+      "fullLogBytes": 55
+    },
+    {
+      "finishedAt": "2026-10-10T13:00:52.0001633+00:00",
+      "command": "npm run check:dependencies",
+      "exitCode": 0,
+      "log": "check-dependencies.log",
+      "startedAt": "2026-10-10T13:00:51.3560289+00:00",
+      "status": "PASS",
+      "scannedTsFiles": 109,
+      "approximateStaticDependencyClauses": 386,
+      "errorCount": 0,
+      "warningCount": 0
+    }
+  ],
+  "validationLimit": "These are the three existing static gates. This phase adds no implementation and does not execute Cocos or additional tests."
+}

@@ -1,0 +1,58 @@
+{
+  "pass": true,
+  "evidenceKind": "RealPostgreSQLReadonlyAudit",
+  "database": "c2c_client_relay",
+  "worldId": "7fea286e-1c3a-4ca9-b4c4-8daeec2916fc",
+  "queue": [
+    {
+      "generation": "1",
+      "position": "1",
+      "envelopeSha256": "6dc789ed9ab04914dd21c4b34f0c764d6ca95e6966d16ba9e0292f5351a87671",
+      "rawBytesSha256": "6dc789ed9ab04914dd21c4b34f0c764d6ca95e6966d16ba9e0292f5351a87671",
+      "rawByteLength": 2142,
+      "originalReceiptSha256": "d4a4c91234c8f54aa3febe77ea297e9713af548ff468d9dcd8e53311a0a6162a",
+      "admittedAt": "1791709782278",
+      "retainedUntil": "1791796182278",
+      "tombstone": false
+    }
+  ],
+  "ack": [
+    {
+      "generation": "1",
+      "position": "1",
+      "confirmationSha256": "2779281e81f4e72ab9f0c40e071a98fb0bfa45ae9121942d02be3cd7b86db9aa",
+      "originalReceiptSha256": "f7146b706e1f5a7c355f475db63d543c987e5c93f4464a6226413343fcdde56a"
+    }
+  ],
+  "pullMemories": [
+    {
+      "kind": "RelayPullReferences",
+      "schemaVersion": 1,
+      "memorySha256": "ad434e6ddc298a8cd1946c309a793972a627b071bc3a6e6bafbf83de2b924607",
+      "byteLength": 968,
+      "payloadKind": "Batch",
+      "referenceCount": 1,
+      "containsPayload": false
+    },
+    {
+      "kind": "RelayPullReferences",
+      "schemaVersion": 1,
+      "memorySha256": "5c98de880ed930ad17faa05435289c79360bba2f9dc77e94948374ce9a50858c",
+      "byteLength": 755,
+      "payloadKind": "Gap",
+      "referenceCount": 0,
+      "containsPayload": false
+    },
+    {
+      "kind": "RelayPullReferences",
+      "schemaVersion": 1,
+      "memorySha256": "6d40ebea7a89b8450417d42abf2fae08e602e214244a73671a3efa606b5be473",
+      "byteLength": 779,
+      "payloadKind": "Batch",
+      "referenceCount": 0,
+      "containsPayload": false
+    }
+  ],
+  "noPlaintextOrKeysSelected": true,
+  "noHostPhysicalDurabilityClaim": true
+}

@@ -1,0 +1,460 @@
+{
+  "completedAt": "2026-10-10T08:37:04.049Z",
+  "method": "All 30 final PNGs opened through view_image and inspected by the preview agent. PNG bytes were never edited. Hash and IHDR checks tie these observations to the final reports. 2560 images may be scaled only by the inspection UI; originals remain 2560x1440.",
+  "fullPreviewPass": true,
+  "independentProcessRestartPass": true,
+  "fullProcessLifecycle": {
+    "launcherPID": 32536,
+    "script": "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-local-worlds\\creator-preview.cjs",
+    "launchedAt": "2026-10-10T08:34:52.006Z",
+    "electronPID": 32756,
+    "exitCode": 0,
+    "exitedAt": "2026-10-10T08:35:10.584Z"
+  },
+  "restartProcessLifecycle": {
+    "launcherPID": 10168,
+    "launchedAt": "2026-10-10T08:35:28.504Z",
+    "priorHarnessProcesses": [],
+    "priorHarnessProcessCheck": "Read-only Win32_Process check before independent Electron spawn",
+    "script": "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-local-worlds\\process-restart.cjs",
+    "electronPID": 15644,
+    "exitedAt": "2026-10-10T08:35:30.615Z",
+    "exitCode": 0
+  },
+  "sourceCompilationModules": 16,
+  "sourceCompilationUnchanged": true,
+  "errors": {
+    "renderer": [],
+    "runtime": [],
+    "external": []
+  },
+  "hud": [
+    {
+      "resolution": "1920x1080",
+      "file": "1920x1080-04-minimal-world-movement.png",
+      "computedStyle": {
+        "backgroundColor": "rgb(41, 41, 41)",
+        "color": "rgb(238, 238, 238)",
+        "fontFamily": "system-ui, sans-serif",
+        "fontSize": "16px",
+        "variables": {
+          "--folder-panel": "#292929",
+          "--folder-ink": "#eee",
+          "--folder-font": "system-ui,sans-serif",
+          "--folder-border": "#666"
+        }
+      }
+    },
+    {
+      "resolution": "1920x1080",
+      "file": "1920x1080-09-reenter-world-at-spawn.png",
+      "computedStyle": {
+        "backgroundColor": "rgb(41, 41, 41)",
+        "color": "rgb(238, 238, 238)",
+        "fontFamily": "system-ui, sans-serif",
+        "fontSize": "16px",
+        "variables": {
+          "--folder-panel": "#292929",
+          "--folder-ink": "#eee",
+          "--folder-font": "system-ui,sans-serif",
+          "--folder-border": "#666"
+        }
+      }
+    },
+    {
+      "resolution": "2560x1440",
+      "file": "2560x1440-04-minimal-world-movement.png",
+      "computedStyle": {
+        "backgroundColor": "rgb(41, 41, 41)",
+        "color": "rgb(238, 238, 238)",
+        "fontFamily": "system-ui, sans-serif",
+        "fontSize": "16px",
+        "variables": {
+          "--folder-panel": "#292929",
+          "--folder-ink": "#eee",
+          "--folder-font": "system-ui,sans-serif",
+          "--folder-border": "#666"
+        }
+      }
+    },
+    {
+      "resolution": "2560x1440",
+      "file": "2560x1440-09-reenter-world-at-spawn.png",
+      "computedStyle": {
+        "backgroundColor": "rgb(41, 41, 41)",
+        "color": "rgb(238, 238, 238)",
+        "fontFamily": "system-ui, sans-serif",
+        "fontSize": "16px",
+        "variables": {
+          "--folder-panel": "#292929",
+          "--folder-ink": "#eee",
+          "--folder-font": "system-ui,sans-serif",
+          "--folder-border": "#666"
+        }
+      }
+    }
+  ],
+  "screenshots": [
+    {
+      "file": "1920x1080-00-default-world-list.png",
+      "name": "00-default-world-list",
+      "resolution": "1920x1080",
+      "sha256": "cb2c91670416355e4f3fe56e698d49979816d59e89dae3e24b0429b955ec6c16",
+      "note": "Main account and built-in InitialWorld visible; world/editor columns intact.",
+      "pass": true,
+      "dimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "file": "1920x1080-00a-initial-world-default-chart.png",
+      "name": "00a-initial-world-default-chart",
+      "resolution": "1920x1080",
+      "sha256": "c7265fe787cbd7a9e3edfc9f3f6e759d95b3ba0c16702f137f63fa8ebc265d8a",
+      "note": "Legacy graybox world and existing debug HUD visible; exit control present. Smoke scope is default chart load/exit only.",
+      "pass": true,
+      "dimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "file": "1920x1080-00b-global-editor-directory.png",
+      "name": "00b-global-editor-directory",
+      "resolution": "1920x1080",
+      "sha256": "2e73cbca60fab893f6d442aa83713a63295aa8c0f79cc41e5e7b84078d153ab6",
+      "note": "Global editor tree and return control intact; no gameplay overlay remains.",
+      "pass": true,
+      "dimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "file": "1920x1080-01-create-world-form.png",
+      "name": "01-create-world-form",
+      "resolution": "1920x1080",
+      "sha256": "687e01646c849ffa35139d20a48067ab794d01b599d15b5f514872639cc78a88",
+      "note": "World title and description fields, create/cancel and InitialWorld visible without overlap.",
+      "pass": true,
+      "dimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "file": "1920x1080-02-multiple-world-list.png",
+      "name": "02-multiple-world-list",
+      "resolution": "1920x1080",
+      "sha256": "d7a013b71d72ba6393a73b13bfcf160e6703c9dcfa75d5c7f1ee3e930b43c00c",
+      "note": "InitialWorld, world A and world B cards and controls visible.",
+      "pass": true,
+      "dimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "file": "1920x1080-03-fork-not-open.png",
+      "name": "03-fork-not-open",
+      "resolution": "1920x1080",
+      "sha256": "3f59f645a226ce8cc60a68ecb90ba3dd6f4ef83f6152e717481e6b2dfd2076a3",
+      "note": "Not-open message visible; all three cards remain.",
+      "pass": true,
+      "dimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "file": "1920x1080-04-minimal-world-movement.png",
+      "name": "04-minimal-world-movement",
+      "resolution": "1920x1080",
+      "sha256": "fd4efd5ac01634ba5779f8143cdf8e4447bffd072371d4d055a49874c08af09b",
+      "note": "Ground, spawn pad and red protagonist visible; protagonist elevated and displaced. HUD now has dark background, bright text and border.",
+      "pass": true,
+      "dimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "file": "1920x1080-05-return-world-list.png",
+      "name": "05-return-world-list",
+      "resolution": "1920x1080",
+      "sha256": "2bda49f5c628ba780273ecaa532e47cfbc42b929a6ae708f00632dd1398bb5ee",
+      "note": "Three cards visible after exit; no 3D/HUD remnants.",
+      "pass": true,
+      "dimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "file": "1920x1080-06-delete-confirmation.png",
+      "name": "06-delete-confirmation",
+      "resolution": "1920x1080",
+      "sha256": "77ea5118c5be3fca3be33683fa0deeab63f6d21bf4b035ae556ab2c4f1086941",
+      "note": "World B confirmation and both confirmation/cancel controls visible. 1080-height viewport uses normal vertical scrolling; no horizontal clipping.",
+      "pass": true,
+      "dimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "file": "1920x1080-07-local-world-tombstoned.png",
+      "name": "07-local-world-tombstoned",
+      "resolution": "1920x1080",
+      "sha256": "8184fa129dbaa40bd3d0c3d0e493806f6fa3c3c91e44c2b7574afe3d8c00c306",
+      "note": "Removed status visible; only InitialWorld and active A remain.",
+      "pass": true,
+      "dimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "file": "1920x1080-08-persisted-after-window-restart.png",
+      "name": "08-persisted-after-window-restart",
+      "resolution": "1920x1080",
+      "sha256": "ac2e53b09ade7ab5ed83c1361862cd7916960080f1e5be91cd88972ba8a2a8a9",
+      "note": "After BrowserWindow reopen main account still lists InitialWorld and A.",
+      "pass": true,
+      "dimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "file": "1920x1080-09-reenter-world-at-spawn.png",
+      "name": "09-reenter-world-at-spawn",
+      "resolution": "1920x1080",
+      "sha256": "e93d4af23f3d46ddebc23d8ae87d600d4c5d42df33929081e43f8c74fbfcebe5",
+      "note": "Protagonist centered on spawn pad; dark HUD panel/text correct and exit control visible.",
+      "pass": true,
+      "dimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "file": "1920x1080-10-second-account-isolated.png",
+      "name": "10-second-account-isolated",
+      "resolution": "1920x1080",
+      "sha256": "40e70ec6b63014afb9c2704f67e6811f73678acddf848b63dc98ea5d3997e9be",
+      "note": "Second account label visible and only its InitialWorld present.",
+      "pass": true,
+      "dimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "file": "1920x1080-11-original-account-preserved.png",
+      "name": "11-original-account-preserved",
+      "resolution": "1920x1080",
+      "sha256": "ac2e53b09ade7ab5ed83c1361862cd7916960080f1e5be91cd88972ba8a2a8a9",
+      "note": "Main account restored with only InitialWorld and A.",
+      "pass": true,
+      "dimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "file": "2560x1440-00-default-world-list.png",
+      "name": "00-default-world-list",
+      "resolution": "2560x1440",
+      "sha256": "54d2c3020e7e14c74ca9fbaba5291bcee4e73e553f2c63aa14df3b729713e8ee",
+      "note": "Main account and built-in InitialWorld visible; world/editor columns intact.",
+      "pass": true,
+      "dimensions": [
+        2560,
+        1440
+      ]
+    },
+    {
+      "file": "2560x1440-00a-initial-world-default-chart.png",
+      "name": "00a-initial-world-default-chart",
+      "resolution": "2560x1440",
+      "sha256": "7afc68db7258e93c0a236997d4160d27abe5eff564df9b507378b8610e5a7174",
+      "note": "Legacy graybox world and existing debug HUD visible; exit control present. Smoke scope is default chart load/exit only.",
+      "pass": true,
+      "dimensions": [
+        2560,
+        1440
+      ]
+    },
+    {
+      "file": "2560x1440-00b-global-editor-directory.png",
+      "name": "00b-global-editor-directory",
+      "resolution": "2560x1440",
+      "sha256": "a6d14c44e96a1a3de5dd2fe2b5d8e6ae760ea5c9f8871572595a99f5c57a493a",
+      "note": "Global editor tree and return control intact; no gameplay overlay remains.",
+      "pass": true,
+      "dimensions": [
+        2560,
+        1440
+      ]
+    },
+    {
+      "file": "2560x1440-01-create-world-form.png",
+      "name": "01-create-world-form",
+      "resolution": "2560x1440",
+      "sha256": "3b106d48e313c3b05d7306b3ff576cb9e4783ee3a80b9ecb3bd327e5c5e58b7a",
+      "note": "World title and description fields, create/cancel and InitialWorld visible without overlap.",
+      "pass": true,
+      "dimensions": [
+        2560,
+        1440
+      ]
+    },
+    {
+      "file": "2560x1440-02-multiple-world-list.png",
+      "name": "02-multiple-world-list",
+      "resolution": "2560x1440",
+      "sha256": "e28c2464075c6bc84dd52c9915837913f76b102336d7de3263f10aa321d5226f",
+      "note": "InitialWorld, world A and world B cards and controls visible.",
+      "pass": true,
+      "dimensions": [
+        2560,
+        1440
+      ]
+    },
+    {
+      "file": "2560x1440-03-fork-not-open.png",
+      "name": "03-fork-not-open",
+      "resolution": "2560x1440",
+      "sha256": "57814788873f5c770e21db36024b29d0d65c30f91c600d36802d420f53ca5e1e",
+      "note": "Not-open message visible; all three cards remain.",
+      "pass": true,
+      "dimensions": [
+        2560,
+        1440
+      ]
+    },
+    {
+      "file": "2560x1440-04-minimal-world-movement.png",
+      "name": "04-minimal-world-movement",
+      "resolution": "2560x1440",
+      "sha256": "2bb555ade6b91f15993727ce20d8ade1b25f41fc4e9c5f7613c52526a6a1177d",
+      "note": "Ground, spawn pad and red protagonist visible; protagonist elevated and displaced. HUD now has dark background, bright text and border.",
+      "pass": true,
+      "dimensions": [
+        2560,
+        1440
+      ]
+    },
+    {
+      "file": "2560x1440-05-return-world-list.png",
+      "name": "05-return-world-list",
+      "resolution": "2560x1440",
+      "sha256": "0a82d6dc1ecc445089f12e2983a9f86c07aaaa037ca325f48eecc6384c4c83ee",
+      "note": "Three cards visible after exit; no 3D/HUD remnants.",
+      "pass": true,
+      "dimensions": [
+        2560,
+        1440
+      ]
+    },
+    {
+      "file": "2560x1440-06-delete-confirmation.png",
+      "name": "06-delete-confirmation",
+      "resolution": "2560x1440",
+      "sha256": "000c75a6832558209502b0180819de3e4cce0e6d0f5cdbfd218e02ee5969aa12",
+      "note": "World B confirmation and both confirmation/cancel controls visible. 1080-height viewport uses normal vertical scrolling; no horizontal clipping.",
+      "pass": true,
+      "dimensions": [
+        2560,
+        1440
+      ]
+    },
+    {
+      "file": "2560x1440-07-local-world-tombstoned.png",
+      "name": "07-local-world-tombstoned",
+      "resolution": "2560x1440",
+      "sha256": "25b8d4282298ed4c46c829cf98a2280c1c72612e76dd8767fddeda41ee9e67ef",
+      "note": "Removed status visible; only InitialWorld and active A remain.",
+      "pass": true,
+      "dimensions": [
+        2560,
+        1440
+      ]
+    },
+    {
+      "file": "2560x1440-08-persisted-after-window-restart.png",
+      "name": "08-persisted-after-window-restart",
+      "resolution": "2560x1440",
+      "sha256": "5a65ce258e1fe8f45081bd9503cb62fd239e53b3f35b0f39b3237837e1a6c8f9",
+      "note": "After BrowserWindow reopen main account still lists InitialWorld and A.",
+      "pass": true,
+      "dimensions": [
+        2560,
+        1440
+      ]
+    },
+    {
+      "file": "2560x1440-09-reenter-world-at-spawn.png",
+      "name": "09-reenter-world-at-spawn",
+      "resolution": "2560x1440",
+      "sha256": "439ee3d34f7b3de26ccfa922f22530c684275536b8c0565ff0b9be36bd23142e",
+      "note": "Protagonist centered on spawn pad; dark HUD panel/text correct and exit control visible.",
+      "pass": true,
+      "dimensions": [
+        2560,
+        1440
+      ]
+    },
+    {
+      "file": "2560x1440-10-second-account-isolated.png",
+      "name": "10-second-account-isolated",
+      "resolution": "2560x1440",
+      "sha256": "883989ff5b817bd438d0c7238ee1fc4b23b464fc4513760a0a59ffa2d6e683cd",
+      "note": "Second account label visible and only its InitialWorld present.",
+      "pass": true,
+      "dimensions": [
+        2560,
+        1440
+      ]
+    },
+    {
+      "file": "2560x1440-11-original-account-preserved.png",
+      "name": "11-original-account-preserved",
+      "resolution": "2560x1440",
+      "sha256": "5a65ce258e1fe8f45081bd9503cb62fd239e53b3f35b0f39b3237837e1a6c8f9",
+      "note": "Main account restored with only InitialWorld and A.",
+      "pass": true,
+      "dimensions": [
+        2560,
+        1440
+      ]
+    },
+    {
+      "file": "1920x1080-12-persisted-after-process-restart.png",
+      "name": "12-persisted-after-process-restart",
+      "resolution": "1920x1080",
+      "sha256": "ac2e53b09ade7ab5ed83c1361862cd7916960080f1e5be91cd88972ba8a2a8a9",
+      "note": "Independent process UI login restores main account InitialWorld and A; no B/C card or runtime overlay.",
+      "pass": true,
+      "dimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "file": "2560x1440-12-persisted-after-process-restart.png",
+      "name": "12-persisted-after-process-restart",
+      "resolution": "2560x1440",
+      "sha256": "5a65ce258e1fe8f45081bd9503cb62fd239e53b3f35b0f39b3237837e1a6c8f9",
+      "note": "Independent process UI login restores main account InitialWorld and A; no B/C card or runtime overlay.",
+      "pass": true,
+      "dimensions": [
+        2560,
+        1440
+      ]
+    }
+  ],
+  "pass": true
+}

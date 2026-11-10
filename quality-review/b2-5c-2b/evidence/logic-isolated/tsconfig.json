@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "lib": [
+      "ES2020"
+    ],
+    "types": [],
+    "strict": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "isolatedModules": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "noEmitOnError": true,
+    "rootDir": "D:\\Project\\A_New_Begin\\Neurou_official\\src\\director",
+    "outDir": "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-2b\\evidence\\logic-isolated\\build"
+  },
+  "files": [
+    "D:\\Project\\A_New_Begin\\Neurou_official\\src\\director\\SharedServiceProtocolContracts.ts",
+    "D:\\Project\\A_New_Begin\\Neurou_official\\src\\director\\SharedServiceProtocolCodec.ts"
+  ]
+}

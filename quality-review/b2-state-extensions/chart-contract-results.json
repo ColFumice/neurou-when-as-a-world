@@ -1,0 +1,130 @@
+{
+  "schemaVersion": 1,
+  "category": "ContractTest",
+  "scope": "B2.2d-2 ChartArchive",
+  "productionClaim": false,
+  "count": 24,
+  "result": "PASS",
+  "results": [
+    {
+      "name": "published World actual ChartPremiere completion freezes the exact content, full layout, RGB, media and transparency",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "all miss is a legal completed play and zero score remains actual result rather than a hydration default",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "archive candidates are deeply immutable independent clones and neither caller mutation nor replay changes original bytes",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "canonical SHA256 matches independent Node SHA256 including Unicode, key sorting, long blocks and proto key data",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "Entry is never a premiere fact and cannot authorize content freeze",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "missing historical played content or scores pass partial only and fail full coverage without fabricated defaults",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "first snapshot cannot be overwritten by duplicate premiere even with identical data",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "replay raises best, records latest/count, preserves premiere snapshot and adds no ledger event",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "equal replay score preserves earlier best and still advances latest and completion count",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "aborted replay is rejected with no candidate mutation, count or score publication",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "Final tier is refused in Primary/BugShore and frozen in FinalShore personal ownership only",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "actual old Note wrong-slot Miss count is retained without assuming hit+miss equals Note count",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "exact legacy zero T7 requires actual frozen Regular chart; old zero T6 remains Entry",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "archive refuses duplicate/foreign ledger completion IDs and duplicate chart completion references",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "archive envelope enforces exact account/world/protagonist and schema version",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "snapshot content or transparency tampering fails its content digest and metadata tampering fails ledger identity",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "incomplete layouts, repeated keys, bad slot kinds, out-of-bound geometry and mismatched versions are rejected",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "visual associations require actual chart nodes, unique IDs and finite byte RGB",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "media identity excludes ephemeral URLs, traversal, kind mismatch, malformed hash and empty bytes",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "strict persisted data rejects unknown fields, accessors without invocation, sparse arrays, foreign prototypes and cycles",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "score rejects dishonest totals, guidance counts, incomplete flags, transparency and mismatched snapshot association",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "score detects forged best/latest/completion ordering, missing prior play IDs and duplicated counts",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "publication manifest maps every real principal media byte identity and records actual legacy fallback distinctly",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "manifest refuses duplicate media/chart identities, unbound media, forged paths, accessors and non-versioned envelopes",
+      "result": "PASS",
+      "category": "ContractTest"
+    }
+  ]
+}

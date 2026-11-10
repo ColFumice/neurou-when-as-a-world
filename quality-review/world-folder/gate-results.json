@@ -1,0 +1,34 @@
+{
+  "generatedAt": "2026-10-10",
+  "gates": [
+    {
+      "gate": "naming",
+      "command": "npm run check:naming",
+      "pass": true,
+      "exitCode": 0
+    },
+    {
+      "gate": "dependencies",
+      "command": "npm run check:dependencies",
+      "pass": true,
+      "exitCode": 0
+    },
+    {
+      "gate": "typecheck",
+      "command": "npm run typecheck",
+      "pass": true,
+      "exitCode": 0
+    }
+  ],
+  "naming": {
+    "errors": 0,
+    "warnings": 16,
+    "baselineWarnings": 16,
+    "newWarnings": [],
+    "unchangedWarningSemantics": true,
+    "review": "Existing Trace names are trace-domain semantics; Window names denote judgement time windows, not UI."
+  },
+  "dependencies": {
+    "errors": 0
+  }
+}

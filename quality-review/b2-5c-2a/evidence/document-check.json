@@ -1,0 +1,24 @@
+{
+  "scope": "New delivery document links and VERDICT numbering only; no implementation test",
+  "pass": true,
+  "documents": 10,
+  "links": 17,
+  "broken": [],
+  "verdictIds": [
+    426,
+    427,
+    428,
+    429,
+    430,
+    431,
+    432,
+    433,
+    434,
+    435,
+    436,
+    437,
+    438,
+    439,
+    440
+  ]
+}

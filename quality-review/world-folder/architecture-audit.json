@@ -1,0 +1,17 @@
+{
+  "pass": true,
+  "protectedFilesUnchanged": true,
+  "unchangedCoreModules": [
+    "chart",
+    "editor",
+    "world",
+    "character",
+    "trace",
+    "ledger"
+  ],
+  "existingDirectorBehaviorUnchanged": true,
+  "noNewModule": true,
+  "noGateChanges": true,
+  "changedProductionFiles": 18,
+  "newDeclarations": 179
+}

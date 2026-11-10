@@ -1,0 +1,20 @@
+{
+  "closedUtc": "2026-10-11T03:42:11.006Z",
+  "authority": "User confirmed in active P3 conversation, relayed by root to evidence agent: docs/NAMEBOOK.md and docs/spec/stage-1.md are Trae-authorized synchronization of B2.5b/v3.16.",
+  "classification": "TraeAuthorized",
+  "coveredChanges": [
+    "docs/NAMEBOOK.md",
+    "docs/spec/stage-1.md"
+  ],
+  "scope": "Attribution closure for the two external document changes observed during P3; not authorization for evidence agent to edit docs, alter old contracts or reset evidence.",
+  "rawHashEquality": false,
+  "rawProtectionPass": false,
+  "attributionClosed": true,
+  "unexpectedChanged": [],
+  "unexpectedAdded": [],
+  "unexpectedRemoved": [],
+  "baselineSha256": "b3cdbde22a9823fb547e1ac882094709de6d96603679675737920698c486f66d",
+  "firstRawFailure": "first-protection-failure/protected-comparison.json",
+  "finalRawComparison": "protected-comparison.json",
+  "action": "Original baseline and first raw FAIL preserved. No protected source/docs were changed by this evidence agent; no rollback or rebaseline performed."
+}

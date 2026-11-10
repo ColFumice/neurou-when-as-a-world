@@ -1,0 +1,29 @@
+{
+  "pass": true,
+  "serverVersion": "170011",
+  "listenAddress": "127.0.0.1",
+  "port": 55438,
+  "role": {
+    "rolname": "c2c_app",
+    "rolsuper": false,
+    "rolcreatedb": false,
+    "rolcreaterole": false
+  },
+  "facts": [
+    {
+      "database": "c2c_client_relay",
+      "connectionFile": "runtime/.local/connection-client.json",
+      "owner": "c2c_app"
+    },
+    {
+      "database": "c2c_authority_regression",
+      "connectionFile": "runtime/.local/connection-authority-regression.json",
+      "owner": "c2c_app"
+    },
+    {
+      "database": "c2c_adapter_regression",
+      "connectionFile": "runtime/.local/connection-adapter-regression.json",
+      "owner": "c2c_app"
+    }
+  ]
+}

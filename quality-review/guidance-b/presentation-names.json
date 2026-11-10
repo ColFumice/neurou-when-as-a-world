@@ -1,0 +1,383 @@
+{
+  "scope": "B 步仅 LineEraseEffect.ts 的新增/修改声明；新增方法内全部字段、局部、参数亦包括复用名均记录。",
+  "frozenReuse": "LineEraseEffect 为 VERDICT-128 已冻结类型，无需追认；GuidancePosition 为只读类型复用。",
+  "entries": [
+    {
+      "name": "ageMs",
+      "kind": "local_or_constant",
+      "status": "existing_identifier_reuse",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "scope": "drawSnapshot",
+          "line": 141
+        }
+      ]
+    },
+    {
+      "name": "alpha",
+      "kind": "parameter",
+      "status": "existing_identifier_reuse",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "scope": "drawHoldRange",
+          "line": 182
+        }
+      ]
+    },
+    {
+      "name": "drawHoldRange",
+      "kind": "method",
+      "status": "pending_protocol",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "scope": "module",
+          "line": 179
+        }
+      ]
+    },
+    {
+      "name": "drawSnapshot",
+      "kind": "method",
+      "status": "existing_identifier_reuse",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "scope": "module",
+          "line": 104
+        }
+      ]
+    },
+    {
+      "name": "dx",
+      "kind": "local_or_constant",
+      "status": "pending_protocol",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "scope": "drawHoldRange",
+          "line": 196
+        }
+      ]
+    },
+    {
+      "name": "dy",
+      "kind": "local_or_constant",
+      "status": "pending_protocol",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "scope": "drawHoldRange",
+          "line": 197
+        }
+      ]
+    },
+    {
+      "name": "end",
+      "kind": "local_or_constant",
+      "status": "pending_protocol",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "scope": "drawHoldRange",
+          "line": 206
+        }
+      ]
+    },
+    {
+      "name": "fadeProgress",
+      "kind": "local_or_constant",
+      "status": "existing_identifier_reuse",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "scope": "drawSnapshot",
+          "line": 145
+        }
+      ]
+    },
+    {
+      "name": "fading",
+      "kind": "local_or_constant",
+      "status": "pending_protocol",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "scope": "drawSnapshot",
+          "line": 140
+        }
+      ]
+    },
+    {
+      "name": "graphics",
+      "kind": "local_or_constant",
+      "status": "existing_identifier_reuse",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "scope": "drawHoldRange",
+          "line": 187
+        }
+      ]
+    },
+    {
+      "name": "GuidancePosition",
+      "kind": "import",
+      "status": "readonly_type_reuse",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "scope": "module",
+          "line": 9
+        }
+      ]
+    },
+    {
+      "name": "hasActiveHold",
+      "kind": "local_or_constant",
+      "status": "pending_protocol",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "scope": "drawSnapshot",
+          "line": 169
+        }
+      ]
+    },
+    {
+      "name": "height",
+      "kind": "parameter",
+      "status": "existing_identifier_reuse",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "scope": "drawHoldRange",
+          "line": 183
+        }
+      ]
+    },
+    {
+      "name": "i",
+      "kind": "local_or_constant",
+      "status": "existing_identifier_reuse",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "scope": "drawHoldRange",
+          "line": 204
+        }
+      ]
+    },
+    {
+      "name": "index",
+      "kind": "parameter",
+      "status": "pending_protocol",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "scope": "drawHoldRange",
+          "line": 194
+        }
+      ]
+    },
+    {
+      "name": "length",
+      "kind": "local_or_constant",
+      "status": "pending_protocol",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "scope": "drawHoldRange",
+          "line": 198
+        }
+      ]
+    },
+    {
+      "name": "mapX",
+      "kind": "parameter",
+      "status": "existing_identifier_reuse",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "scope": "drawHoldRange",
+          "line": 184
+        }
+      ]
+    },
+    {
+      "name": "mapY",
+      "kind": "parameter",
+      "status": "existing_identifier_reuse",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "scope": "drawHoldRange",
+          "line": 185
+        }
+      ]
+    },
+    {
+      "name": "offset",
+      "kind": "local_or_constant",
+      "status": "pending_protocol",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "scope": "drawHoldRange",
+          "line": 207
+        }
+      ]
+    },
+    {
+      "name": "offsets",
+      "kind": "local_or_constant",
+      "status": "pending_protocol",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "scope": "drawHoldRange",
+          "line": 194
+        }
+      ]
+    },
+    {
+      "name": "point",
+      "kind": "parameter",
+      "status": "existing_identifier_reuse",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "scope": "drawHoldRange",
+          "line": 193
+        },
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "scope": "drawHoldRange",
+          "line": 194
+        }
+      ]
+    },
+    {
+      "name": "points",
+      "kind": "parameter",
+      "status": "pending_protocol",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "scope": "drawHoldRange",
+          "line": 180
+        }
+      ]
+    },
+    {
+      "name": "previous",
+      "kind": "local_or_constant",
+      "status": "pending_protocol",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "scope": "drawHoldRange",
+          "line": 195
+        }
+      ]
+    },
+    {
+      "name": "previousOffset",
+      "kind": "local_or_constant",
+      "status": "pending_protocol",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "scope": "drawHoldRange",
+          "line": 215
+        }
+      ]
+    },
+    {
+      "name": "start",
+      "kind": "local_or_constant",
+      "status": "pending_protocol",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "scope": "drawHoldRange",
+          "line": 205
+        }
+      ]
+    },
+    {
+      "name": "stripWidth",
+      "kind": "parameter",
+      "status": "pending_protocol",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "scope": "drawHoldRange",
+          "line": 181
+        }
+      ]
+    },
+    {
+      "name": "u",
+      "kind": "parameter",
+      "status": "existing_identifier_reuse",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "scope": "drawHoldRange",
+          "line": 184
+        }
+      ]
+    },
+    {
+      "name": "v",
+      "kind": "parameter",
+      "status": "existing_identifier_reuse",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "scope": "drawHoldRange",
+          "line": 185
+        }
+      ]
+    },
+    {
+      "name": "vertices",
+      "kind": "local_or_constant",
+      "status": "pending_protocol",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "scope": "drawHoldRange",
+          "line": 193
+        }
+      ]
+    },
+    {
+      "name": "x",
+      "kind": "local_or_constant",
+      "status": "pending_protocol",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "scope": "drawSnapshot",
+          "line": 150
+        }
+      ]
+    },
+    {
+      "name": "y",
+      "kind": "local_or_constant",
+      "status": "pending_protocol",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "scope": "drawSnapshot",
+          "line": 151
+        }
+      ]
+    }
+  ]
+}

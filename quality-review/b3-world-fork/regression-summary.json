@@ -1,0 +1,129 @@
+{
+  "schemaVersion": 1,
+  "category": "ContractTest",
+  "historicalFilesEdited": false,
+  "historicalEvidenceOverwritten": false,
+  "unchangedSuitesAllPass": {
+    "suiteCount": 14,
+    "passed": 396,
+    "failed": 0,
+    "results": [
+      {
+        "file": "b2-foundation-account-milestone.contract-results.json",
+        "passed": 26,
+        "failed": 0
+      },
+      {
+        "file": "b2-local-worlds-logic-results.json",
+        "passed": 15,
+        "failed": 0
+      },
+      {
+        "file": "b2-state-core-ledger.contract-results.json",
+        "passed": 44,
+        "failed": 0
+      },
+      {
+        "file": "b2-state-core-puzzle.contract-results.json",
+        "passed": 14,
+        "failed": 0
+      },
+      {
+        "file": "b2-state-core-storage.contract-results.json",
+        "passed": 40,
+        "failed": 0
+      },
+      {
+        "file": "b2-state-extensions-aggregation.contract-results.json",
+        "passed": 23,
+        "failed": 0
+      },
+      {
+        "file": "b2-state-extensions-chart-contract-results.json",
+        "passed": 24,
+        "failed": 0
+      },
+      {
+        "file": "b2-state-extensions-recall.contract-results.json",
+        "passed": 31,
+        "failed": 0
+      },
+      {
+        "file": "b2-state-extensions-replay.contract-results.json",
+        "passed": 23,
+        "failed": 0
+      },
+      {
+        "file": "b2-state-extensions-storage.contract-results.json",
+        "passed": 23,
+        "failed": 0
+      },
+      {
+        "file": "b2-state-extensions-world-link.contract-results.json",
+        "passed": 24,
+        "failed": 0
+      },
+      {
+        "file": "b2-world-clear-domain.contract-results.json",
+        "passed": 49,
+        "failed": 0
+      },
+      {
+        "file": "b2-world-clear-storage.contract-results.json",
+        "passed": 56,
+        "failed": 0
+      },
+      {
+        "file": "world-folder-acceptance-results.json",
+        "passed": 4,
+        "failed": 0
+      }
+    ]
+  },
+  "historicalFixtureOrStageExceptions": {
+    "suiteCount": 4,
+    "passed": 9,
+    "failed": 12,
+    "results": [
+      {
+        "file": "b2-local-worlds-builder-boundary-results.json",
+        "passed": 0,
+        "failed": 9
+      },
+      {
+        "file": "b2-state-core-aggregation.contract-results.json",
+        "passed": 0,
+        "failed": 1
+      },
+      {
+        "file": "b2-state-core-runtime-wiring.contract-results.json",
+        "passed": 0,
+        "failed": 1
+      },
+      {
+        "file": "b2-state-extensions-runtime-wiring.contract-results.json",
+        "passed": 9,
+        "failed": 1
+      }
+    ],
+    "note": "Raw failures retained; details and derived coverage in domain-delivery.md. These failures are not reported as PASS."
+  },
+  "derivedCurrentCoverage": [
+    {
+      "file": "legacy-wiring-results.json",
+      "passed": 11,
+      "failed": 0
+    },
+    {
+      "file": "folder-regression-results.json",
+      "passed": 12,
+      "failed": 0
+    }
+  ],
+  "domain": {
+    "file": "domain-results.json",
+    "passed": 54,
+    "failed": 0
+  },
+  "protectedFilesEditedByDomainAgent": []
+}

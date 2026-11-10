@@ -1,0 +1,142 @@
+{
+  "passed": 5,
+  "failed": 0,
+  "officialDependencyGateReplacement": false,
+  "checks": [
+    {
+      "name": "editor value imports only chart/constants; zero cc/presentation/director/ledger",
+      "pass": true,
+      "evidence": [
+        {
+          "module": "../../constants",
+          "typeOnly": true,
+          "bindings": "{ ChartTier }"
+        },
+        {
+          "module": "../chart/GuidanceChart",
+          "typeOnly": true,
+          "bindings": "{ GuidanceChart, GuidancePosition, ChartNodeKind, GuidanceNode }"
+        },
+        {
+          "module": "../chart/GuidanceChart",
+          "typeOnly": false,
+          "bindings": "{ parseGuidanceChart, measurePathLength, positionAtPathDistance }"
+        },
+        {
+          "module": "../chart/GuidanceTiming",
+          "typeOnly": false,
+          "bindings": "{ guidanceDistanceAtTime, guidanceNodeTime }"
+        },
+        {
+          "module": "../chart/KeyboardPadLayout",
+          "typeOnly": true,
+          "bindings": "{ KeyboardPadLayout, ChartKeyId }"
+        },
+        {
+          "module": "../chart/KeyboardPadLayout",
+          "typeOnly": false,
+          "bindings": "{ resolveGridKeyAt, isMatchingGridKey }"
+        },
+        {
+          "module": "../chart/ChartPremiere",
+          "typeOnly": false,
+          "bindings": "{ ChartPremiere }"
+        },
+        {
+          "module": "../chart/ChartPremiere",
+          "typeOnly": true,
+          "bindings": "{ ChartPremiereReader }"
+        },
+        {
+          "module": "../chart/Strike",
+          "typeOnly": true,
+          "bindings": "{ Strike }"
+        }
+      ]
+    },
+    {
+      "name": "presentation editor/chart imports are type-only; uses intent port",
+      "pass": true,
+      "evidence": [
+        {
+          "module": "../editor/GuidanceEditorSession",
+          "typeOnly": true,
+          "bindings": "{ GuidanceEditorReader, GuidanceEditorPort, GuidanceEditorIntent, ChartSourceData }"
+        },
+        {
+          "module": "../chart/GuidanceChart",
+          "typeOnly": true,
+          "bindings": "{ ChartNodeKind }"
+        }
+      ]
+    },
+    {
+      "name": "composition root isolated; no gameplay director/ledger",
+      "pass": true,
+      "evidence": [
+        {
+          "module": "cc",
+          "typeOnly": false,
+          "bindings": "{ _decorator, Component, resources, JsonAsset, SpriteFrame }"
+        },
+        {
+          "module": "./src/editor/GuidanceEditorSession",
+          "typeOnly": false,
+          "bindings": "{ GuidanceEditorSession }"
+        },
+        {
+          "module": "./src/editor/GuidanceEditorSession",
+          "typeOnly": true,
+          "bindings": "{ ChartSourceData }"
+        },
+        {
+          "module": "./src/chart/KeyboardPadLayout",
+          "typeOnly": false,
+          "bindings": "{ createDefaultKeyboardPadLayout }"
+        },
+        {
+          "module": "./src/presentation/GuidanceEditorView",
+          "typeOnly": false,
+          "bindings": "{ GuidanceEditorView }"
+        }
+      ]
+    },
+    {
+      "name": "protected docs byte-for-byte unchanged",
+      "pass": true,
+      "evidence": [
+        {
+          "file": "docs\\NAMEBOOK.md",
+          "expected": "2099737cb0f334161f9bc53016be5b0a6e20c8c4441d4b04c70ad3f53743fe15",
+          "actual": "2099737cb0f334161f9bc53016be5b0a6e20c8c4441d4b04c70ad3f53743fe15"
+        },
+        {
+          "file": "docs\\spec\\stage-1-acceptance.md",
+          "expected": "c08c7cbfb24876b56e0482559c578ad51d9c623e97ced7045907cba742e2bf59",
+          "actual": "c08c7cbfb24876b56e0482559c578ad51d9c623e97ced7045907cba742e2bf59"
+        },
+        {
+          "file": "docs\\spec\\stage-1.md",
+          "expected": "0518695b56f6784fb9fe2932566d4ee9807b7c69f30e3a120f30274a8bb3e195",
+          "actual": "0518695b56f6784fb9fe2932566d4ee9807b7c69f30e3a120f30274a8bb3e195"
+        }
+      ]
+    },
+    {
+      "name": "legacy GuidanceLine and ordinary node interfaces retain original shape",
+      "pass": true,
+      "evidence": {
+        "unchanged": [
+          "GuidancePosition",
+          "NodePath",
+          "HeadNode",
+          "TapNode",
+          "DragNode",
+          "HoldNode",
+          "GuidanceLine"
+        ],
+        "newVersionBranch": "TimedGuidanceLine"
+      }
+    }
+  ]
+}

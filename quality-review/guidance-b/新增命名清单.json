@@ -1,0 +1,869 @@
+{
+  "scope": "B step declaration deltas against saved A baseline, including locals and imports",
+  "publicAdditions": [
+    "slicePathByDistance",
+    "getTotalNodeCount",
+    "releaseWhilePaused",
+    "disappearAtMs",
+    "holdActive",
+    "holdRemainingPoints"
+  ],
+  "resourceIds": [
+    "guidance-b-1",
+    "line-b-1",
+    "head-b-1",
+    "drag-b-1",
+    "hold-b-1",
+    "tap-b-corner",
+    "tap-b-end"
+  ],
+  "records": [
+    {
+      "file": "src/chart/GuidanceChart.ts",
+      "name": "CHART_KEY_IDS",
+      "kind": "ImportSpecifier",
+      "line": 6,
+      "status": "既有实现词形复用（本文件新增声明）"
+    },
+    {
+      "file": "src/chart/GuidanceChart.ts",
+      "name": "getSlot",
+      "kind": "ImportSpecifier",
+      "line": 6,
+      "status": "既有实现词形复用（本文件新增声明）"
+    },
+    {
+      "file": "src/chart/GuidanceChart.ts",
+      "name": "PATH_CALCULATION_EPSILON",
+      "kind": "VariableDeclaration",
+      "line": 9,
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "file": "src/chart/GuidanceChart.ts",
+      "name": "slicePathByDistance",
+      "kind": "FunctionDeclaration",
+      "line": 133,
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "file": "src/chart/GuidanceChart.ts",
+      "name": "startDistance",
+      "kind": "Parameter",
+      "line": 136,
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "file": "src/chart/GuidanceChart.ts",
+      "name": "endDistance",
+      "kind": "Parameter",
+      "line": 137,
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "file": "src/chart/GuidanceChart.ts",
+      "name": "pathLength",
+      "kind": "VariableDeclaration",
+      "line": 139,
+      "status": "既有实现词形复用（本文件新增声明）"
+    },
+    {
+      "file": "src/chart/GuidanceChart.ts",
+      "name": "cumulativeDistance",
+      "kind": "VariableDeclaration",
+      "line": 152,
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "file": "src/chart/GuidanceChart.ts",
+      "name": "parseBoundKey",
+      "kind": "FunctionDeclaration",
+      "line": 189,
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "file": "src/chart/GuidanceChart.ts",
+      "name": "parseGuidanceNode",
+      "kind": "FunctionDeclaration",
+      "line": 200,
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "file": "src/chart/GuidanceChart.ts",
+      "name": "pathLength",
+      "kind": "Parameter",
+      "line": 203,
+      "status": "既有实现词形复用（本文件新增声明）"
+    },
+    {
+      "file": "src/chart/GuidanceChart.ts",
+      "name": "assertTurnsHaveNodes",
+      "kind": "FunctionDeclaration",
+      "line": 237,
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "file": "src/chart/GuidanceChart.ts",
+      "name": "pathLength",
+      "kind": "VariableDeclaration",
+      "line": 238,
+      "status": "既有实现词形复用（本文件新增声明）"
+    },
+    {
+      "file": "src/chart/GuidanceChart.ts",
+      "name": "distanceTolerance",
+      "kind": "VariableDeclaration",
+      "line": 239,
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "file": "src/chart/GuidanceChart.ts",
+      "name": "cumulativeDistance",
+      "kind": "VariableDeclaration",
+      "line": 240,
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "file": "src/chart/GuidanceChart.ts",
+      "name": "corner",
+      "kind": "VariableDeclaration",
+      "line": 243,
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "file": "src/chart/GuidanceChart.ts",
+      "name": "incomingU",
+      "kind": "VariableDeclaration",
+      "line": 245,
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "file": "src/chart/GuidanceChart.ts",
+      "name": "incomingV",
+      "kind": "VariableDeclaration",
+      "line": 246,
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "file": "src/chart/GuidanceChart.ts",
+      "name": "outgoingU",
+      "kind": "VariableDeclaration",
+      "line": 247,
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "file": "src/chart/GuidanceChart.ts",
+      "name": "outgoingV",
+      "kind": "VariableDeclaration",
+      "line": 248,
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "file": "src/chart/GuidanceChart.ts",
+      "name": "incomingLength",
+      "kind": "VariableDeclaration",
+      "line": 249,
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "file": "src/chart/GuidanceChart.ts",
+      "name": "outgoingLength",
+      "kind": "VariableDeclaration",
+      "line": 250,
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "file": "src/chart/GuidanceChart.ts",
+      "name": "incomingDirectionU",
+      "kind": "VariableDeclaration",
+      "line": 253,
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "file": "src/chart/GuidanceChart.ts",
+      "name": "incomingDirectionV",
+      "kind": "VariableDeclaration",
+      "line": 254,
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "file": "src/chart/GuidanceChart.ts",
+      "name": "outgoingDirectionU",
+      "kind": "VariableDeclaration",
+      "line": 255,
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "file": "src/chart/GuidanceChart.ts",
+      "name": "outgoingDirectionV",
+      "kind": "VariableDeclaration",
+      "line": 256,
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "file": "src/chart/GuidanceChart.ts",
+      "name": "cross",
+      "kind": "VariableDeclaration",
+      "line": 257,
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "file": "src/chart/GuidanceChart.ts",
+      "name": "dot",
+      "kind": "VariableDeclaration",
+      "line": 258,
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "file": "src/chart/GuidanceChart.ts",
+      "name": "isTurn",
+      "kind": "VariableDeclaration",
+      "line": 259,
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "file": "src/chart/GuidanceChart.ts",
+      "name": "segmentLength",
+      "kind": "VariableDeclaration",
+      "line": 321,
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "file": "src/chart/GuidanceChart.ts",
+      "name": "left",
+      "kind": "Parameter",
+      "line": 338,
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "file": "src/chart/GuidanceChart.ts",
+      "name": "right",
+      "kind": "Parameter",
+      "line": 338,
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "name": "GuidanceNode",
+      "kind": "ImportSpecifier",
+      "line": 9,
+      "status": "既有名库词形复用"
+    },
+    {
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "name": "slicePathByDistance",
+      "kind": "ImportSpecifier",
+      "line": 12,
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "name": "disappearAtMs",
+      "kind": "PropertySignature",
+      "line": 31,
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "name": "holdActive",
+      "kind": "PropertySignature",
+      "line": 32,
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "name": "holdRemainingPoints",
+      "kind": "PropertySignature",
+      "line": 33,
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "name": "GuidanceNodeStatus",
+      "kind": "InterfaceDeclaration",
+      "line": 46,
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "name": "holdStarted",
+      "kind": "PropertySignature",
+      "line": 50,
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "name": "holdInterrupted",
+      "kind": "PropertySignature",
+      "line": 51,
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "name": "GuidanceArrival",
+      "kind": "InterfaceDeclaration",
+      "line": 54,
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "name": "status",
+      "kind": "PropertySignature",
+      "line": 55,
+      "status": "既有实现词形复用（本文件新增声明）"
+    },
+    {
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "name": "distance",
+      "kind": "PropertySignature",
+      "line": 57,
+      "status": "既有实现词形复用（本文件新增声明）"
+    },
+    {
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "name": "kind",
+      "kind": "PropertySignature",
+      "line": 58,
+      "status": "既有名库词形复用"
+    },
+    {
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "name": "compareIdentity",
+      "kind": "FunctionDeclaration",
+      "line": 61,
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "name": "a",
+      "kind": "Parameter",
+      "line": 61,
+      "status": "既有名库词形复用"
+    },
+    {
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "name": "b",
+      "kind": "Parameter",
+      "line": 61,
+      "status": "既有名库词形复用"
+    },
+    {
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "name": "statuses",
+      "kind": "PropertyDeclaration",
+      "line": 68,
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "name": "holdStarted",
+      "kind": "PropertyAssignment",
+      "line": 81,
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "name": "holdInterrupted",
+      "kind": "PropertyAssignment",
+      "line": 81,
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "name": "status",
+      "kind": "VariableDeclaration",
+      "line": 103,
+      "status": "既有实现词形复用（本文件新增声明）"
+    },
+    {
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "name": "status",
+      "kind": "VariableDeclaration",
+      "line": 112,
+      "status": "既有实现词形复用（本文件新增声明）"
+    },
+    {
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "name": "repeated",
+      "kind": "VariableDeclaration",
+      "line": 123,
+      "status": "既有实现词形复用（本文件新增声明）"
+    },
+    {
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "name": "candidates",
+      "kind": "VariableDeclaration",
+      "line": 143,
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "name": "status",
+      "kind": "Parameter",
+      "line": 143,
+      "status": "既有实现词形复用（本文件新增声明）"
+    },
+    {
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "name": "status",
+      "kind": "Parameter",
+      "line": 144,
+      "status": "既有实现词形复用（本文件新增声明）"
+    },
+    {
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "name": "status",
+      "kind": "ShorthandPropertyAssignment",
+      "line": 144,
+      "status": "既有实现词形复用（本文件新增声明）"
+    },
+    {
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "name": "lineId",
+      "kind": "PropertyAssignment",
+      "line": 145,
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "name": "item",
+      "kind": "Parameter",
+      "line": 146,
+      "status": "既有实现词形复用（本文件新增声明）"
+    },
+    {
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "name": "a",
+      "kind": "Parameter",
+      "line": 147,
+      "status": "既有名库词形复用"
+    },
+    {
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "name": "b",
+      "kind": "Parameter",
+      "line": 147,
+      "status": "既有名库词形复用"
+    },
+    {
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "name": "candidate",
+      "kind": "VariableDeclaration",
+      "line": 151,
+      "status": "既有实现词形复用（本文件新增声明）"
+    },
+    {
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "name": "releaseWhilePaused",
+      "kind": "MethodDeclaration",
+      "line": 160,
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "name": "status",
+      "kind": "VariableDeclaration",
+      "line": 164,
+      "status": "既有实现词形复用（本文件新增声明）"
+    },
+    {
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "name": "status",
+      "kind": "VariableDeclaration",
+      "line": 176,
+      "status": "既有实现词形复用（本文件新增声明）"
+    },
+    {
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "name": "getTotalNodeCount",
+      "kind": "MethodDeclaration",
+      "line": 190,
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "name": "status",
+      "kind": "Parameter",
+      "line": 193,
+      "status": "既有实现词形复用（本文件新增声明）"
+    },
+    {
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "name": "status",
+      "kind": "Parameter",
+      "line": 196,
+      "status": "既有实现词形复用（本文件新增声明）"
+    },
+    {
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "name": "status",
+      "kind": "Parameter",
+      "line": 199,
+      "status": "既有实现词形复用（本文件新增声明）"
+    },
+    {
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "name": "holdActive",
+      "kind": "VariableDeclaration",
+      "line": 201,
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "name": "disappearAtMs",
+      "kind": "VariableDeclaration",
+      "line": 204,
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "name": "holdRemainingPoints",
+      "kind": "VariableDeclaration",
+      "line": 206,
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "name": "disappearAtMs",
+      "kind": "ShorthandPropertyAssignment",
+      "line": 213,
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "name": "holdActive",
+      "kind": "ShorthandPropertyAssignment",
+      "line": 213,
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "name": "holdRemainingPoints",
+      "kind": "ShorthandPropertyAssignment",
+      "line": 213,
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "name": "advanceTimeline",
+      "kind": "MethodDeclaration",
+      "line": 227,
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "name": "includeEqual",
+      "kind": "Parameter",
+      "line": 227,
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "name": "status",
+      "kind": "Parameter",
+      "line": 233,
+      "status": "既有实现词形复用（本文件新增声明）"
+    },
+    {
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "name": "events",
+      "kind": "VariableDeclaration",
+      "line": 237,
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "name": "status",
+      "kind": "VariableDeclaration",
+      "line": 238,
+      "status": "既有实现词形复用（本文件新增声明）"
+    },
+    {
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "name": "status",
+      "kind": "ShorthandPropertyAssignment",
+      "line": 242,
+      "status": "既有实现词形复用（本文件新增声明）"
+    },
+    {
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "name": "distance",
+      "kind": "PropertyAssignment",
+      "line": 243,
+      "status": "既有实现词形复用（本文件新增声明）"
+    },
+    {
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "name": "kind",
+      "kind": "PropertyAssignment",
+      "line": 243,
+      "status": "既有名库词形复用"
+    },
+    {
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "name": "status",
+      "kind": "ShorthandPropertyAssignment",
+      "line": 245,
+      "status": "既有实现词形复用（本文件新增声明）"
+    },
+    {
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "name": "distance",
+      "kind": "PropertyAssignment",
+      "line": 246,
+      "status": "既有实现词形复用（本文件新增声明）"
+    },
+    {
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "name": "kind",
+      "kind": "PropertyAssignment",
+      "line": 246,
+      "status": "既有名库词形复用"
+    },
+    {
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "name": "status",
+      "kind": "ShorthandPropertyAssignment",
+      "line": 249,
+      "status": "既有实现词形复用（本文件新增声明）"
+    },
+    {
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "name": "distance",
+      "kind": "PropertyAssignment",
+      "line": 250,
+      "status": "既有实现词形复用（本文件新增声明）"
+    },
+    {
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "name": "kind",
+      "kind": "PropertyAssignment",
+      "line": 250,
+      "status": "既有名库词形复用"
+    },
+    {
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "name": "a",
+      "kind": "Parameter",
+      "line": 253,
+      "status": "既有名库词形复用"
+    },
+    {
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "name": "b",
+      "kind": "Parameter",
+      "line": 253,
+      "status": "既有名库词形复用"
+    },
+    {
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "name": "event",
+      "kind": "VariableDeclaration",
+      "line": 256,
+      "status": "既有名库词形复用"
+    },
+    {
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "name": "status",
+      "kind": "BindingElement",
+      "line": 257,
+      "status": "既有实现词形复用（本文件新增声明）"
+    },
+    {
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "name": "getTimeAtDistance",
+      "kind": "MethodDeclaration",
+      "line": 282,
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "name": "distance",
+      "kind": "Parameter",
+      "line": 282,
+      "status": "既有实现词形复用（本文件新增声明）"
+    },
+    {
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "name": "status",
+      "kind": "Parameter",
+      "line": 299,
+      "status": "既有实现词形复用（本文件新增声明）"
+    },
+    {
+      "file": "src/presentation/LineEraseEffect.ts",
+      "name": "GuidancePosition",
+      "kind": "ImportSpecifier",
+      "line": 9,
+      "status": "既有名库词形复用"
+    },
+    {
+      "file": "src/presentation/LineEraseEffect.ts",
+      "name": "fading",
+      "kind": "VariableDeclaration",
+      "line": 140,
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "file": "src/presentation/LineEraseEffect.ts",
+      "name": "x",
+      "kind": "VariableDeclaration",
+      "line": 150,
+      "status": "既有实现词形复用（本文件新增声明）"
+    },
+    {
+      "file": "src/presentation/LineEraseEffect.ts",
+      "name": "y",
+      "kind": "VariableDeclaration",
+      "line": 151,
+      "status": "既有实现词形复用（本文件新增声明）"
+    },
+    {
+      "file": "src/presentation/LineEraseEffect.ts",
+      "name": "hasActiveHold",
+      "kind": "VariableDeclaration",
+      "line": 169,
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "file": "src/presentation/LineEraseEffect.ts",
+      "name": "drawHoldRange",
+      "kind": "MethodDeclaration",
+      "line": 179,
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "file": "src/presentation/LineEraseEffect.ts",
+      "name": "points",
+      "kind": "Parameter",
+      "line": 180,
+      "status": "既有名库词形复用"
+    },
+    {
+      "file": "src/presentation/LineEraseEffect.ts",
+      "name": "stripWidth",
+      "kind": "Parameter",
+      "line": 181,
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "file": "src/presentation/LineEraseEffect.ts",
+      "name": "vertices",
+      "kind": "VariableDeclaration",
+      "line": 193,
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "file": "src/presentation/LineEraseEffect.ts",
+      "name": "x",
+      "kind": "PropertyAssignment",
+      "line": 193,
+      "status": "既有实现词形复用（本文件新增声明）"
+    },
+    {
+      "file": "src/presentation/LineEraseEffect.ts",
+      "name": "y",
+      "kind": "PropertyAssignment",
+      "line": 193,
+      "status": "既有实现词形复用（本文件新增声明）"
+    },
+    {
+      "file": "src/presentation/LineEraseEffect.ts",
+      "name": "offsets",
+      "kind": "VariableDeclaration",
+      "line": 194,
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "file": "src/presentation/LineEraseEffect.ts",
+      "name": "index",
+      "kind": "Parameter",
+      "line": 194,
+      "status": "既有名库词形复用"
+    },
+    {
+      "file": "src/presentation/LineEraseEffect.ts",
+      "name": "previous",
+      "kind": "VariableDeclaration",
+      "line": 195,
+      "status": "既有实现词形复用（本文件新增声明）"
+    },
+    {
+      "file": "src/presentation/LineEraseEffect.ts",
+      "name": "dx",
+      "kind": "VariableDeclaration",
+      "line": 196,
+      "status": "既有实现词形复用（本文件新增声明）"
+    },
+    {
+      "file": "src/presentation/LineEraseEffect.ts",
+      "name": "dy",
+      "kind": "VariableDeclaration",
+      "line": 197,
+      "status": "既有实现词形复用（本文件新增声明）"
+    },
+    {
+      "file": "src/presentation/LineEraseEffect.ts",
+      "name": "length",
+      "kind": "VariableDeclaration",
+      "line": 198,
+      "status": "既有实现词形复用（本文件新增声明）"
+    },
+    {
+      "file": "src/presentation/LineEraseEffect.ts",
+      "name": "x",
+      "kind": "PropertyAssignment",
+      "line": 199,
+      "status": "既有实现词形复用（本文件新增声明）"
+    },
+    {
+      "file": "src/presentation/LineEraseEffect.ts",
+      "name": "y",
+      "kind": "PropertyAssignment",
+      "line": 199,
+      "status": "既有实现词形复用（本文件新增声明）"
+    },
+    {
+      "file": "src/presentation/LineEraseEffect.ts",
+      "name": "x",
+      "kind": "PropertyAssignment",
+      "line": 200,
+      "status": "既有实现词形复用（本文件新增声明）"
+    },
+    {
+      "file": "src/presentation/LineEraseEffect.ts",
+      "name": "y",
+      "kind": "PropertyAssignment",
+      "line": 201,
+      "status": "既有实现词形复用（本文件新增声明）"
+    },
+    {
+      "file": "src/presentation/LineEraseEffect.ts",
+      "name": "start",
+      "kind": "VariableDeclaration",
+      "line": 205,
+      "status": "既有实现词形复用（本文件新增声明）"
+    },
+    {
+      "file": "src/presentation/LineEraseEffect.ts",
+      "name": "end",
+      "kind": "VariableDeclaration",
+      "line": 206,
+      "status": "既有实现词形复用（本文件新增声明）"
+    },
+    {
+      "file": "src/presentation/LineEraseEffect.ts",
+      "name": "offset",
+      "kind": "VariableDeclaration",
+      "line": 207,
+      "status": "既有实现词形复用（本文件新增声明）"
+    },
+    {
+      "file": "src/presentation/LineEraseEffect.ts",
+      "name": "previousOffset",
+      "kind": "VariableDeclaration",
+      "line": 215,
+      "status": "待 PROTOCOL 追认"
+    }
+  ]
+}

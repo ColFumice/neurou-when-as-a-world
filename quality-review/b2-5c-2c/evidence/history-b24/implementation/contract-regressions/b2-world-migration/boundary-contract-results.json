@@ -1,0 +1,47 @@
+{
+  "mode": "ContractAdapter",
+  "passed": 8,
+  "failed": 0,
+  "cases": [
+    {
+      "name": "B01 healthy admission returns original intent batch and preserves source data",
+      "category": "ContractAdapter",
+      "result": "PASS"
+    },
+    {
+      "name": "B02 idle paused account admits settlement retry and rejects new narrative/chart/world activities",
+      "category": "ContractAdapter",
+      "result": "PASS"
+    },
+    {
+      "name": "B03 active chart retains ordered strike/pause/exit inputs, preserves payload and rejects new entries",
+      "category": "ContractAdapter",
+      "result": "PASS"
+    },
+    {
+      "name": "B04 granted reveal continuation can enter existing T7 and naturally finish without forced timer/media mutation",
+      "category": "ContractAdapter",
+      "result": "PASS"
+    },
+    {
+      "name": "B05 active performer explicitly exits using existing chart lifecycle without fabricated completion",
+      "category": "ContractAdapter",
+      "result": "PASS"
+    },
+    {
+      "name": "B06 RetryWorldClear under closed admission settles a restored real account fact without new premiere",
+      "category": "ContractAdapter",
+      "result": "PASS"
+    },
+    {
+      "name": "B07 continuation permission permits only old EnterChart, never new World chart or replay",
+      "category": "ContractAdapter",
+      "result": "PASS"
+    },
+    {
+      "name": "B08 existing seven-second sustain can finish under pause while fresh world strikes remain denied",
+      "category": "ContractAdapter",
+      "result": "PASS"
+    }
+  ]
+}

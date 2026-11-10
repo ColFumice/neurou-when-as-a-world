@@ -1,0 +1,36 @@
+{
+  "phase": "B2.5c-2b delivery artifact link audit",
+  "generatedUtc": "2026-10-11T08:11:36.168Z",
+  "documentCount": 5,
+  "localLinkCount": 0,
+  "checks": [
+    {
+      "path": "quality-review/b2-5c-2b/client-and-server-independent-review.md",
+      "sha256": "96a77b55e4a99af4931c84791dd4e7f624ea38e3875bee3c66400e76d46b615b",
+      "localLinks": []
+    },
+    {
+      "path": "quality-review/b2-5c-2b/delivery-report.md",
+      "sha256": "8287b6b46d139f834b73659b4f8671a92d885c75e28d581c2574e013c324f4cb",
+      "localLinks": []
+    },
+    {
+      "path": "quality-review/b2-5c-2b/implementation-plan.md",
+      "sha256": "86867a51a46649a08fbf37ba06159158812f7c500b1791d07ae1499b8792301d",
+      "localLinks": []
+    },
+    {
+      "path": "quality-review/b2-5c-2b/namebook-v3.20-appendix-proposal.md",
+      "sha256": "503fd5957f1586b36c095d2aa0ef2cb8388ffa410ff655924720f6abb3760bff",
+      "localLinks": []
+    },
+    {
+      "path": "quality-review/b2-5c-2b/verdicts-441-447.md",
+      "sha256": "00502c2f1e24bee0147e03c00f43870ebc6dd3084fe0dc7a732f20ac861b3ea5",
+      "localLinks": []
+    }
+  ],
+  "missing": [],
+  "pass": true,
+  "limits": "Checks explicit local Markdown links in top-level c-2b delivery documents at this snapshot. Plain code path mentions and future-stage candidates are not links and are not claimed to exist."
+}

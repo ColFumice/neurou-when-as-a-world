@@ -1,0 +1,18 @@
+{
+  "generatedUtc": "2026-10-11T08:02:51.100Z",
+  "command": [
+    "C:\\Program Files\\nodejs\\node.exe",
+    "quality-review/b2-5c-2b/client-real-http.cjs"
+  ],
+  "harnessSha256": "482f22b25f86ec99b7a9e8b6f6156f48b706f81e65bf630c3bf2356b500f2b42",
+  "logSha256": "b099f6ef4589edb715f49b44600816117dbb707222ed219cb1dd516bc072a6d4",
+  "resultSha256": "ce4417349263a9ce265bcbba683828f6a3a00c0e06993c6fb0a32107203fc8b9",
+  "checks": 11,
+  "authorityMethods": 16,
+  "realHttp": true,
+  "realPostgreSQL": true,
+  "realClock": true,
+  "isolatedClock": false,
+  "pass": true,
+  "scope": "Production independent Builder+Session+Authority adapter through real TCP loopback Fastify/PG17; 15 additive authority methods plus inherited readAccountFacts; temporary approved public pins, in-memory publisher; ordinary Observer via real six-digit code; production seal empty only, nonempty cutoff remains isolated-clock proof"
+}

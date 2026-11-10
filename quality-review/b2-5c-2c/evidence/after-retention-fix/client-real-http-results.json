@@ -1,0 +1,183 @@
+{
+  "kind": "ProductionRelayClientRealHttpWithIsolatedCryptoCache",
+  "realHttp": true,
+  "realPostgreSQL": true,
+  "realClock": true,
+  "isolatedClock": false,
+  "database": "c2c_client_relay",
+  "pgMajor": 17,
+  "passed": 22,
+  "failed": 0,
+  "authorityMethods": [
+    "admitCommit",
+    "allocateSegment",
+    "issueAppendPermit",
+    "publishMembershipEpoch",
+    "readAccountFacts",
+    "readAdmission",
+    "readMembershipEpoch",
+    "readServiceStatus",
+    "readWorldFacts",
+    "redeemObserverChallenge",
+    "registerAgreementCredential",
+    "registerWorld",
+    "requestCredentialChallenge",
+    "requestObserverChallenge",
+    "sealPrefix",
+    "setAccessCode"
+  ],
+  "publicPin": {
+    "serviceInstanceId": "neurou-client-http-91603973-c5a8-4c8b-ba71-30a4934c115f",
+    "worldId": "04f95eb0-a13e-45b0-9a16-fc8dc3c42d2a",
+    "mapId": "c89181e8-9864-4d32-a718-b11bd9ae4ad2",
+    "worldDeveloperAccountId": "40cd8beb-cc8f-44fe-ab47-513e1e23d77c",
+    "developerTrustAnchor": {
+      "schemaVersion": 1,
+      "worldId": "04f95eb0-a13e-45b0-9a16-fc8dc3c42d2a",
+      "worldDeveloperAccountId": "40cd8beb-cc8f-44fe-ab47-513e1e23d77c",
+      "developerSigningKeyId": "MzsvjraRkcPHrIeLoY05npSJhzKWBi_u37ugb6cpFSM",
+      "developerPublicKey": {
+        "kty": "EC",
+        "crv": "P-256",
+        "x": "JwDuP1NTXB_2Wk_JeHaW-xGXxpTbbjQ5gZHyHjP82OE",
+        "y": "tZT2BOUNuaAtzlnUFurwIUEuPQzpQuZ1uVkzQ_vGgyE"
+      },
+      "developerPublicKeyFingerprint": "MzsvjraRkcPHrIeLoY05npSJhzKWBi_u37ugb6cpFSM"
+    },
+    "developerTrustAnchorSha256": "e0d48e2d959d19359e457f828659829e15b999d190ae27f30f2b4292c998b9e7",
+    "genesisSha256": "05e081229cfc2dd72f139ab7a8f2b46b5bbaf44b8ecd4f2180dc770efe3a0521",
+    "contentManifestSha256": "67ffd06a53572ca46605c56374df32d787baca7194ba51d40a095534461cff6a"
+  },
+  "nodeVersion": "v24.19.0",
+  "noRelay": false,
+  "relayEvidence": [
+    {
+      "case": "MissingAdmittedEnvelope",
+      "worldId": "04f95eb0-a13e-45b0-9a16-fc8dc3c42d2a",
+      "identity": {
+        "authorAccountId": "40cd8beb-cc8f-44fe-ab47-513e1e23d77c",
+        "authorSequence": 1
+      }
+    },
+    {
+      "case": "ExactPGBytesAndOriginalPosition",
+      "envelopeSha256": "c1708c4e7b59074adae84dbacaa1aa16752cb01eb9fff8f8c51fba0c20e5ff28",
+      "position": "1"
+    },
+    {
+      "case": "ACKAfterExactDurableReadback",
+      "confirmationSha256": "bca7e513570d25aac2b20e5b592923b7fdcd73c1b1f208326122bbe90b4a5b81",
+      "entriesSha256": "bca7e513570d25aac2b20e5b592923b7fdcd73c1b1f208326122bbe90b4a5b81",
+      "acknowledgedCount": 1
+    },
+    {
+      "case": "P10RealLongPoll",
+      "maximumWaitMs": 13000,
+      "deadlineMs": 20000,
+      "elapsedMs": 13029.9036
+    },
+    {
+      "case": "RestartKeepsOriginalReceipt",
+      "generation": "1",
+      "position": "1"
+    }
+  ],
+  "isolatedNativeCryptoOracle": true,
+  "isolatedWalHostCache": true,
+  "noProductionKeyDelivery": true,
+  "noDualClientReplay": true,
+  "noProductChain": true,
+  "noKeyPackageDelivery": true,
+  "emptyProductionSealOnly": true,
+  "ordinaryObserverViaActualAccessCode": true,
+  "cases": [
+    {
+      "label": "independent production Builder authenticates real registered devices through b routes",
+      "pass": true
+    },
+    {
+      "label": "service status signature and real clock/policy trusted through production client",
+      "pass": true
+    },
+    {
+      "label": "world registration uses installed public tuple, in-memory root, and registered session signature",
+      "pass": true
+    },
+    {
+      "label": "six-digit code automatically admits real ordinary Observer; no fixture membership",
+      "pass": true
+    },
+    {
+      "label": "actual ECDH/GCM/HMAC possession uses registered production author-signing capability",
+      "pass": true
+    },
+    {
+      "label": "real root membership CAS activates only previously proven Observer/device credentials",
+      "pass": true
+    },
+    {
+      "label": "concurrent real PG author segments are disjoint; same nonce preserves original signed receipt",
+      "pass": true
+    },
+    {
+      "label": "permit-generated AppendedAt and registered claim produce real original admission facts",
+      "pass": true
+    },
+    {
+      "label": "production real-clock empty seal obeys S-H; prematurely including fresh admission rejected",
+      "pass": true
+    },
+    {
+      "label": "all 15 incremental authority methods plus unchanged account-facts port used real HTTP",
+      "pass": true
+    },
+    {
+      "label": "real Relay reports admitted-not-enqueued as conservative MissingAdmittedEnvelope Gap",
+      "pass": true
+    },
+    {
+      "label": "Relay transport outage rejects without fixture fallback and authority remains healthy",
+      "pass": true
+    },
+    {
+      "label": "lost submit response retransmits exact nonce; real PG keeps one raw envelope and position",
+      "pass": true
+    },
+    {
+      "label": "submit and relay aliases concurrently return original receipt/position",
+      "pass": true
+    },
+    {
+      "label": "signed real pull provides exact proof/bytes for full c-1 validator",
+      "pass": true
+    },
+    {
+      "label": "missing group key yields no ACK HTTP or PG row",
+      "pass": true
+    },
+    {
+      "label": "Host persistence failure yields no signed ACK or PG row",
+      "pass": true
+    },
+    {
+      "label": "full validator then fsynced WAL exact readback precedes real device-signed ACK transaction",
+      "pass": true
+    },
+    {
+      "label": "ACK does not delete live ciphertext before admittedAt+retention",
+      "pass": true
+    },
+    {
+      "label": "legal 13-second real HTTP pull exceeds prior 12-second cap without timeout",
+      "pass": true
+    },
+    {
+      "label": "production server restart preserves generation, queue bytes and original receipt",
+      "pass": true
+    },
+    {
+      "label": "logout rejects further production authority admission and registered signing",
+      "pass": true
+    }
+  ]
+}

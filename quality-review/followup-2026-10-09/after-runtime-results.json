@@ -1,0 +1,485 @@
+{
+  "creator": "3.8.8",
+  "chromium": "142.0.7444.52",
+  "checks": [
+    {
+      "name": "seven-second deep trace trigger",
+      "pass": true
+    },
+    {
+      "name": "each non-space row fills width with uniform contiguous cells",
+      "pass": true
+    },
+    {
+      "name": "adjacent keyboard rows have no vertical gap",
+      "pass": true
+    },
+    {
+      "name": "pause freezes media time",
+      "pass": true
+    },
+    {
+      "name": "midway exit restores actual UI camera and keeps one record",
+      "pass": true
+    },
+    {
+      "name": "reentry restores video-under-Canvas camera and clears score",
+      "pass": true
+    },
+    {
+      "name": "completion returns world without ESC and appends once",
+      "pass": true
+    },
+    {
+      "name": "UI render camera does not clear world color after return",
+      "pass": true
+    },
+    {
+      "name": "video hidden and stopped after completion",
+      "pass": true
+    },
+    {
+      "name": "world movement works after completion",
+      "pass": true
+    },
+    {
+      "name": "ESC after return remains in world",
+      "pass": true
+    },
+    {
+      "name": "no runtime errors",
+      "pass": true
+    }
+  ],
+  "result": {
+    "state": "Exited",
+    "entered": false,
+    "world": true,
+    "worldCamera": true,
+    "gated": false,
+    "scheduled": false,
+    "ledger": 2,
+    "result": {
+      "chartId": "chart-placeholder-1",
+      "tier": "Regular",
+      "perfectCount": 0,
+      "goodCount": 0,
+      "missCount": 20,
+      "totalScore": 0,
+      "finishedAtMs": 10127.53,
+      "completed": true
+    },
+    "uiComponentClearFlags": 6,
+    "uiRenderClearFlags": 6,
+    "videoVisibility": "hidden",
+    "videoPlaying": false
+  },
+  "layout": [
+    [
+      {
+        "keyId": "KeyZ",
+        "padKind": "Regular",
+        "u": 0,
+        "v": 0.12,
+        "width": 0.1,
+        "height": 0.22
+      },
+      {
+        "keyId": "KeyX",
+        "padKind": "Regular",
+        "u": 0.1,
+        "v": 0.12,
+        "width": 0.1,
+        "height": 0.22
+      },
+      {
+        "keyId": "KeyC",
+        "padKind": "Regular",
+        "u": 0.2,
+        "v": 0.12,
+        "width": 0.1,
+        "height": 0.22
+      },
+      {
+        "keyId": "KeyV",
+        "padKind": "Regular",
+        "u": 0.3,
+        "v": 0.12,
+        "width": 0.1,
+        "height": 0.22
+      },
+      {
+        "keyId": "KeyB",
+        "padKind": "Regular",
+        "u": 0.4,
+        "v": 0.12,
+        "width": 0.1,
+        "height": 0.22
+      },
+      {
+        "keyId": "KeyN",
+        "padKind": "Regular",
+        "u": 0.5,
+        "v": 0.12,
+        "width": 0.1,
+        "height": 0.22
+      },
+      {
+        "keyId": "KeyM",
+        "padKind": "Regular",
+        "u": 0.6,
+        "v": 0.12,
+        "width": 0.1,
+        "height": 0.22
+      },
+      {
+        "keyId": "Comma",
+        "padKind": "Regular",
+        "u": 0.7,
+        "v": 0.12,
+        "width": 0.1,
+        "height": 0.22
+      },
+      {
+        "keyId": "Period",
+        "padKind": "Regular",
+        "u": 0.8,
+        "v": 0.12,
+        "width": 0.1,
+        "height": 0.22
+      },
+      {
+        "keyId": "Slash",
+        "padKind": "Regular",
+        "u": 0.9,
+        "v": 0.12,
+        "width": 0.1,
+        "height": 0.22
+      }
+    ],
+    [
+      {
+        "keyId": "KeyA",
+        "padKind": "Regular",
+        "u": 0,
+        "v": 0.33999999999999997,
+        "width": 0.09090909090909091,
+        "height": 0.22
+      },
+      {
+        "keyId": "KeyS",
+        "padKind": "Regular",
+        "u": 0.09090909090909091,
+        "v": 0.33999999999999997,
+        "width": 0.09090909090909091,
+        "height": 0.22
+      },
+      {
+        "keyId": "KeyD",
+        "padKind": "Regular",
+        "u": 0.18181818181818182,
+        "v": 0.33999999999999997,
+        "width": 0.09090909090909091,
+        "height": 0.22
+      },
+      {
+        "keyId": "KeyF",
+        "padKind": "Regular",
+        "u": 0.2727272727272727,
+        "v": 0.33999999999999997,
+        "width": 0.09090909090909091,
+        "height": 0.22
+      },
+      {
+        "keyId": "KeyG",
+        "padKind": "Regular",
+        "u": 0.36363636363636365,
+        "v": 0.33999999999999997,
+        "width": 0.09090909090909091,
+        "height": 0.22
+      },
+      {
+        "keyId": "KeyH",
+        "padKind": "Regular",
+        "u": 0.45454545454545453,
+        "v": 0.33999999999999997,
+        "width": 0.09090909090909091,
+        "height": 0.22
+      },
+      {
+        "keyId": "KeyJ",
+        "padKind": "Regular",
+        "u": 0.5454545454545454,
+        "v": 0.33999999999999997,
+        "width": 0.09090909090909091,
+        "height": 0.22
+      },
+      {
+        "keyId": "KeyK",
+        "padKind": "Regular",
+        "u": 0.6363636363636364,
+        "v": 0.33999999999999997,
+        "width": 0.09090909090909091,
+        "height": 0.22
+      },
+      {
+        "keyId": "KeyL",
+        "padKind": "Regular",
+        "u": 0.7272727272727273,
+        "v": 0.33999999999999997,
+        "width": 0.09090909090909091,
+        "height": 0.22
+      },
+      {
+        "keyId": "Semicolon",
+        "padKind": "Regular",
+        "u": 0.8181818181818182,
+        "v": 0.33999999999999997,
+        "width": 0.09090909090909091,
+        "height": 0.22
+      },
+      {
+        "keyId": "Quote",
+        "padKind": "Regular",
+        "u": 0.9090909090909091,
+        "v": 0.33999999999999997,
+        "width": 0.09090909090909091,
+        "height": 0.22
+      }
+    ],
+    [
+      {
+        "keyId": "KeyQ",
+        "padKind": "Regular",
+        "u": 0,
+        "v": 0.56,
+        "width": 0.07692307692307693,
+        "height": 0.22
+      },
+      {
+        "keyId": "KeyW",
+        "padKind": "Regular",
+        "u": 0.07692307692307693,
+        "v": 0.56,
+        "width": 0.07692307692307693,
+        "height": 0.22
+      },
+      {
+        "keyId": "KeyE",
+        "padKind": "Regular",
+        "u": 0.15384615384615385,
+        "v": 0.56,
+        "width": 0.07692307692307693,
+        "height": 0.22
+      },
+      {
+        "keyId": "KeyR",
+        "padKind": "Regular",
+        "u": 0.23076923076923078,
+        "v": 0.56,
+        "width": 0.07692307692307693,
+        "height": 0.22
+      },
+      {
+        "keyId": "KeyT",
+        "padKind": "Regular",
+        "u": 0.3076923076923077,
+        "v": 0.56,
+        "width": 0.07692307692307693,
+        "height": 0.22
+      },
+      {
+        "keyId": "KeyY",
+        "padKind": "Regular",
+        "u": 0.38461538461538464,
+        "v": 0.56,
+        "width": 0.07692307692307693,
+        "height": 0.22
+      },
+      {
+        "keyId": "KeyU",
+        "padKind": "Regular",
+        "u": 0.46153846153846156,
+        "v": 0.56,
+        "width": 0.07692307692307693,
+        "height": 0.22
+      },
+      {
+        "keyId": "KeyI",
+        "padKind": "Regular",
+        "u": 0.5384615384615384,
+        "v": 0.56,
+        "width": 0.07692307692307693,
+        "height": 0.22
+      },
+      {
+        "keyId": "KeyO",
+        "padKind": "Regular",
+        "u": 0.6153846153846154,
+        "v": 0.56,
+        "width": 0.07692307692307693,
+        "height": 0.22
+      },
+      {
+        "keyId": "KeyP",
+        "padKind": "Regular",
+        "u": 0.6923076923076923,
+        "v": 0.56,
+        "width": 0.07692307692307693,
+        "height": 0.22
+      },
+      {
+        "keyId": "BracketLeft",
+        "padKind": "Regular",
+        "u": 0.7692307692307693,
+        "v": 0.56,
+        "width": 0.07692307692307693,
+        "height": 0.22
+      },
+      {
+        "keyId": "BracketRight",
+        "padKind": "Regular",
+        "u": 0.8461538461538461,
+        "v": 0.56,
+        "width": 0.07692307692307693,
+        "height": 0.22
+      },
+      {
+        "keyId": "Backslash",
+        "padKind": "Regular",
+        "u": 0.9230769230769231,
+        "v": 0.56,
+        "width": 0.07692307692307693,
+        "height": 0.22
+      }
+    ],
+    [
+      {
+        "keyId": "Backquote",
+        "padKind": "Regular",
+        "u": 0,
+        "v": 0.78,
+        "width": 0.07692307692307693,
+        "height": 0.22
+      },
+      {
+        "keyId": "Digit1",
+        "padKind": "Drum",
+        "u": 0.07692307692307693,
+        "v": 0.78,
+        "width": 0.07692307692307693,
+        "height": 0.22
+      },
+      {
+        "keyId": "Digit2",
+        "padKind": "Drum",
+        "u": 0.15384615384615385,
+        "v": 0.78,
+        "width": 0.07692307692307693,
+        "height": 0.22
+      },
+      {
+        "keyId": "Digit3",
+        "padKind": "Drum",
+        "u": 0.23076923076923078,
+        "v": 0.78,
+        "width": 0.07692307692307693,
+        "height": 0.22
+      },
+      {
+        "keyId": "Digit4",
+        "padKind": "Drum",
+        "u": 0.3076923076923077,
+        "v": 0.78,
+        "width": 0.07692307692307693,
+        "height": 0.22
+      },
+      {
+        "keyId": "Digit5",
+        "padKind": "Drum",
+        "u": 0.38461538461538464,
+        "v": 0.78,
+        "width": 0.07692307692307693,
+        "height": 0.22
+      },
+      {
+        "keyId": "Digit6",
+        "padKind": "Drum",
+        "u": 0.46153846153846156,
+        "v": 0.78,
+        "width": 0.07692307692307693,
+        "height": 0.22
+      },
+      {
+        "keyId": "Digit7",
+        "padKind": "Drum",
+        "u": 0.5384615384615384,
+        "v": 0.78,
+        "width": 0.07692307692307693,
+        "height": 0.22
+      },
+      {
+        "keyId": "Digit8",
+        "padKind": "Drum",
+        "u": 0.6153846153846154,
+        "v": 0.78,
+        "width": 0.07692307692307693,
+        "height": 0.22
+      },
+      {
+        "keyId": "Digit9",
+        "padKind": "Drum",
+        "u": 0.6923076923076923,
+        "v": 0.78,
+        "width": 0.07692307692307693,
+        "height": 0.22
+      },
+      {
+        "keyId": "Digit0",
+        "padKind": "Drum",
+        "u": 0.7692307692307693,
+        "v": 0.78,
+        "width": 0.07692307692307693,
+        "height": 0.22
+      },
+      {
+        "keyId": "Minus",
+        "padKind": "Regular",
+        "u": 0.8461538461538461,
+        "v": 0.78,
+        "width": 0.07692307692307693,
+        "height": 0.22
+      },
+      {
+        "keyId": "Equal",
+        "padKind": "Regular",
+        "u": 0.9230769230769231,
+        "v": 0.78,
+        "width": 0.07692307692307693,
+        "height": 0.22
+      }
+    ]
+  ],
+  "logs": [
+    {
+      "level": 2,
+      "message": "%cElectron Security Warning (Insecure Content-Security-Policy) font-weight: bold; This renderer process has either no Content Security\n  Policy set or a policy with \"unsafe-eval\" enabled. This exposes users of\n  this app to unnecessary security risks.\n\nFor more information and help, consult\nhttps://electronjs.org/docs/tutorial/security.\nThis warning will not show up\nonce the app is packaged."
+    },
+    {
+      "level": 0,
+      "message": "Init Base: 0.10400390625 ms"
+    },
+    {
+      "level": 0,
+      "message": "Init Infrastructure: 19.8359375 ms"
+    },
+    {
+      "level": 0,
+      "message": "Init SubSystem: 115.400146484375 ms"
+    },
+    {
+      "level": 0,
+      "message": "Init Project: 58.655029296875 ms"
+    }
+  ]
+}

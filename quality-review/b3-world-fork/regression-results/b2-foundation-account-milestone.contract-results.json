@@ -1,0 +1,138 @@
+{
+  "category": "ContractTest",
+  "note": "Isolated in-memory adapter fixtures only; true values do not prove or trigger production world clears.",
+  "passed": 26,
+  "failed": 0,
+  "results": [
+    {
+      "name": "missing projection is readonly false and does not write a default",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "separate encoded key preserves startup and folder keys",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "CopyPermission true derives from a valid fixture with no stored derived field",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "account isolation keeps one account true and another missing false",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "false to true and true to true are valid adapter transitions",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "true to false is rejected and retains persisted true",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "stale false expected cannot erase a persisted true",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "a known prior true cannot be downgraded even if external storage was removed",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "stale expected is rejected without overwriting actual current",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "write failure keeps old storage and published readonly reader",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "reject JSON null on read and preserve original bytes",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "reject malformed JSON on read and preserve original bytes",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "reject array on read and preserve original bytes",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "reject primitive on read and preserve original bytes",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "reject unknown schema on read and preserve original bytes",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "reject mismatched account on read and preserve original bytes",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "reject noncanonical account on read and preserve original bytes",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "reject boolean string on read and preserve original bytes",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "reject boolean numeric on read and preserve original bytes",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "reject missing fact on read and preserve original bytes",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "reject persisted derived value on read and preserve original bytes",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "invalid caller identity and non-data fields fail explicitly",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "reader derives from a cloned immutable projection without caller alias",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "unknown Proxy inputs are read once through descriptors, without property get traps",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "revoked Proxy and inherited inputs fail explicitly without writes",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "account accessor is rejected without invoking user code",
+      "result": "PASS",
+      "category": "ContractTest"
+    }
+  ]
+}

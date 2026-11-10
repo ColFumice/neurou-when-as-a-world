@@ -1,0 +1,56 @@
+{
+  "configuration": {
+    "rhythmStrikeWindowMs": 100,
+    "perfectWindowMs": 100,
+    "goodWindowMs": 200,
+    "syncToleranceMs": 30
+  },
+  "allPassed": true,
+  "runs": [
+    {
+      "name": "b-regression",
+      "command": "node quality-review/judgement-window-2026-10-10/b-regression.cjs",
+      "exitCode": 0,
+      "passed": 31,
+      "failed": 0,
+      "failures": [],
+      "scriptSha256": "8c539b47ff98873eab8b1f7b858b4d322f76a2d6979d004c3ce3db2bcf2d6d8c"
+    },
+    {
+      "name": "c-regression",
+      "command": "node quality-review/judgement-window-2026-10-10/c-regression.cjs",
+      "exitCode": 0,
+      "passed": 14,
+      "failed": 0,
+      "failures": [],
+      "scriptSha256": "449321db3746cc3e8301c561aeb9bdedb34841f69f11ec0edecbcdb19182c93a"
+    },
+    {
+      "name": "pad-regression",
+      "command": "node quality-review/judgement-window-2026-10-10/pad-regression.cjs",
+      "exitCode": 0,
+      "passed": 28,
+      "failed": 0,
+      "failures": [],
+      "scriptSha256": "00bcf951b4b2c068c2ba5cbf6646b7fcefb7ef5c07951361573f3a77c3df08b2"
+    },
+    {
+      "name": "editor-regression",
+      "command": "node quality-review/judgement-window-2026-10-10/editor-regression.cjs",
+      "exitCode": 0,
+      "passed": 18,
+      "failed": 0,
+      "failures": [],
+      "scriptSha256": "b90f6970ba886e086d88496d704359652de5a307d526e554acc0f241143484ca"
+    },
+    {
+      "name": "window-boundaries",
+      "command": "node quality-review/judgement-window-2026-10-10/window-boundaries.cjs",
+      "exitCode": 0,
+      "passed": 12,
+      "failed": 0,
+      "failures": [],
+      "scriptSha256": "840f57a84a2ab699bc935a12cbdef07290c2575c239950d3cee87e6191dd6566"
+    }
+  ]
+}

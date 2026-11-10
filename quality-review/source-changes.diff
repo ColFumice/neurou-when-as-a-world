@@ -1,0 +1,2995 @@
+diff --git "a/D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\backup\\assets\\effects\\invert-ripple.effect" "b/D:\\Project\\A_New_Begin\\Neurou_official\\assets\\resources\\effects\\invert-ripple.effect"
+index fbeaeed..a408ae5 100644
+--- "a/D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\backup\\assets\\effects\\invert-ripple.effect"
++++ "b/D:\\Project\\A_New_Begin\\Neurou_official\\assets\\resources\\effects\\invert-ripple.effect"
+@@ -34,6 +34,9 @@ CCEffect %{
+           blendDstAlpha: one_minus_src_alpha
+       rasterizerState:
+         cullMode: none
++      properties:
++        u_centerRadius: { value: [0, 0, 0, 8] }
++        u_params: { value: [0, 0, 1, 1] }
+ }%
+ 
+ CCProgram vs %{
+@@ -49,11 +52,13 @@ CCProgram vs %{
+ 
+   out vec4 color;
+   out vec2 uv0;
++  out vec2 screenUV;
+ 
+   vec4 vert () {
+     vec4 pos = vec4(a_position, 1);
+     pos = cc_matViewProj * pos;
+     uv0 = a_texCoord;
++    screenUV = vec2(a_texCoord.x, 1.0 - a_texCoord.y);
+     #if SAMPLE_FROM_RT
+       CC_HANDLE_RT_SAMPLE_FLIP(uv0);
+     #endif
+@@ -67,6 +72,7 @@ CCProgram fs %{
+ 
+   in vec4 color;
+   in vec2 uv0;
++  in vec2 screenUV;
+ 
+   #pragma builtin(local)
+   layout(set = 2, binding = 12) uniform sampler2D cc_spriteTexture;
+@@ -79,14 +85,14 @@ CCProgram fs %{
+   };
+ 
+   vec4 frag () {
+-    vec2 px = uv0 * u_params.zw;
++    vec2 px = screenUV * u_params.zw;
+     float dist = distance(px, u_centerRadius.xy);
+     // 软边：半径内全效，边缘 smoothstep 渐出（参照 radial-gradient）
+     float edge = 1.0 - smoothstep(u_centerRadius.z - u_centerRadius.w, u_centerRadius.z, dist);
+     vec3 src = texture(cc_spriteTexture, uv0).rgb;
+     // 反色（参照 invert(1)），曝光脉冲时向白推（参照高光脉冲）
+     vec3 inverted = vec3(1.0) - src;
+-    inverted = mix(inverted, vec3(1.0), u_params.y * 0.7);
++    inverted = mix(inverted, vec3(1.0), u_params.y);
+     // 遮罩强度（参照 mask 渐变 alpha = k）与全屏脉冲罩取大
+     float alpha = max(u_params.x * edge, u_params.y) * color.a;
+     return vec4(inverted, alpha);
+diff --git "a/D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\backup\\assets\\scripts\\Bootstrap.ts" "b/D:\\Project\\A_New_Begin\\Neurou_official\\assets\\scripts\\Bootstrap.ts"
+index 04c6925..5fd2745 100644
+--- "a/D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\backup\\assets\\scripts\\Bootstrap.ts"
++++ "b/D:\\Project\\A_New_Begin\\Neurou_official\\assets\\scripts\\Bootstrap.ts"
+@@ -21,8 +21,7 @@
+ //   直接导入（官方论坛工程师答复：3.1.1 起 .ts 只能在
+ //   assets 内使用）。
+ //
+-// 门禁说明：本文件在 assets/ 下，不属于 stage-1.md §3 八
+-// 模块；三条门禁只扫描 src/ 与 constants/，不扫描本文件。
++// 组合根参与 naming / tsc；依赖矩阵适用于 src 七域与 constants。
+ // ============================================================
+ 
+ import { _decorator, Component } from 'cc';
+diff --git "a/D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\backup\\assets\\scripts\\SceneBuilder.ts" "b/D:\\Project\\A_New_Begin\\Neurou_official\\assets\\scripts\\SceneBuilder.ts"
+index 3105b42..0d2b073 100644
+--- "a/D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\backup\\assets\\scripts\\SceneBuilder.ts"
++++ "b/D:\\Project\\A_New_Begin\\Neurou_official\\assets\\scripts\\SceneBuilder.ts"
+@@ -22,7 +22,7 @@
+ //   ├── RouteSegmentRotating （旋转路段标记，横向 3~6 WM）
+ //   ├── Protagonist          （1×1×1 立方体 + ProtagonistView，
+ //   │                         运行时缩放 1.6，AC-06）
+-//   ├── TrailRenderer        （拖尾渲染器节点，子节点为白色段池，
++//   ├── TrailRender        （拖尾渲染器节点，子节点为白色段池，
+ //   │                         T3 拖尾 / AC-07 / AC-08；3D 跟随）
+ //   ├── ElementInitial       （Initial 实体，明态常驻，T5 AC-09）
+ //   ├── ElementProcess       （Process 实体，明态常驻，T5 AC-09）
+@@ -46,7 +46,7 @@
+ // 坐标与距中点距离完全不受影响。
+ //
+ // 跳跃（AC-30，HANDOFF-ROUND-15 / VERDICT-101~106）：
+-//   空格键 = Jump（按住每帧提交）；鼠标左键 = Strike
++//   空格键 = Jump（按住每帧提交）；数字键 = 世界 Strike
+ //   （撤销原空格 Strike 绑定）。
+ //
+ // T6 节奏敲击与解谜链（HANDOFF-ROUND-17 / VERDICT-113~117）：
+@@ -99,6 +99,7 @@ import {
+   UITransform,
+   Overflow,
+   MeshRenderer,
++  Mesh,
+   Material,
+   Color,
+   utils,
+@@ -109,10 +110,11 @@ import {
+   VideoPlayer,
+   VideoClip,
+   JsonAsset,
+-  input,
++  input, Input,
+   resources,
+-  screen,
++  screen, isValid,
+ } from 'cc';
++import { AudioOutputClock } from './src/presentation/AudioOutputClock';
+ import { Bootstrap } from './Bootstrap';
+ import type { RuntimeGraph } from './Bootstrap';
+ import { FrameDriver } from './src/presentation/FrameDriver';
+@@ -120,7 +122,7 @@ import { CameraRig } from './src/presentation/CameraRig';
+ import { InputCollector } from './src/presentation/InputCollector';
+ import { DebugPanel } from './src/presentation/DebugPanel';
+ import { ProtagonistView } from './src/presentation/ProtagonistView';
+-import { TrailRenderer } from './src/presentation/TrailRenderer';
++import { TrailRender } from './src/presentation/TrailRender';
+ import { PerceptionFilter } from './src/presentation/PerceptionFilter';
+ import { ElementEntityView } from './src/presentation/ElementEntityView';
+ import { DeepTraceRevealSequence } from './src/presentation/DeepTraceRevealSequence';
+@@ -136,8 +138,6 @@ import { TraceProximityVolume } from './src/trace/TraceProximityVolume';
+ import { createDefaultKeyboardPadLayout, CHART_KEY_IDS } from './src/chart/KeyboardPadLayout';
+ import { ChartPremiere } from './src/chart/ChartPremiere';
+ import type { RhythmStrike } from './src/trace/RhythmStrike';
+-import type { LedgerAppend } from './src/ledger/LedgerAppend';
+-import type { NarrativeEvent } from './src/ledger/NarrativeEvent';
+ import type { ChartData, Note } from './src/chart/Note';
+ import type {
+   KeyboardPadLayout,
+@@ -147,7 +147,7 @@ import type {
+ import type { ChartJudgeTier } from './src/chart/ChartScore';
+ import type { ChartTier } from './constants/index';
+ 
+-const { ccclass } = _decorator;
++const { ccclass, property } = _decorator;
+ 
+ /** 旋转路段起点（WorldMeter，横轴） */
+ const ROUTE_BAND_START = 3;
+@@ -167,12 +167,10 @@ const FOV_PER_VIEW_DISTANCE = 4.5;
+ const LAYER_DEFAULT_3D = 1 << 30;
+ 
+ /**
+- * Cocos Camera clearFlags 数值常量（运行时不导出枚举名，故用数字）。
+- *   0 = SKYBOX  · 1 = SOLID_COLOR（清色 + 清深度）
+- *   2 = DEPTH_ONLY（只清深度）· 3 = DONT_CLEAR
++ * 使用引擎位掩码，包含深度与模板清理，避免 RT 保留旧深度。
+  */
+-const CLEAR_FLAGS_SOLID_COLOR = 1;
+-const CLEAR_FLAGS_DEPTH_ONLY = 2;
++const CLEAR_FLAGS_SOLID_COLOR = Camera.ClearFlag.SOLID_COLOR;
++const CLEAR_FLAGS_DEPTH_ONLY = Camera.ClearFlag.DEPTH_ONLY;
+ 
+ // ------------------------------------------------------------
+ // T6 占位参数（SceneBuilder 表现层配置；待冻结登记）
+@@ -244,6 +242,10 @@ function addBox(
+  */
+ @ccclass('SceneBuilder')
+ export class SceneBuilder extends Component {
++  /** AC-18：演奏开始前在 Creator 属性面板调整，保持演奏中不变。 */
++  @property({ min: 0, max: 100, step: 1, slide: true, tooltip: '引导透明度（百分比），演奏开始前配置' })
++  GuideTransparency = 0;
++  private readonly createdVisualAssets: Array<Mesh | Material> = [];
+   /** 组合根组装出的运行时对象图（start 后置非空） */
+   private graph: RuntimeGraph | null = null;
+ 
+@@ -261,17 +263,16 @@ export class SceneBuilder extends Component {
+   private puzzleChain: PuzzleChain | null = null;
+   /** 深痕逻辑实例（BGM 音量距离计算用） */
+   private deepTrace: DeepTrace | null = null;
+-  /** 深痕视觉节点（屏幕投影探针用） */
+-  private deepTraceNode: Node | null = null;
++
+   /** 痕接近音量（BGM 音量驱动） */
+   private proximityVolume: TraceProximityVolume | null = null;
+-  /** 占位 BGM 播放组件 */
+-  private audioSource: AudioSource | null = null;
+-  /** BGM 播放起点（拍点时钟原点，挂钟近似，偏差待裁定） */
+-  private bgmStartEpochMs = 0;
++  /** BGM 与视频输出时间线；暂停 / 重播重建媒体映射 */
++  private readonly audioOutputClock = new AudioOutputClock();
++  private chartMediaStarted = false;
++  private lastChartState = 'Ready';
+   /** BGM 是否已就绪（资源加载完成；起播与否见 bgmReady） */
+   private bgmClipLoaded = false;
+-  /** BGM 是否已起播（拍点时钟 bgmStartEpochMs 已启动） */
++  /** BGM 是否已起播（输出音频时钟可读） */
+   private bgmReady = false;
+   /** 是否已完成首次点击解锁（浏览器 autoplay 手势要求） */
+   private autoplayUnlocked = false;
+@@ -289,8 +290,7 @@ export class SceneBuilder extends Component {
+   private screenProjectionOf:
+     | (() => { x: number; y: number } | null)
+     | null = null;
+-  /** 占位账本容器（链终点 / 完成事件的计数可观察） */
+-  private readonly settledEvents: NarrativeEvent[] = [];
++
+   /** 3D 世界根节点（谱面入口切换时整体隐藏） */
+   private worldRootNode: Node | null = null;
+   /** 调试面板节点（谱面入口切换时隐藏） */
+@@ -332,14 +332,19 @@ export class SceneBuilder extends Component {
+    * 接线。幂等：start 在组件生命周期内只执行一次。
+    */
+   start(): void {
++    // The component may be attached to Canvas or to a plain child node.
++    const rootTransform = this.node.getComponent(UITransform) ?? this.node.addComponent(UITransform);
++    const parentTransform = this.node.parent?.getComponent(UITransform);
++    rootTransform.setContentSize(parentTransform?.width ?? screen.windowSize.width,
++      parentTransform?.height ?? screen.windowSize.height);
+     // —— 输入监听注册（与 onDestroy 的 off 成对；T6） ——
+     // ① autoplay 解锁：浏览器要求 AudioContext 在用户手势内
+     //    启动 / 恢复；首次鼠标按下或键盘按下时起播 BGM 并启动
+     //    拍点时钟（幂等闸保证仅首次生效）。
+     // ② 节奏敲击记录：数字键时间戳对经探针供 director 判定
+     //    （用户指令变更：敲击输入由鼠标左键改为任意数字键）。
+-    input.on('mouse-down', this.onAutoplayUnlock, this);
+-    input.on('keydown', this.onAutoplayUnlock, this);
++    input.on(Input.EventType.MOUSE_DOWN, this.onAutoplayUnlock, this);
++    input.on(Input.EventType.KEY_DOWN, this.onAutoplayUnlock, this);
+     // T7：节奏敲击不再由本组件直接监听键盘——统一由
+     // InputCollector 做白名单边沿采集与上下文路由；世界敲击经
+     // bindWorldStrikeRecorder 回调在 BGM 时钟上记录时间线。
+@@ -349,8 +354,8 @@ export class SceneBuilder extends Component {
+     //       整屏覆盖，把我们先渲染的 3D 内容盖掉，画面只剩纯色。
+     //       改成 DEPTH_ONLY（只清深度，不清颜色），3D 像素即可透过来。
+     //       如果用户没在 Canvas 上挂 UI 相机，跳过此步（仅靠 3D 相机渲染）。
+-    const uiCamera = this.node.getComponent(Camera);
+-    if (uiCamera !== null) {
++    const uiCamera = this.node.getComponent(Camera) ?? this.node.parent?.getComponent(Camera);
++    if (uiCamera) {
+       uiCamera.clearFlags = CLEAR_FLAGS_DEPTH_ONLY;
+       // 同时把 UI 相机优先级抬到 1（数值大后渲染），保证它在我们
+       // 3D 相机（priority=-1）之后渲染，UI 标签永远盖在 3D 之上。
+@@ -500,10 +505,10 @@ export class SceneBuilder extends Component {
+     // 叠加，导致拖尾错位（"由世界中心距角色的比例移动" bug）。
+     // 拖尾颜色固定白色 #FFFFFF（占位逻辑拖尾色，AC-08）；
+     // 静止时拖尾收拢（AC-07）。
+-    const trailNode = new Node('TrailRenderer');
++    const trailNode = new Node('TrailRender');
+     worldRoot.addChild(trailNode);
+     trailNode.layer = LAYER_DEFAULT_3D;
+-    const trailRenderer = trailNode.addComponent(TrailRenderer);
++    const trailRenderer = trailNode.addComponent(TrailRender);
+     trailRenderer.bindSource(this.graph.protagonist);
+ 
+     // —— 5.6 元素实体（T5：AC-09 / AC-10 / AC-11） ——
+@@ -607,28 +612,19 @@ export class SceneBuilder extends Component {
+       0, desaturationTargets,
+     );
+     this.deepTrace = deepTrace;
+-    this.deepTraceNode = deepTraceNode;
++
+ 
+     // 两步解谜链（VERDICT-117）：进度只更新 PuzzleProgress，
+     // 不写账本；链终点结算由 director 执行（恰好一条
+     // NarrativeEvent + 防重复结算），同时标记深痕触发。
+     const puzzleProgress = new PuzzleProgress();
+-    const puzzleChain = new PuzzleChain(puzzleProgress);
++    const puzzleChain = new PuzzleChain(puzzleProgress, BEAT_INTERVAL_MS);
+     this.puzzleProgress = puzzleProgress;
+     this.puzzleChain = puzzleChain;
+     this.graph.session.bindPuzzleChain(puzzleChain);
+     this.graph.session.bindDeepTrace(deepTrace);
+ 
+-    // 占位账本容器（偏差：LedgerAppend 的数组承载实现待后续
+-    // HANDOFF 授权；此处组合根内联 sink 占位，仅供 AC-13
+-    // 可观察验证——进度标签实时显示账本事件计数）。
+-    const settledEvents = this.settledEvents;
+-    const ledgerSink: LedgerAppend = {
+-      append(event: NarrativeEvent): void {
+-        settledEvents.push(event);
+-      },
+-    };
+-    this.graph.session.bindLedgerAppend(ledgerSink);
++    // 账本容器与追加能力仅由 director 承载。
+ 
+     // —— T6 探针（I 边注入：测量归表现层，决策归 director） ——
+     // ① 屏幕投影探针：深痕世界坐标 → 3D 相机 worldToScreen →
+@@ -656,7 +652,7 @@ export class SceneBuilder extends Component {
+     );
+     // beat 时钟探针：供 director 逐帧检查持续期超时（7 秒）。
+     this.graph.session.bindBeatClockProbe(
+-      () => this.bgmReady ? performance.now() - this.bgmStartEpochMs : -1,
++      () => this.bgmReady ? this.audioOutputClock.readBgmTimeMs() : -1,
+     );
+ 
+     // —— 5.8 深痕揭示序列（T6 / VERDICT-114 / 116） ——
+@@ -686,18 +682,11 @@ export class SceneBuilder extends Component {
+     // 不改节拍 / 播放速度 / 判定窗口）。挂在 World3D 之外的
+     // sceneRoot，谱面占位切换隐藏 World3D 后 BGM 不中断。
+     this.proximityVolume = new TraceProximityVolume();
+-    const bgmNode = new Node('BGM');
+-    sceneRoot.addChild(bgmNode);
+-    bgmNode.layer = LAYER_DEFAULT_3D;
+-    const bgmSource = bgmNode.addComponent(AudioSource);
+-    this.audioSource = bgmSource;
+-    bgmSource.loop = true;
+-    bgmSource.playOnAwake = false;
+-    bgmSource.volume = 0;
+     resources.load(
+       'audio/bgm_placeholder_60bpm',
+       AudioClip,
+-      (err: Error | null, clip: AudioClip | null) => {
++      async (err: Error | null, clip: AudioClip | null) => {
++        if (!isValid(this, true)) { return; }
+         // 注意：Cocos 3.x 加载成功时回调的 err 实际传 undefined
+         // 而非 null，严格 !== null 判定会把成功误判为失败
+         // （err = undefined 且 clip 有效即此情形）；改用宽松判空。
+@@ -717,8 +706,15 @@ export class SceneBuilder extends Component {
+         // 不在此处 play：浏览器 autoplay 政策要求 AudioContext
+         // 必须在用户手势内启动（否则挂起无声，拍点时钟与播放
+         // 脱钩）；起播挪至 onAutoplayUnlock（首次鼠标按下）。
+-        bgmSource.clip = clip;
+-        this.bgmClipLoaded = true;
++        try {
++          await this.audioOutputClock.loadBgm(clip.nativeUrl);
++          if (!isValid(this, true)) { return; }
++          this.bgmClipLoaded = true;
++          if (this.autoplayUnlocked) { this.bgmReady = this.audioOutputClock.startBgm(); }
++        } catch (error) {
++          this.bgmLoadFailed = true;
++          console.error('[SceneBuilder] BGM 解码失败', error);
++        }
+       },
+     );
+ 
+@@ -800,6 +796,7 @@ export class SceneBuilder extends Component {
+     videoPlayer.playOnAwake = false;
+     videoPlayer.fullScreenOnAwake = false;
+     videoPlayer.keepAspectRatio = true;
++    videoPlayer.stayOnBottom = true;
+     videoPlayer.volume = 1;
+     this.videoPlayer = videoPlayer;
+ 
+@@ -836,11 +833,13 @@ export class SceneBuilder extends Component {
+       'video/chart_video_placeholder',
+       VideoClip,
+       (err: Error | null, clip: VideoClip | null) => {
++        if (!isValid(this, true)) { return; }
+         if (err != null || clip == null) {
+           console.warn('[SceneBuilder] 谱面视频缺失（黑底运行）：', err);
+           return;
+         }
+         videoPlayer.clip = clip;
++        if (this.chartEntered) { this.startChartVideo(); }
+       },
+     );
+ 
+@@ -854,6 +853,7 @@ export class SceneBuilder extends Component {
+       'chart/chart_placeholder',
+       JsonAsset,
+       (err: Error | null, asset: JsonAsset | null) => {
++        if (!isValid(this, true)) { return; }
+         if (err == null && asset != null && asset.json != null) {
+           const parsed = parseChartData(
+             asset.json,
+@@ -882,8 +882,11 @@ export class SceneBuilder extends Component {
+     inputCollector.bindChartStateProvider(
+       () => session.getChartPlaybackState(),
+     );
++    inputCollector.bindChartContextProvider(() => session.isChartEntryScheduled());
++    inputCollector.bindWorldMotionProvider(() => session.isWorldMotionGated());
+     inputCollector.bindChartTimeProbe(() => this.readVideoTimeMs());
+     inputCollector.bindWorldStrikeRecorder(() => this.recordWorldStrike());
++    inputCollector.bindWorldStrikeResetter(() => { this.strikeTimeline.length = 0; });
+     this.cameraRig.bindProtagonist(this.graph.protagonist);
+     frameDriver.bindWiring(inputCollector, this.graph.session);
+ 
+@@ -896,6 +899,7 @@ export class SceneBuilder extends Component {
+       );
+     }
+ 
++    frameDriver.addRefreshable(this);
+     frameDriver.addRefreshable(this.cameraRig);
+     frameDriver.addRefreshable(protagonistView);
+     frameDriver.addRefreshable(trailRenderer);
+@@ -910,6 +914,10 @@ export class SceneBuilder extends Component {
+     for (const entityView of elementViews) {
+       frameDriver.addRefreshable(entityView);
+     }
++    for (const renderer of worldRoot.getComponentsInChildren(MeshRenderer)) {
++      if (renderer.mesh) { this.createdVisualAssets.push(renderer.mesh); }
++      if (renderer.sharedMaterial) { this.createdVisualAssets.push(renderer.sharedMaterial); }
++    }
+   }
+ 
+   /**
+@@ -922,6 +930,21 @@ export class SceneBuilder extends Component {
+     if (this.graph === null || this.cameraRig === null) {
+       return;
+     }
++    const transform = this.node.getComponent(UITransform)!;
++    const parentTransform = this.node.parent?.getComponent(UITransform);
++    if (parentTransform) { transform.setContentSize(parentTransform.width, parentTransform.height); }
++    for (const node of [this.chartLayerNode, this.chartPadView?.node, this.pausePanel?.node, this.videoPlayer?.node]) {
++      node?.getComponent(UITransform)?.setContentSize(transform.width, transform.height);
++    }
++    if (this.debugLabelNode) {
++      this.debugLabelNode.setPosition(0, transform.height / 2 - 28, 0);
++      this.debugLabelNode.getComponent(UITransform)?.setContentSize(transform.width - 48, 48);
++    }
++    if (this.puzzleLabel) {
++      this.puzzleLabel.node.setPosition(0, -transform.height / 2 + 120, 0);
++      this.puzzleLabel.node.getComponent(UITransform)?.setContentSize(Math.min(900, transform.width - 48), 220);
++      this.puzzleLabel.fontSize = Math.min(22, Math.max(14, transform.width / 44));
++    }
+     // T7：谱面数据解析后创建首演并绑定 director / 视图。
+     this.ensureChartPremiere();
+ 
+@@ -940,47 +963,13 @@ export class SceneBuilder extends Component {
+       this.cameraRig.rotateAlongRoute(0);
+     }
+ 
+-    // —— T7：谱面入口轮询（VERDICT-115） ——
+-    // director 在 EnterChart 接受帧已同帧接入世界门控；表现层
+-    // 隐藏 3D 世界，显示谱面层并从 0 起播视频。
+-    if (!this.chartEntered && this.graph.session.isChartEntryScheduled()) {
+-      this.chartEntered = true;
+-      if (this.worldRootNode !== null) {
+-        this.worldRootNode.active = false;
+-      }
+-      if (this.debugLabelNode !== null) {
+-        this.debugLabelNode.active = false;
+-      }
+-      if (this.chartLayerNode !== null) {
+-        this.chartLayerNode.active = true;
+-      }
+-      this.startChartVideo();
+-    }
+-
+-    // —— T7：按首演状态控制媒体 + 退出回收（FrameDriver 不停） ——
+-    if (this.chartEntered) {
+-      const chartState = this.graph.session.getChartPlaybackState();
+-      if (chartState === 'Paused') {
+-        // 冻结媒体位置（与判定窗口 / 进度一同停住）。
+-        this.videoPlayer?.pause();
+-      } else if (chartState === 'Playing') {
+-        // 恢复后重建视频时钟读数（探针每帧读 currentTime），
+-        // 若视频仍暂停则续播。
+-        if (this.videoPlayer !== null && !this.videoPlayer.isPlaying) {
+-          this.videoPlayer.resume();
+-        }
+-      } else if (chartState === 'Exited') {
+-        this.teardownChart();
+-      }
+-    }
+-
+     // —— T6：解谜链进度标签（AC-13 可观察进度阶段） ——
+     if (this.puzzleLabel !== null && this.puzzleProgress !== null) {
+       const stage = this.puzzleProgress.getStage();
+       const stageText = stage === 'Step1'
+         ? '第一步：走近深痕，使其投影进入屏幕中央敲击区'
+         : stage === 'AwaitingStrike'
+-          ? '第二步：跟拍按数字键（±50ms，连续 7 拍通过）'
++          ? '第二步：跟拍按数字键（±50ms，连续 7 秒无漏拍通过）'
+           : '解谜完成';
+       const bgmText = !this.bgmClipLoaded
+         ? this.bgmLoadFailed
+@@ -1026,7 +1015,7 @@ export class SceneBuilder extends Component {
+           + sustainedText;
+       }
+       this.puzzleLabel.string =
+-        `解谜链：${stageText}｜账本事件：${this.settledEvents.length}｜${bgmText}`
++        `解谜链：${stageText}｜账本事件：${this.graph.session.getLedgerEvents().length}｜${bgmText}`
+         + diagnostics;
+     }
+ 
+@@ -1035,7 +1024,6 @@ export class SceneBuilder extends Component {
+     //    链条件同式：平面平方和开根） ——
+     if (
+       this.bgmReady &&
+-      this.audioSource !== null &&
+       this.proximityVolume !== null &&
+       this.deepTrace !== null
+     ) {
+@@ -1044,17 +1032,71 @@ export class SceneBuilder extends Component {
+       const dx = tracePos.lateral - protagonistPos.lateral;
+       const dz = tracePos.depth - protagonistPos.depth;
+       const distanceWm = Math.sqrt(dx * dx + dz * dz);
+-      this.audioSource.volume =
+-        this.proximityVolume.calculateVolume(distanceWm);
++      this.audioOutputClock.setBgmVolume(this.chartEntered ? 0 :
++        this.proximityVolume.calculateVolume(distanceWm));
+     }
+   }
+ 
++  /** FrameDriver 逻辑提交后同帧同步媒体与显示，避免暂停晚一帧。 */
++  onFrameRefresh(): void {
++    if (!this.graph) { return; }
++    if (this.puzzleLabel) { this.puzzleLabel.node.active = !this.graph.session.isWorldMotionGated(); }
++    // —— T7：谱面入口轮询（VERDICT-115） ——
++    // director 在 EnterChart 接受帧已同帧接入世界门控；表现层
++    // 隐藏 3D 世界，显示谱面层并从 0 起播视频。
++    if (!this.chartEntered && this.graph.session.isChartEntryScheduled()) {
++      this.chartEntered = true;
++      if (this.puzzleLabel) { this.puzzleLabel.node.active = false; }
++      if (this.worldRootNode !== null) {
++        this.worldRootNode.active = false;
++      }
++      if (this.debugLabelNode !== null) {
++        this.debugLabelNode.active = false;
++      }
++      if (this.chartLayerNode !== null) {
++        this.chartLayerNode.active = true;
++      }
++      this.startChartVideo();
++    }
++
++    // —— T7：按首演状态控制媒体 + 退出回收（FrameDriver 不停） ——
++    if (this.chartEntered) {
++      const chartState = this.graph.session.getChartPlaybackState();
++      if (chartState === 'Completed') {
++        this.graph.session.submitFrameIntents([{ kind: 'ExitChart' }], 0);
++        this.teardownChart();
++        this.lastChartState = chartState;
++        return;
++      }
++      if (chartState === 'Paused' && this.lastChartState !== 'Paused') {
++        // 冻结媒体位置（与判定窗口 / 进度一同停住）。
++        this.videoPlayer?.pause();
++      } else if (chartState === 'Playing' && this.lastChartState === 'Paused') {
++        // 恢复后重建视频时钟读数（探针每帧读 currentTime），
++        // 若视频仍暂停则续播。
++        if (this.videoPlayer !== null && !this.videoPlayer.isPlaying) {
++          this.videoPlayer.resume();
++        }
++      } else if (chartState === 'Exited') {
++        this.teardownChart();
++      }
++      this.lastChartState = chartState;
++    }
++
++  }
++
+   /**
+    * Cocos 销毁生命周期：注销本组件注册的输入监听。
+    */
+   onDestroy(): void {
+-    input.off('mouse-down', this.onAutoplayUnlock, this);
+-    input.off('keydown', this.onAutoplayUnlock, this);
++    input.off(Input.EventType.MOUSE_DOWN, this.onAutoplayUnlock, this);
++    input.off(Input.EventType.KEY_DOWN, this.onAutoplayUnlock, this);
++    this.audioOutputClock.destroy();
++    // 这些灰盒网格 / 材质为运行时创建，不属于资源库资产。
++    for (const asset of this.createdVisualAssets) {
++      if (isValid(asset, true)) { asset.destroy(); }
++    }
++    this.createdVisualAssets.length = 0;
+   }
+ 
+   /**
+@@ -1064,7 +1106,7 @@ export class SceneBuilder extends Component {
+    * 恢复时处于挂起状态（无声、播放不推进）。因此起播不在
+    * 资源加载回调里执行，而挪到首次鼠标按下——手势内的
+    * play() 调用满足政策，AudioContext 得以正常出声，拍点
+-   * 时钟（bgmStartEpochMs）与真实播放同刻启动。
++   * 时钟以 AudioContext 输出时间为原点。
+    *
+    * 注意：不得使用 audioEngine.resume()——该符号在 3.8 预览
+    * 构建运行时为 undefined（类型声明存在、实现被裁剪），
+@@ -1076,11 +1118,13 @@ export class SceneBuilder extends Component {
+       return;
+     }
+     this.autoplayUnlocked = true;
+-    if (this.audioSource !== null && this.bgmClipLoaded && !this.bgmReady) {
+-      this.audioSource.play();
+-      this.bgmStartEpochMs = performance.now();
+-      this.bgmReady = true;
+-    }
++    void this.audioOutputClock.unlock().then(() => {
++      if (!isValid(this, true)) { return; }
++      if (this.bgmClipLoaded && !this.bgmReady) { this.bgmReady = this.audioOutputClock.startBgm(); }
++    }).catch(error => {
++      this.autoplayUnlocked = false;
++      console.error('[SceneBuilder] 音频解锁失败', error);
++    });
+   }
+ 
+   // ----------------------------------------------------------
+@@ -1093,6 +1137,7 @@ export class SceneBuilder extends Component {
+       path,
+       AudioClip,
+       (err: Error | null, clip: AudioClip | null) => {
++        if (!isValid(this, true)) { return; }
+         if (err != null || clip == null) {
+           console.warn('[SceneBuilder] 击音缺失（静默）：', path, err);
+           return;
+@@ -1123,7 +1168,7 @@ export class SceneBuilder extends Component {
+     if (this.videoPlayer === null || !this.chartEntered) {
+       return -1;
+     }
+-    return this.videoPlayer.currentTime * 1000;
++    return this.audioOutputClock.readChartTimeMs();
+   }
+ 
+   /**
+@@ -1135,7 +1180,7 @@ export class SceneBuilder extends Component {
+       return;
+     }
+     const offset = this.graph.session.getBeatClockOffsetMs();
+-    const strikeTimeMs = performance.now() - this.bgmStartEpochMs + offset;
++    const strikeTimeMs = this.audioOutputClock.readBgmTimeMs() + offset;
+     const targetBeatTimeMs =
+       Math.round(strikeTimeMs / BEAT_INTERVAL_MS) * BEAT_INTERVAL_MS;
+     this.strikeTimeline.push({ strikeTimeMs, targetBeatTimeMs });
+@@ -1144,9 +1189,12 @@ export class SceneBuilder extends Component {
+ 
+   /** 从 0 起播谱面视频。 */
+   private startChartVideo(): void {
+-    if (this.videoPlayer === null) {
++    if (this.videoPlayer === null || !this.videoPlayer.clip || !this.videoPlayer.nativeVideo || this.chartMediaStarted) {
+       return;
+     }
++    this.audioOutputClock.attachVideo(this.videoPlayer.nativeVideo);
++    this.audioOutputClock.resetChart();
++    this.chartMediaStarted = true;
+     this.videoPlayer.currentTime = 0;
+     this.videoPlayer.play();
+   }
+@@ -1165,6 +1213,7 @@ export class SceneBuilder extends Component {
+       return;
+     }
+     const premiere = new ChartPremiere(this.chartData, this.keyboardLayout);
++    premiere.setGuideTransparency(this.GuideTransparency);
+     this.chartPremiere = premiere;
+     this.graph.session.bindChartPremiere(premiere);
+     this.graph.session.bindChartClockProbe(() => this.readVideoTimeMs());
+@@ -1181,6 +1230,8 @@ export class SceneBuilder extends Component {
+    */
+   private teardownChart(): void {
+     this.videoPlayer?.stop();
++    this.audioOutputClock.resetChart();
++    this.chartMediaStarted = false;
+     if (this.chartLayerNode !== null) {
+       this.chartLayerNode.active = false;
+     }
+@@ -1191,6 +1242,7 @@ export class SceneBuilder extends Component {
+       this.debugLabelNode.active = true;
+     }
+     this.chartEntered = false;
++    if (this.puzzleLabel) { this.puzzleLabel.node.active = true; }
+   }
+ }
+ 
+diff --git "a/D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\backup\\scripts\\check-naming.js" "b/D:\\Project\\A_New_Begin\\Neurou_official\\scripts\\check-naming.js"
+index c8ec804..67ec10b 100644
+--- "a/D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\backup\\scripts\\check-naming.js"
++++ "b/D:\\Project\\A_New_Begin\\Neurou_official\\scripts\\check-naming.js"
+@@ -53,7 +53,7 @@ const path = require('path');
+ // ------------------------------------------------------------
+ 
+ /** 扫描根目录（相对工程根） */
+-const SCAN_DIRS = ['src', 'constants'];
++const SCAN_DIRS = ['src', 'constants', 'assets/scripts'];
+ 
+ /** 仅扫描 TypeScript 文件 */
+ const SCAN_EXTENSIONS = new Set(['.ts']);
+@@ -287,7 +287,7 @@ function collectFiles(rootDir) {
+       return; // 目录不存在则跳过
+     }
+     for (const entry of entries) {
+-      if (entry.name === 'node_modules' || entry.name.startsWith('.')) {
++      if (entry.isSymbolicLink() || entry.name === 'node_modules' || entry.name.startsWith('.')) {
+         continue;
+       }
+       const full = path.join(dir, entry.name);
+diff --git "a/D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\backup\\src\\character\\MoveSpeed.ts" "b/D:\\Project\\A_New_Begin\\Neurou_official\\src\\character\\MoveSpeed.ts"
+index b15dbd1..e456ec9 100644
+--- "a/D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\backup\\src\\character\\MoveSpeed.ts"
++++ "b/D:\\Project\\A_New_Begin\\Neurou_official\\src\\character\\MoveSpeed.ts"
+@@ -133,6 +133,10 @@ export function moveAlongAxes(
+   frameDurationSeconds: number,
+   center: MapCenter,
+ ): MovementResult {
++  if (!Number.isFinite(input.lateral) || !Number.isFinite(input.depth) ||
++      !Number.isFinite(speed) || !Number.isFinite(frameDurationSeconds) || frameDurationSeconds < 0) {
++    return { lateral: current.lateral, depth: current.depth };
++  }
+   const safeSpeed = clampSpeed(speed);
+   const lateralInput = clampAxisInput(input.lateral);
+   const depthInput = clampAxisInput(input.depth);
+diff --git "a/D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\backup\\src\\character\\Protagonist.ts" "b/D:\\Project\\A_New_Begin\\Neurou_official\\src\\character\\Protagonist.ts"
+index 3887518..5886ee8 100644
+--- "a/D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\backup\\src\\character\\Protagonist.ts"
++++ "b/D:\\Project\\A_New_Begin\\Neurou_official\\src\\character\\Protagonist.ts"
+@@ -17,7 +17,7 @@
+ //   character 域纯函数 moveAlongAxes 推进坐标。
+ //   提供 getTrailLength 方法：T3 拖尾派生读取，调用
+ //   character 域纯函数 calculateTrailLength 推导逻辑拖尾
+-//   长度（AC-07；表现侧 TrailRenderer 间接消费）。
++//   长度（AC-07；表现侧 TrailRender 间接消费）。
+ //   提供 jump / tickVertical / isGrounded / getVertical 方法：
+ //   跳跃状态推进（VERDICT-104 / VERDICT-105，AC-30）。
+ //
+@@ -103,7 +103,7 @@ export interface ProtagonistSeed {
+  * 主角状态，分属不同语义）。
+  *
+  * 含 vertical（VerticalAxis，名库 v2.0 / VERDICT-104）：
+- * 表现层（ProtagonistView / TrailRenderer）经此只读访问
++ * 表现层（ProtagonistView / TrailRender）经此只读访问
+  * 主角垂直坐标以更新节点 Y 轴 / 隐藏拖尾。
+  * vertical 不参与 calculateCenterDistance（原地跳跃不改变
+  * 距中点距离）。
+@@ -170,7 +170,7 @@ export class Protagonist {
+ 
+   /**
+    * 读取主角当前位置（只读视图；含 vertical）。
+-   * 表现层（ProtagonistView / CameraRig / DebugPanel / TrailRenderer）
++   * 表现层（ProtagonistView / CameraRig / DebugPanel / TrailRender）
+    * 经此只读访问主角坐标，不获得写入能力（INV-3 表现层只读）。
+    *
+    * vertical 不参与 calculateCenterDistance（原地跳跃不改变
+@@ -198,16 +198,16 @@ export class Protagonist {
+    * 同模式）：
+    *   矩阵规定 presentation → character 为 R 边（只允许
+    *   import type），而 calculateTrailLength 是 character 域
+-   *   free function（值导入）；若由 TrailRenderer 直接消费
++   *   free function（值导入）；若由 TrailRender 直接消费
+    *   character.calculateTrailLength，会触发 E2 违规。故将
+    *   calculateTrailLength 的值导入挂在 Protagonist 上
+    *   （character → character 自身为 A 边，允许值导入），
+-   *   TrailRenderer 经 protagonist 实例的方法分派间接消费
++   *   TrailRender 经 protagonist 实例的方法分派间接消费
+    *   ——既不另建拖尾长度公式（HANDOFF 禁止事项），也不
+    *   违反 R 边。
+    *
+    * 返回值不含上限裁剪——上限属表现侧视觉参数，由
+-   * TrailRenderer 在显示前应用（HANDOFF-14 明令）。
++   * TrailRender 在显示前应用（HANDOFF-14 明令）。
+    *
+    * @returns 逻辑拖尾长度（WorldMeter，≥ 0；速度为 0 时为 0）
+    */
+@@ -273,7 +273,7 @@ export class Protagonist {
+ 
+   /**
+    * 读取主角垂直坐标（只读视图；名库 v2.0 / VERDICT-104）。
+-   * 表现层 ProtagonistView 经此设节点 Y 轴；TrailRenderer 经此
++   * 表现层 ProtagonistView 经此设节点 Y 轴；TrailRender 经此
+    * 判断是否隐藏拖尾。
+    *
+    * 方法名 getVertical 为直译，待 PROTOCOL 追认。
+@@ -313,10 +313,11 @@ export class Protagonist {
+    * 方法名 jump 为直译，待 PROTOCOL 追认。
+    */
+   jump(): void {
+-    if (this.vertical > 0) {
++    if (!this.isGrounded()) {
+       // 空中起跳请求被忽略（AC-30：空中不能再次起跳）。
+       return;
+     }
++    this.vertical = 0;
+     this.verticalSpeed = JUMP_INITIAL_SPEED_WM_PER_SECONDS;
+   }
+ 
+@@ -343,6 +344,7 @@ export class Protagonist {
+     // 物理不推进（容差归地，避免角色悬停在容差高度 /
+     // verticalSpeed 累积负值影响下一次起跳）。
+     // 上升阶段（verticalSpeed > 0）不进入此分支。
++    if (!Number.isFinite(frameDurationSeconds) || frameDurationSeconds < 0) { return; }
+     if (this.vertical <= GROUND_TOLERANCE_WM && this.verticalSpeed <= 0) {
+       this.vertical = 0;
+       this.verticalSpeed = 0;
+diff --git "a/D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\backup\\src\\character\\TrailLength.ts" "b/D:\\Project\\A_New_Begin\\Neurou_official\\src\\character\\TrailLength.ts"
+index 4baf34b..08eaeb8 100644
+--- "a/D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\backup\\src\\character\\TrailLength.ts"
++++ "b/D:\\Project\\A_New_Begin\\Neurou_official\\src\\character\\TrailLength.ts"
+@@ -22,9 +22,9 @@
+ //   - 静止（速度为 0）时返回 0（拖尾收拢）。
+ //
+ // 上限口径（HANDOFF-14）：
+-//   - "拖尾长度上限等视觉参数放在 TrailRenderer 内部或
++//   - "拖尾长度上限等视觉参数放在 TrailRender 内部或
+ //     presentation 配置中，绝对不准放进 constants"。
+-//   - 本文件不定义上限常量；上限由表现侧 TrailRenderer
++//   - 本文件不定义上限常量；上限由表现侧 TrailRender
+ //     在显示前对 calculateTrailLength 的返回值再做视觉裁剪。
+ //   - 速度本身已有 MAX_MOVE_SPEED_WM_PER_SECONDS 上限
+ //     （constants 内登记），故本函数输出有自然边界，
+@@ -48,7 +48,7 @@ import type { MoveSpeed } from './MoveSpeed';
+  * 唯一距离单位）；取值 ≥ 0。
+  *
+  * 语义：由 MoveSpeed 单调不减推导的"理论拖尾长度"，不含
+- * 上限裁剪（上限属表现侧视觉参数，由 TrailRenderer 在显示
++ * 上限裁剪（上限属表现侧视觉参数，由 TrailRender 在显示
+  * 前应用）。本类型不携带任何颜色或感绪信息——逻辑拖尾色
+  * 与渲染分离（INV-6）。
+  */
+@@ -58,7 +58,7 @@ export type TrailLength = number;
+  * 速度 → 拖尾长度的占位线性系数（character 域内部常量）。
+  *
+  * 不进 constants（HANDOFF-14 明令："拖尾长度上限等视觉参数
+- * 放在 TrailRenderer 内部或 presentation 配置中，绝对不准
++ * 放在 TrailRender 内部或 presentation 配置中，绝对不准
+  * 放进 constants"；本系数亦属拖尾专属数值，按口径不入
+  * constants）。占位取 0.8，待数值平衡阶段在 character
+  * 域内部调整。
+diff --git "a/D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\backup\\src\\chart\\ChartPremiere.ts" "b/D:\\Project\\A_New_Begin\\Neurou_official\\src\\chart\\ChartPremiere.ts"
+index 47c286f..36a101f 100644
+--- "a/D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\backup\\src\\chart\\ChartPremiere.ts"
++++ "b/D:\\Project\\A_New_Begin\\Neurou_official\\src\\chart\\ChartPremiere.ts"
+@@ -112,7 +112,7 @@ export class ChartPremiere implements ChartPremiereReader {
+   private readonly noteStatuses: NoteStatus[] = [];
+ 
+   private state: ChartPlaybackState = 'Ready';
+-  private readonly score = new ChartScore();
++  private score = new ChartScore();
+   private guideTransparencyValue = 0;
+ 
+   /** 最近一次推进的谱面媒体时间（暂停时不更新，保持冻结）。 */
+@@ -149,7 +149,7 @@ export class ChartPremiere implements ChartPremiereReader {
+       if (getSlot(layout, note.keyId) === undefined) {
+         throw new Error(`ChartPremiere: Note 引用了布局中不存在的键 ${note.keyId}`);
+       }
+-      this.noteStatuses.push({ note, resolved: false, tier: null });
++      this.noteStatuses.push({ note: Object.freeze({ ...note }), resolved: false, tier: null });
+     }
+   }
+ 
+@@ -244,7 +244,7 @@ export class ChartPremiere implements ChartPremiereReader {
+    * 仅 Playing 生效；其余状态一律丢弃（暂停 / 完成 / 退出 / 待播）。
+    */
+   submitStrike(strike: Strike): void {
+-    if (this.state !== 'Playing') {
++    if (this.state !== 'Playing' || !Number.isFinite(strike.videoTimeMs) || strike.videoTimeMs < 0) {
+       return;
+     }
+     const keyId = strike.keyId;
+@@ -264,6 +264,7 @@ export class ChartPremiere implements ChartPremiereReader {
+       status.tier = tier;
+       this.score.applyJudgement(tier, this.guideTransparencyValue);
+       this.pushFeedback(strike.videoTimeMs, keyId, tier, true);
++      this.currentTimeMsValue = Math.max(this.currentTimeMsValue, strike.videoTimeMs);
+       this.checkCompleted(strike.videoTimeMs);
+       return;
+     }
+@@ -281,7 +282,10 @@ export class ChartPremiere implements ChartPremiereReader {
+    * 其他状态忽略。
+    */
+   togglePause(videoTimeMs: number): void {
++    if (!Number.isFinite(videoTimeMs) || videoTimeMs < 0) { return; }
+     if (this.state === 'Playing') {
++      this.advance(videoTimeMs);
++      if (this.state !== 'Playing') { return; }
+       this.state = 'Paused';
+     } else if (this.state === 'Paused') {
+       // 恢复：保留 Note / 分数 / 进度；输出时钟映射由 presentation 重建。
+@@ -298,6 +302,7 @@ export class ChartPremiere implements ChartPremiereReader {
+     if (this.state !== 'Playing') {
+       return;
+     }
++    if (!Number.isFinite(videoTimeMs) || videoTimeMs < this.currentTimeMsValue) { return; }
+     this.currentTimeMsValue = videoTimeMs;
+     for (const status of this.noteStatuses) {
+       if (status.resolved) {
+@@ -319,8 +324,11 @@ export class ChartPremiere implements ChartPremiereReader {
+    * 不写谱面账本记录（由 director 保证），资源回收由 presentation 处理。
+    */
+   requestExit(finishedAtMs: number): ChartPlaybackResult {
++    const completed = this.state === 'Completed' || this.result?.completed === true;
+     this.state = 'Exited';
+-    this.result = this.buildResult(finishedAtMs, false);
++    if (!completed || this.result === null) {
++      this.result = this.buildResult(finishedAtMs, completed);
++    }
+     return this.result;
+   }
+ 
+@@ -336,6 +344,7 @@ export class ChartPremiere implements ChartPremiereReader {
+       status.resolved = false;
+       status.tier = null;
+     }
++    this.score = new ChartScore();
+     this.feedback.length = 0;
+     this.feedbackSeq = 0;
+     this.result = null;
+@@ -387,7 +396,7 @@ export class ChartPremiere implements ChartPremiereReader {
+     consumed: boolean,
+   ): void {
+     this.feedbackSeq += 1;
+-    this.feedback.push({ seq: this.feedbackSeq, videoTimeMs, keyId, tier, consumed });
++    this.feedback.push(Object.freeze({ seq: this.feedbackSeq, videoTimeMs, keyId, tier, consumed }));
+   }
+ 
+   /** 全部 Note 已决 → Completed，固化结果（只触发一次）。 */
+@@ -406,7 +415,7 @@ export class ChartPremiere implements ChartPremiereReader {
+     finishedAtMs: number,
+     completed: boolean,
+   ): ChartPlaybackResult {
+-    return {
++    return Object.freeze({
+       chartId: this.chartId,
+       tier: this.tier,
+       perfectCount: this.score.getPerfectCount(),
+@@ -415,6 +424,6 @@ export class ChartPremiere implements ChartPremiereReader {
+       totalScore: this.score.getTotalScore(),
+       finishedAtMs,
+       completed,
+-    };
++    });
+   }
+ }
+diff --git "a/D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\backup\\src\\chart\\FrameLocator.ts" "b/D:\\Project\\A_New_Begin\\Neurou_official\\src\\chart\\FrameLocator.ts"
+index 4e11010..4b91633 100644
+--- "a/D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\backup\\src\\chart\\FrameLocator.ts"
++++ "b/D:\\Project\\A_New_Begin\\Neurou_official\\src\\chart\\FrameLocator.ts"
+@@ -79,6 +79,9 @@ export function resolveDisplayPixel(
+   if (!Number.isInteger(width) || !Number.isInteger(height) || width <= 0 || height <= 0) {
+     throw new Error('FrameLocator: width / height 必须为正整数');
+   }
++  if (!Number.isFinite(u) || !Number.isFinite(v)) {
++    throw new Error('FrameLocator: UV 必须为有限值');
++  }
+   const cu = clamp01(u);
+   const cv = clamp01(v);
+   const x = Math.min(width - 1, Math.floor(cu * width));
+diff --git "a/D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\backup\\src\\chart\\VideoSyncTest.ts" "b/D:\\Project\\A_New_Begin\\Neurou_official\\src\\chart\\VideoSyncTest.ts"
+index ffe490f..945ebab 100644
+--- "a/D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\backup\\src\\chart\\VideoSyncTest.ts"
++++ "b/D:\\Project\\A_New_Begin\\Neurou_official\\src\\chart\\VideoSyncTest.ts"
+@@ -1,52 +1,8 @@
+-﻿// ============================================================
+-// T0 技术验证 · VideoSyncTest 视频/判定时钟同步偏差测量脚本
+-// 名库版本：v1.2（名库未冻结任何视频同步领域名称；
+-//   本文件名 VideoSyncTest 与输出字段
+-//   resolution / deviationMs / sampleCount
+-//   为 HANDOFF-ROUND-10 文本逐字明示，按铁律 3 通道落盘）
+-//
+-// 本文件性质：纯测量/输出脚本，不含任何游戏业务逻辑，
+-//   不 import 任何游戏模块，不参与游戏运行时。
+-//
+-// 测量对象：
+-//   视频画面中“判定圈”的实际呈现时刻（rVFC 回调时刻）
+-//   相对“判定时钟”（谱面等间隔音符的媒体时间）的偏差。
+-//
+-// 测量方法（HANDOFF-ROUND-11 正式追认，作为阶段 1 合格线）：
+-//   容差 100ms / 聚合口径 max|d| / 检出阈值 30fps·500ms；
+-//   1. 测试视频为黑底，判定圈（白色圆环）仅在谱面音符
+-//      对应帧（30fps 下每 15 帧，即每 500ms）呈现 1 帧；
+-//   2. 以 requestVideoFrameCallback 逐帧回调，把视频帧
+-//      绘制到离屏缩放 canvas（320x180），扫描中心区域的
+-//      高亮像素数量，以上升沿检出判定圈呈现帧；
+-//   3. 以首个 rVFC 回调为锚点 (wall0, media0)：
+-//      样本偏差 d = (wallNow - wall0) - (expectedMs - media0)
+-//      正值表示画面呈现落后于判定时钟；
+-//   4. 同时记录编码对齐误差 presentedMediaMs - expectedMs
+-//      （仅作旁证，不进入 HANDOFF 指定输出）；
+-//   5. 聚合口径：deviationMs = max(|d_i|)（最坏值），
+-//      节奏游戏同步判定采用保守最坏值；平均值仅入明细。
+-//
+-// 容差：100ms（VIDEO_SYNC_TOLERANCE_MS_TENTATIVE），
+-//   ROUND-11 正式追认为阶段 1 合格线。
+-//
+-// T0 验收结论（ROUND-11）：双分辨率实测偏差
+-//   16.87ms / 16.53ms，均远低于 100ms 容差，T0 人工
+-//   验收正式通过；不触发 FFmpeg 升级路径，无需移动端复测。
+-//
+-// 测试内部命名（测试专用，不进入游戏名库面）：
+-//   EquallySpacedChart / SyncTestNote / SyncTestTarget /
+-//   SyncSample / ResolutionDetail / detectBrightPixelCount /
+-//   runOneResolution 等，均经 ROUND-11 追认冻结。
+-// ============================================================
++// T0 视频帧呈现测量；AC-19 使用当前 30ms 门限，历史值不代表本轮结果。
++import { SYNC_TOLERANCE_MS } from '../../constants';
+ 
+-// ------------------------------------------------------------
+-// 板块零：测试常量（仅本脚本使用；本轮未授权 constants/，
+-// 故不写入集中常量文件）
+-// ------------------------------------------------------------
+-
+-/** 音画同步容差（毫秒），HANDOFF-ROUND-10 暂定 100ms */
+-export const VIDEO_SYNC_TOLERANCE_MS_TENTATIVE = 100;
++/** 保留既有测试导出名；数值服从阶段 1 当前同步门限。 */
++export const VIDEO_SYNC_TOLERANCE_MS_TENTATIVE = SYNC_TOLERANCE_MS;
+ 
+ /** 缩放检测画布宽（16:9，与测试视频一致） */
+ const DETECT_CANVAS_WIDTH = 320;
+@@ -124,6 +80,7 @@ interface ResolutionDetail {
+ /** rVFC 元数据最小自包含声明（不依赖 TS DOM lib 版本） */
+ interface VideoFrameCallbackMetadataLike {
+   readonly mediaTime: number;
++  readonly expectedDisplayTime: number;
+ }
+ type VideoFrameRequestCallbackLike = (
+   nowMs: number,
+@@ -131,6 +88,7 @@ type VideoFrameRequestCallbackLike = (
+ ) => void;
+ interface RequestVideoFrameCallbackCapable {
+   requestVideoFrameCallback(cb: VideoFrameRequestCallbackLike): number;
++  cancelVideoFrameCallback(handle: number): void;
+ }
+ 
+ // ------------------------------------------------------------
+@@ -175,71 +133,81 @@ async function runOneResolution(
+   chart: EquallySpacedChart,
+ ): Promise<ResolutionDetail> {
+   const video = document.createElement('video');
+-  video.src = target.videoUrl;
+   video.muted = true;
+   video.playsInline = true;
+   video.preload = 'auto';
+   video.controls = false;
+   document.body.appendChild(video);
+-
+-  const canvas = document.createElement('canvas');
+-  canvas.width = DETECT_CANVAS_WIDTH;
+-  canvas.height = DETECT_CANVAS_HEIGHT;
+-  const context = canvas.getContext('2d', { willReadFrequently: true });
+-  if (!context) {
+-    throw new Error('VideoSyncTest：无法取得 2d canvas 上下文');
+-  }
+-
+-  await new Promise<void>((resolve, reject) => {
+-    video.addEventListener('loadeddata', () => resolve(), { once: true });
+-    video.addEventListener('error', () => reject(new Error('视频加载失败：' + target.videoUrl)), { once: true });
+-  });
+-
+   const samples: SyncSample[] = [];
+-  let anchorWallMs: number | null = null;
+-  let anchorMediaMs = 0;
+-  let markerPresent = false;
+-
+   const callbackCapable = video as unknown as RequestVideoFrameCallbackCapable;
+-
+-  await new Promise<void>((resolve, reject) => {
+-    video.addEventListener('ended', () => resolve(), { once: true });
+-    video.addEventListener('error', () => reject(new Error('播放失败：' + target.videoUrl)), { once: true });
+-
+-    const onFrame: VideoFrameRequestCallbackLike = (nowMs, metadata) => {
+-      if (anchorWallMs === null) {
+-        anchorWallMs = nowMs;
+-        anchorMediaMs = metadata.mediaTime * 1000;
+-      }
+-
+-      context.drawImage(video, 0, 0, DETECT_CANVAS_WIDTH, DETECT_CANVAS_HEIGHT);
+-      const brightCount = detectBrightPixelCount(context);
+-      const markerNowPresent = brightCount >= BRIGHT_PIXEL_COUNT_THRESHOLD;
+-
+-      // 判定圈上升沿：上一帧无、本帧有
+-      if (markerNowPresent && !markerPresent) {
+-        const noteIndex = samples.length;
+-        const expectedMs = chart.notes[noteIndex]?.timeMs;
+-        if (expectedMs !== undefined) {
+-          const presentedMediaMs = metadata.mediaTime * 1000;
+-          const wallDriftMs =
+-            nowMs - (anchorWallMs ?? nowMs) - (expectedMs - anchorMediaMs);
+-          samples.push({ expectedMs, presentedMediaMs, wallDriftMs });
+-        }
+-      }
+-      markerPresent = markerNowPresent;
+-
+-      callbackCapable.requestVideoFrameCallback(onFrame);
+-    };
+-
+-    callbackCapable.requestVideoFrameCallback(onFrame);
+-    void video.play().catch((error: unknown) => reject(error as Error));
+-  });
+-
+-  document.body.removeChild(video);
+-
+-  if (samples.length === 0) {
+-    throw new Error('VideoSyncTest：未检出任何判定圈（' + target.resolution + '）');
++  let frameHandle = 0;
++  let timeoutHandle = 0;
++  let onLoaded = (): void => {};
++  let onEnded = (): void => {};
++  let onError = (): void => {};
++  try {
++    const canvas = document.createElement('canvas');
++    canvas.width = DETECT_CANVAS_WIDTH;
++    canvas.height = DETECT_CANVAS_HEIGHT;
++    const context = canvas.getContext('2d', { willReadFrequently: true });
++    if (!context || typeof callbackCapable.requestVideoFrameCallback !== 'function') {
++      throw new Error('VideoSyncTest：平台缺少画布或逐帧回调');
++    }
++    await new Promise<void>((resolve, reject) => {
++      onLoaded = resolve;
++      onError = () => reject(new Error('视频加载失败：' + target.videoUrl));
++      video.addEventListener('loadeddata', onLoaded, { once: true });
++      video.addEventListener('error', onError, { once: true });
++      timeoutHandle = window.setTimeout(() => reject(new Error('视频加载超时')), 15000);
++      video.src = target.videoUrl;
++    });
++    window.clearTimeout(timeoutHandle);
++    video.removeEventListener('error', onError);
++    let anchorWallMs: number | null = null;
++    let anchorMediaMs = 0;
++    let markerPresent = false;
++    await new Promise<void>((resolve, reject) => {
++      onEnded = resolve;
++      onError = () => reject(new Error('播放失败：' + target.videoUrl));
++      video.addEventListener('ended', onEnded, { once: true });
++      video.addEventListener('error', onError, { once: true });
++      timeoutHandle = window.setTimeout(() => reject(new Error('视频测量超时')), 30000);
++      const onFrame: VideoFrameRequestCallbackLike = (_nowMs, metadata) => {
++        try {
++          if (anchorWallMs === null) {
++            anchorWallMs = metadata.expectedDisplayTime;
++            anchorMediaMs = metadata.mediaTime * 1000;
++          }
++          context.drawImage(video, 0, 0, DETECT_CANVAS_WIDTH, DETECT_CANVAS_HEIGHT);
++          const markerNowPresent = detectBrightPixelCount(context) >= BRIGHT_PIXEL_COUNT_THRESHOLD;
++          if (markerNowPresent && !markerPresent) {
++            const expectedMs = chart.notes[samples.length]?.timeMs;
++            if (expectedMs !== undefined) {
++              const presentedMediaMs = metadata.mediaTime * 1000;
++              const wallDriftMs = metadata.expectedDisplayTime - anchorWallMs - (expectedMs - anchorMediaMs);
++              samples.push({ expectedMs, presentedMediaMs, wallDriftMs });
++            }
++          }
++          markerPresent = markerNowPresent;
++          frameHandle = callbackCapable.requestVideoFrameCallback(onFrame);
++        } catch (error) { reject(error); }
++      };
++      frameHandle = callbackCapable.requestVideoFrameCallback(onFrame);
++      void video.play().catch(reject);
++    });
++  } finally {
++    window.clearTimeout(timeoutHandle);
++    if (frameHandle) { callbackCapable.cancelVideoFrameCallback(frameHandle); }
++    video.removeEventListener('loadeddata', onLoaded);
++    video.removeEventListener('ended', onEnded);
++    video.removeEventListener('error', onError);
++    video.pause();
++    video.removeAttribute('src');
++    video.load();
++    video.remove();
++  }
++  if (samples.length !== chart.notes.length || samples.length === 0) {
++    throw new Error('VideoSyncTest：检出判定圈不完整（' + target.resolution + '）');
+   }
+ 
+   const driftValues = samples.map((sample) => Math.abs(sample.wallDriftMs));
+@@ -298,7 +266,7 @@ export async function runVideoSyncTest(
+ }
+ 
+ /**
+- * 判定某分辨率结果是否超出暂定容差（100ms）
++ * 判定某分辨率结果是否超出当前同步容差（30ms）
+  * 超限 → 向 PROTOCOL 报告并升级 ARCHITECT 裁定是否改用 FFmpeg。
+  */
+ export function exceedsTentativeTolerance(result: VideoSyncResult): boolean {
+diff --git "a/D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\backup\\src\\director\\IntentPort.ts" "b/D:\\Project\\A_New_Begin\\Neurou_official\\src\\director\\IntentPort.ts"
+index d577e49..028de75 100644
+--- "a/D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\backup\\src\\director\\IntentPort.ts"
++++ "b/D:\\Project\\A_New_Begin\\Neurou_official\\src\\director\\IntentPort.ts"
+@@ -3,9 +3,9 @@
+ //
+ // 依据：
+ // - 名库 v2.1：IntentPort 是 presentation 通往 director
+-//   的唯一窄路，文件放 src/director/；PlayerIntent 六种意图
++//   的唯一窄路，文件放 src/director/；PlayerIntent 七种意图
+ //   （Move / Strike / SwitchPerceptionMode / EnterChart /
+-//   ExitChart / Jump）；
++//   ExitChart / Jump / ToggleChartPause）；
+ // - stage-1.md §6：presentation → director 为 I 边，
+ //   只接收“玩家想做什么”，不暴露写入能力；
+ // - 名库 v1.9 / HANDOFF 特别提醒：当前感知模式由 director
+@@ -169,6 +169,7 @@ export interface IntentPort {
+    * （VERDICT-121 / INV-13）：只有 Playing 接受演奏输入。
+    */
+   getChartPlaybackState(): ChartPlaybackState;
++  isWorldMotionGated(): boolean;
+ }
+ 
+ /**
+@@ -184,7 +185,7 @@ export interface IntentPort {
+  *       mapCenter)（VERDICT-096 / VERDICT-100 第 4 条）；
+  *     · Strike → 解谜链第二步结算（T6 / VERDICT-117）；
+  *     · EnterChart → 谱面入口调度（T6 / VERDICT-115，仅链
+- *       终点结算完成后接受）；ExitChart 仍空挂起（T7）。
++ *       终点结算完成后接受）；ExitChart 执行 T7 回收。
+  *
+  * 依赖矩阵：director → character A、director → world A
+  * （stage-1.md §6），均为值导入。
+@@ -257,7 +258,19 @@ export class DirectorSession implements IntentPort {
+   private deepTrace: DeepTrace | null = null;
+ 
+   /** 账本追加接口（链终点恰好写入一条 NarrativeEvent；INV-2） */
+-  private ledgerAppend: LedgerAppend | null = null;
++  private readonly ledgerEvents: NarrativeEvent[] = [];
++  private ledgerAppend: LedgerAppend | null = {
++    append: (event: NarrativeEvent): void => {
++      this.ledgerEvents.push(Object.freeze({
++        ...event, vector: Object.freeze([...event.vector]) as NarrativeVector,
++        AppendedAt: Object.freeze({ ...event.AppendedAt }),
++        ChapterTag: Object.freeze({ ...event.ChapterTag }),
++        ChartRef: Object.freeze({ ...event.ChartRef }),
++      }));
++    },
++  };
++  getLedgerEvents(): ReadonlyArray<NarrativeEvent> { return this.ledgerEvents.slice(); }
++  isWorldMotionGated(): boolean { return this.worldMotionGated; }
+ 
+   /** 屏幕投影探针：表现层测量深痕的归一化屏幕投影
+    *  （x / y ∈ [0,1]，原点屏幕左上）；未就绪返回 null。
+@@ -480,16 +493,19 @@ export class DirectorSession implements IntentPort {
+     // 非 Jump 意图即时分发；本帧是否存在 Jump 只记录为布尔，
+     // 起跳决策延后到第 2 / 4 步按落地状态执行（请求-消费模型：
+     // 输入回调不读物理状态，物理判定只在帧更新内完成）。
++    const frameBeganGated = this.worldMotionGated;
++    // An accepted chart entry gates the entire batch, including preceding Move/Jump.
++    if (intents.some(intent => intent.kind === 'EnterChart')) { this.handleEnterChartIntent(); }
+     let frameHasJump = false;
+     for (const intent of intents) {
+       switch (intent.kind) {
+         case 'SwitchPerceptionMode':
+           // 切换运行时感知模式（不写账本，名库 v1.9）。
+-          this.setPerceptionMode(intent.mode);
++          if (!this.worldMotionGated) { this.setPerceptionMode(intent.mode); }
+           break;
+ 
+         case 'Move':
+-          if (this.protagonist !== null && this.mapCenter !== null) {
++          if (!this.worldMotionGated && !frameBeganGated && this.protagonist !== null && this.mapCenter !== null) {
+             this.protagonist.move(
+               { lateral: intent.lateral, depth: intent.depth },
+               frameDurationSeconds,
+@@ -506,7 +522,7 @@ export class DirectorSession implements IntentPort {
+               videoTimeMs: intent.videoTimeMs,
+               keyId: intent.keyId,
+             });
+-          } else {
++          } else if (intent.keyId === undefined && !this.isChartContext()) {
+             // T6（VERDICT-113 / 117）：解谜链第二步——世界节奏敲击。
+             this.handleStrikeIntent();
+           }
+@@ -531,7 +547,7 @@ export class DirectorSession implements IntentPort {
+         case 'Jump':
+           // 空中请求不缓存：本帧只标记有无有效请求；
+           // 是否起跳由第 2 / 4 步的落地状态决定。
+-          frameHasJump = true;
++          frameHasJump = !this.worldMotionGated && !frameBeganGated;
+           break;
+       }
+     }
+@@ -539,7 +555,7 @@ export class DirectorSession implements IntentPort {
+     // —— 世界运动门控（VERDICT-111）：谱面入口调度后置位，
+     //      自本帧起跳过第 2~6 步世界运动（不推进、不补算）；
+     //      但 FrameDriver / 谱面 / 表现刷新继续——此帧驱动谱面。
+-    if (this.worldMotionGated) {
++    if (this.worldMotionGated || frameBeganGated) {
+       this.driveChartPlayback();
+       return;
+     }
+@@ -624,11 +640,12 @@ export class DirectorSession implements IntentPort {
+    * NarrativeEvent，与得分无关。方法名为直译，待追认。
+    */
+   private recordChartCompletion(finishedAtMs: number): void {
+-    this.chartCompletionRecorded = true;
+     if (this.ledgerAppend !== null && this.chartPremiere !== null) {
+       this.ledgerAppend.append(
+         this.buildCompletionNarrativeEvent(finishedAtMs),
+       );
++      this.chartCompletionRecorded = true;
++
+     }
+   }
+ 
+@@ -638,7 +655,7 @@ export class DirectorSession implements IntentPort {
+    * 其余附加项与终点事件同口径。方法名为直译，待追认。
+    */
+   private buildCompletionNarrativeEvent(
+-    finishedAtMs: number,
++    _finishedAtMs: number,
+   ): NarrativeEvent {
+     const zeroVector: NarrativeVector = [
+       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+@@ -679,7 +696,11 @@ export class DirectorSession implements IntentPort {
+    * 方法名为直译，待追认。
+    */
+   private handleExitChartIntent(): void {
++    if (!this.chartEntryScheduled) { return; }
+     if (this.chartPremiere !== null) {
++      if (this.chartPremiere.getState() === 'Completed' && !this.chartCompletionRecorded) {
++        this.recordChartCompletion(this.chartPremiere.getCurrentTimeMs());
++      }
+       const probeTime =
+         this.chartClockProbe !== null ? this.chartClockProbe() : -1;
+       this.chartPremiere.requestExit(probeTime >= 0 ? probeTime : 0);
+@@ -759,7 +780,9 @@ export class DirectorSession implements IntentPort {
+     if (strike === null) {
+       return;
+     }
+-    this.puzzleChain.attemptStrike(strike);
++    // Recheck approach/projection after Move before consuming the strike.
++    this.evaluatePuzzleApproach();
++    if (!this.worldMotionGated) { this.puzzleChain.attemptStrike(strike); }
+   }
+ 
+   /**
+@@ -777,7 +800,7 @@ export class DirectorSession implements IntentPort {
+    * 方法名为直译，待 PROTOCOL 追认。
+    */
+   private handleEnterChartIntent(): void {
+-    if (this.chartEntryScheduled) {
++    if (this.chartEntryScheduled || this.chartCompletionRecorded) {
+       return;
+     }
+     if (!this.endpointSettled) {
+@@ -826,6 +849,21 @@ export class DirectorSession implements IntentPort {
+       return;
+     }
+ 
++    this.evaluatePuzzleApproach();
++
++    // 逐帧检查持续期，输入时间线先消费，帧末才关闭窗口。
++    if (this.beatClockProbe !== null) {
++      const now = this.beatClockProbe();
++      const currentBeatTimeMs = now < 0 ? -1 : now + this.beatClockOffsetMs;
++      if (currentBeatTimeMs >= 0) {
++        this.puzzleChain.checkSustainedExpiry(currentBeatTimeMs);
++        if (this.puzzleChain.getProgress().getStage() === 'Completed') { this.settlePuzzleChainEndpoint(); }
++      }
++    }
++  }
++
++  private evaluatePuzzleApproach(): void {
++    if (!this.protagonist || !this.deepTrace || !this.puzzleChain) { return; }
+     // 主角到深痕的平面距离（横轴 + 纵深轴；不含 vertical，
+     // 与 calculateCenterDistance 同口径）。
+     const protagonistPosition = this.protagonist.getPosition();
+@@ -840,15 +878,6 @@ export class DirectorSession implements IntentPort {
+       this.screenProjectionProbe !== null ? this.screenProjectionProbe() : null;
+     this.puzzleChain.evaluateStepCondition(distanceWm, projection);
+ 
+-    // 逐帧检查持续期是否已满 7 秒（VERDICT-119 / VERDICT-120）。
+-    // VERDICT-120：拍点时钟消费处叠加 beatClockOffsetMs 校准偏移，
+-    // 使 Strike、目标拍点、持续期计时统一使用同一条音频时间线。
+-    if (this.beatClockProbe !== null) {
+-      const currentBeatTimeMs = this.beatClockProbe() + this.beatClockOffsetMs;
+-      if (currentBeatTimeMs >= 0) {
+-        this.puzzleChain.checkSustainedExpiry(currentBeatTimeMs);
+-      }
+-    }
+   }
+ 
+   /**
+@@ -859,21 +888,22 @@ export class DirectorSession implements IntentPort {
+    * DeepTraceRevealSequence）；endpointSettled 双重防重复
+    * 结算（链 'Completed' 阶段判定 + 本布尔幂等闸）。
+    *
+-   * 触发不修改 TraceTier / 解谜进度 / 世界运动门控（INV-11）
+-   * ——门控在 EnterChart 被接受时才接入（VERDICT-115）。
++   * DeepTrace 自身只标记触发；director 在结算帧接入揭示门控，
++   * EnterChart 继续保留门控，表现层不写任何玩法状态（INV-11）。
+    * 方法名为直译，待 PROTOCOL 追认。
+    */
+   private settlePuzzleChainEndpoint(): void {
+     if (this.endpointSettled) {
+       return;
+     }
++    if (this.ledgerAppend === null) { return; }
++    this.ledgerAppend.append(this.buildEndpointNarrativeEvent());
+     this.endpointSettled = true;
++    this.worldMotionGated = true;
+     if (this.deepTrace !== null) {
+       this.deepTrace.markTriggered();
+     }
+-    if (this.ledgerAppend !== null) {
+-      this.ledgerAppend.append(this.buildEndpointNarrativeEvent());
+-    }
++
+   }
+ 
+   /**
+diff --git "a/D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\backup\\src\\ledger\\NarrativeEvent.ts" "b/D:\\Project\\A_New_Begin\\Neurou_official\\src\\ledger\\NarrativeEvent.ts"
+index 96bf7c1..cac83ad 100644
+--- "a/D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\backup\\src\\ledger\\NarrativeEvent.ts"
++++ "b/D:\\Project\\A_New_Begin\\Neurou_official\\src\\ledger\\NarrativeEvent.ts"
+@@ -16,7 +16,7 @@
+ //   NarrativeVector、AppendedAt、InputSource、ChapterTag
+ // ============================================================
+ 
+-import { NarrativeDimension, VectorSchemaVersion } from '../../constants/index';
++import { VectorSchemaVersion } from '../../constants/index';
+ import type { NarrativeEventId, ChartRef } from '../../constants/index';
+ 
+ /**
+diff --git "a/D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\backup\\src\\presentation\\ChartPadView.ts" "b/D:\\Project\\A_New_Begin\\Neurou_official\\src\\presentation\\ChartPadView.ts"
+index 2932fd7..b40e308 100644
+--- "a/D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\backup\\src\\presentation\\ChartPadView.ts"
++++ "b/D:\\Project\\A_New_Begin\\Neurou_official\\src\\presentation\\ChartPadView.ts"
+@@ -140,6 +140,10 @@ export class ChartPadView extends Component implements FrameRefreshable {
+     }
+     const state = this.premiere.getState();
+     this.ensureBuilt();
++    if (state === 'Ready' || state === 'Exited') {
++      this.lastFeedbackSeq = 0;
++      this.flashes.length = 0;
++    }
+ 
+     if (this.graphics === null) {
+       return;
+@@ -159,6 +163,11 @@ export class ChartPadView extends Component implements FrameRefreshable {
+       return;
+     }
+     const pulled = this.premiere.getJudgeFeedbackSince(this.lastFeedbackSeq);
++    if (pulled.nextSeq < this.lastFeedbackSeq) {
++      this.lastFeedbackSeq = 0;
++      this.flashes.length = 0;
++      return this.consumeFeedback();
++    }
+     this.lastFeedbackSeq = pulled.nextSeq;
+     const now = Date.now();
+     for (const item of pulled.items) {
+@@ -330,6 +339,11 @@ export class ChartPadView extends Component implements FrameRefreshable {
+     if (transform === null) {
+       return;
+     }
++    if (this.infoLabel) {
++      this.infoLabel.node.setPosition(0, transform.height / 2 - 12, 0);
++      this.infoLabel.node.getComponent(UITransform)?.setContentSize(transform.width - 24, 24);
++      this.infoLabel.fontSize = 10;
++    }
+     if (
+       transform.width !== this.lastContainerW ||
+       transform.height !== this.lastContainerH
+diff --git "a/D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\backup\\src\\presentation\\ChartPausePanel.ts" "b/D:\\Project\\A_New_Begin\\Neurou_official\\src\\presentation\\ChartPausePanel.ts"
+index 75cc6eb..6da0c7c 100644
+--- "a/D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\backup\\src\\presentation\\ChartPausePanel.ts"
++++ "b/D:\\Project\\A_New_Begin\\Neurou_official\\src\\presentation\\ChartPausePanel.ts"
+@@ -21,8 +21,8 @@ import {
+   Graphics,
+   Label,
+   Color,
+-  input,
+-  EventMouse,
++  input, Input,
++  EventMouse, Vec3,
+ } from 'cc';
+ import type { FrameRefreshable } from './FrameDriver';
+ 
+@@ -70,12 +70,13 @@ export class ChartPausePanel extends Component implements FrameRefreshable {
+     this.onExit = onExit;
+   }
+ 
+-  onLoad(): void {
+-    input.on('mouse-down', this.onMouseDown, this);
++  onEnable(): void {
++    input.on(Input.EventType.MOUSE_DOWN, this.onMouseDown, this);
+   }
+ 
+-  onDestroy(): void {
+-    input.off('mouse-down', this.onMouseDown, this);
++  onDisable(): void {
++    this.pausedShown = false;
++    input.off(Input.EventType.MOUSE_DOWN, this.onMouseDown, this);
+   }
+ 
+   /** 首次创建绘图与标签节点。 */
+@@ -184,7 +185,7 @@ export class ChartPausePanel extends Component implements FrameRefreshable {
+ 
+   /** 鼠标按下：仅暂停时对按钮做命中。 */
+   private onMouseDown(event: EventMouse): void {
+-    if (!this.pausedShown) {
++    if (!this.pausedShown || event.getButton() !== EventMouse.BUTTON_LEFT) {
+       return;
+     }
+     const transform = this.node.getComponent(UITransform);
+@@ -192,8 +193,10 @@ export class ChartPausePanel extends Component implements FrameRefreshable {
+       return;
+     }
+     // 面板覆盖全屏且居中：屏幕坐标 → 面板中心坐标。
+-    const localX = event.getLocationX() - transform.width / 2;
+-    const localY = event.getLocationY() - transform.height / 2;
++    const location = event.getUILocation();
++    const local = transform.convertToNodeSpaceAR(new Vec3(location.x, location.y, 0));
++    const localX = local.x;
++    const localY = local.y;
+     for (const button of this.buttons) {
+       if (
+         localX >= button.x - button.w / 2 &&
+diff --git "a/D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\backup\\src\\presentation\\DeepTraceRevealSequence.ts" "b/D:\\Project\\A_New_Begin\\Neurou_official\\src\\presentation\\DeepTraceRevealSequence.ts"
+index 7d97849..f9e5ba9 100644
+--- "a/D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\backup\\src\\presentation\\DeepTraceRevealSequence.ts"
++++ "b/D:\\Project\\A_New_Begin\\Neurou_official\\src\\presentation\\DeepTraceRevealSequence.ts"
+@@ -1,340 +1,59 @@
+-﻿// ============================================================
+-// P 表现层 · DeepTraceRevealSequence 深痕揭示序列组件
+-// （T6 / 名库 v2.3 / HANDOFF-ROUND-17 任务三）
+-//
+-// 依据：
+-// - 名库 v2.3 冻结名：DeepTraceRevealSequence（Cocos 组件）、
+-//   DeepTrace、ScreenInvertRipple（灰盒占位声明）；
+-// - VERDICT-114 / 116：深痕触发成立后播放揭示序列；序列不得
+-//   修改 TraceTier、解谜进度、账本或世界运动门控（INV-11）；
+-// - HANDOFF-ROUND-17 任务三：阶段 1 灰盒实现——用圆环缩放 +
+-//   淡出模拟 ScreenInvertRipple；不实现真实反色滤镜（完整
+-//   效果留到美术阶段）；序列结束后报告"播放结束或跳过"。
+-// - PROTOCOL 指示（扩张圆动画翻译）：参照同级目录
+-//   expanding_filtercircle_effect_code(html).txt 的 ripple 模式
+-//   波纹，翻译其三段动画语义（灰盒近似，见下方对照）：
+-//     ① 扩张缓动 nrL(p)=ln(1+4p)/ln5（先快后慢，起止速度比
+-//       5:1）→ easeExpand；② 亮度 k=nrL(1−p)（长时间保持高亮、
+-//       末段快速熄灭）→ 段材质 alpha 曲线；③ 圆走完触发短暂
+-//       曝光脉冲（0.9^(dt·60) 衰减，<0.004 截止）→ Flash 阶段
+-//       整环复亮再衰减。
+-//   真实滤镜（PROTOCOL 二次指示"尝试做一做"）：反色由同层
+-//   冻结名组件 ScreenInvertRipple 承载（RT 相机 + 全屏 Sprite +
+-//   assets/effects/invert-ripple.effect 圆形遮罩反色）；本组件
+-//   负责时序 / 跳过 / EnterChart，并把扩张进度与脉冲推给它。
+-//   灰盒圆环保留：作为波前边缘标记 + Effect 缺失时降级路径。
+-//   其余灰盒差异（不变更 INV-11 边界）：不做径向渐变软边
+-//   （12 段方块拼合）、无鼠标跟随圆、无 SVG 滤镜（浏览器专属
+-//   管线无对应物）；扩张速度按固定占位时长而非 780px/s 换算。
+-//
+-// 职责：
+-//   轮询 DeepTrace.isTriggered()；触发后播放灰盒揭示序列
+-//   （白色圆环由 12 段小方块拼合，放大 + 透明度衰减模拟
+-//   ScreenInvertRipple 冲击波）；播放中任意鼠标点击可跳过；
+-//   序列结束（播放完或跳过）后向 IntentPort 系统侧提交一个
+-//   EnterChart 意图（谱面入口由深痕授予，PlayerIntent 注释
+-//   明示该语义；系统侧提交先例：setPerceptionMode 公开供
+-//   系统侧使用），由 director 调度谱面入口切换。
+-//
+-// 边界（INV-11 / HANDOFF-ROUND-17 禁止事项）：
+-//   ✗ 不实现真实反色滤镜 / 后处理 / LUT（灰盒占位）
+-//   ✗ 不修改 TraceTier、PuzzleProgress、账本、世界运动门控
+-//   ✗ 不保存感知模式权威副本、不做颜色映射 / 雨模式
+-//
+-// 依赖矩阵（stage-1.md §6）：
+-//   presentation → trace R（DeepTrace，仅 import type）
+-//   presentation → director I（IntentPort，仅 import type）
+-//   presentation 可引用 cc
+-// ============================================================
+-
+-import {
+-  _decorator,
+-  Component,
+-  Node,
+-  Color,
+-  MeshRenderer,
+-  Material,
+-  primitives,
+-  utils,
+-  input,
+-} from 'cc';
++// INV-11: play the reveal, then report completion through IntentPort.
++import { _decorator, Component, input, Input } from 'cc';
+ import type { DeepTrace } from '../trace/DeepTrace';
+ import type { IntentPort } from '../director/IntentPort';
+ import type { ScreenInvertRipple } from './ScreenInvertRipple';
+-
+ const { ccclass } = _decorator;
+-
+-// ------------------------------------------------------------
+-// 揭示序列灰盒表现参数（表现层配置，阶段 1 占位，待冻结登记；
+-// HANDOFF-ROUND-17 明示 constants 本轮仅新增
+-// RHYTHM_STRIKE_WINDOW_MS，故占位在本消费文件内部）。
+-// ------------------------------------------------------------
+-
+-/** 序列时长（秒，占位）：圆环从起始缩放放大到结束缩放并淡出 */
+ const REVEAL_DURATION_SECONDS = 1.2;
+-
+-/** 圆环起始缩放（占位） */
+-const RING_START_SCALE = 0.5;
+-
+-/** 圆环结束缩放（占位；相对圆环半径 2WM，6 倍 ≈ 12WM 冲击范围） */
+-const RING_END_SCALE = 6;
+-
+-/** 曝光脉冲衰减基数（每 1/60 秒乘 0.90，参照 nrRipFlash 衰减） */
+ const FLASH_DECAY_BASE = 0.9;
+-
+-/** 曝光脉冲截止阈值（低于即结束序列，参照 nrRipFlash < 0.004） */
+ const FLASH_END_EPSILON = 0.004;
+-
+-/**
+- * 扩张缓动（参照 expanding_filtercircle_effect_code(html).txt 的
+- * nrL：ln(1+4p)/ln5，单调递增，起始/结束速度比 5:1，先快后慢；
+- * 直译待追认；导出供 ScreenInvertRipple 复用同一曲线）。
+- */
+ export function easeExpand(p: number): number {
+-  return Math.log(1 + 4 * p) / Math.log(5);
++  return Math.log(1 + 4 * Math.max(0, Math.min(1, p))) / Math.log(5);
+ }
+-
+-/** 圆环段数（占位）：桩阶段无圆环几何，以小方块段拼合 */
+-const RING_SEGMENT_COUNT = 12;
+-
+-/** 圆环单段方块边长（WorldMeter，占位） */
+-const RING_SEGMENT_SIZE = 0.3;
+-
+-/** 圆环半径（WorldMeter，占位） */
+-const RING_RADIUS_WM = 2;
+-
+-/**
+- * DeepTraceRevealSequence 深痕揭示序列组件
+- * （名库 v2.3 冻结类型名，Cocos 组件）
+- *
+- * 由 SceneBuilder 挂载到场景中任意常驻节点，bindSource 注入
+- * DeepTrace、bindIntentPort 注入意图窄口。update 轮询触发
+- * 状态（阶段 1 无事件总线，轮询为灰盒占位）。
+- */
+ @ccclass('DeepTraceRevealSequence')
+ export class DeepTraceRevealSequence extends Component {
+-  /** 深痕（仅读取 isTriggered()；import type，无运行时耦合） */
+   private deepTrace: DeepTrace | null = null;
+-
+-  /** 意图窄口（I 边：序列结束提交 EnterChart，系统侧先例） */
+   private intentPort: IntentPort | null = null;
+-
+-  /** 屏幕反色涟漪（同层冻结名组件；缺失/降级时可为空） */
+   private invertRipple: ScreenInvertRipple | null = null;
+-
+-  /** 圆环节点（onLoad 构建；初始隐藏） */
+-  private ringNode: Node | null = null;
+-
+-  /** 各圆环段材质（淡出时逐段写 mainColor 透明度） */
+-  private segmentMaterials: Material[] = [];
+-
+-  /** 序列阶段（文件内私有状态；'Finished' 后不再响应） */
+   private phase: 'Idle' | 'Playing' | 'Flash' | 'Finished' = 'Idle';
+-
+-  /** 已播放秒数（Playing 阶段累加） */
+   private elapsedSeconds = 0;
+-
+-  /** 曝光脉冲强度（Flash 阶段由 1 按 0.9^(dt·60) 衰减，参照 nrRipFlash） */
+   private flashValue = 0;
+-
+-  /**
+-   * 接线深痕（方法名沿用 ROUND-12 追认模式 bindSource）。
+-   */
+-  bindSource(deepTrace: DeepTrace): void {
+-    this.deepTrace = deepTrace;
++  bindSource(deepTrace: DeepTrace): void { this.deepTrace = deepTrace; }
++  bindIntentPort(intentPort: IntentPort): void { this.intentPort = intentPort; }
++  bindInvertRipple(invertRipple: ScreenInvertRipple): void { this.invertRipple = invertRipple; }
++  onEnable(): void { input.on(Input.EventType.MOUSE_DOWN, this.onSkipInput, this); }
++  onDisable(): void {
++    input.off(Input.EventType.MOUSE_DOWN, this.onSkipInput, this);
++    this.invertRipple?.end();
+   }
+-
+-  /**
+-   * 接线意图窄口（方法名沿用 ROUND-12 追认模式 bindIntentPort）。
+-   */
+-  bindIntentPort(intentPort: IntentPort): void {
+-    this.intentPort = intentPort;
+-  }
+-
+-  /**
+-   * 接线屏幕反色涟漪（PROTOCOL 指示的真实滤镜尝试；沿用
+-   * 追认模式 bindInvertRipple）。为空 / 降级时仅灰盒圆环。
+-   */
+-  bindInvertRipple(invertRipple: ScreenInvertRipple): void {
+-    this.invertRipple = invertRipple;
+-  }
+-
+-  /**
+-   * 构建圆环 + 注册跳过输入。
+-   * 圆环：12 段小方块沿 XY 平面圆周拼合；材质走 builtin-unlit
+-   * 透明 technique（technique: 1 经变量传入以兼容类型桩）。
+-   */
+-  onLoad(): void {
+-    this.buildRing();
+-    // 播放中任意鼠标点击 → 跳过（灰盒占位；点击同时会被
+-    // InputCollector 采集为 Strike，链已 Completed 时无害）。
+-    input.on('mouse-down', this.onSkipInput, this);
+-  }
+-
+-  onDestroy(): void {
+-    input.off('mouse-down', this.onSkipInput, this);
+-  }
+-
+-  /**
+-   * 每帧轮询：Idle 且深痕已触发 → 启动序列；Playing → 推进
+-   * 缓动扩张与亮度衰减（参照 nrL 曲线）；走完 → 曝光脉冲
+-   * （Flash）→ 衰减到阈值结束（报告"播放结束或跳过"）。
+-   */
+   update(deltaTime: number): void {
+     if (this.phase === 'Idle') {
+-      if (this.deepTrace !== null && this.deepTrace.isTriggered()) {
+-        this.startSequence();
+-      }
++      if (this.deepTrace?.isTriggered() && this.invertRipple?.begin()) { this.phase = 'Playing'; }
+       return;
+     }
+-
+     if (this.phase === 'Playing') {
+       this.elapsedSeconds += deltaTime;
+       const p = this.elapsedSeconds / REVEAL_DURATION_SECONDS;
+       if (p >= 1) {
+-        // 圆走完：触发曝光脉冲（参照 nrRipFlash = 1）。
+         this.flashValue = 1;
+         this.phase = 'Flash';
+-        this.applySegmentAlpha(1);
+-        if (this.invertRipple !== null) {
+-          this.invertRipple.updateProgress(1, 1);
+-        }
+-        return;
+-      }
+-
+-      // 扩张半径：r = r0 + (R − r0)·nrL(p)（先快后慢）。
+-      const lp = easeExpand(p);
+-      if (this.ringNode !== null) {
+-        const scale =
+-          RING_START_SCALE + (RING_END_SCALE - RING_START_SCALE) * lp;
+-        this.ringNode.setScale(scale, scale, scale);
+-      }
+-      // 亮度：k = nrL(1 − p)（长时间保持高亮，末段快速熄灭）。
+-      this.applySegmentAlpha(easeExpand(1 - p));
+-      // 真实反色滤镜同步推进（降级时组件内部直接忽略）。
+-      if (this.invertRipple !== null) {
+-        this.invertRipple.updateProgress(p, 0);
+-      }
++        this.invertRipple?.updateProgress(1, 1);
++      } else { this.invertRipple?.updateProgress(p, 0); }
+       return;
+     }
+-
+     if (this.phase === 'Flash') {
+-      // 曝光脉冲衰减（参照 nrRipFlash *= 0.90^dt，dt 为 1/60s 帧
+-      // 单位；约 0.6s 消失，低于阈值结束序列）。
+       this.flashValue *= Math.pow(FLASH_DECAY_BASE, deltaTime * 60);
+-      if (this.flashValue < FLASH_END_EPSILON) {
+-        this.finishSequence();
+-        return;
+-      }
+-      this.applySegmentAlpha(this.flashValue);
+-      if (this.invertRipple !== null) {
+-        this.invertRipple.updateProgress(1, this.flashValue);
+-      }
++      if (this.flashValue < FLASH_END_EPSILON) { this.finishSequence(); }
++      else { this.invertRipple?.updateProgress(1, this.flashValue); }
+     }
+   }
+-
+-  /**
+-   * 逐段写 mainColor 透明度（灰盒亮度曲线的唯一写入口）。
+-   */
+-  private applySegmentAlpha(intensity: number): void {
+-    const alpha = Math.round(255 * Math.max(0, Math.min(1, intensity)));
+-    for (const material of this.segmentMaterials) {
+-      material.setProperty('mainColor', new Color(255, 255, 255, alpha));
+-    }
+-  }
+-
+-  /**
+-   * 鼠标点击回调：扩张中或曝光脉冲中点击 → 跳过（报告"跳过"）。
+-   */
+   private onSkipInput(): void {
+-    if (this.phase === 'Playing' || this.phase === 'Flash') {
+-      this.finishSequence();
+-    }
++    if (this.phase === 'Playing' || this.phase === 'Flash' ||
++        (this.phase === 'Idle' && this.deepTrace?.isTriggered())) { this.finishSequence(); }
+   }
+-
+-  /**
+-   * 启动序列（显示圆环、复位计时与亮度）。
+-   */
+-  private startSequence(): void {
+-    // 真实反色滤镜启动（降级时组件内部直接忽略）。
+-    if (this.invertRipple !== null) {
+-      this.invertRipple.begin();
+-    }
+-    if (this.ringNode !== null) {
+-      this.ringNode.active = true;
+-      const start = RING_START_SCALE;
+-      this.ringNode.setScale(start, start, start);
+-    }
+-    this.applySegmentAlpha(1);
+-    this.flashValue = 0;
+-    this.elapsedSeconds = 0;
+-    this.phase = 'Playing';
+-  }
+-
+-  /**
+-   * 结束序列（播放到时或跳过共用；报告"播放结束或跳过"）：
+-   * 隐藏圆环，经 IntentPort 系统侧提交一个无载荷 EnterChart
+-   * 意图（谱面入口由深痕授予），由 director 调度谱面入口切换。
+-   */
+   private finishSequence(): void {
+-    if (this.invertRipple !== null) {
+-      this.invertRipple.end();
+-    }
+-    if (this.ringNode !== null) {
+-      this.ringNode.active = false;
+-    }
++    this.invertRipple?.end();
+     this.phase = 'Finished';
+-    if (this.intentPort !== null) {
+-      this.intentPort.submitFrameIntents([{ kind: 'EnterChart' }], 0);
+-    }
+-  }
+-
+-  /**
+-   * 构建灰盒圆环（子节点；初始隐藏）。
+-   * 桩阶段无圆环（torus）几何，以 12 段小方块沿圆周拼合：
+-   * 每段绕 Z 轴旋转切向摆放，整环绕 X 轴倾斜 15 度面向相机。
+-   */
+-  private buildRing(): void {
+-    const ring = new Node('DeepTraceRevealRing');
+-    ring.active = false;
+-    ring.setPosition(0, 0.5, 0);
+-    ring.setRotationFromEuler(15, 0, 0);
+-    ring.layer = this.node.layer;
+-    this.node.addChild(ring);
+-    this.ringNode = ring;
+-
+-    for (let i = 0; i < RING_SEGMENT_COUNT; i++) {
+-      const angle = (i / RING_SEGMENT_COUNT) * Math.PI * 2;
+-      const segment = new Node(`RingSegment${i}`);
+-      segment.layer = this.node.layer;
+-
+-      const renderer = segment.addComponent(MeshRenderer);
+-      const mesh = utils.MeshUtils.createMesh(
+-        primitives.box({
+-          width: RING_SEGMENT_SIZE,
+-          height: RING_SEGMENT_SIZE,
+-          length: RING_SEGMENT_SIZE,
+-        }),
+-      );
+-      renderer.mesh = mesh;
+-
+-      // 透明材质（灰盒淡出需要 alpha 混合）：technique: 1 为
+-      // builtin-unlit 透明通道；经变量传入以兼容阶段 1 类型桩。
+-      const material = new Material();
+-      const initInfo = { effectName: 'builtin-unlit', technique: 1 };
+-      material.initialize(initInfo);
+-      material.setProperty('mainColor', new Color(255, 255, 255, 255));
+-      renderer.material = material;
+-      this.segmentMaterials.push(material);
+-
+-      const radius = RING_RADIUS_WM;
+-      segment.setPosition(
+-        Math.cos(angle) * radius,
+-        Math.sin(angle) * radius,
+-        0,
+-      );
+-      segment.setRotationFromEuler(0, 0, (angle * 180) / Math.PI);
+-      ring.addChild(segment);
+-    }
++    this.intentPort?.submitFrameIntents([{ kind: 'EnterChart' }], 0);
+   }
+ }
+diff --git "a/D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\backup\\src\\presentation\\ElementEntityView.ts" "b/D:\\Project\\A_New_Begin\\Neurou_official\\src\\presentation\\ElementEntityView.ts"
+index b06c384..3101c62 100644
+--- "a/D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\backup\\src\\presentation\\ElementEntityView.ts"
++++ "b/D:\\Project\\A_New_Begin\\Neurou_official\\src\\presentation\\ElementEntityView.ts"
+@@ -53,7 +53,7 @@ export class ElementEntityView extends Component implements FrameRefreshable {
+ 
+   /**
+    * 接线只读实体（方法名沿用 bindSource，与 ProtagonistView /
+-   * TrailRenderer 同一命名，待追认）。
++   * TrailRender 同一命名，待追认）。
+    */
+   bindSource(entity: ElementEntity): void {
+     this.entity = entity;
+diff --git "a/D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\backup\\src\\presentation\\FrameDriver.ts" "b/D:\\Project\\A_New_Begin\\Neurou_official\\src\\presentation\\FrameDriver.ts"
+index 363b0da..ebe0839 100644
+--- "a/D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\backup\\src\\presentation\\FrameDriver.ts"
++++ "b/D:\\Project\\A_New_Begin\\Neurou_official\\src\\presentation\\FrameDriver.ts"
+@@ -10,12 +10,8 @@
+ // 全场景只有一个 FrameDriver（VERDICT-094），由本类的
+ // 单实例守卫 + 场景唯一挂载共同保证。
+ //
+-// Cocos 绑定（HANDOFF-ROUND-13 / VERDICT-094 偏差 1 解锁）：
+-//   本工程已通过 types/cc.d.ts ambient 类型桩模拟 Cocos Creator
+-//   3.8.8 引擎类型；引擎导入后由真实 cc 类型覆盖桩，方法签名
+-//   不变（VERDICT-094）。本文件现已引用 `import { _decorator,
+-//   Component } from 'cc'`，并补齐 @ccclass / extends Component。
+-//   presentation 是矩阵中唯一允许引用 cc 的域（stage-1.md §14）。
++// 类型检查使用 Creator 生成的真实引擎声明（temp/declarations）。
++// presentation 可引用 cc，逻辑域保持引擎隔离。
+ //
+ // 表现层文件：不承载任何逻辑决策（INV-1 / INV-6），
+ // 不做向量计算、网络同步、颜色映射（HANDOFF 禁止事项 2）。
+@@ -48,6 +44,7 @@ let frameDriverBound = false;
+  */
+ @ccclass('FrameDriver')
+ export class FrameDriver extends Component {
++  private ownsFrameDriverGuard = false;
+   /** 本帧输入来源（第 ① 步） */
+   private inputCollector: InputCollector | null = null;
+ 
+@@ -65,12 +62,19 @@ export class FrameDriver extends Component {
+       throw new Error('FrameDriver 全场景只允许挂载一个实例');
+     }
+     frameDriverBound = true;
++    this.ownsFrameDriverGuard = true;
+   }
+ 
+   /**
+    * 场景接线（引擎导入后改由 @property 拖拽赋值；
+    * 方法名为直译，待追认）。
+    */
++  onDestroy(): void {
++    if (this.ownsFrameDriverGuard) { frameDriverBound = false; }
++    this.ownsFrameDriverGuard = false;
++    this.refreshables.length = 0;
++  }
++
+   bindWiring(inputCollector: InputCollector, intentPort: IntentPort): void {
+     this.inputCollector = inputCollector;
+     this.intentPort = intentPort;
+diff --git "a/D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\backup\\src\\presentation\\InputCollector.ts" "b/D:\\Project\\A_New_Begin\\Neurou_official\\src\\presentation\\InputCollector.ts"
+index 66db047..eeeba8f 100644
+--- "a/D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\backup\\src\\presentation\\InputCollector.ts"
++++ "b/D:\\Project\\A_New_Begin\\Neurou_official\\src\\presentation\\InputCollector.ts"
+@@ -36,7 +36,7 @@
+ import {
+   _decorator,
+   Component,
+-  input,
++  input, Input,
+   EventKeyboard,
+   EventMouse,
+ } from 'cc';
+@@ -127,11 +127,39 @@ export class InputCollector extends Component {
+    * 与本类随后入队的 Strike 意图一一对应。
+    */
+   private worldStrikeRecorder: (() => void) | null = null;
++  private worldStrikeResetter: (() => void) | null = null;
+ 
+-  onLoad(): void {
+-    input.on('keydown', this.onKeyDown, this);
+-    input.on('keyup', this.onKeyUp, this);
+-    input.on('mouse-wheel', this.onMouseWheel, this);
++  private chartContextProvider: (() => boolean) | null = null;
++  bindChartContextProvider(provider: () => boolean): void { this.chartContextProvider = provider; }
++
++  private worldMotionProvider: (() => boolean) | null = null;
++
++  bindWorldMotionProvider(provider: () => boolean): void { this.worldMotionProvider = provider; }
++
++  private isWorldMotionGated(): boolean { return this.worldMotionProvider?.() ?? false; }
++
++  private clearHeldInput = (): void => {
++    this.physicalKeysDown.clear();
++    this.pressedMoveKeys.clear();
++    this.spacePressed = false;
++    this.setMoveAxis(0, 0);
++    this.discreteIntents.length = 0;
++    this.worldStrikeResetter?.();
++  };
++
++  onEnable(): void {
++    input.on(Input.EventType.KEY_DOWN, this.onKeyDown, this);
++    input.on(Input.EventType.KEY_UP, this.onKeyUp, this);
++    input.on(Input.EventType.MOUSE_WHEEL, this.onMouseWheel, this);
++    if (typeof window !== 'undefined') { window.addEventListener('blur', this.clearHeldInput); }
++  }
++
++  onDisable(): void {
++    input.off(Input.EventType.KEY_DOWN, this.onKeyDown, this);
++    input.off(Input.EventType.KEY_UP, this.onKeyUp, this);
++    input.off(Input.EventType.MOUSE_WHEEL, this.onMouseWheel, this);
++    if (typeof window !== 'undefined') { window.removeEventListener('blur', this.clearHeldInput); }
++    this.clearHeldInput();
+   }
+ 
+   // ----------------------------------------------------------
+@@ -157,6 +185,7 @@ export class InputCollector extends Component {
+   bindWorldStrikeRecorder(recorder: () => void): void {
+     this.worldStrikeRecorder = recorder;
+   }
++  bindWorldStrikeResetter(resetter: () => void): void { this.worldStrikeResetter = resetter; }
+ 
+   // ----------------------------------------------------------
+   // 原始输入入口
+@@ -172,11 +201,11 @@ export class InputCollector extends Component {
+     }
+ 
+     const state = this.readChartState();
+-    if (isChartPlayback(state)) {
++    if (isChartPlayback(state) || this.chartContextProvider?.()) {
+       this.routeChartKey(code, state);
+       return;
+     }
+-    this.routeWorldKey(code);
++    if (!this.isWorldMotionGated()) { this.routeWorldKey(code); }
+   }
+ 
+   private onKeyUp(event: EventKeyboard): void {
+@@ -200,7 +229,7 @@ export class InputCollector extends Component {
+     if (code === CODE_ESCAPE) {
+       if (state === 'Playing' || state === 'Paused') {
+         this.requestToggleChartPause();
+-      } else if (state === 'Completed') {
++      } else if (state === 'Completed' || state === 'Ready') {
+         this.requestExitChart();
+       }
+       return;
+@@ -213,9 +242,10 @@ export class InputCollector extends Component {
+       return; // 非白名单（含 Shift / 方向键）忽略。
+     }
+     const mediaTime = this.chartTimeProbe !== null ? this.chartTimeProbe() : -1;
++    if (!Number.isFinite(mediaTime) || mediaTime < 0) { return; }
+     this.discreteIntents.push({
+       kind: 'Strike',
+-      videoTimeMs: mediaTime >= 0 ? mediaTime : 0,
++      videoTimeMs: mediaTime,
+       keyId,
+     });
+   }
+@@ -285,6 +315,7 @@ export class InputCollector extends Component {
+ 
+   /** 鼠标滚轮：调视距直送 CameraRig，不产生意图。 */
+   private onMouseWheel(event: EventMouse): void {
++    if (isChartPlayback(this.readChartState()) || this.isWorldMotionGated()) { return; }
+     const scrollY = event.getScrollY();
+     if (scrollY !== 0) {
+       this.adjustViewDistance(scrollY > 0 ? -1 : 1);
+@@ -359,9 +390,15 @@ export class InputCollector extends Component {
+   collectFrameIntents(): PlayerIntent[] {
+     const frameIntents: PlayerIntent[] = [];
+     const state = this.readChartState();
+-    const inChart = isChartPlayback(state);
++    const inChart = isChartPlayback(state) || (this.chartContextProvider?.() ?? false);
+ 
+-    if (!inChart) {
++    if (inChart || this.isWorldMotionGated()) {
++      this.worldStrikeResetter?.();
++      this.pressedMoveKeys.clear();
++      this.spacePressed = false;
++      this.setMoveAxis(0, 0);
++    }
++    if (!inChart && !this.isWorldMotionGated()) {
+       const lateral = clampAxis(this.moveLateral);
+       const depth = clampAxis(this.moveDepth);
+       if (lateral !== 0 || depth !== 0) {
+diff --git "a/D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\backup\\src\\presentation\\ScreenInvertRipple.ts" "b/D:\\Project\\A_New_Begin\\Neurou_official\\src\\presentation\\ScreenInvertRipple.ts"
+index 0f3fcd9..4050b89 100644
+--- "a/D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\backup\\src\\presentation\\ScreenInvertRipple.ts"
++++ "b/D:\\Project\\A_New_Begin\\Neurou_official\\src\\presentation\\ScreenInvertRipple.ts"
+@@ -1,292 +1,129 @@
+-﻿// ============================================================
+-// P 表现层 · ScreenInvertRipple 屏幕反色涟漪组件
+-// （T6 / 名库 v2.3 冻结名，原灰盒占位声明经 PROTOCOL 指示转正）
+-//
+-// 依据：
+-// - 名库 v2.3 冻结名：ScreenInvertRipple（Cocos 组件）；
+-// - PROTOCOL 指示：参照 expanding_filtercircle_effect_code(html).txt
+-//   的 ripple 模式（CSS mask + invert(1)）尝试真实反色滤镜；
+-// - INV-11 边界不变：不修改 TraceTier、解谜进度、账本、世界
+-//   运动门控；本组件纯视觉，由 DeepTraceRevealSequence 驱动。
+-//
+-// 实现原理（对照参考实现的浏览器管线 → Cocos 管线翻译）：
+-//   CSS mask + invert(1) 无法直接用；等价做法为：
+-//   ① RenderTexture 相机（主相机子节点，同参投影）把 3D 世界
+-//     渲染到 RT；② Canvas 下全屏 Sprite 以该 RT 为纹理；
+-//   ③ 自定义 Effect assets/effects/invert-ripple.effect 在
+-//     圆形遮罩内输出反色（软边 smoothstep + 强度 k 曲线 +
+-//     曝光脉冲白化罩），遮罩外 alpha=0 不遮挡世界。
+-//   曲线与参考一致：扩张缓动 ln(1+4p)/ln5（复用
+-//   DeepTraceRevealSequence 的 easeExpand）、强度 nrL(1−p)、
+-//   软边 8 + min(r,600)×0.02、起始半径 2×高/15。
+-//
+-// 降级（效果资产缺失 / 初始化失败时）：
+-//   不激活 RT 相机与遮罩，仅保留 DeepTraceRevealSequence 的
+-//   12 段方块圆环灰盒（表现不中断）。
+-//
+-// 边界：
+-//   ✗ 不实现 SVG 滤镜（浏览器专属管线，无对应物）
+-//   ✗ 无鼠标跟随圆（触发源是深痕位置事件，非点击）
+-//   ✗ 圆心取屏幕中心（占位；深痕世界坐标投影待 PROTOCOL 追认）
+-//
+-// 依赖矩阵（stage-1.md §6）：presentation 可引用 cc；
+-//   对 DeepTraceRevealSequence 仅复用其导出的缓动函数。
+-// ============================================================
+-
+-import {
+-  _decorator,
+-  Component,
+-  Node,
+-  Camera,
+-  Sprite,
+-  SpriteFrame,
+-  RenderTexture,
+-  Material,
+-  Vec4,
+-  UITransform,
+-  screen,
+-} from 'cc';
++// INV-11: visual state only; capture and invert a soft circular region.
++import { _decorator, Component, Node, Camera, Sprite, SpriteFrame, RenderTexture,
++  Material, EffectAsset, Vec4, UITransform, screen, resources, isValid } from 'cc';
+ import { easeExpand } from './DeepTraceRevealSequence';
+-
+ const { ccclass } = _decorator;
+-
+-// ------------------------------------------------------------
+-// 滤镜参数（占位，参照 expanding_filtercircle_effect_code(html).txt
+-// 直译，待追认登记）。
+-// ------------------------------------------------------------
+-
+-/** 自定义 Effect 资产名（assets/effects/invert-ripple.effect） */
+-const INVERT_EFFECT_NAME = 'invert-ripple';
+-
+-/** 起始半径占视口高的比例（参照 r0 = 2 * vh / 15） */
+ const START_RADIUS_VIEW_RATIO = 2 / 15;
+-
+-/** 软边基础像素（参照 soft = 8 + …） */
+ const SOFT_EDGE_BASE_PX = 8;
+-
+-/** 软边随半径增长系数（参照 … + min(r, 600) * 0.02） */
+ const SOFT_EDGE_RADIUS_SCALE = 0.02;
+-
+-/** 软边半径封顶像素（参照 min(r, 600)） */
+ const SOFT_EDGE_RADIUS_CAP_PX = 600;
+ 
+-/**
+- * ScreenInvertRipple 屏幕反色涟漪组件
+- * （名库 v2.3 冻结类型名，Cocos 组件）
+- *
+- * 由 SceneBuilder 挂载并接线：bindUiRoot 注入 Canvas 根、
+- * bindSourceCamera 注入主 3D 相机；DeepTraceRevealSequence 在
+- * 揭示序列各阶段调用 begin / updateProgress / end。
+- */
+ @ccclass('ScreenInvertRipple')
+ export class ScreenInvertRipple extends Component {
+-  /** UI 根节点（遮罩 Sprite 挂其下，取其层与全屏尺寸） */
+   private uiRoot: Node | null = null;
+-
+-  /** 主 3D 相机（RT 相机挂其节点下复制投影参数） */
+   private sourceCamera: Camera | null = null;
+-
+-  /** RT 相机（渲染世界到 RenderTexture；序列外禁用） */
+   private rtCamera: Camera | null = null;
+-
+-  /** 渲染纹理（世界画面；遮罩 Sprite 的采样源） */
+   private renderTexture: RenderTexture | null = null;
+-
+-  /** 全屏遮罩 Sprite 节点（Canvas 下；序列外隐藏） */
+   private overlayNode: Node | null = null;
+-
+-  /** 反色滤镜材质（invert-ripple Effect 实例） */
+   private material: Material | null = null;
+-
+-  /** 涟漪是否激活（begin → end 之间） */
++  private frame: SpriteFrame | null = null;
+   private active = false;
+-
+-  /** 视口尺寸（px，begin 时快照） */
+   private widthPx = 0;
+   private heightPx = 0;
+-
+-  /** 起始 / 结束半径（px，begin 时按视口计算） */
+   private startRadiusPx = 0;
+   private endRadiusPx = 0;
+-
+-  /**
+-   * 接线 UI 根（方法名沿用 ROUND-12 追认模式 bindUiRoot）。
+-   */
+-  bindUiRoot(root: Node): void {
+-    this.uiRoot = root;
+-  }
+-
+-  /**
+-   * 接线主 3D 相机（沿用追认模式 bindSourceCamera）。
+-   */
+-  bindSourceCamera(camera: Camera): void {
+-    this.sourceCamera = camera;
++  private centerX = 0;
++  private centerY = 0;
++
++  onLoad(): void {
++    resources.load('effects/invert-ripple', EffectAsset, (error, effect) => {
++      if (!isValid(this, true)) { return; }
++      if (error || !effect) {
++        console.error('[ScreenInvertRipple] Effect 加载失败', error); return;
++      }
++      this.material = new Material();
++      this.material.initialize({ effectAsset: effect, defines: { SAMPLE_FROM_RT: true } });
++    });
+   }
+-
+-  /**
+-   * 启动涟漪（构建/复用管线资源，激活 RT 相机与遮罩）。
+-   * 效果资产缺失时静默降级（调用方无需感知）。
+-   */
+-  begin(): void {
+-    if (this.active || this.uiRoot === null || this.sourceCamera === null) {
+-      return;
+-    }
+-    const size = screen.windowSize;
+-    this.widthPx = size.width;
+-    this.heightPx = size.height;
+-    if (!this.ensurePipeline()) {
+-      return;
+-    }
+-
+-    // 起始 / 结束半径（参照 nrSpawn：r0 = 2*vh/15；
+-    // R = 圆心到最远角距离，居中时即半对角线）。
+-    this.startRadiusPx = START_RADIUS_VIEW_RATIO * this.heightPx;
+-    const halfW = this.widthPx / 2;
+-    const halfH = this.heightPx / 2;
+-    this.endRadiusPx = Math.sqrt(halfW * halfW + halfH * halfH);
+-    if (this.endRadiusPx <= this.startRadiusPx + 1) {
+-      this.endRadiusPx = this.startRadiusPx + 1;
+-    }
+-
++  bindUiRoot(root: Node): void { this.uiRoot = root; }
++  bindSourceCamera(camera: Camera): void { this.sourceCamera = camera; }
++  begin(): boolean {
++    if (this.active) { return true; }
++    if (!this.uiRoot || !this.sourceCamera || !this.material) { return false; }
++    this.widthPx = Math.max(2, screen.windowSize.width);
++    this.heightPx = Math.max(2, screen.windowSize.height);
++    const projected = this.sourceCamera.worldToScreen(this.node.worldPosition);
++    this.centerX = projected.x / this.widthPx;
++    this.centerY = projected.y / this.heightPx;
++    this.ensurePipeline();
+     this.active = true;
+-    if (this.rtCamera !== null) {
+-      this.rtCamera.enabled = true;
+-    }
+-    if (this.overlayNode !== null) {
+-      this.overlayNode.active = true;
+-    }
+-    this.applyUniforms(this.startRadiusPx, 0, 0);
++    this.rtCamera!.enabled = true;
++    this.overlayNode!.active = true;
++    this.overlayNode!.setSiblingIndex(this.uiRoot.children.length - 1);
++    this.updateProgress(0, 0);
++    return true;
+   }
+-
+-  /**
+-   * 推进涟漪（由 DeepTraceRevealSequence 每帧调用）：
+-   * progress ∈ [0,1] 扩张进度；flash ∈ [0,1] 曝光脉冲强度。
+-   * 曲线与参考一致：半径走 easeExpand（先快后慢），
+-   * 强度走 easeExpand(1−p)（长亮末熄）。
+-   */
+   updateProgress(progress: number, flash: number): void {
+-    if (!this.active || this.material === null) {
+-      return;
++    if (!this.active || !this.material || !this.sourceCamera || !this.rtCamera) { return; }
++    if (screen.windowSize.width !== this.widthPx || screen.windowSize.height !== this.heightPx) {
++      this.widthPx = Math.max(2, screen.windowSize.width);
++      this.heightPx = Math.max(2, screen.windowSize.height);
++      this.ensurePipeline();
+     }
++    this.rtCamera.projection = this.sourceCamera.projection;
++    this.rtCamera.fov = this.sourceCamera.fov;
++    this.rtCamera.fovAxis = this.sourceCamera.fovAxis;
++    this.rtCamera.orthoHeight = this.sourceCamera.orthoHeight;
++    this.rtCamera.clearColor = this.sourceCamera.clearColor;
+     const p = Math.max(0, Math.min(1, progress));
+-    const lp = easeExpand(p);
+-    const radiusPx =
+-      this.startRadiusPx + (this.endRadiusPx - this.startRadiusPx) * lp;
+-    const invertK = easeExpand(1 - p);
+-    this.applyUniforms(radiusPx, invertK, Math.max(0, Math.min(1, flash)));
++    const radiusPx = this.startRadiusPx + (this.endRadiusPx - this.startRadiusPx) * easeExpand(p);
++    const softPx = SOFT_EDGE_BASE_PX + Math.min(radiusPx, SOFT_EDGE_RADIUS_CAP_PX) * SOFT_EDGE_RADIUS_SCALE;
++    this.material.setProperty('u_centerRadius', new Vec4(
++      this.centerX * this.widthPx, this.centerY * this.heightPx, radiusPx, softPx));
++    this.material.setProperty('u_params', new Vec4(
++      easeExpand(1 - p), Math.max(0, Math.min(1, flash)), this.widthPx, this.heightPx));
+   }
+-
+-  /**
+-   * 结束涟漪（停 RT 相机、隐藏遮罩；资源复用不清除）。
+-   */
+   end(): void {
+     this.active = false;
+-    if (this.rtCamera !== null) {
+-      this.rtCamera.enabled = false;
+-    }
+-    if (this.overlayNode !== null) {
+-      this.overlayNode.active = false;
+-    }
++    if (this.rtCamera && isValid(this.rtCamera, true)) { this.rtCamera.enabled = false; }
++    if (this.overlayNode && isValid(this.overlayNode, true)) { this.overlayNode.active = false; }
+   }
+-
++  onDisable(): void { this.end(); }
+   onDestroy(): void {
+     this.end();
++    if (this.rtCamera && isValid(this.rtCamera.node, true)) { this.rtCamera.node.destroy(); }
++    if (this.overlayNode && isValid(this.overlayNode, true)) { this.overlayNode.destroy(); }
++    this.frame?.destroy();
++    this.material?.destroy();
++    this.renderTexture?.destroy();
+   }
+-
+-  /**
+-   * 确保 RT + RT 相机 + 遮罩 Sprite + 材质就绪（懒构建一次）。
+-   * 返回 false 表示 Effect 缺失 / 初始化失败（降级灰盒）。
+-   */
+-  private ensurePipeline(): boolean {
+-    // RT（尺寸随当前视口重建；SpriteFrame 持同对象引用自动生效）
+-    if (this.renderTexture === null) {
+-      this.renderTexture = new RenderTexture();
+-    }
+-    this.renderTexture.reset({
+-      name: 'DeepTraceInvertRT',
+-      width: Math.max(2, Math.round(this.widthPx)),
+-      height: Math.max(2, Math.round(this.heightPx)),
+-    });
+-
+-    // 材质（先建，失败即降级，避免留下无材质节点）
+-    if (this.material === null) {
+-      const material = new Material();
+-      try {
+-        material.initialize({ effectName: INVERT_EFFECT_NAME });
+-      } catch (error) {
+-        console.warn('[ScreenInvertRipple] 反色 Effect 初始化失败：', error);
+-        return false;
+-      }
+-      if (material.passes.length === 0) {
+-        console.warn('[ScreenInvertRipple] 未找到 invert-ripple Effect（降级灰盒圆环）');
+-        return false;
+-      }
+-      this.material = material;
+-    }
+-
+-    // RT 相机（主相机子节点，局部零变换即同位姿；复制投影参数）
+-    if (this.rtCamera === null && this.sourceCamera !== null) {
+-      const camNode = new Node('DeepTraceInvertRtCamera');
+-      this.sourceCamera.node.addChild(camNode);
+-      const cam = camNode.addComponent(Camera);
+-      cam.projection = this.sourceCamera.projection;
+-      cam.fov = this.sourceCamera.fov;
+-      cam.orthoHeight = this.sourceCamera.orthoHeight;
+-      cam.near = this.sourceCamera.near;
+-      cam.far = this.sourceCamera.far;
+-      cam.clearFlags = this.sourceCamera.clearFlags;
+-      cam.clearColor = this.sourceCamera.clearColor;
+-      cam.visibility = this.sourceCamera.visibility;
+-      cam.priority = this.sourceCamera.priority;
+-      // 渲染目标 = RT；默认禁用，序列期间由 begin 激活。
+-      cam.targetTexture = this.renderTexture;
+-      cam.enabled = false;
+-      this.rtCamera = cam;
++  private ensurePipeline(): void {
++    if (!this.renderTexture) { this.renderTexture = new RenderTexture(); }
++    this.renderTexture.reset({ width: Math.round(this.widthPx), height: Math.round(this.heightPx) });
++    if (!this.rtCamera) {
++      const cameraNode = new Node('DeepTraceInvertRtCamera');
++      this.sourceCamera!.node.addChild(cameraNode);
++      this.rtCamera = cameraNode.addComponent(Camera);
++      this.rtCamera.enabled = false;
++      this.rtCamera.near = this.sourceCamera!.near;
++      this.rtCamera.far = this.sourceCamera!.far;
++      this.rtCamera.clearFlags = this.sourceCamera!.clearFlags;
++      this.rtCamera.visibility = this.sourceCamera!.visibility;
++      this.rtCamera.priority = this.sourceCamera!.priority - 1;
++      this.rtCamera.targetTexture = this.renderTexture;
+     }
+-
+-    // 全屏遮罩 Sprite（Canvas 下最上层；采样 RT）
+-    if (this.overlayNode === null && this.uiRoot !== null) {
++    if (!this.overlayNode) {
+       const node = new Node('ScreenInvertRippleOverlay');
+-      node.layer = this.uiRoot.layer;
+-      this.uiRoot.addChild(node);
+-      node
+-        .addComponent(UITransform)
+-        .setContentSize(this.widthPx, this.heightPx);
++      node.layer = this.uiRoot!.layer;
++      this.uiRoot!.addChild(node);
++      node.addComponent(UITransform);
+       const sprite = node.addComponent(Sprite);
+       sprite.sizeMode = Sprite.SizeMode.CUSTOM;
+       sprite.type = Sprite.Type.SIMPLE;
+-      const frame = new SpriteFrame();
+-      frame.texture = this.renderTexture;
+-      sprite.spriteFrame = frame;
+       sprite.customMaterial = this.material;
+-      node.active = false;
+       this.overlayNode = node;
+     }
+-
+-    return this.rtCamera !== null && this.overlayNode !== null;
+-  }
+-
+-  /**
+-   * 写滤镜 uniforms（软边随半径增长，参照 radial-gradient 软渐变）。
+-   */
+-  private applyUniforms(
+-    radiusPx: number,
+-    invertK: number,
+-    flash: number,
+-  ): void {
+-    if (this.material === null) {
+-      return;
+-    }
+-    const softPx =
+-      SOFT_EDGE_BASE_PX +
+-      Math.min(radiusPx, SOFT_EDGE_RADIUS_CAP_PX) * SOFT_EDGE_RADIUS_SCALE;
+-    this.material.setProperty(
+-      'u_centerRadius',
+-      new Vec4(this.widthPx / 2, this.heightPx / 2, radiusPx, softPx),
+-    );
+-    this.material.setProperty(
+-      'u_params',
+-      new Vec4(invertK, flash, this.widthPx, this.heightPx),
+-    );
++    const rootTransform = this.uiRoot!.getComponent(UITransform)!;
++    this.overlayNode.getComponent(UITransform)!.setContentSize(rootTransform.width, rootTransform.height);
++    const sprite = this.overlayNode.getComponent(Sprite)!;
++    sprite.spriteFrame = null;
++    this.frame?.destroy();
++    this.frame = new SpriteFrame();
++    this.frame.texture = this.renderTexture;
++    sprite.spriteFrame = this.frame;
++    this.startRadiusPx = START_RADIUS_VIEW_RATIO * this.heightPx;
++    this.endRadiusPx = Math.max(this.startRadiusPx + 1, Math.hypot(
++      Math.max(this.centerX, 1 - this.centerX) * this.widthPx,
++      Math.max(this.centerY, 1 - this.centerY) * this.heightPx));
+   }
+ }
+diff --git "a/D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\backup\\src\\presentation\\TrailRenderer.ts" "b/D:\\Project\\A_New_Begin\\Neurou_official\\src\\presentation\\TrailRender.ts"
+index 45baa1c..a74a498 100644
+--- "a/D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\backup\\src\\presentation\\TrailRenderer.ts"
++++ "b/D:\\Project\\A_New_Begin\\Neurou_official\\src\\presentation\\TrailRender.ts"
+@@ -1,63 +1,16 @@
+-﻿// ============================================================
+-// P 表现层 · TrailRenderer 拖尾渲染组件（T3 拖尾 / AC-07 / AC-08）
+-// 名库 v1.9：行 51 颜色体系冻结 `TrailRender`（不含 -er 后缀）；
+-//            HANDOFF-ROUND-14 明示文件 `src/presentation/TrailRenderer.ts`
+-//            与组件类型 `TrailRenderer`（与名库 TrailRender 不一致，
+-//            列入待追认事项，请 PROTOCOL 裁定是否更新名库）。
+-//
+-// 关联冻结名：TrailLength（character 域，逻辑拖尾长度，行 51）
+-//             Protagonist（character 域，主角状态承载类，VERDICT-096）
+-//             MoveSpeed（character 域，速度承载类型，行 51）
+-//             WorldMeter（world 域，全游戏唯一距离单位）
+-//
+-// HANDOFF-ROUND-14 明示：
+-//   - 文件路径：src/presentation/TrailRenderer.ts
+-//   - 组件类型：TrailRenderer（Cocos 组件）
+-//   - 读取 Protagonist 移动速度，调用 calculateTrailLength 获取
+-//     逻辑拖尾长度（经 Protagonist.getTrailLength 间接消费，
+-//     避免违反 presentation → character R 边值导入禁令）；
+-//   - 拖尾颜色使用固定占位色 #FFFFFF，不得读取感绪值或
+-//     渲染过渡色（AC-08）；
+-//   - 拖尾长度上限等视觉参数放 TrailRenderer 内部，
+-//     绝对不准放进 constants。
+-//
+-// 实现选择（HANDOFF 明示"使用 Cocos 的 MotionStreak 或 Graphics"）：
+-//   未补 cc.d.ts 中 MotionStreak / Graphics 桩（避免触碰未授权文件），
+-//   改用 MeshRenderer + 一组小立方体子节点模拟拖尾段（与 SceneBuilder
+-//   灰盒方案一致；所引用的 cc 类型均已桩）。列入偏差栏待追认。
+-//
+-// 职责：
+-//   - 每帧读取主角位置，推入位置历史队列；
+-//   - 调用 protagonist.getTrailLength() 获取逻辑拖尾长度；
+-//   - 静止检测（位置 delta < EPSILON）→ 视觉裁剪为 0（拖尾收拢）；
+-//   - 应用表现侧视觉上限裁剪（MAX_TRAIL_LENGTH_WM）；
+-//   - 按可视段数把段节点对齐到历史位置，沿队列尾部缩放衰减；
+-//   - 段节点固定白色 #FFFFFF（PLACEHOLDER_TRAIL_COLOR）。
+-//
+-// 边界：
+-//   ✗ 不读感绪值 / 不实现颜色映射 / 不做网络同步
+-//     （HANDOFF-14 禁感绪系统；AC-08 占位色固定不变）
+-//   ✗ 不修改 Protagonist 内部状态（INV-3 表现层只读）
+-//   ✗ 不另建拖尾长度公式（消费 calculateTrailLength 即可）
+-//
+-// 依赖矩阵（stage-1.md §6）：
+-//   presentation → constants A（无；本轮无新增 constants 引用）
+-//   presentation → character R（Protagonist 类型只读；
+-//                  通过 protagonist.getTrailLength() 间接消费
+-//                  character.calculateTrailLength，避免值导入违规）
+-//   presentation → presentation 自身（FrameRefreshable）
+-// ============================================================
+-
++// P 表现层 · TrailRender（名库冻结名）；固定白色灰盒拖尾，仅读主角。
+ import {
+   _decorator,
+   Component,
+   Node,
+   Vec3,
+   MeshRenderer,
++  Mesh,
+   Material,
+   Color,
+   utils,
+   primitives,
++  isValid,
+ } from 'cc';
+ import type { Protagonist } from '../character/Protagonist';
+ import type { TrailLength } from '../character/TrailLength';
+@@ -66,7 +19,7 @@ import type { FrameRefreshable } from './FrameDriver';
+ const { ccclass, property } = _decorator;
+ 
+ // ------------------------------------------------------------
+-// 视觉参数（HANDOFF-14 明令：放 TrailRenderer 内部，
++// 视觉参数（HANDOFF-14 明令：放 TrailRender 内部，
+ // 绝对不准放进 constants；以下常量均为表现侧占位数值）
+ // ------------------------------------------------------------
+ 
+@@ -99,7 +52,7 @@ const STATIONARY_EPSILON_WM = 0.0005;
+ const PLACEHOLDER_TRAIL_COLOR = new Color(255, 255, 255, 255);
+ 
+ /**
+- * TrailRenderer 拖尾渲染组件（HANDOFF-14 明示类型名）
++ * TrailRender 拖尾渲染组件（HANDOFF-14 明示类型名）
+  *
+  * 阶段 1 承载：
+  *   - AC-07：拖尾长度随移动速度增加只增不减；静止时拖尾收拢；
+@@ -110,8 +63,9 @@ const PLACEHOLDER_TRAIL_COLOR = new Color(255, 255, 255, 255);
+  *   bindSource 注入 Protagonist 实例；FrameDriver 把本组件
+  *   加入 refreshables 列表，每帧第 ③ 步回调 onFrameRefresh。
+  */
+-@ccclass('TrailRenderer')
+-export class TrailRenderer extends Component implements FrameRefreshable {
++@ccclass('TrailRender')
++export class TrailRender extends Component implements FrameRefreshable {
++  private readonly createdVisualAssets: Array<Mesh | Material> = [];
+   /** 主角实例（R 边：类型只读；运行时由 bindSource 注入） */
+   private protagonist: Protagonist | null = null;
+ 
+@@ -192,6 +146,7 @@ export class TrailRenderer extends Component implements FrameRefreshable {
+       material.initialize({ effectName: 'builtin-unlit' });
+       material.setProperty('mainColor', PLACEHOLDER_TRAIL_COLOR);
+       meshRenderer.material = material;
++      this.createdVisualAssets.push(mesh, material);
+ 
+       // 初始隐藏（scale=0；速度=0 → 拖尾收拢）
+       seg.setScale(0, 0, 0);
+@@ -301,8 +256,18 @@ export class TrailRenderer extends Component implements FrameRefreshable {
+     }
+   }
+ 
++  /** 运行时创建的网格与材质由本组件释放，避免场景重载累积。 */
++  onDestroy(): void {
++    for (const asset of this.createdVisualAssets) {
++      if (isValid(asset, true)) { asset.destroy(); }
++    }
++    this.createdVisualAssets.length = 0;
++    this.trailSegments.length = 0;
++    this.positionHistory.length = 0;
++  }
++
+   /**
+-   * 表现侧视觉上限裁剪（HANDOFF-14 明令视觉参数放 TrailRenderer 内部）。
++   * 表现侧视觉上限裁剪（HANDOFF-14 明令视觉参数放 TrailRender 内部）。
+    */
+   private applyVisualCap(trailLength: TrailLength): TrailLength {
+     if (trailLength > MAX_TRAIL_LENGTH_WM) {
+diff --git "a/D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\backup\\src\\trace\\DeepTrace.ts" "b/D:\\Project\\A_New_Begin\\Neurou_official\\src\\trace\\DeepTrace.ts"
+index 5c3c7a9..d342682 100644
+--- "a/D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\backup\\src\\trace\\DeepTrace.ts"
++++ "b/D:\\Project\\A_New_Begin\\Neurou_official\\src\\trace\\DeepTrace.ts"
+@@ -52,7 +52,7 @@ export class DeepTrace extends Trace {
+     // 层级固定 Deep（名库 v2.3 深痕身份段）；来源暂以 Normal
+     // 占位——来源归属（TraceOrigin 语义分配）待后续任务冻结。
+     super(TraceTier.Deep, TraceOrigin.Normal);
+-    this.position = position;
++    this.position = Object.freeze({ ...position });
+   }
+ 
+   /**
+diff --git "a/D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\backup\\src\\trace\\PuzzleChain.ts" "b/D:\\Project\\A_New_Begin\\Neurou_official\\src\\trace\\PuzzleChain.ts"
+index b51b080..cccf95b 100644
+--- "a/D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\backup\\src\\trace\\PuzzleChain.ts"
++++ "b/D:\\Project\\A_New_Begin\\Neurou_official\\src\\trace\\PuzzleChain.ts"
+@@ -7,8 +7,7 @@
+ //   第一步：主角移动使痕满足指定接近距离，且痕的屏幕投影进入
+ //           指定敲击区域 → PuzzleProgress 推进至"待敲击"；
+ //           离开有效范围 → 退回第一步；
+-//   第二步：第一步条件仍成立时，完成一次 RhythmStrike（±50ms）
+-//           → 到达终点；敲击超出窗口 → 保留"待敲击"，允许重试；
++//   第二步：保持条件并连续七秒命中拍点（±50ms）；漏拍 / 离区归零。
+ //   中间不写账本（进度只更新 PuzzleProgress）；终点恰好写入
+ //   一条 NarrativeEvent（结算由 director 经 LedgerAppend 执行，
+ //   INV-2，并防止重复结算）。
+@@ -94,20 +93,14 @@ export class PuzzleChain {
+   /** 上次命中的目标拍点时间戳（防止同一拍重复处理） */
+   private lastHitBeatTimeMs = -1;
+ 
+-  /**
+-   * 最后一次被评估的拍点时刻（终点前；VERDICT-119）。
+-   *
+-   * 用于 checkSustainedExpiry 中的待判窗口检查：持续期满时，
+-   * 若该拍点的判定窗口 [t-50, t+50] 尚未闭合（当前 beat 时钟
+-   * < t + RHYTHM_STRIKE_WINDOW_MS），不得提前宣布成功——终点
+-   * 前的拍点仍须得到有效判定机会。miss 归零时同步重置为 -1。
+-   */
+-  private lastEvaluatedBeatTimeMs = -1;
++  /** 下一待命中拍点；若在持续期终点前，窗口闭合后漏拍归零。 */
++  private nextBeatTimeMs = -1;
+ 
+   /**
+    * @param progress 解谜进度（由组合根装配注入；本链推进其阶段）
+    */
+-  constructor(progress: PuzzleProgress) {
++  constructor(progress: PuzzleProgress, private readonly beatIntervalMs = 1000) {
++    if (!Number.isFinite(beatIntervalMs) || beatIntervalMs <= 0) { throw new Error('PuzzleChain: 拍点间隔必须为正'); }
+     this.progress = progress;
+   }
+ 
+@@ -152,6 +145,7 @@ export class PuzzleChain {
+     } else if (!stepConditionHold && stage === 'AwaitingStrike') {
+       // 离开第一步有效范围：退回第一步（AC-13）。
+       this.progress.applyStage('Step1');
++      this.resetSustained();
+     }
+     return stepConditionHold;
+   }
+@@ -190,105 +184,52 @@ export class PuzzleChain {
+    * @param currentBeatTimeMs 当前 beat 时钟毫秒（表现层探针提供）
+    * @returns 是否因此次检查到达终点
+    */
++  private resetSustained(): void {
++    this.sustainedStartMs = -1;
++    this.sustainedElapsedMs = 0;
++    this.lastHitBeatTimeMs = -1;
++    this.nextBeatTimeMs = -1;
++  }
++
+   checkSustainedExpiry(currentBeatTimeMs: number): boolean {
+-    if (this.progress.getStage() !== 'AwaitingStrike') {
+-      return false;
+-    }
+-    if (this.sustainedStartMs < 0) {
+-      this.sustainedElapsedMs = 0;
++    if (this.progress.getStage() !== 'AwaitingStrike' ||
++        !Number.isFinite(currentBeatTimeMs) || this.sustainedStartMs < 0) { return false; }
++    const end = this.sustainedStartMs + this.requiredSustainedMs;
++    // A beat strictly before end belongs to this run, even when its window closes after end.
++    if (this.nextBeatTimeMs < end) {
++      if (currentBeatTimeMs > this.nextBeatTimeMs + RHYTHM_STRIKE_WINDOW_MS) {
++        this.resetSustained();
++      } else {
++        this.sustainedElapsedMs = Math.max(0, currentBeatTimeMs - this.sustainedStartMs);
++      }
+       return false;
+     }
+-    const elapsed = currentBeatTimeMs - this.sustainedStartMs;
+-    this.sustainedElapsedMs = elapsed;
+-    if (elapsed >= this.requiredSustainedMs) {
+-      // VERDICT-119：终点前的拍点若判定窗口尚未闭合，
+-      // 不得提前宣布成功——等待窗口闭合后再完成。
+-      if (
+-        this.lastEvaluatedBeatTimeMs >= 0 &&
+-        currentBeatTimeMs <
+-          this.lastEvaluatedBeatTimeMs + RHYTHM_STRIKE_WINDOW_MS
+-      ) {
+-        return false;
+-      }
++    this.sustainedElapsedMs = Math.max(0, currentBeatTimeMs - this.sustainedStartMs);
++    if (currentBeatTimeMs >= end) {
+       this.progress.applyStage('Completed');
+       return true;
+     }
+     return false;
+   }
+ 
+-  /**
+-   * 第二步：尝试结算一次节奏敲击（AC-12 / AC-13）。
+-   *
+-   * VERDICT-119 口径（时间制，非拍数制）：
+-   *   - 第一次命中启动 7 秒持续期；
+-   *   - 持续期内每次敲击必须在 ±50ms 内（miss 即归零重来）；
+-   *   - 有效持续区间为 [首次命中时刻, 首次命中时刻 + 7000ms)
+-   *     （半开区间）；
+-   *   - 目标拍点时刻等于或晚于持续期终点的拍点，不计入本轮
+-   *     持续判定（归属以目标拍点时刻判断，不以按键事件或
+-   *     更新帧的处理顺序判断）；
+-   *   - 终点前的拍点仍须得到有效判定；若其判定窗口尚未闭合，
+-   *     不得因已满七秒而提前宣布成功。
+-   *
+-   * 仅"待敲击"阶段接受敲击；判定由 RhythmStrike 纯函数执行
+-   * （绝对偏差 ≤ RHYTHM_STRIKE_WINDOW_MS = 50）。
+-   *
+-   * 账本结算不在本方法内：链终点"恰好写入一条 NarrativeEvent"
+-   * 由 director 在本方法返回 true 后执行（INV-2）。
+-   *
+-   * 方法名 attemptStrike 为"完成一次敲击"直译，待 PROTOCOL 追认。
+-   *
+-   * @param strike 敲击时间戳与目标节拍时间戳（表现层探针提供）
+-   * @returns 是否到达终点（持续期满 7 秒）
+-   */
+   attemptStrike(strike: RhythmStrike): boolean {
+-    if (this.progress.getStage() !== 'AwaitingStrike') {
+-      return false;
+-    }
+-
+-    // VERDICT-119：持续期活跃时，以目标拍点时刻判断边界。
+-    // 目标拍点时刻 >= 持续期终点的拍点不计入本轮持续判定。
++    if (this.progress.getStage() !== 'AwaitingStrike' ||
++        !Number.isFinite(strike.strikeTimeMs) || !Number.isFinite(strike.targetBeatTimeMs) ||
++        strike.strikeTimeMs < 0 || strike.targetBeatTimeMs < 0) { return false; }
+     if (this.sustainedStartMs >= 0) {
+-      const sustainedEnd = this.sustainedStartMs + this.requiredSustainedMs;
+-      if (strike.targetBeatTimeMs >= sustainedEnd) {
+-        // 本拍不计入持续判定。但持续期已满——检查终点前
+-        // 最后一个被评估拍点的判定窗口是否已闭合：
+-        // 若尚未闭合，须等待（终点前的拍点仍须得到有效判定）。
+-        if (
+-          this.lastEvaluatedBeatTimeMs >= 0 &&
+-          strike.strikeTimeMs <
+-            this.lastEvaluatedBeatTimeMs + RHYTHM_STRIKE_WINDOW_MS
+-        ) {
+-          return false;
+-        }
+-        this.progress.applyStage('Completed');
+-        return true;
+-      }
++      const end = this.sustainedStartMs + this.requiredSustainedMs;
++      if (strike.targetBeatTimeMs >= end) { return false; }
++      if (this.nextBeatTimeMs < strike.targetBeatTimeMs) { this.resetSustained(); }
+     }
+-
+-    // 同一拍重复命中：不计数也不归零，等待下一拍。
+-    if (strike.targetBeatTimeMs === this.lastHitBeatTimeMs) {
+-      return false;
+-    }
+-    this.lastHitBeatTimeMs = strike.targetBeatTimeMs;
+-
+-    // 记录最后一次被评估的拍点时刻（终点前），
+-    // 供 checkSustainedExpiry 的待判窗口检查使用。
+-    this.lastEvaluatedBeatTimeMs = strike.targetBeatTimeMs;
+-
++    if (strike.targetBeatTimeMs === this.lastHitBeatTimeMs) { return false; }
+     if (!judgeRhythmStrike(strike.strikeTimeMs, strike.targetBeatTimeMs)) {
+-      // 敲击超出窗口：持续期归零，保留"待敲击"阶段允许重试。
+-      this.sustainedStartMs = -1;
+-      this.sustainedElapsedMs = 0;
+-      this.lastEvaluatedBeatTimeMs = -1;
++      this.resetSustained();
+       return false;
+     }
+-
+-    // 命中：若持续期未开始则启动（以本次敲击时间戳为起点）。
+-    if (this.sustainedStartMs < 0) {
+-      this.sustainedStartMs = strike.strikeTimeMs;
+-    }
+-    this.sustainedElapsedMs = strike.strikeTimeMs - this.sustainedStartMs;
++    if (this.sustainedStartMs < 0) { this.sustainedStartMs = strike.strikeTimeMs; }
++    this.lastHitBeatTimeMs = strike.targetBeatTimeMs;
++    this.nextBeatTimeMs = strike.targetBeatTimeMs + this.beatIntervalMs;
++    this.sustainedElapsedMs = Math.max(0, strike.strikeTimeMs - this.sustainedStartMs);
+     return false;
+   }
+ }
+diff --git "a/D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\backup\\tsconfig.json" "b/D:\\Project\\A_New_Begin\\Neurou_official\\tsconfig.json"
+index 0cb14c8..ba8a37c 100644
+--- "a/D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\backup\\tsconfig.json"
++++ "b/D:\\Project\\A_New_Begin\\Neurou_official\\tsconfig.json"
+@@ -2,20 +2,10 @@
+   // ============================================================
+   // TypeScript 检查配置（HANDOFF-ROUND-11 / T1）
+   //
+-  // Cocos Creator 3.8.8 对接说明（依据官方 3.8 tsconfig 文档）：
+-  // - Cocos 编译资产脚本（assets/ 下）时自行管理编译选项，
+-  //   不读取本文件的编译结果；
+-  // - 用 Cocos Dashboard 3.8.8 首次打开/导入本工程后，编辑器
+-  //   会生成 temp/tsconfig.cocos.json（target / module / cc 类型
+-  //   声明由其管理），届时如需让 IDE 检查与编辑器完全一致，
+-  //   可在 PROTOCOL 授权后改为 { "extends": "./temp/tsconfig.cocos.json" }；
+-  // - temp/ library/ build/ local/ 等编辑器生成目录不入库。
+-  //
+-  // 当前 src/ 为零 cc 依赖的纯逻辑层，本文件为 tsc / IDE 的
+-  // 自包含检查配置；选项与 Cocos 隐含约束对齐：
+-  // module=ES2015、experimentalDecorators、isolatedModules、
+-  // forceConsistentCasingInFileNames（官方明示，勿擅自改 target/module）。
+-  // ============================================================
++  // 使用 Creator 导入工程时生成的 temp/declarations/cc 与 cc.env。
++  // 首次运行 tsc 前须由 Creator 3.8.8 打开工程生成真实引擎声明。
++  // src 逻辑域保持零 cc；presentation 与 assets/scripts 组合根可用 cc。
++  // target/module 保持既有 Cocos 兼容选项；检查包含两个组合根脚本。
+   "compilerOptions": {
+     "target": "ES2015",
+     "module": "ES2015",
+@@ -29,8 +19,8 @@
+     "forceConsistentCasingInFileNames": true,
+     "skipLibCheck": true,
+     "noEmit": true,
+-    "types": []
++    "types": ["./temp/declarations/cc", "./temp/declarations/cc.env"]
+   },
+-  "include": ["src/**/*.ts", "constants/**/*.ts", "types/**/*.d.ts"],
+-  "exclude": ["node_modules", "assets", "temp", "tmp", "library", "local", "build", "scripts"]
++  "include": ["src/**/*.ts", "constants/**/*.ts", "assets/scripts/*.ts"],
++  "exclude": ["node_modules", "temp", "tmp", "library", "local", "build", "scripts"]
+ }
+diff --git "a/D:\\Project\\A_New_Begin\\Neurou_official\\temp\\quality-empty.txt" "b/D:\\Project\\A_New_Begin\\Neurou_official\\src\\presentation\\AudioOutputClock.ts"
+index e69de29..be452e7 100644
+--- "a/D:\\Project\\A_New_Begin\\Neurou_official\\temp\\quality-empty.txt"
++++ "b/D:\\Project\\A_New_Begin\\Neurou_official\\src\\presentation\\AudioOutputClock.ts"
+@@ -0,0 +1,134 @@
++// Browser presentation clock: media samples -> actual audio output time (INV-12).
++// No fixed compensation; output timestamp is already aligned, so do not subtract latency twice.
++export class AudioOutputClock {
++  private context: AudioContext | null = null;
++  private bgmBuffer: AudioBuffer | null = null;
++  private bgmSource: AudioBufferSourceNode | null = null;
++  private bgmGain: GainNode | null = null;
++  private bgmStartSeconds = -1;
++  private video: HTMLVideoElement | null = null;
++  private mediaSource: MediaElementAudioSourceNode | null = null;
++  private chartTimeMs = -1;
++  private chartAnchor: { mediaSeconds: number; contextSeconds: number } | null = null;
++  private chartRunning = false;
++  private disposed = false;
++  private onMediaPlaying = (): void => {
++    if (!this.video || !this.context) { return; }
++    this.chartAnchor = { mediaSeconds: this.video.currentTime, contextSeconds: this.readOutputSeconds() };
++    this.chartRunning = true;
++  };
++  private onMediaPause = (): void => {
++    this.chartRunning = false;
++    this.chartAnchor = null;
++  };
++  private onMediaWaiting = (): void => {
++    this.chartRunning = false;
++    this.chartAnchor = null;
++  };
++
++  private ensureContext(): AudioContext {
++    if (!this.context) { this.context = new AudioContext(); }
++    return this.context;
++  }
++  async loadBgm(url: string): Promise<void> {
++    const context = this.ensureContext();
++    const response = await fetch(url);
++    if (!response.ok) { throw new Error('BGM HTTP ' + response.status); }
++    const buffer = await context.decodeAudioData(await response.arrayBuffer());
++    if (!this.disposed) { this.bgmBuffer = buffer; }
++  }
++  async unlock(): Promise<void> {
++    if (this.disposed) { return; }
++    await this.ensureContext().resume();
++  }
++  startBgm(): boolean {
++    if (!this.bgmBuffer || this.disposed) { return false; }
++    const context = this.ensureContext();
++    if (context.state !== 'running') { return false; }
++    if (this.bgmSource) { return true; }
++    this.bgmGain = context.createGain();
++    this.bgmGain.gain.value = 0;
++    this.bgmGain.connect(context.destination);
++    this.bgmSource = context.createBufferSource();
++    this.bgmSource.buffer = this.bgmBuffer;
++    this.bgmSource.loop = true;
++    this.bgmSource.connect(this.bgmGain);
++    this.bgmStartSeconds = context.currentTime;
++    this.bgmSource.start(this.bgmStartSeconds);
++    return true;
++  }
++  setBgmVolume(value: number): void {
++    if (this.bgmGain && this.context) {
++      this.bgmGain.gain.setValueAtTime(Math.max(0, Math.min(1, value)), this.context.currentTime);
++    }
++  }
++  readBgmTimeMs(): number {
++    if (!this.context || !this.bgmSource || this.bgmStartSeconds < 0) { return -1; }
++    return Math.max(0, (this.readOutputSeconds() - this.bgmStartSeconds) * 1000);
++  }
++  attachVideo(video: HTMLVideoElement): void {
++    if (this.video === video) { return; }
++    this.detachVideo();
++    this.video = video;
++    const context = this.ensureContext();
++    this.mediaSource = context.createMediaElementSource(video);
++    this.mediaSource.connect(context.destination);
++    video.addEventListener('playing', this.onMediaPlaying);
++    video.addEventListener('pause', this.onMediaPause);
++    video.addEventListener('waiting', this.onMediaWaiting);
++    video.addEventListener('seeking', this.onMediaWaiting);
++    video.addEventListener('ended', this.onMediaPause);
++  }
++  resetChart(): void {
++    this.chartAnchor = null;
++    this.chartRunning = false;
++    this.chartTimeMs = -1;
++  }
++  readChartTimeMs(): number {
++    const video = this.video;
++    const context = this.context;
++    if (!video || !context || video.readyState < 2 || video.seeking) { return -1; }
++    if (!this.chartRunning || !this.chartAnchor) { return this.chartTimeMs; }
++    // Chromium's media playback head already follows its audio output clock.
++    // Pair it with output time, not the ahead-of-output AudioContext.currentTime.
++    // Subtracting context latency again made Note/Strike lag the displayed frame.
++    const outputSeconds = this.readOutputSeconds();
++    this.chartAnchor = { mediaSeconds: video.currentTime, contextSeconds: outputSeconds };
++    const mapped = (this.chartAnchor.mediaSeconds + outputSeconds - this.chartAnchor.contextSeconds) * 1000;
++    this.chartTimeMs = Math.max(0, this.chartTimeMs, mapped);
++    return this.chartTimeMs;
++  }
++  private readOutputSeconds(): number {
++    const context = this.context!;
++    const timestamp = context.getOutputTimestamp?.();
++    if (context.state === 'running' && timestamp && typeof timestamp.performanceTime === 'number' &&
++        typeof timestamp.contextTime === 'number' && timestamp.performanceTime > 0 &&
++        timestamp.contextTime > 0 && performance.now() - timestamp.performanceTime < 1000) {
++      return Math.min(context.currentTime, timestamp.contextTime +
++        (performance.now() - timestamp.performanceTime) / 1000);
++    }
++    const measuredLatency = context.baseLatency + (context.outputLatency || 0);
++    return Math.max(0, context.currentTime - measuredLatency);
++  }
++  private detachVideo(): void {
++    if (this.video) {
++      this.video.removeEventListener('playing', this.onMediaPlaying);
++      this.video.removeEventListener('pause', this.onMediaPause);
++      this.video.removeEventListener('waiting', this.onMediaWaiting);
++      this.video.removeEventListener('seeking', this.onMediaWaiting);
++      this.video.removeEventListener('ended', this.onMediaPause);
++    }
++    this.mediaSource?.disconnect();
++    this.mediaSource = null;
++    this.video = null;
++    this.resetChart();
++  }
++  destroy(): void {
++    this.disposed = true;
++    this.detachVideo();
++    this.bgmSource?.stop();
++    this.bgmSource?.disconnect();
++    this.bgmGain?.disconnect();
++    void this.context?.close();
++  }
++}
+diff --git "a/D:\\Project\\A_New_Begin\\Neurou_official\\temp\\quality-empty.txt" "b/D:\\Project\\A_New_Begin\\Neurou_official\\src\\presentation\\AudioOutputClock.ts.meta"
+index e69de29..a4c354f 100644
+--- "a/D:\\Project\\A_New_Begin\\Neurou_official\\temp\\quality-empty.txt"
++++ "b/D:\\Project\\A_New_Begin\\Neurou_official\\src\\presentation\\AudioOutputClock.ts.meta"
+@@ -0,0 +1,9 @@
++{
++  "ver": "4.0.24",
++  "importer": "typescript",
++  "imported": true,
++  "uuid": "2f6ec325-6654-40c8-a05c-6ad62a54bdb2",
++  "files": [],
++  "subMetas": {},
++  "userData": {}
++}
+diff --git "a/D:\\Project\\A_New_Begin\\Neurou_official\\temp\\quality-empty.txt" "b/D:\\Project\\A_New_Begin\\Neurou_official\\assets\\resources\\effects.meta"
+index e69de29..73279ef 100644
+--- "a/D:\\Project\\A_New_Begin\\Neurou_official\\temp\\quality-empty.txt"
++++ "b/D:\\Project\\A_New_Begin\\Neurou_official\\assets\\resources\\effects.meta"
+@@ -0,0 +1,9 @@
++{
++  "ver": "1.2.0",
++  "importer": "directory",
++  "imported": true,
++  "uuid": "e7fb97ff-6a68-42db-a197-aa4b4e7e9e6a",
++  "files": [],
++  "subMetas": {},
++  "userData": {}
++}
+diff --git "a/D:\\Project\\A_New_Begin\\Neurou_official\\temp\\quality-empty.txt" "b/D:\\Project\\A_New_Begin\\Neurou_official\\assets\\resources\\audio\\hit_drum.wav.meta"
+index e69de29..02fc509 100644
+--- "a/D:\\Project\\A_New_Begin\\Neurou_official\\temp\\quality-empty.txt"
++++ "b/D:\\Project\\A_New_Begin\\Neurou_official\\assets\\resources\\audio\\hit_drum.wav.meta"
+@@ -0,0 +1,14 @@
++{
++  "ver": "1.0.0",
++  "importer": "audio-clip",
++  "imported": true,
++  "uuid": "b1bfd9fe-d016-464b-aec1-69e078874698",
++  "files": [
++    ".json",
++    ".wav"
++  ],
++  "subMetas": {},
++  "userData": {
++    "downloadMode": 0
++  }
++}
+diff --git "a/D:\\Project\\A_New_Begin\\Neurou_official\\temp\\quality-empty.txt" "b/D:\\Project\\A_New_Begin\\Neurou_official\\assets\\resources\\audio\\hit_heavy.wav.meta"
+index e69de29..bec47e8 100644
+--- "a/D:\\Project\\A_New_Begin\\Neurou_official\\temp\\quality-empty.txt"
++++ "b/D:\\Project\\A_New_Begin\\Neurou_official\\assets\\resources\\audio\\hit_heavy.wav.meta"
+@@ -0,0 +1,14 @@
++{
++  "ver": "1.0.0",
++  "importer": "audio-clip",
++  "imported": true,
++  "uuid": "a1cebbe1-1859-48a2-b309-0bb4578ea02b",
++  "files": [
++    ".json",
++    ".wav"
++  ],
++  "subMetas": {},
++  "userData": {
++    "downloadMode": 0
++  }
++}
+diff --git "a/D:\\Project\\A_New_Begin\\Neurou_official\\temp\\quality-empty.txt" "b/D:\\Project\\A_New_Begin\\Neurou_official\\assets\\resources\\audio\\hit_regular.wav.meta"
+index e69de29..fd8b359 100644
+--- "a/D:\\Project\\A_New_Begin\\Neurou_official\\temp\\quality-empty.txt"
++++ "b/D:\\Project\\A_New_Begin\\Neurou_official\\assets\\resources\\audio\\hit_regular.wav.meta"
+@@ -0,0 +1,14 @@
++{
++  "ver": "1.0.0",
++  "importer": "audio-clip",
++  "imported": true,
++  "uuid": "8584f0ed-8753-44b4-8cdf-13d653820d74",
++  "files": [
++    ".json",
++    ".wav"
++  ],
++  "subMetas": {},
++  "userData": {
++    "downloadMode": 0
++  }
++}

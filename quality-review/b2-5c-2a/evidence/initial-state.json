@@ -1,0 +1,136 @@
+{
+  "phase": "B2.5c-2a initial state",
+  "generatedUtc": "2026-10-11T06:28:13.218Z",
+  "baselineCapturedUtc": "2026-10-11T06:27:23.760Z",
+  "documents": [
+    {
+      "path": "docs/NAMEBOOK.md",
+      "sha256": "74557e834294cb30318e88bccd4fd69e355979e4454a58016e09e2836d3a1a91",
+      "bytes": 151218,
+      "matches": [
+        {
+          "line": 1596,
+          "text": "## 名库 v3.18 附录 · VERDICT-411~425 B2.5c-1 契约与确定性重放（纯逻辑实现冻结）"
+        },
+        {
+          "line": 1598,
+          "text": "依据 VERDICT-411～425 与《名库 v3.18 附录提案 · B2.5c-1 实际源码命名清单》落盘，2026-10-11（Asia/Shanghai）。本轮为**纯逻辑实现冻结**：不是服务或网络，没有 HTTP route、真实 Relay、Auth 接线、存储、时钟或产品接线；不授予 B2.5c-2 网络、密钥分发、存储或产品接线权限。实现边界为 src/director 下五份独立源码（SharedCommitContracts.ts、SharedCanonicalBytes.ts、SharedCommitCodec.ts、SharedCommitValidator.ts、SharedWorldReducer.ts）及 quality-review/b2-5c-1 下隔离测试与交付证据；IntentPort.ts 仅允许保留原字节前缀、追加 type-only 导出；没有恢复 archive/service/sync。机械清单为 evidence/new-names.json（工作区 TypeScript Compiler AST 扫描五份源码，记录源文件 SHA256、位置、全部顶层声明、类型字段/类成员、参数及局部声明；扫描排除 import 和普通属性使用，避免把引用旧名称列为新声明）。54 个 P3 schema 与 SharedSchemaMap 的 54 个 key 一一核对。五份源码共 75 个顶层公开声明：54 + 4 + 5 + 8 + 4；该数不将公开方法、schema 字段或局部绑定重复计为顶层导出。本附录分 P3 已冻复写、A 类（本轮正式冻结实现类）、B/C/D 类（辅助/本地 API 类型）、E 类（实现常量，模块私有，不导出）、F 类（域常量，字符串字面量，不导出）、候选区、延期区。"
+        }
+      ]
+    },
+    {
+      "path": "docs/spec/stage-1.md",
+      "sha256": "506db334f029d4f05d3ad736068a828fd2f3f8ab78066f1964349f68bc2fcfdd",
+      "bytes": 97510,
+      "matches": [
+        {
+          "line": 3,
+          "text": "> 本文件最近更新：HANDOFF-ROUND-18，纳入 VERDICT-121 ~ 126（T7 视频谱面 + 键盘打击垫 + 暂停）。"
+        },
+        {
+          "line": 5,
+          "text": "> 本文件最近更新：引导线编辑器阶段，纳入 VERDICT-147 ~ 157（v3 时间模型 + editor 模块 + 颜色伴随文件）。"
+        },
+        {
+          "line": 7,
+          "text": "> 本文件最近更新：世界文件夹阶段，纳入 VERDICT-158 ~ 168（登录 → 序章 → 世界文件夹启动流程 + 编辑器目录框架）。"
+        },
+        {
+          "line": 9,
+          "text": "> 本文件最近更新：音频编辑器阶段，纳入 VERDICT-180 ~ 190（MIDI 音轨编辑器最小交付 + musicEditor 模块）。"
+        },
+        {
+          "line": 11,
+          "text": "> 本文件最近更新：音乐编辑器批量操作 + B1 谱面接入，纳入 VERDICT-191 ~ 200。"
+        },
+        {
+          "line": 13,
+          "text": "> 本文件最近更新：B2.1 本地多世界基础，纳入 VERDICT-201 ~ 210。"
+        },
+        {
+          "line": 15,
+          "text": "> 本文件最近更新：B2.2 账号里程碑与状态契约，纳入 VERDICT-211 ~ 225。"
+        },
+        {
+          "line": 17,
+          "text": "> 本文件最近更新：B2.2c 真实通关链路落地，纳入 VERDICT-226 ~ 240 及最小内容生产者授权。"
+        },
+        {
+          "line": 19,
+          "text": "> 本文件最近更新：B2.2d-1 完整状态恢复前置（核心机制），纳入 VERDICT-241 ~ 255。"
+        },
+        {
+          "line": 21,
+          "text": "> 本文件最近更新：B2.2d 完整状态恢复前置（核心 + 扩展），纳入 VERDICT-241 ~ 270。"
+        },
+        {
+          "line": 23,
+          "text": "> 本文件最近更新：B2.3 WorldFork 实装，纳入 VERDICT-271 ~ 285。"
+        },
+        {
+          "line": 25,
+          "text": "> 本文件最近更新：B2.4a 冻结 + B2.4b 契约级最小闭环，纳入 VERDICT-301 ~ 310。"
+        },
+        {
+          "line": 27,
+          "text": "> 本文件最近更新：B2.4c CrossDeviceDuplicate 受限 Core 原型，纳入 VERDICT-311 ~ 325。"
+        },
+        {
+          "line": 29,
+          "text": "> 本文件最近更新：B2.4d WorldMigration + RealityPause，纳入 VERDICT-326 ~ 345。"
+        },
+        {
+          "line": 31,
+          "text": "> 本文件最近更新：B2.4e 跨设备整体验收 + B2.4 闭环，纳入 VERDICT-346 ~ 355。"
+        },
+        {
+          "line": 33,
+          "text": "> 本文件最近更新：B2.5a 冻结 + B2.5b 真实认证服务，纳入 VERDICT-376 ~ 390。"
+        },
+        {
+          "line": 35,
+          "text": "> 本文件最近更新：P3 共享契约补冻，纳入 VERDICT-391 ~ 410。"
+        },
+        {
+          "line": 37,
+          "text": "> 本文件最近更新：B2.5c-1 契约与确定性重放，纳入 VERDICT-411 ~ 425。"
+        },
+        {
+          "line": 236,
+          "text": "**v3.18 / VERDICT-411 ~ 425 纳入的有限范围（B2.5c-1 契约与确定性重放 · 纯逻辑实现冻结）**"
+        }
+      ]
+    }
+  ],
+  "c1": [
+    {
+      "path": "src/director/SharedCommitContracts.ts",
+      "bytes": 22261,
+      "sha256": "e0682252df74a4767cdeac5a79bebb33dbdd88343af0d0f4ebb362a1e41cd291"
+    },
+    {
+      "path": "src/director/SharedCanonicalBytes.ts",
+      "bytes": 13285,
+      "sha256": "1cd132ab68ee3a5c30989cd4e5464743c4223ba3141ae7dc16dd4e27c2fbe27c"
+    },
+    {
+      "path": "src/director/SharedCommitCodec.ts",
+      "bytes": 43479,
+      "sha256": "ed55c2ba48857b7a75c45f2e887b541ebf2fb68fb50cd48233f64dd343ee77cd"
+    },
+    {
+      "path": "src/director/SharedCommitValidator.ts",
+      "bytes": 32121,
+      "sha256": "8443e792b9f4c2b12c9a8f053240d3d15bc47303cec993438ff4d9466588b31a"
+    },
+    {
+      "path": "src/director/SharedWorldReducer.ts",
+      "bytes": 27557,
+      "sha256": "cb9449c0160eea3aae1217f17125d23538ec202a9340e49eee4ff469684fa6d9"
+    }
+  ],
+  "gateNamingWarningDelta": 0,
+  "newWarningLines": [],
+  "removedWarningLines": [],
+  "note": "Current docs already contain v3.18/c-1 synchronization in this immutable baseline. This records observed bytes and version headings, not source attribution for any later external modification. Historical P3/c-1 raw FAIL records are not overwritten."
+}

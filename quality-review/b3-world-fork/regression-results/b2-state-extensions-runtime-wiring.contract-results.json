@@ -1,0 +1,53 @@
+{
+  "category": "ContractTest",
+  "passed": 9,
+  "failed": 1,
+  "results": [
+    {
+      "name": "actual Scene persistence commits nonzero maker choice and all four extension sections in one leased key",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "actual World completion writes Ledger, actual played snapshot and result atomically before account commit",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "completion quota failure publishes neither complete Ledger nor artifacts nor account success",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "unverified actual media prevents completion before durable write or account success",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "reading and stable no-op of legacy3 does not silently migrate four fields or write storage",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "new gameplay append may explicitly establish extension mechanism on old three-section carrier",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "actual capturePuzzle blocks World play and replay despite valid stored stable checkpoint",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "actual capturePuzzle blocks active reveal and entry gate without resetting them",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "current live boundary source prevents Complete from being reported from older durable state",
+      "category": "ContractTest",
+      "result": "PASS"
+    }
+  ],
+  "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ null\n- WorldFolderSession {\n-   accountId: 'folder-wiring',\n-   createId: [Function (anonymous)],\n-   now: [Function (anonymous)],\n-   persist: [Function (anonymous)],\n-   snapshot: {\n-     accountId: 'folder-wiring',\n-     records: [\n-       {\n-         createdAt: 1791600000000,\n-         deletedAt: null,\n-         description: '',\n-         template: 'InitialWorld',\n-         title: 'Active world',\n-         worldId: 'InitialWorld'\n-       },\n-       {\n-         createdAt: 1791600000000,\n-         deletedAt: 1791600000000,\n-         description: '',\n-         template: 'EmptyWorld',\n-         title: 'Deleted world',\n-         worldId: 'world-deleted'\n-       }\n-     ],\n-     schemaVersion: 1\n-   }\n- }\n\n    at D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-state-extensions\\runtime-wiring.contract.cjs:175:12\n    at async test (D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-state-extensions\\runtime-wiring.contract.cjs:97:40)\n    at async D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-state-extensions\\runtime-wiring.contract.cjs:158:3"
+}

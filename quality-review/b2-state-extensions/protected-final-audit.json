@@ -1,0 +1,279 @@
+{
+  "batch": "B2.2d-2",
+  "generatedAt": "2026-10-10T12:07:31.960020+00:00",
+  "protected": [
+    {
+      "path": "docs/NAMEBOOK.md",
+      "unchanged": true
+    },
+    {
+      "path": "docs/spec/stage-1-acceptance.md",
+      "unchanged": true
+    },
+    {
+      "path": "docs/spec/stage-1.md",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/check-dependencies.js",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/check-naming.js",
+      "unchanged": true
+    },
+    {
+      "path": "雨若_Neurou_core_gameplay.docx",
+      "unchanged": true
+    },
+    {
+      "path": "雨若_Neurou_main_describe.docx",
+      "unchanged": true
+    },
+    {
+      "path": "641f3d33-4bab-4769-8f46-62a03315d1b1.jsonl",
+      "unchanged": true
+    }
+  ],
+  "additionalProtected": [
+    {
+      "path": "archive/boss/ChartPremiere.ts",
+      "unchanged": true,
+      "baseline": "accepted-d1-protected-baseline"
+    },
+    {
+      "path": "archive/boss/ChartReplay.ts",
+      "unchanged": true,
+      "baseline": "accepted-d1-protected-baseline"
+    },
+    {
+      "path": "archive/boss/ChartScore.ts",
+      "unchanged": true,
+      "baseline": "accepted-d1-protected-baseline"
+    },
+    {
+      "path": "archive/boss/ChartTier.ts",
+      "unchanged": true,
+      "baseline": "accepted-d1-protected-baseline"
+    },
+    {
+      "path": "archive/ledger/MomentInfo.legacy.ts",
+      "unchanged": true,
+      "baseline": "accepted-d1-protected-baseline"
+    },
+    {
+      "path": "archive/ledger/SphereCrossing.ts",
+      "unchanged": true,
+      "baseline": "accepted-d1-protected-baseline"
+    },
+    {
+      "path": "archive/map/WorldMap.ts",
+      "unchanged": true,
+      "baseline": "accepted-d1-protected-baseline"
+    },
+    {
+      "path": "archive/presentation/ConstellationGate.ts",
+      "unchanged": true,
+      "baseline": "accepted-d1-protected-baseline"
+    },
+    {
+      "path": "archive/presentation/EmotionToTrailColor.ts",
+      "unchanged": true,
+      "baseline": "accepted-d1-protected-baseline"
+    },
+    {
+      "path": "archive/presentation/EndingMemoryPlayback.ts",
+      "unchanged": true,
+      "baseline": "accepted-d1-protected-baseline"
+    },
+    {
+      "path": "archive/presentation/GlitchGap.ts",
+      "unchanged": true,
+      "baseline": "accepted-d1-protected-baseline"
+    },
+    {
+      "path": "archive/presentation/MomentCapture.ts",
+      "unchanged": true,
+      "baseline": "accepted-d1-protected-baseline"
+    },
+    {
+      "path": "archive/service/AuthService.ts",
+      "unchanged": true,
+      "baseline": "accepted-d1-protected-baseline"
+    },
+    {
+      "path": "archive/service/AutopilotThreshold.ts",
+      "unchanged": true,
+      "baseline": "accepted-d1-protected-baseline"
+    },
+    {
+      "path": "archive/service/CommitRelay.ts",
+      "unchanged": true,
+      "baseline": "accepted-d1-protected-baseline"
+    },
+    {
+      "path": "archive/service/OfflineGrace.ts",
+      "unchanged": true,
+      "baseline": "accepted-d1-protected-baseline"
+    },
+    {
+      "path": "archive/service/WorldMigration.ts",
+      "unchanged": true,
+      "baseline": "accepted-d1-protected-baseline"
+    },
+    {
+      "path": "archive/sync/Observer.ts",
+      "unchanged": true,
+      "baseline": "accepted-d1-protected-baseline"
+    },
+    {
+      "path": "archive/sync/SettleHorizon.ts",
+      "unchanged": true,
+      "baseline": "accepted-d1-protected-baseline"
+    },
+    {
+      "path": "archive/sync/SharedWorldState.ts",
+      "unchanged": true,
+      "baseline": "accepted-d1-protected-baseline"
+    },
+    {
+      "path": "archive/sync/WorldChangeLog.ts",
+      "unchanged": true,
+      "baseline": "accepted-d1-protected-baseline"
+    },
+    {
+      "path": "archive/sync/WorldCheckpoint.ts",
+      "unchanged": true,
+      "baseline": "accepted-d1-protected-baseline"
+    },
+    {
+      "path": "archive/sync/WorldCommit.ts",
+      "unchanged": true,
+      "baseline": "accepted-d1-protected-baseline"
+    },
+    {
+      "path": ".trae/skills/neurou-handoff-executor/SKILL.md",
+      "unchanged": true,
+      "baseline": "accepted-d1-protected-baseline"
+    }
+  ],
+  "unexpectedChanges": [],
+  "deleted": [],
+  "logicCcImports": [],
+  "unchangedBaselineCount": 262,
+  "coreAlgorithmsUnchanged": [
+    "src/character/DecorationPalette.ts",
+    "src/character/DecorationPalette.ts.meta",
+    "src/character/HairColor.ts",
+    "src/character/HairColor.ts.meta",
+    "src/character/MoveSpeed.ts",
+    "src/character/MoveSpeed.ts.meta",
+    "src/character/Protagonist.ts",
+    "src/character/Protagonist.ts.meta",
+    "src/character/TrailLength.ts",
+    "src/character/TrailLength.ts.meta",
+    "src/chart/ChartEntry.ts",
+    "src/chart/ChartEntry.ts.meta",
+    "src/chart/ChartPlaybackState.ts",
+    "src/chart/ChartPlaybackState.ts.meta",
+    "src/chart/ChartPremiere.ts",
+    "src/chart/ChartPremiere.ts.meta",
+    "src/chart/ChartScore.ts",
+    "src/chart/ChartScore.ts.meta",
+    "src/chart/FrameLocator.ts",
+    "src/chart/FrameLocator.ts.meta",
+    "src/chart/GuidanceChart.ts",
+    "src/chart/GuidanceChart.ts.meta",
+    "src/chart/GuidanceChartRuntime.ts",
+    "src/chart/GuidanceChartRuntime.ts.meta",
+    "src/chart/GuidanceLineRuntime.ts",
+    "src/chart/GuidanceLineRuntime.ts.meta",
+    "src/chart/GuidanceTiming.ts",
+    "src/chart/GuidanceTiming.ts.meta",
+    "src/chart/KeyboardPadLayout.ts",
+    "src/chart/KeyboardPadLayout.ts.meta",
+    "src/chart/Note.ts",
+    "src/chart/Note.ts.meta",
+    "src/chart/Strike.ts",
+    "src/chart/Strike.ts.meta",
+    "src/chart/VideoSyncTest.ts",
+    "src/chart/VideoSyncTest.ts.meta",
+    "src/chart/WorldBossChartSource.ts",
+    "src/chart/WorldBossChartSource.ts.meta",
+    "src/director/AccountMilestone.ts",
+    "src/director/AccountMilestone.ts.meta",
+    "src/director/AccountStartupSession.ts",
+    "src/director/AccountStartupSession.ts.meta",
+    "src/director/LedgerHydration.ts",
+    "src/director/LedgerHydration.ts.meta",
+    "src/director/PuzzleHydration.ts",
+    "src/director/PuzzleHydration.ts.meta",
+    "src/director/SphereCrossing.ts",
+    "src/director/SphereCrossing.ts.meta",
+    "src/director/WorldClearSession.ts",
+    "src/director/WorldClearSession.ts.meta",
+    "src/editor/GuidanceEditorSession.ts",
+    "src/editor/GuidanceEditorSession.ts.meta",
+    "src/ledger/LedgerAppend.ts",
+    "src/ledger/LedgerAppend.ts.meta",
+    "src/ledger/LedgerPosition.ts",
+    "src/ledger/LedgerPosition.ts.meta",
+    "src/ledger/LedgerRead.ts",
+    "src/ledger/LedgerRead.ts.meta",
+    "src/ledger/MomentInfo.ts",
+    "src/ledger/MomentInfo.ts.meta",
+    "src/ledger/NarrativeEvent.ts",
+    "src/ledger/NarrativeEvent.ts.meta",
+    "src/ledger/deriveLedgerPosition.ts",
+    "src/ledger/deriveLedgerPosition.ts.meta",
+    "src/musicEditor/ChartSourceBuilder.ts",
+    "src/musicEditor/ChartSourceBuilder.ts.meta",
+    "src/musicEditor/MusicEditorSession.ts",
+    "src/musicEditor/MusicEditorSession.ts.meta",
+    "src/musicEditor/MusicProjectData.ts",
+    "src/musicEditor/MusicProjectData.ts.meta",
+    "src/musicEditor/MusicTiming.ts",
+    "src/musicEditor/MusicTiming.ts.meta",
+    "src/trace/DeepTrace.ts",
+    "src/trace/DeepTrace.ts.meta",
+    "src/trace/EchoTrace.ts",
+    "src/trace/EchoTrace.ts.meta",
+    "src/trace/ElementEntity.ts",
+    "src/trace/ElementEntity.ts.meta",
+    "src/trace/EmpathyScaling.ts",
+    "src/trace/EmpathyScaling.ts.meta",
+    "src/trace/PuzzleChain.ts",
+    "src/trace/PuzzleChain.ts.meta",
+    "src/trace/PuzzleProgress.ts",
+    "src/trace/PuzzleProgress.ts.meta",
+    "src/trace/RhythmStrike.ts",
+    "src/trace/RhythmStrike.ts.meta",
+    "src/trace/Trace.ts",
+    "src/trace/Trace.ts.meta",
+    "src/trace/TraceOrigin.ts",
+    "src/trace/TraceOrigin.ts.meta",
+    "src/trace/TraceProximityVolume.ts",
+    "src/trace/TraceProximityVolume.ts.meta",
+    "src/trace/TraceTier.ts",
+    "src/trace/TraceTier.ts.meta",
+    "src/trace/VisibilityState.ts",
+    "src/trace/VisibilityState.ts.meta",
+    "src/trace/VisibilityTransition.ts",
+    "src/trace/VisibilityTransition.ts.meta",
+    "src/world/DepthAxis.ts",
+    "src/world/DepthAxis.ts.meta",
+    "src/world/LateralAxis.ts",
+    "src/world/LateralAxis.ts.meta",
+    "src/world/MapCenter.ts",
+    "src/world/MapCenter.ts.meta",
+    "src/world/VerticalAxis.ts",
+    "src/world/VerticalAxis.ts.meta",
+    "src/world/WorldInstance.ts",
+    "src/world/WorldInstance.ts.meta",
+    "src/world/WorldMap.ts",
+    "src/world/WorldMap.ts.meta",
+    "src/world/WorldMeter.ts",
+    "src/world/WorldMeter.ts.meta"
+  ],
+  "pass": true
+}

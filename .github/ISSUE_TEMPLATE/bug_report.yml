@@ -1,0 +1,65 @@
+name: Bug report
+description: 报告可复现的缺陷（桌面 / 编辑器 / 游戏 / Rust 命令 / 文档）
+title: "[bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        请勿粘贴 API Key、图片 base64、音频内容或完整 prompt。
+        安全/密钥问题请走私有渠道，不要公开 Issue。
+  - type: textarea
+    id: what
+    attributes:
+      label: 发生了什么
+      description: 现象、期望、实际
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: 复现步骤
+      placeholder: |
+        1. 打开 ...
+        2. 进入 ...
+        3. 看到 ...
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: 所在层
+      options:
+        - Editor
+        - Game / Explore / Rhythm / Cutscene
+        - Rust media commands
+        - Core judgement / clock / ledger
+        - Static web / Pages
+        - Docs / build
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: 版本
+      placeholder: v4.0.0
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: 环境
+      placeholder: Windows 11 / WebView2 / Node 22 / Rust stable / 是否 Tauri
+  - type: textarea
+    id: evidence
+    attributes:
+      label: 日志或截图
+      description: 请先移除密钥与个人数据
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: 提交前
+      options:
+        - label: 我已搜索现有 Issue
+        - label: 我没有粘贴 Key / 私有媒体

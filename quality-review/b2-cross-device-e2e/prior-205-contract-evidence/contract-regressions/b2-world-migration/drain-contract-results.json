@@ -1,0 +1,127 @@
+{
+  "mode": "ContractAdapter",
+  "passed": 20,
+  "failed": 0,
+  "cases": [
+    {
+      "name": "D01 drain includes actual leased InitialWorld and source; JSON round-trip reacquires strict confirmation",
+      "category": "ContractAdapter",
+      "result": "PASS",
+      "elapsedMs": 145.212
+    },
+    {
+      "name": "D02 arbitrary serialized/assertCurrent object cannot become production drain capability",
+      "category": "ContractAdapter",
+      "result": "PASS",
+      "elapsedMs": 0.035
+    },
+    {
+      "name": "D03 unsafe active runtime refuses without stopping media, acquiring leases or changing files",
+      "category": "ContractAdapter",
+      "result": "PASS",
+      "elapsedMs": 32.547
+    },
+    {
+      "name": "D04 pending transactions reject confirmation and leave persistent bytes unchanged",
+      "category": "ContractAdapter",
+      "result": "PASS",
+      "elapsedMs": 27.657
+    },
+    {
+      "name": "D05 actual retained account commit makes source lease unavailable until promise settles",
+      "category": "ContractAdapter",
+      "result": "PASS",
+      "elapsedMs": 73.05
+    },
+    {
+      "name": "D06 missing real lease fails despite a readable Complete Core",
+      "category": "ContractAdapter",
+      "result": "PASS",
+      "elapsedMs": 22.962
+    },
+    {
+      "name": "D07 empty newly created world participates in full account drain",
+      "category": "ContractAdapter",
+      "result": "PASS",
+      "elapsedMs": 49.851
+    },
+    {
+      "name": "D08 noninherited completed Ledger without account record rejects as unsettled",
+      "category": "ContractAdapter",
+      "result": "PASS",
+      "elapsedMs": 29.159
+    },
+    {
+      "name": "D09 durable clear record without settled FirstWorldCleared projection rejects",
+      "category": "ContractAdapter",
+      "result": "PASS",
+      "elapsedMs": 21.129
+    },
+    {
+      "name": "D10 a real inherited fork completion needs no duplicate account fact",
+      "category": "ContractAdapter",
+      "result": "PASS",
+      "elapsedMs": 63.651
+    },
+    {
+      "name": "D11 content change, directory change and reopened source admission each revoke current proof",
+      "category": "ContractAdapter",
+      "result": "PASS",
+      "elapsedMs": 216.399
+    },
+    {
+      "name": "D12 callback rejection revokes capability and releases every lease and admission gate",
+      "category": "ContractAdapter",
+      "result": "PASS",
+      "elapsedMs": 43.627
+    },
+    {
+      "name": "D13 no Web Locks and drain reentrancy are explicit failures",
+      "category": "ContractAdapter",
+      "result": "PASS",
+      "elapsedMs": 61.514
+    },
+    {
+      "name": "D14 account facts mutation after confirmation invalidates capability",
+      "category": "ContractAdapter",
+      "result": "PASS",
+      "elapsedMs": 49.34
+    },
+    {
+      "name": "D15 Core transport stays unbranded, byte-equivalent and preserves revision/FormatTime/forkOrigin",
+      "category": "ContractAdapter",
+      "result": "PASS",
+      "elapsedMs": 30.017
+    },
+    {
+      "name": "D16 payload rejects InitialWorld, permission/account facts, wrong versions, getters and noncertifying validators",
+      "category": "ContractAdapter",
+      "result": "PASS",
+      "elapsedMs": 16.612
+    },
+    {
+      "name": "D17 confirmation strict schema rejects missing worlds, unsorted duplicates, forged digest and foreign account",
+      "category": "ContractAdapter",
+      "result": "PASS",
+      "elapsedMs": 37.581
+    },
+    {
+      "name": "D18 service pause schema requires at least OfflineGrace and no local time fields",
+      "category": "ContractAdapter",
+      "result": "PASS",
+      "elapsedMs": 0.214
+    },
+    {
+      "name": "D19 receipt phases enforce same identity and exact homeRevision transitions",
+      "category": "ContractAdapter",
+      "result": "PASS",
+      "elapsedMs": 46.238
+    },
+    {
+      "name": "D20 a failed live check consumes confirmation even if changed bytes are restored",
+      "category": "ContractAdapter",
+      "result": "PASS",
+      "elapsedMs": 46.767
+    }
+  ]
+}

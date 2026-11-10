@@ -1,0 +1,123 @@
+{
+  "category": "ContractTest",
+  "note": "Formal World premiere result and strict seven-section codec with controlled atomic storage and exclusive lock. Covers one-key transactions, monotonic history, GC and bound complete writer; no production-browser claim.",
+  "passed": 23,
+  "failed": 0,
+  "results": [
+    {
+      "name": "seven sections share exact same account/world key and one locked write; complete round trip preserves real archive",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "save without exact world lease rejects before storage write and missing lock rejects graph activation",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "counter and real replay score update together in a single durable seven-section document",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "atomic storage failure preserves original exact bytes and all seven validated prior values; retry increments once",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "idempotent identical document performs no write while stale expected and revision jumps reject",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "legacy three-section documents stay readable but cannot drop four established carriers on write",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "partial extension migration rejects and reads never mutate legacy bytes",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "authoritative creation time and ledger append-only facts cannot change during extended updates",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "established RecallCount records cannot be removed lowered or replaced by null",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "T6 established canonical binding cannot be removed while its authoritative terminal event remains",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "frozen chart/layout/visual/media/transparency snapshot cannot be replaced by a newly valid digest",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "established chart/score collections cannot be erased through normal live-world save",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "completed score count and prior best cannot regress after a real higher-score replay",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "same-count score rewrite and historical completed play-ID replacement reject with bytes preserved",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "new replay cannot rewrite historical best or replace its winner on an equal-score tie",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "single durable replay transaction cannot skip completed-play counters even with valid full history",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "tombstone-only chart GC requires exact world lease and rejects an active world",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "GC failure keeps tombstone and exact frozen bytes; successful retry clears only chart state once",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "different worlds/accounts isolate keys and exact leases; one world lease cannot authorize another",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "real exclusive lock serializes two storage instances sharing same identity until release",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "world lease retainUntil holds through queued account commit and only releases after settlement",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "WorldStateStorage unbound rejects any save; bound writer validates then delegates to same leased key",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "corrupt stored JSON and unsafe snapshot identity reject without rewriting or invoking getters",
+      "result": "PASS",
+      "category": "ContractTest"
+    }
+  ]
+}

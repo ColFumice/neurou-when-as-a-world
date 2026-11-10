@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-workspace-write-json-atomic"
+description = "Enables the workspace_write_json_atomic command without any pre-configured scope."
+commands.allow = ["workspace_write_json_atomic"]
+
+[[permission]]
+identifier = "deny-workspace-write-json-atomic"
+description = "Denies the workspace_write_json_atomic command without any pre-configured scope."
+commands.deny = ["workspace_write_json_atomic"]

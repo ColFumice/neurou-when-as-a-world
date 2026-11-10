@@ -1,0 +1,22 @@
+{
+  "name": "neurou_official",
+  "version": "1.0.0",
+  "private": true,
+  "description": "雨若 Neurou —— 阶段 1 工程骨架（逻辑层，Cocos Creator 3.8.8 目标运行时）",
+  "type": "commonjs",
+  "scripts": {
+    "check:naming": "node scripts/check-naming.js",
+    "check:naming:selftest": "node scripts/check-naming.js --selftest",
+    "check:dependencies": "node scripts/check-dependencies.js",
+    "typecheck": "tsc --noEmit",
+    "verify": "node scripts/check-naming.js && tsc --noEmit"
+  },
+  "devDependencies": {
+    "electron": "39.0.0",
+    "typescript": "~5.5.4"
+  },
+  "creator": {
+    "version": "3.8.8"
+  },
+  "uuid": "2612b3bc-7c54-4dd1-887c-03dded7f6004"
+}

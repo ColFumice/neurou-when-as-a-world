@@ -1,0 +1,128 @@
+const fs = require('fs');
+const path = require('path');
+const crypto = require('crypto');
+const dir = __dirname;
+const root = path.resolve(dir, '../..');
+const read = name => JSON.parse(fs.readFileSync(path.join(dir, name), 'utf8'));
+const link = (label, file) => `[${label}](${path.join(root, file).replace(/\\/g, '/')})`;
+const checks = read('results.json');
+const gates = read('head-1000-gates-results.json');
+const preview = read('creator-preview-results.json');
+const files = read('files.json');
+const legacy = read('r26-regression-results.json');
+if (!preview.pass || !preview.endToEnd?.pass ||
+    preview.endToEnd.checks.some(c => !c.pass) || preview.rendererErrors.length ||
+    checks.failed || legacy.some(c => !c.pass) ||
+    gates.gates.some(g => g.result.exit_code !== 0)) {
+  throw new Error('Delivery requires passing current gates, logic and Creator preview evidence');
+}
+const hash = file => crypto.createHash('sha256').update(fs.readFileSync(path.join(root, file))).digest('hex');
+if (hash('small logo.png') !== hash('assets/resources/guidance/head-logo.png')) {
+  throw new Error('Head logo copy must equal the unchanged source reference');
+}
+const modifications = {
+  'constants/index.ts': '增加 HEAD_WINDOW_MS；按2026-10-09用户指令从100调整为1000 ms。',
+  'src/chart/KeyboardPadLayout.ts': '增加纯函数 resolveGridKeyAt；共享边界统一计算，消除浮点重叠。结构保持不变。',
+  'src/chart/ChartPremiere.ts': '兼容 ChartData/Note，并接入独立 GuidanceChart 单线运行；复用 ChartScore；保留生命周期、结果及 R26 B。',
+  'src/chart/Strike.ts': '携带 Down/Up 边沿；省略 phase 保持既有 Down 语义。',
+  'src/director/PlayerIntent.ts': 'Strike 意图承载同一时间戳边沿。',
+  'src/director/IntentPort.ts': '转发边沿；输入消费后推进媒体时间和结束/异常状态；保留唯一记账及完成闸门。',
+  'src/presentation/InputCollector.ts': '收集原时间戳 Down/Up，拦截重复按下，暂停只释放，失焦/禁用释放逻辑守卫。',
+  'src/presentation/ChartPadView.ts': '保留完整 48 键与旧 T7 显示；A 分支与原逻辑网格共用坐标，接独立 LineEraseEffect。',
+  'assets/scripts/SceneBuilder.ts': '默认加载 A 资源与 LOGO；保留 UseGuidanceChart=false 的 T7 入口；严格拒绝非法 A 数据；暂停 seek 与输出时钟重建。',
+};
+const screenshots = preview.resolutions.map(r => {
+  const base = `quality-review/guidance-a/${r.resolution}-`;
+  return `| ${r.resolution} | ${link('LOGO Head', base+'head-waiting.png')} | ${link('移动前', base+'movement-before.png')} / ${link('移动后与擦除', base+'movement-after.png')} | ${link('Tap Perfect', base+'tap-judged.png')} | ${link('暂停前', base+'pause-before.png')} / ${link('暂停后', base+'pause-after.png')} | ${link('退出世界', base+'exit-world.png')} / ${link('重入复位', base+'reentry-cleared.png')} / ${link('完成回世界', base+'completion-world.png')} |`;
+}).join('\n');
+const syncRows = preview.resolutions.map(r => `| ${r.resolution} | ${r.syncSummary.sampleCount} | ${r.syncSummary.maxRawPresentedErrorMs.toFixed(3)} ms | ${r.motion.error.toExponential(2)} |`).join('\n');
+const e2e = preview.endToEnd;
+const cross = checks.checks.find(c => c.name.startsWith('Tap resolves')).evidence.actualResource;
+const headFrame = checks.checks.find(c => c.name.startsWith('Real InputCollector + FrameDriver')).evidence;
+if (!cross || cross.cases.some(c => c.wrongKeyConsumed || c.tier !== 'Good')) {
+  throw new Error('Actual-resource G/H boundary evidence is required');
+}
+const beatError = Math.max(...e2e.beats.map(b => Math.abs(b.deviationMs)));
+const e2eEvidence = e2e.evidence.map(e => link(e.name, `quality-review/guidance-a/${e.file}`)).join(' / ');
+const e2eText = `fresh scene 初始 endpointSettled=false、账本0；真实 KeyA 移动后进入 AwaitingStrike，连续 ${e2e.beats.length} 拍输出时钟输入（最大偏差 ${beatError.toFixed(3)} ms）自然揭示并自动进入谱面，账本为 ${e2e.chartEntry.ledger}。Head 在 ${e2e.tap.line.startedAtMs.toFixed(3)} ms 启动，Tap 为 Perfect；实际媒体在 ${e2e.completed.result.finishedAtMs.toFixed(3)} ms 结束后返回世界，账本为 ${e2e.completed.ledger}。两项端到端检查全部通过。\n\n截图：${e2eEvidence}。原始输入、完整状态和断言保存在同一预览 JSON。\n\n预览脚本末尾曾使用严格浮点等值比较，将 12000.000000000004 ms 误报为失败；现改为绝对误差 <1e-6 ms，并对已采集的全套证据重新验证通过，未改动实采快照或截图。说明保存在 harnessCorrection；证据重验脚本为 ${link('revalidate-preview.cjs', 'quality-review/guidance-a/revalidate-preview.cjs')}。`;
+const report = `# 雨若 · A 步引导线最小原型交付
+
+实现范围为一条两点直线、一个 Head、一个 Tap，并保留完整键盘打击垫及旧 T7 数据/生命周期。A 解析器拒绝 Drag、Hold、多线、多 Tap、非直线、Tap.keyId 与未知备用字段，均有明确错误。编辑器未实现。
+
+2026-10-09 后续调整：按用户明确指令，Head的Space启动窗口从100 ms放宽为1000 ms，含生成时刻与生成后1000 ms两个端点；Tap的Perfect/Good/Miss窗口保持现有值。该指令覆盖此前100 ms取值，docs与名库仍只读。
+
+## 修改清单与 diff
+
+修改 ${files.changed.length} 个既有文件，新增 ${files.added.length} 个源码/资源/导入元数据文件。完整清单见 ${link('files.json', 'quality-review/guidance-a/files.json')}，代码见 ${link('implementation.diff', 'quality-review/guidance-a/implementation.diff')}。本工作区没有 Git 仓库；基线依据本轮已读取源码和记录变更精确逆向恢复后生成 no-index diff，未使用旧质量审查备份。原始基线保存在本目录 baseline/。
+
+| 修改文件 | 实现 |
+| --- | --- |
+${files.changed.map(file => `| ${link(file, file)} | ${modifications[file]} |`).join('\n')}
+
+新增 ${link('GuidanceChart.ts', 'src/chart/GuidanceChart.ts')}（严格加载、深冻结、路径数学、冻结数据联合），${link('GuidanceLineRuntime.ts', 'src/chart/GuidanceLineRuntime.ts')}（生成/启动/推进/终结及节点最终判定），${link('LineEraseEffect.ts', 'src/presentation/LineEraseEffect.ts')}（只读白线/白框/实心点、擦除及媒体时间放大淡出），以及相应 .meta、独立 guidance_a.json 与 Head LOGO 副本。
+
+ChartScore、ChartPlaybackState、AudioOutputClock 直接复用。Head 无独立分数；Tap 错键/null 不消费也不追加分数，漏判最终只记一次 Miss。旧 Note 错键行为保留兼容。逻辑层零 cc，presentation 对 chart 只类型导入，director 唯一写账本。
+
+本轮未写 docs/、根目录实际名库 docsNAMEBOOK.md，未修改 ColorMusic、参照文件或归档 T7。LOGO 资源副本 SHA-256 与原 small logo.png 完全相同。
+
+## 三条门禁
+
+| 命令 | 退出码 | 结果 |
+| --- | --- | --- |
+| npm run check:naming | 0 | 0 ERROR / 16 WARN；语义复核均为痕域或时间窗口。新增一条是复用 judgeTimeWindow，未放宽检查器。 |
+| npm run check:dependencies | 0 | 59 TS 文件，约 160 条静态依赖，0 ERROR。 |
+| npm run typecheck | 0 | tsc --noEmit 通过。 |
+
+${link('1000 ms调整后的门禁输出', 'quality-review/guidance-a/head-1000-gates-results.json')}。A 步验收 ${checks.passed}/${checks.checks.length} 通过；原 R26 六项回归 ${legacy.filter(c=>c.pass).length}/${legacy.length} 通过。复现命令分别为 node quality-review/guidance-a/acceptance.cjs 与 node quality-review/guidance-a/r26-regression.cjs；原 R26 文件及旧证据未改动，复制脚本仅重定向结果路径。
+
+## 最小验收证据对应
+
+| 要求 | 已取得的证据 |
+| --- | --- |
+| 等时长内等弧长 | 逻辑脚本等间隔采样含 aspectRatio 的斜直线；两档实采均验证 Δs=speed×Δt/1000，误差见下表。 |
+| 全部 Tap 已决但媒体未结束不完成 | 10000 ms Tap 案例在媒体结束前仍 Playing，12000 ms 媒体结束才 Completed；原 T7 同例通过。两档自然播放亦在 10 秒、11.8 秒确认无结果/无完成账本，实际 12 秒结束后恰好一条。 |
+| 跨两个非 Space 网格动态键 | 真实 guidance_a.json 在 Head 于2000 ms启动的逻辑验收中，Tap目标4000 ms，G/H边界在 ${cross.boundaryTimeMs.toFixed(3)} ms；边界前1 ms需G、后1 ms需H，正确键各Good，相反键不消费；边界点唯一归H。自定义A/B布局另验证输入时刻早于最新帧仍按输入位置取键。默认全部48槽及43个共享横边界通过；gap/外部/Space返回null。 |
+| Head 1000 ms 端点、超时、重复/错误/漏敲 | spawn、spawn+100、spawn+999、spawn+1000均可启动；严格超过1000 ms端点终止所属Tap一次Miss，旧Space不能复活；生成前持有、长按重复及错误键不启动。 |
+| 暂停冻结、重入清空、完成仅记一次 | 等待 Head 暂停和运行暂停均冻结路径/判定/超时；暂停 Up 只释放。真实采集层失焦发 Up。两档截图与快照验证暂停350 ms完全不推进；退出不记完整演奏，重入起点/分数/按键/媒体标志复位。director 完整解谜链中途退出再演奏最终恰好两条账本。 |
+| 输入先于渲染帧超时 | 真实 InputCollector + FrameDriver + director：Head输入${headFrame.headInputAtMs}/帧${headFrame.headFrameAtMs}仍启动，Tap输入${headFrame.tapInputAtMs}/帧${headFrame.tapFrameAtMs}仍Good。采集stub只替换cc基类和事件总线，逻辑代码均真实执行。 |
+| 擦除后仍可判 Tap | 路径末端线已全部擦除，Tap 在含端点 Good+120 ms 窗口仍可结算；窗口关闭后只 Miss 一次。 |
+| 严格数据及架构 | schema/layoutVersion/正有限速度/路径/距离/唯一 ID 验证，未知字段和不支持类型均拒绝；解析结果及只读快照深冻结；Head 不计分。 |
+
+完整逐项结果、采样值和错误拒绝列表见 ${link('results.json', 'quality-review/guidance-a/results.json')} 与 ${link('验收脚本', 'quality-review/guidance-a/acceptance.cjs')}。
+
+## Creator 3.8.8 实采预览
+
+本节保留A步首次交付的100 ms版本实采预览与截图；1000 ms后续调整已重新通过逻辑边界、暂停、输入帧序验收及三条门禁，本次未重复采集Creator截图。
+
+使用运行中 Creator 的 localhost:7456 预览，Electron 测试窗口设 DPR=1 与设备尺寸覆盖，真实 innerWidth/innerHeight、GameCanvas 像素及 CSS 大小均为对应分辨率。截图来自真实渲染；自然媒体播放，未替换媒体时钟、节点或分数。
+
+| 分辨率 | Head | 判定点移动/擦除 | Tap | 暂停冻结 | 退出/重入/完成 |
+| --- | --- | --- | --- | --- | --- |
+${screenshots}
+
+| 分辨率 | 视频帧回调样本数 | 输出时间与呈现媒体时间最大偏差（阈值≤30 ms） | 弧长增量绝对误差 |
+| --- | --- | --- | --- |
+${syncRows}
+
+原始 requestVideoFrameCallback 样本、输入边沿、只读状态、暂停与记账检查见 ${link('creator-preview-results.json', 'quality-review/guidance-a/creator-preview-results.json')}；${link('Creator 自动验收脚本', 'quality-review/guidance-a/creator-preview.cjs')} 可复现。rendererErrors 数量为 ${preview.rendererErrors.length}。
+
+两档视觉测试只以 endpointSettled=true 作为已测 T6 入口夹具，Head/Tap、暂停/退出/重入均经真实输入采集→FrameDriver→director；该夹具本身不写账本。另追加 fresh scene 真正 T6→自动揭示→A 演奏→世界的端到端验证（无入口夹具）：
+
+__E2E_SUMMARY__
+
+## 新增命名，待 PROTOCOL 追认
+
+公开/接线提案：GuidancePosition、parseGuidanceChart、measurePathLength、positionAtPathDistance、GuidanceLineRuntime、GuidanceLineState、GuidanceJudgement、GuidanceNodeSnapshot、GuidanceLineSnapshot、getGuidanceSnapshot、bindHeadLogo、bindHeadPosition、bindContentSize、clearVisuals、bindChartMediaProbe、UseGuidanceChart、phase/Down/Up。
+
+全部类型、方法、字段、参数、局部名、状态字面与资源 ID 逐项列于 ${link('逻辑命名清单', 'quality-review/guidance-a/logic-names.json')}、${link('表现命名清单', 'quality-review/guidance-a/presentation-names.json')}、${link('接线命名清单', 'quality-review/guidance-a/integration-names.json')}。清单注明冻结复用、引擎 API、既有词形及待追认项，未修改名库。schemaVersion=1 为本次独立格式技术版本。
+
+## 遗留/待裁定
+
+未发现 VERDICT-127~135 内部冲突，A 步没有实现阻断项。Head窗口1000 ms为用户后续明确调整，待PROTOCOL同步此前100 ms裁定取值；新增技术命名及表现占位参数等待PROTOCOL追认。节点240 ms放大淡出及尺寸仅在presentation，可替换且不影响判定。名库落盘位置实际是根docsNAMEBOOK.md；docs/NAMEBOOK.md不存在，交由Trae/PROTOCOL后续统一路径。本轮继续遵守只读。
+
+Drag/Hold、多线和编辑器未纳入A步，加载时明确拒绝；其冻结数据类型仍完整保留。除用户明确授权的Head窗口调整外，未扩展交付范围。
+
+自动审批拒绝删除测试用 electron-profile 缓存，返回理由为 blocked by policy；缓存保留，不影响实现与验收交付。
+`;
+fs.writeFileSync(path.join(dir, '交付报告.md'), report.replace('__E2E_SUMMARY__', e2eText));
+console.log('Delivery report generated.');

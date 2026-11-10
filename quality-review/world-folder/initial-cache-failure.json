@@ -1,0 +1,13 @@
+{
+  "creator": "3.8.8",
+  "url": "http://localhost:7457/",
+  "fixturePolicy": "Startup/navigation use real DOM controls. The full T6 chain has no endpoint fixture. A separately labelled lifecycle check grants the already verified endpoint. Storage rejection and delayed genuine resource callbacks only inject failures at external boundaries. Forwarding method wrappers count calls without changing arguments or results.",
+  "resolutions": [],
+  "rendererErrors": [],
+  "runtimeErrors": [],
+  "pass": false,
+  "failure": {
+    "message": "Creator source map is stale: WorldFolderBuilder.ts",
+    "stack": "AssertionError [ERR_ASSERTION]: Creator source map is stale: WorldFolderBuilder.ts\n    at D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\world-folder\\creator-preview.cjs:116:14\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async Promise.all (index 1)\n    at async compilation (D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\world-folder\\creator-preview.cjs:105:21)\n    at async D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\world-folder\\creator-preview.cjs:461:28"
+  }
+}

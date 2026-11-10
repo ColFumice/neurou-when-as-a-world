@@ -1,0 +1,50 @@
+{
+  "generatedUtc": "2026-10-11T08:07:53.495Z",
+  "priorPositiveClientEvidence": "client-real-http-run/verified/results.json",
+  "priorPositiveClientRunMetadata": "client-real-http-run/verified/run-metadata.json",
+  "productionClientChecks": 11,
+  "productionClientEvidencePredatesFinalErrorMapping": true,
+  "clientNotRerunAfterFinalErrorMapping": true,
+  "changedImplementationFiles": [
+    {
+      "path": "server/src/AuthorityRoute.ts",
+      "beforeSha256": "4f087bdb0c076e6c7f8d5aa5a329766847419152be1bad6a90bd111216117c0f",
+      "finalSha256": "1490b475447f7a8cb6cbf93763c1e32b5f36624729e5bfae52904def39ff6f0e"
+    },
+    {
+      "path": "server/test/shared-http.test.ts",
+      "beforeSha256": "cee2817577f0df4c106b5062fa47c5b56a6edc224b4f50a871a71b5b8b702a6b",
+      "finalSha256": "1040fb1057b2f199e2df0e71c874ddeff9f4ef0797b3a649ddcc23af0c7a021a"
+    }
+  ],
+  "unchangedClientAndProtocolSources": [
+    {
+      "path": "assets/scripts/SharedRelayPrototypeBuilder.ts",
+      "beforeSha256": "65e9636369f66dec87b36da94beea0c79f998ef3946b72875312da77ea3840bf",
+      "finalSha256": "65e9636369f66dec87b36da94beea0c79f998ef3946b72875312da77ea3840bf"
+    },
+    {
+      "path": "src/presentation/RealSharedServiceSessionAdapter.ts",
+      "beforeSha256": "46238bab2bd3d082622d0b22ba2e3cb82f0330b40f77d70c4de6b229b8af1f8e",
+      "finalSha256": "46238bab2bd3d082622d0b22ba2e3cb82f0330b40f77d70c4de6b229b8af1f8e"
+    },
+    {
+      "path": "src/presentation/RealWorldAuthorityAdapter.ts",
+      "beforeSha256": "fa51d3cc028601f3506bcdee6ce53e5288ebeb3cb98f6fd2a94e1092aac8db39",
+      "finalSha256": "fa51d3cc028601f3506bcdee6ce53e5288ebeb3cb98f6fd2a94e1092aac8db39"
+    },
+    {
+      "path": "src/director/SharedServiceProtocolCodec.ts",
+      "beforeSha256": "22bb5e8139f8323388bcb2129d021471c48b97c0ede4a25cbea1285629400fea",
+      "finalSha256": "22bb5e8139f8323388bcb2129d021471c48b97c0ede4a25cbea1285629400fea"
+    },
+    {
+      "path": "src/director/SharedServiceProtocolContracts.ts",
+      "beforeSha256": "e74f48e14ded771db56cb1890c24a19490e52e2a9b8d96a9c3a9a9bad33b4a80",
+      "finalSha256": "e74f48e14ded771db56cb1890c24a19490e52e2a9b8d96a9c3a9a9bad33b4a80"
+    }
+  ],
+  "finalNegativeWireEvidence": "server-validation-results.json",
+  "reason": "The final source revision changes only AuthorityRoute unsupported outer-version error mapping and adds the corresponding real HTTP negative case. Positive routes and all production client/Builder/protocol source bytes are unchanged; earlier 11 actual client HTTP/PG checks remain historical positive evidence, not claimed as a test of the later negative mapping.",
+  "pass": true
+}

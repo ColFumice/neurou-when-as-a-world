@@ -1,0 +1,57 @@
+{
+  "category": "ProductionObservation",
+  "note": "Read-only sample copied from the actual temporary preview account storage, not fixture input",
+  "record": {
+    "schemaVersion": 1,
+    "accountId": "b22c-production-1920",
+    "worldId": "InitialWorld",
+    "worldKind": "Primary",
+    "protagonistCharacterId": "protagonist-1",
+    "ChartRef": {
+      "chartId": "primary-rain-world-1",
+      "state": "PremiereCompleted"
+    },
+    "contentRevision": "1.0.0",
+    "completionEventId": "WORLD_PREMIERE_COMPLETED:1791627531670:2",
+    "clearedAt": {
+      "epochMs": 1791627531670
+    },
+    "routeSignature": {
+      "VectorSchemaVersion": 1,
+      "ledgerPosition": [
+        0.4,
+        3.2,
+        0.8,
+        0,
+        0.4,
+        0.2,
+        0.2,
+        0.5,
+        0.3,
+        0.2,
+        0,
+        0.4,
+        1,
+        1,
+        0.5,
+        0,
+        0.2,
+        1,
+        0.2,
+        1
+      ],
+      "classificationVersion": 1,
+      "divergenceAxis": 1,
+      "narrativeTime": 1
+    }
+  },
+  "nativeMediaEvents": [
+    {
+      "type": "ended",
+      "src": "http://localhost:7456/assets/resources/native/9b/9bd6cf12-3ef9-4406-b72a-c7c91a09e2ea.wav",
+      "time": 6,
+      "duration": 6,
+      "nativeEnded": true
+    }
+  ]
+}

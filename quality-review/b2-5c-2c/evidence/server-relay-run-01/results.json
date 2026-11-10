@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "suite": "c-2c-real-loopback-pg-server",
+  "serviceMode": "ExternalService",
+  "databaseVersion": "PostgreSQL17",
+  "isolatedPublicWorldPins": true,
+  "noProductionKeyDeliveryOrReplayClaim": true,
+  "total": 2,
+  "passed": 1,
+  "failed": 1,
+  "results": [
+    {
+      "name": "actual loopback registered session, shared authority and relay strict Host/Origin/CSRF",
+      "pass": true,
+      "clock": "production-real-wall",
+      "elapsedMs": 59
+    },
+    {
+      "name": "admitted without enqueue is signed conservative MissingAdmittedEnvelope Gap",
+      "pass": false,
+      "clock": "production-real-wall",
+      "error": "AssertionError [ERR_ASSERTION]: SchemaInvalid\n\n400 !== 200\n\n    at checked (file:///D:/Project/A_New_Begin/Neurou_official/quality-review/b2-5c-2c/server-relay-tests.mjs:54:10)\n    at admittedCommit (file:///D:/Project/A_New_Begin/Neurou_official/quality-review/b2-5c-2c/server-relay-tests.mjs:116:21)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/Project/A_New_Begin/Neurou_official/quality-review/b2-5c-2c/server-relay-tests.mjs:141:18\n    at async run (file:///D:/Project/A_New_Begin/Neurou_official/quality-review/b2-5c-2c/server-relay-tests.mjs:125:9)\n    at async file:///D:/Project/A_New_Begin/Neurou_official/quality-review/b2-5c-2c/server-relay-tests.mjs:140:3"
+    }
+  ]
+}

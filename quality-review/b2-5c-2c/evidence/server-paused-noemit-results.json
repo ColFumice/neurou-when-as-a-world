@@ -1,0 +1,20 @@
+{
+  "phase": "B2.5c-2c paused P11 current server source health check",
+  "status": "PausedP11",
+  "stageComplete": false,
+  "startedUtc": "2026-10-11T09:05:20.943Z",
+  "completedUtc": "2026-10-11T09:05:22.051Z",
+  "command": [
+    "C:\\Program Files\\nodejs\\node.exe",
+    "node_modules/typescript/bin/tsc",
+    "-p",
+    "tsconfig.shared.json",
+    "--noEmit"
+  ],
+  "cwd": "D:\\Project\\A_New_Begin\\Neurou_official\\server",
+  "exitCode": 0,
+  "pass": true,
+  "log": "server-paused-noemit.log",
+  "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "scope": "Independent server shared tsconfig noEmit compilation only. No SharedBuild output write, no Relay test, no server runtime startup, no final acceptance or completed-stage claim."
+}

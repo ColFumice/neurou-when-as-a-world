@@ -1,0 +1,48 @@
+{
+  "observedUtc": "2026-10-11T01:53:09.6776602Z",
+  "baselineCapturedUtc": "2026-10-11T01:51:33.4380239Z",
+  "initialComparisonFile": "protected-files-first-comparison.json",
+  "relativePath": "docs/B2.4-overall-report.md",
+  "bytes": 7947,
+  "sha256": "df314c242a746a0bd3e44e1b0fee76191ec36225654a69ce3a6b45f382e5eae1",
+  "creationTimeUtc": "2026-10-11T01:52:06.1125792Z",
+  "lastWriteTimeUtc": "2026-10-11T01:52:06.1507988Z",
+  "source": "UnknownExternal",
+  "classification": "Protected file appeared after the initial capture",
+  "authorOrAuthorizationConfirmed": false,
+  "actionTaken": "Preserved external file and initial failing comparison; baseline was not overwritten",
+  "limitation": "Filesystem timestamps and hashes do not identify the author or establish approval. This agent wrote only inside the new delivery evidence directory.",
+  "finalObservation": {
+    "observedUtc": "2026-10-11T02:06:17.8648552Z",
+    "comparisonUtc": "2026-10-11T02:05:47.9881061Z",
+    "beforeCount": 6937,
+    "afterCount": 6939,
+    "added": [
+      {
+        "relativePath": "docs/B2.4-overall-report.md",
+        "bytes": 7947,
+        "sha256": "df314c242a746a0bd3e44e1b0fee76191ec36225654a69ce3a6b45f382e5eae1",
+        "creationTimeUtc": "2026-10-11T01:52:06.1125792Z",
+        "lastWriteTimeUtc": "2026-10-11T01:52:06.1507988Z",
+        "source": "UnknownExternal",
+        "authorOrAuthorizationConfirmed": false
+      },
+      {
+        "relativePath": "quality-review/B2.4-overall-report.md",
+        "bytes": 7959,
+        "sha256": "fe19becbb0d549d5e935a0dfea8768acbe9a5c4432fa90c5ffe0fbc9b286481c",
+        "creationTimeUtc": "2026-10-11T01:54:47.9705831Z",
+        "lastWriteTimeUtc": "2026-10-11T01:54:48.0100979Z",
+        "source": "UnknownExternal",
+        "authorOrAuthorizationConfirmed": false
+      }
+    ],
+    "changed": [],
+    "removed": [],
+    "rawComparisonExitCode": 1,
+    "firstObservedFileSameSha256": true,
+    "agentWriteScope": "quality-review/b2-real-service-freeze/evidence only",
+    "deliveryWriteScope": "quality-review/b2-real-service-freeze/ only for this collaborating task",
+    "limitation": "Final protected scope contains two additions outside the delivery directory, both source UnknownExternal; this evidence cannot certify author or approval."
+  }
+}

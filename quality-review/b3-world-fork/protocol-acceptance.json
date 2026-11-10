@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "batch": "B2.3",
+  "status": "AcceptedByProtocol",
+  "authority": "UserProtocolClarification",
+  "names": {
+    "version": "3.11",
+    "allProposedNames": "Ratified",
+    "officialNamebookWriteOwner": "Trae",
+    "officialNamebookLanding": {
+      "status": "ObservedOnDisk",
+      "evidence": "post-acceptance-trae-landings.json",
+      "version": "3.11"
+    }
+  },
+  "worldForkAvailability": {
+    "productionComposition": "Implemented",
+    "protocolRatified": true,
+    "legacyUnboundDefault": "NotImplemented"
+  },
+  "confirmedAttribution": {
+    "kind": "ProtocolAuthorizedConcurrentLanding",
+    "executor": "Trae",
+    "authorizedBy": "PROTOCOL",
+    "confirmedByUser": true,
+    "files": [
+      {
+        "path": "docs/spec/stage-1.md",
+        "authorizedWork": "Append section 4 B2.2d-1/B2.2d-2 scope and section 8 B2.2d-2-01 through B2.2d-2-08 evidence labels",
+        "observedB23ConcurrentDiff": "Section 8 evidence labels; section 4 scope already existed in the B2.3 baseline"
+      },
+      {
+        "path": "scripts/check-naming.js",
+        "authorizedWork": "Add traceBindings, t6TraceId and bindT6Trace to the R4 trace-domain whitelist for v3.10"
+      }
+    ],
+    "preservation": "Keep the authorized concurrent landing and its original diff and hashes",
+    "legacyEvidenceFileNames": "concurrent-external-changes.json and concurrent-external.diff are retained for continuity; attribution is confirmed"
+  },
+  "futureConcurrentLandingPolicy": "Preserve Trae concurrent landings authorized by PROTOCOL; retain separate attribution and evidence",
+  "nextPhase": {
+    "batch": "B2.4",
+    "subject": "CrossDevice",
+    "implementationStarted": false
+  },
+  "historicalEvidence": {
+    "acceptedProtectedSnapshots": "accepted-protected-manifest.json",
+    "acceptedOriginalReport": "accepted-delivery-results.json",
+    "subsequentTraeLanding": "post-acceptance-trae-landings.json"
+  }
+}

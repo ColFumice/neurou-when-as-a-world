@@ -1,0 +1,98 @@
+[
+  {
+    "name": "AC-17 one key consumes at most one matching note",
+    "pass": true
+  },
+  {
+    "name": "AC-17 invalid timestamp cannot consume a note",
+    "pass": true
+  },
+  {
+    "name": "AC-18 guide transparency score monotonic",
+    "pass": true
+  },
+  {
+    "name": "AC-21 reopen resets score and counters",
+    "pass": true
+  },
+  {
+    "name": "T7 pause timestamp freezes progress and judgement",
+    "pass": true
+  },
+  {
+    "name": "INV-10 Move Jump physics gated before chart entry batch",
+    "pass": true
+  },
+  {
+    "name": "AC-20 last strike + ExitChart same frame records exactly once",
+    "pass": true
+  },
+  {
+    "name": "INV-1 ledger read cannot mutate vector or delete stored entries",
+    "pass": true
+  },
+  {
+    "name": "AC-13 missed beat auto resets sustained run",
+    "pass": true
+  },
+  {
+    "name": "AC-13 leave and return cannot reuse sustained progress",
+    "pass": true
+  },
+  {
+    "name": "AC-13 exact endpoint beat excluded",
+    "pass": true
+  },
+  {
+    "name": "AC-13 pre-end final beat waits for window closure",
+    "pass": true
+  },
+  {
+    "name": "INV-13 no held world input carried through chart",
+    "pass": true
+  },
+  {
+    "name": "Input listeners unregister and blur clears held keys",
+    "pass": true
+  },
+  {
+    "name": "FrameDriver supports scene destroy and reload",
+    "pass": true
+  },
+  {
+    "name": "AC-30 grounded tolerance permits jump, airborne ascent denied",
+    "pass": true
+  },
+  {
+    "name": "AC-19 tolerance strictly below Perfect window",
+    "pass": true
+  },
+  {
+    "name": "AC-20 completion result survives teardown and read cannot mutate it",
+    "pass": true
+  },
+  {
+    "name": "INV-3 judgement feedback cannot be altered through reader",
+    "pass": true
+  },
+  {
+    "name": "Input reset also clears orphaned world strike timestamps",
+    "pass": true
+  },
+  {
+    "name": "FrameDriver rejected duplicate cannot release live singleton",
+    "pass": true
+  },
+  {
+    "name": "INV-3 DeepTrace position is immutable and copied from seed",
+    "pass": true
+  },
+  {
+    "name": "FrameLocator rejects non-finite UV before pixel indexing",
+    "pass": true
+  },
+  {
+    "name": "INV-12 already output-aligned media head is not compensated twice",
+    "pass": true
+  }
+]

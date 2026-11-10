@@ -1,0 +1,70 @@
+.project-tree {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  color: #dce6f4;
+  background: #05070a;
+}
+
+.project-tree__stage {
+  position: relative;
+  overflow: hidden;
+  width: 100vw;
+  height: 100vh;
+  background: #05070a;
+  transition: filter 380ms ease;
+}
+
+.project-tree__canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.project-tree__vignette {
+  position: absolute;
+  pointer-events: none;
+}
+
+.project-tree__ripple {
+  position: absolute;
+  pointer-events: none;
+}
+
+.project-tree__selected {
+  position: absolute;
+  left: 0.9rem;
+  bottom: 0.8rem;
+  border: 1px solid rgba(142, 154, 171, 0.28);
+  background: rgba(8, 12, 18, 0.78);
+  padding: 0.35rem 0.55rem;
+  font: 500 0.72rem/1.4 "Cascadia Code", "Consolas", monospace;
+  pointer-events: none;
+}
+
+.project-tree__hint {
+  max-width: 960px;
+  margin: 0.55rem 0 0;
+  color: #718096;
+  font: 400 0.7rem/1.5 "Cascadia Code", "Consolas", monospace;
+}
+
+@media (max-width: 760px) {
+  .project-tree__header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .project-tree__hud {
+    margin-left: 0;
+    text-align: left;
+  }
+}
+
+.project-tree__zoom-black {
+  position: absolute;
+  inset: 0;
+  background: #000000;
+  pointer-events: none;
+  transition: opacity 700ms ease;
+}

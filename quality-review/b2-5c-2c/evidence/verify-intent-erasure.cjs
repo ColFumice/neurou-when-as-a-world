@@ -1,0 +1,24 @@
+'use strict';
+const fs = require('node:fs');
+const path = require('node:path');
+const crypto = require('node:crypto');
+const root = path.resolve(__dirname, '../../..');
+const ts = require(path.join(root, 'node_modules/typescript'));
+const output = path.join(__dirname, 'intent-type-erasure-final.json');
+if (fs.existsSync(output)) throw new Error('Type erasure result is immutable.');
+const sha = bytes => crypto.createHash('sha256').update(bytes).digest('hex');
+const baseline = JSON.parse(fs.readFileSync(path.join(__dirname, 'protected-baseline.json'), 'utf8'));
+const before = fs.readFileSync(path.join(__dirname, 'intent-before-c2c.ts')), after = fs.readFileSync(path.join(root, 'src/director/IntentPort.ts'));
+if (sha(before) !== baseline.files.find(file => file.path === 'src/director/IntentPort.ts').sha256) throw new Error('Before snapshot differs from the immutable baseline.');
+const options = { target: ts.ScriptTarget.ES2020, module: ts.ModuleKind.CommonJS, strict: true };
+const beforeEmitted = ts.transpileModule(before.toString('utf8'), { fileName: 'IntentPort.ts', compilerOptions: options }).outputText;
+const afterEmitted = ts.transpileModule(after.toString('utf8'), { fileName: 'IntentPort.ts', compilerOptions: options }).outputText;
+fs.writeFileSync(path.join(__dirname, 'IntentPort.before.emitted.js'), beforeEmitted);
+fs.writeFileSync(path.join(__dirname, 'IntentPort.after.emitted.js'), afterEmitted);
+const suffix = after.subarray(before.length).toString('utf8'), ast = ts.createSourceFile('IntentPort.suffix.ts', suffix, ts.ScriptTarget.Latest, true);
+const prefixPreserved = after.length >= before.length && after.subarray(0, before.length).equals(before);
+const typeOnly = ast.statements.length === 1 && ast.statements.every(statement => ts.isExportDeclaration(statement) && statement.isTypeOnly && statement.exportClause && ts.isNamedExports(statement.exportClause));
+const names = ast.statements.flatMap(statement => statement.exportClause && ts.isNamedExports(statement.exportClause) ? statement.exportClause.elements.map(item => item.name.text) : []);
+const report = { phase: 'B2.5c-2c final IntentPort byte-prefix and emitted runtime preservation', generatedUtc: new Date().toISOString(), typescriptVersion: ts.version, compilerOptions: { target: 'ES2020', module: 'CommonJS', strict: true }, beforeBytes: before.length, beforeSha256: sha(before), afterBytes: after.length, afterSha256: sha(after), originalBytePrefixPreserved: prefixPreserved, suffixBytes: after.length - before.length, suffixExportStatementCount: ast.statements.length, suffixExportedTypeReferenceCount: names.length, suffixExportedTypeReferences: names, suffixTypeOnly: typeOnly, beforeEmittedSha256: sha(beforeEmitted), afterEmittedSha256: sha(afterEmitted), emittedRuntimeBytesIdentical: beforeEmitted === afterEmitted,
+  pass: prefixPreserved && typeOnly && beforeEmitted === afterEmitted && JSON.stringify(names) === JSON.stringify(['SharedCommitValidator', 'ValidatedSharedCommit', 'SharedValidationResult']), scope: 'TypeScript transpilation proves this approved type-only suffix adds no runtime require/export bytes and preserves the entire c-2b accepted IntentPort prefix. The three names reference existing c-1 declarations and are not new public declaration names.' };
+fs.writeFileSync(output, JSON.stringify(report, null, 2) + '\n'); console.log(JSON.stringify({ pass: report.pass, originalBytePrefixPreserved: prefixPreserved, suffixExportStatementCount: ast.statements.length, suffixExportedTypeReferenceCount: names.length, emittedRuntimeBytesIdentical: report.emittedRuntimeBytesIdentical, emittedSha256: report.beforeEmittedSha256 }, null, 2));

@@ -1,0 +1,590 @@
+{
+  "task": "Full-screen 47-key grid and direct side/corner neighbor judgments",
+  "generatedAt": "2026-10-10T02:14:01.011Z",
+  "command": "node quality-review/pad-grid-2026-10-10/acceptance.cjs",
+  "semantics": "四行铺满；同排少键更宽；Space只启动Head。邻键取屏幕矩形边/角直接接触，只一层。Hold可接受集合持续非空，Down/Up同时间保留边沿顺序。",
+  "coverage": "公开 chart/director API；真实 InputCollector/FrameDriver 仅 cc 事件总线 stub；实际 Creator 视觉独立采集。旧A/B严格键反例因用户规则变更不再适用，旧证据未修改。",
+  "sourceHashes": {
+    "src/chart/KeyboardPadLayout.ts": "73adc3efcb5e1311040385d63352ca3242536743b75505283954720dd545e992",
+    "src/chart/GuidanceLineRuntime.ts": "6914099af15ffcab0a2a0f46c826a42fd2d98da46360a851b7e3e56a3957f886",
+    "src/chart/ChartPremiere.ts": "50617d366ae7c5b8dd6b402389f1ef9e43822bf24e03f0687476e1558853eb6d",
+    "src/presentation/ChartPadView.ts": "426f0888c6bbb7e3cfc1d609bc942e353ee6503af54d27c9942e7d83db9b2160"
+  },
+  "passed": 28,
+  "failed": 0,
+  "checks": [
+    {
+      "name": "Default 47-cell four-row grid fills the full normalized screen and omits Space",
+      "pass": true,
+      "evidence": {
+        "cells": 47,
+        "rowCounts": [
+          13,
+          13,
+          11,
+          10
+        ],
+        "rowWidths": [
+          0.07692307692307693,
+          0.07692307692307693,
+          0.09090909090909091,
+          0.1
+        ],
+        "area": 1,
+        "spaceRendered": false,
+        "spaceInputAccepted": true
+      }
+    },
+    {
+      "name": "Default grid has no internal gaps; every cell origin and shared edge resolves deterministically",
+      "pass": true,
+      "evidence": {
+        "cellOriginsAndCenters": 47,
+        "interiorSamplesWithoutGap": 10000,
+        "rightAndTopHalfOpen": true
+      }
+    },
+    {
+      "name": "Neighbor matcher includes direct sides/corners and self, with one layer only and no Space",
+      "pass": true,
+      "evidence": {
+        "target": "KeyF",
+        "accepted": [
+          "KeyA",
+          "KeyB",
+          "KeyC",
+          "KeyE",
+          "KeyF",
+          "KeyG",
+          "KeyI",
+          "KeyJ",
+          "KeyK"
+        ],
+        "rejected": [
+          "KeyD",
+          "KeyH",
+          "KeyL",
+          "KeyM",
+          "KeyN",
+          "KeyO",
+          "KeyP",
+          "Space",
+          "KeyZ"
+        ],
+        "diagonalIncluded": true,
+        "transitiveNeighborsRejected": true
+      }
+    },
+    {
+      "name": "Geometry defines neighbors across unequal row widths; all 2209 default pairs agree with direct-contact oracle",
+      "pass": true,
+      "evidence": {
+        "pairs": 2209,
+        "acceptedPairs": 293,
+        "cornerOnlyTouchAccepted": true,
+        "smallRealGapRejected": true
+      }
+    },
+    {
+      "name": "Invisible Space still exclusively starts Head within authorized 1000ms; repeated Space cannot restart",
+      "pass": true,
+      "evidence": {
+        "headWindowMs": 1000,
+        "invisibleSpaceStarts": true,
+        "endpointAcceptedMs": 2000,
+        "lateRejectedMs": 2000.001,
+        "startedAtMsStable": 1000
+      }
+    },
+    {
+      "name": "Tap accepts diagonal neighbor and rejects remote or Space keys",
+      "pass": true,
+      "evidence": {
+        "target": "KeyF",
+        "diagonalKey": "KeyA",
+        "diagonalTier": "Perfect",
+        "feedbackKey": "KeyF",
+        "remoteKey": "KeyP",
+        "remoteTier": "Miss",
+        "spaceTier": "Miss"
+      }
+    },
+    {
+      "name": "Tap resolves target at input timestamp across a grid boundary before applying neighbor tolerance",
+      "pass": true,
+      "evidence": {
+        "boundaryAtMs": 4000,
+        "noNominalKeyFallback": true,
+        "results": [
+          {
+            "inputTimeMs": 3999,
+            "input": "KeyE",
+            "dynamicRequired": "KeyF",
+            "tier": "Perfect"
+          },
+          {
+            "inputTimeMs": 4001,
+            "input": "KeyH",
+            "dynamicRequired": "KeyG",
+            "tier": "Perfect"
+          },
+          {
+            "inputTimeMs": 3999,
+            "input": "KeyH",
+            "dynamicRequired": "KeyF",
+            "tier": null
+          },
+          {
+            "inputTimeMs": 4001,
+            "input": "KeyE",
+            "dynamicRequired": "KeyG",
+            "tier": null
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tap dynamic null in gaps/Space/overlap never gains a nearest-key fallback",
+      "pass": true,
+      "evidence": [
+        {
+          "region": "gap",
+          "tier": "Miss",
+          "fabricatedDefaultKey": false
+        },
+        {
+          "region": "Space",
+          "tier": "Miss",
+          "fabricatedDefaultKey": false
+        },
+        {
+          "region": "overlap",
+          "tier": "Miss",
+          "fabricatedDefaultKey": false
+        }
+      ]
+    },
+    {
+      "name": "Tap temporal windows are unchanged by neighbor tolerance, including endpoints and timeout",
+      "pass": true,
+      "evidence": {
+        "perfectWindowMs": 50,
+        "goodWindowMs": 120,
+        "results": [
+          {
+            "offsetMs": -120,
+            "expected": "Good"
+          },
+          {
+            "offsetMs": -50,
+            "expected": "Perfect"
+          },
+          {
+            "offsetMs": 0,
+            "expected": "Perfect"
+          },
+          {
+            "offsetMs": 50,
+            "expected": "Perfect"
+          },
+          {
+            "offsetMs": 120,
+            "expected": "Good"
+          },
+          {
+            "offsetMs": 120.001,
+            "expected": "Miss"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tap neighbor candidates retain nearest-time/target-time/ID ordering and consume at most one per new Down",
+      "pass": true,
+      "evidence": {
+        "oneDownFirst": "a",
+        "repeatedDownConsumed": false,
+        "freshDownNext": "z",
+        "nearestTime": "near",
+        "equalDifferenceEarlierTarget": "earlier-z"
+      }
+    },
+    {
+      "name": "Drag uses held diagonal neighbor at exact arrival, rejecting remote/late/released-before/Space inputs",
+      "pass": true,
+      "evidence": [
+        {
+          "input": "KeyA",
+          "downAtMs": 2999,
+          "upAtMs": 3001,
+          "tier": "Perfect"
+        },
+        {
+          "input": "KeyA",
+          "downAtMs": 3000,
+          "upAtMs": null,
+          "tier": "Perfect"
+        },
+        {
+          "input": "KeyA",
+          "downAtMs": 3001,
+          "upAtMs": null,
+          "tier": "Miss"
+        },
+        {
+          "input": "KeyA",
+          "downAtMs": 2900,
+          "upAtMs": 3000,
+          "tier": "Miss"
+        },
+        {
+          "input": "KeyP",
+          "downAtMs": 2999,
+          "upAtMs": null,
+          "tier": "Miss"
+        },
+        {
+          "input": "Space",
+          "downAtMs": 2999,
+          "upAtMs": null,
+          "tier": "Miss"
+        }
+      ]
+    },
+    {
+      "name": "Timestamped Drag neighbor Down/Up edges produce identical verdicts at 2/30/60/144 FPS",
+      "pass": true,
+      "evidence": [
+        {
+          "fps": 2,
+          "downAtMs": 2999,
+          "upAtMs": 3001,
+          "tier": "Perfect",
+          "resolvedAtMs": 3000
+        },
+        {
+          "fps": 30,
+          "downAtMs": 2999,
+          "upAtMs": 3001,
+          "tier": "Perfect",
+          "resolvedAtMs": 3000
+        },
+        {
+          "fps": 60,
+          "downAtMs": 2999,
+          "upAtMs": 3001,
+          "tier": "Perfect",
+          "resolvedAtMs": 3000
+        },
+        {
+          "fps": 144,
+          "downAtMs": 2999,
+          "upAtMs": 3001,
+          "tier": "Perfect",
+          "resolvedAtMs": 3000
+        },
+        {
+          "fps": 2,
+          "downAtMs": 3001,
+          "upAtMs": 3002,
+          "tier": "Miss",
+          "resolvedAtMs": 3000
+        },
+        {
+          "fps": 30,
+          "downAtMs": 3001,
+          "upAtMs": 3002,
+          "tier": "Miss",
+          "resolvedAtMs": 3000
+        },
+        {
+          "fps": 60,
+          "downAtMs": 3001,
+          "upAtMs": 3002,
+          "tier": "Miss",
+          "resolvedAtMs": 3000
+        },
+        {
+          "fps": 144,
+          "downAtMs": 3001,
+          "upAtMs": 3002,
+          "tier": "Miss",
+          "resolvedAtMs": 3000
+        }
+      ]
+    },
+    {
+      "name": "Drag binding remains its fixed target neighborhood even after path crosses another grid",
+      "pass": true,
+      "evidence": {
+        "fixedTarget": "KeyF",
+        "pathGridAtArrival": "KeyH",
+        "fixedDiagonalHeld": "Perfect",
+        "onlyPathGridHeld": "Miss"
+      }
+    },
+    {
+      "name": "Hold accepts pre-held diagonal neighbor, scores once and keeps origin until full tail",
+      "pass": true,
+      "evidence": {
+        "target": "KeyF",
+        "preHeldNeighbor": "KeyA",
+        "startAtMs": 3000,
+        "tailAtMs": 5000,
+        "fullRangeOriginRetained": true,
+        "scoreEvents": 1
+      }
+    },
+    {
+      "name": "Hold overlapping neighbor handoff remains continuous; releasing a non-last accepted key does not fail",
+      "pass": true,
+      "evidence": {
+        "acceptedNeighbors": [
+          "KeyA",
+          "KeyC"
+        ],
+        "overlapMs": 1,
+        "firstReleaseAtMs": 3501,
+        "finalReleaseAtMs": 5000,
+        "tier": "Perfect"
+      }
+    },
+    {
+      "name": "Hold equal-time handoff respects edge order: Down then Up continuous; Up then Down cannot repair",
+      "pass": true,
+      "evidence": [
+        {
+          "order": "Down then Up",
+          "handoffTimeMs": 3500,
+          "tier": "Perfect"
+        },
+        {
+          "order": "Up then Down",
+          "handoffTimeMs": 3500,
+          "tier": "Miss"
+        }
+      ]
+    },
+    {
+      "name": "Hold last-neighbor release or missing start permanently fails; remote/Space held keys cannot bridge gaps",
+      "pass": true,
+      "evidence": [
+        {
+          "mode": "missing start",
+          "tier": "Miss",
+          "resolvedAtMs": 5000,
+          "repaintCannotRepair": true
+        },
+        {
+          "mode": "neighbor gap",
+          "tier": "Miss",
+          "resolvedAtMs": 5000,
+          "repaintCannotRepair": true
+        },
+        {
+          "mode": "remote bridge",
+          "tier": "Miss",
+          "resolvedAtMs": 5000,
+          "repaintCannotRepair": true
+        },
+        {
+          "mode": "Space bridge",
+          "tier": "Miss",
+          "resolvedAtMs": 5000,
+          "repaintCannotRepair": true
+        }
+      ]
+    },
+    {
+      "name": "Hold tail endpoint accepts final neighbor Up; just-before-tail fails and just-after cannot rescore",
+      "pass": true,
+      "evidence": [
+        {
+          "releaseAtMs": 4999.999,
+          "tier": "Miss",
+          "disappearAtMs": 5000
+        },
+        {
+          "releaseAtMs": 5000,
+          "tier": "Perfect",
+          "disappearAtMs": 5000
+        },
+        {
+          "releaseAtMs": 5000.001,
+          "tier": "Perfect",
+          "disappearAtMs": 5000
+        }
+      ]
+    },
+    {
+      "name": "Hold pause freezes interval/clock; paused release of non-last neighbor preserves continuity",
+      "pass": true,
+      "evidence": {
+        "pauseAtMs": 3500,
+        "holdAndClockFrozen": true,
+        "pausedNonLastReleasePreserved": true,
+        "pausedWallTimeExcludedMs": 90000,
+        "tier": "Perfect"
+      }
+    },
+    {
+      "name": "Hold pause releasing last accepted neighbor locks failure while verdict/visual stay frozen to tail",
+      "pass": true,
+      "evidence": {
+        "lastNeighborReleasedDuringPause": true,
+        "noJudgmentDuringPause": true,
+        "resumedRepressCannotRepair": true,
+        "tailVerdict": "Miss"
+      }
+    },
+    {
+      "name": "Mixed neighbor Tap / Drag / Hold remain independent and path arrivals retain distance ordering",
+      "pass": true,
+      "evidence": {
+        "tapNeighbor": "KeyD",
+        "fixedTargetNeighbor": "KeyA",
+        "arrivalTimesMs": [
+          3000,
+          4000,
+          5000
+        ],
+        "perfect": 3,
+        "score": 300
+      }
+    },
+    {
+      "name": "Exit/reentry resets accepted-neighbor guards, Hold failures, node tiers and stale media end",
+      "pass": true,
+      "evidence": {
+        "staleHeldNeighborCleared": true,
+        "firstReentryWithoutInput": "Miss",
+        "secondReentryFreshNeighbor": "Perfect",
+        "scoreAndFeedbackCleared": true
+      }
+    },
+    {
+      "name": "47-key legacy ChartData accepts adjacent targets but rejects remote/Space; one strike consumes one Note",
+      "pass": true,
+      "evidence": {
+        "gridCells": 47,
+        "target": "KeyF",
+        "acceptedNeighbor": "KeyR",
+        "rejectedRemote": "Backquote",
+        "spaceDoesNotConsume": true,
+        "oneStrikeOneNote": true
+      }
+    },
+    {
+      "name": "Legacy adjacent candidate ranking retains time ordering when one key matches multiple Note targets",
+      "pass": true,
+      "evidence": {
+        "sharedNeighbor": "KeyF",
+        "targetTimesMs": [
+          3000,
+          3080
+        ],
+        "selectedTargetTimeMs": 3080,
+        "consumed": 1
+      }
+    },
+    {
+      "name": "Actual independent A/B resources declare new grid version and retain strict version rejection",
+      "pass": true,
+      "evidence": [
+        {
+          "name": "guidance_a.json",
+          "chartId": "guidance-a-1",
+          "nodeCount": 1,
+          "layoutVersion": "pad-layout-2"
+        },
+        {
+          "name": "guidance_b.json",
+          "chartId": "guidance-b-1",
+          "nodeCount": 4,
+          "layoutVersion": "pad-layout-2"
+        }
+      ]
+    },
+    {
+      "name": "Normalized grid/neighbors/arc length and temporal verdicts are identical at 1920x1080 and 2560x1440",
+      "pass": true,
+      "evidence": {
+        "scope": "纯逻辑归一化/投影一致性；实际 Creator 视觉由另份预览证据覆盖",
+        "samples": [
+          {
+            "resolution": "1920x1080",
+            "logicalDistance": 0.5,
+            "tierCounts": {
+              "perfect": 3,
+              "good": 0,
+              "miss": 0
+            },
+            "pathLength": 0.75,
+            "widthsNormalized": [
+              0.07692307692307693
+            ]
+          },
+          {
+            "resolution": "2560x1440",
+            "logicalDistance": 0.5,
+            "tierCounts": {
+              "perfect": 3,
+              "good": 0,
+              "miss": 0
+            },
+            "pathLength": 0.75,
+            "widthsNormalized": [
+              0.07692307692307693
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "Director retains R26 all-settled + media-end, no mid-exit ledger and only one completion record after reentry",
+      "pass": true,
+      "evidence": {
+        "allResolvedAtMs": 5000,
+        "stillPlayingAtMs": 10000,
+        "mediaEndedAtMs": 12000,
+        "endpointRecords": 1,
+        "middleExitRecords": 0,
+        "completionRecords": 1
+      }
+    },
+    {
+      "name": "Real InputCollector/FrameDriver sends invisible Head Space and cross-frame neighbor edges through director",
+      "pass": true,
+      "evidence": {
+        "invisibleSpaceCode": 32,
+        "startAtMs": 1000,
+        "diagonalNeighborCode": 65,
+        "downAtMs": 2999,
+        "upAtMs": 3001,
+        "firstRenderAtMs": 3500,
+        "dragTier": "Perfect",
+        "holdTier": "Miss",
+        "reads": [
+          {
+            "timeMs": 1000,
+            "lineState": "Running",
+            "dragTier": null,
+            "holdTier": null
+          },
+          {
+            "timeMs": 3500,
+            "lineState": "Running",
+            "dragTier": "Perfect",
+            "holdTier": null
+          },
+          {
+            "timeMs": 5000,
+            "lineState": "Running",
+            "dragTier": "Perfect",
+            "holdTier": "Miss"
+          }
+        ]
+      }
+    }
+  ]
+}

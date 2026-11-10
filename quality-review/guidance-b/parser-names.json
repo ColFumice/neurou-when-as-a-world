@@ -1,0 +1,2104 @@
+{
+  "scope": [
+    "src/chart/GuidanceChart.ts"
+  ],
+  "baseline": "quality-review/guidance-b/baseline/src/chart/GuidanceChart.ts",
+  "classification": "完整列出当前parser标识符；isNewIdentifier 标记B新增词形，newOccurrence 标记B新声明位置；已有A声明均按v2.7整批追认复用。import既有CHART_KEY_IDS/getSlot不表示新增API。",
+  "summary": {
+    "allIdentifierNames": 93,
+    "newIdentifierNames": 29,
+    "pendingNames": 27
+  },
+  "identifiers": [
+    {
+      "name": "allowed",
+      "status": "复用冻结/已追认",
+      "basis": "A步原标识符，docs/NAMEBOOK.md:494~512 已追认",
+      "isNewIdentifier": false,
+      "occurrences": [
+        {
+          "name": "allowed",
+          "kind": "Parameter",
+          "scope": "src/chart/GuidanceChart.ts.requireFields",
+          "line": 81,
+          "exported": false,
+          "newOccurrence": false
+        }
+      ]
+    },
+    {
+      "name": "aspectRatio",
+      "status": "复用冻结/已追认",
+      "basis": "A步原标识符，docs/NAMEBOOK.md:494~512 已追认",
+      "isNewIdentifier": false,
+      "occurrences": [
+        {
+          "name": "aspectRatio",
+          "kind": "PropertySignature",
+          "scope": "src/chart/GuidanceChart.ts.GuidanceChart",
+          "line": 65,
+          "exported": false,
+          "newOccurrence": false
+        },
+        {
+          "name": "aspectRatio",
+          "kind": "Parameter",
+          "scope": "src/chart/GuidanceChart.ts.measurePathLength",
+          "line": 119,
+          "exported": false,
+          "newOccurrence": false
+        },
+        {
+          "name": "aspectRatio",
+          "kind": "Parameter",
+          "scope": "src/chart/GuidanceChart.ts.slicePathByDistance",
+          "line": 135,
+          "exported": false,
+          "newOccurrence": true
+        },
+        {
+          "name": "aspectRatio",
+          "kind": "Parameter",
+          "scope": "src/chart/GuidanceChart.ts.positionAtPathDistance",
+          "line": 168,
+          "exported": false,
+          "newOccurrence": false
+        },
+        {
+          "name": "aspectRatio",
+          "kind": "Parameter",
+          "scope": "src/chart/GuidanceChart.ts.assertTurnsHaveNodes",
+          "line": 237,
+          "exported": false,
+          "newOccurrence": true
+        },
+        {
+          "name": "aspectRatio",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceChart",
+          "line": 285,
+          "exported": false,
+          "newOccurrence": false
+        }
+      ]
+    },
+    {
+      "name": "assertTurnsHaveNodes",
+      "status": "待 PROTOCOL 追认",
+      "basis": "B步新增parser/path helper实现名",
+      "isNewIdentifier": true,
+      "occurrences": [
+        {
+          "name": "assertTurnsHaveNodes",
+          "kind": "FunctionDeclaration",
+          "scope": "src/chart/GuidanceChart.ts",
+          "line": 237,
+          "exported": false,
+          "newOccurrence": true
+        }
+      ]
+    },
+    {
+      "name": "CHART_KEY_IDS",
+      "status": "复用冻结/已追认",
+      "basis": "Existing KeyboardPadLayout export (名库v2.7批次追认)",
+      "isNewIdentifier": true,
+      "occurrences": [
+        {
+          "name": "CHART_KEY_IDS",
+          "kind": "ImportSpecifier",
+          "scope": "src/chart/GuidanceChart.ts",
+          "line": 6,
+          "exported": false,
+          "newOccurrence": true
+        }
+      ]
+    },
+    {
+      "name": "chartId",
+      "status": "复用冻结/已追认",
+      "basis": "A步原标识符，docs/NAMEBOOK.md:494~512 已追认",
+      "isNewIdentifier": false,
+      "occurrences": [
+        {
+          "name": "chartId",
+          "kind": "PropertySignature",
+          "scope": "src/chart/GuidanceChart.ts.GuidanceChart",
+          "line": 62,
+          "exported": false,
+          "newOccurrence": false
+        },
+        {
+          "name": "chartId",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceChart",
+          "line": 280,
+          "exported": false,
+          "newOccurrence": false
+        }
+      ]
+    },
+    {
+      "name": "ChartKeyId",
+      "status": "复用冻结/已追认",
+      "basis": "A步原标识符，docs/NAMEBOOK.md:494~512 已追认",
+      "isNewIdentifier": false,
+      "occurrences": [
+        {
+          "name": "ChartKeyId",
+          "kind": "ImportSpecifier",
+          "scope": "src/chart/GuidanceChart.ts",
+          "line": 5,
+          "exported": false,
+          "newOccurrence": false
+        }
+      ]
+    },
+    {
+      "name": "ChartNodeKind",
+      "status": "复用冻结/已追认",
+      "basis": "A步原标识符，docs/NAMEBOOK.md:494~512 已追认",
+      "isNewIdentifier": false,
+      "occurrences": [
+        {
+          "name": "ChartNodeKind",
+          "kind": "TypeAliasDeclaration",
+          "scope": "src/chart/GuidanceChart.ts",
+          "line": 49,
+          "exported": true,
+          "newOccurrence": false
+        }
+      ]
+    },
+    {
+      "name": "ChartTier",
+      "status": "复用冻结/已追认",
+      "basis": "A步原标识符，docs/NAMEBOOK.md:494~512 已追认",
+      "isNewIdentifier": false,
+      "occurrences": [
+        {
+          "name": "ChartTier",
+          "kind": "ImportSpecifier",
+          "scope": "src/chart/GuidanceChart.ts",
+          "line": 3,
+          "exported": false,
+          "newOccurrence": false
+        }
+      ]
+    },
+    {
+      "name": "corner",
+      "status": "待 PROTOCOL 追认",
+      "basis": "B步新增parser/path helper实现名",
+      "isNewIdentifier": true,
+      "occurrences": [
+        {
+          "name": "corner",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.assertTurnsHaveNodes",
+          "line": 243,
+          "exported": false,
+          "newOccurrence": true
+        }
+      ]
+    },
+    {
+      "name": "cross",
+      "status": "待 PROTOCOL 追认",
+      "basis": "B步新增parser/path helper实现名",
+      "isNewIdentifier": true,
+      "occurrences": [
+        {
+          "name": "cross",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.assertTurnsHaveNodes",
+          "line": 257,
+          "exported": false,
+          "newOccurrence": true
+        }
+      ]
+    },
+    {
+      "name": "cumulativeDistance",
+      "status": "待 PROTOCOL 追认",
+      "basis": "B步新增parser/path helper实现名",
+      "isNewIdentifier": true,
+      "occurrences": [
+        {
+          "name": "cumulativeDistance",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.slicePathByDistance",
+          "line": 152,
+          "exported": false,
+          "newOccurrence": true
+        },
+        {
+          "name": "cumulativeDistance",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.assertTurnsHaveNodes",
+          "line": 240,
+          "exported": false,
+          "newOccurrence": true
+        }
+      ]
+    },
+    {
+      "name": "distance",
+      "status": "复用冻结/已追认",
+      "basis": "A步原标识符，docs/NAMEBOOK.md:494~512 已追认",
+      "isNewIdentifier": false,
+      "occurrences": [
+        {
+          "name": "distance",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.positionAtPathDistance",
+          "line": 171,
+          "exported": false,
+          "newOccurrence": false
+        }
+      ]
+    },
+    {
+      "name": "distanceTolerance",
+      "status": "待 PROTOCOL 追认",
+      "basis": "B步新增parser/path helper实现名",
+      "isNewIdentifier": true,
+      "occurrences": [
+        {
+          "name": "distanceTolerance",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.assertTurnsHaveNodes",
+          "line": 239,
+          "exported": false,
+          "newOccurrence": true
+        }
+      ]
+    },
+    {
+      "name": "dot",
+      "status": "待 PROTOCOL 追认",
+      "basis": "B步新增parser/path helper实现名",
+      "isNewIdentifier": true,
+      "occurrences": [
+        {
+          "name": "dot",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.assertTurnsHaveNodes",
+          "line": 258,
+          "exported": false,
+          "newOccurrence": true
+        }
+      ]
+    },
+    {
+      "name": "DragNode",
+      "status": "复用冻结/已追认",
+      "basis": "A步原标识符，docs/NAMEBOOK.md:494~512 已追认",
+      "isNewIdentifier": false,
+      "occurrences": [
+        {
+          "name": "DragNode",
+          "kind": "InterfaceDeclaration",
+          "scope": "src/chart/GuidanceChart.ts",
+          "line": 32,
+          "exported": true,
+          "newOccurrence": false
+        }
+      ]
+    },
+    {
+      "name": "endDistance",
+      "status": "待 PROTOCOL 追认",
+      "basis": "B步新增parser/path helper实现名",
+      "isNewIdentifier": true,
+      "occurrences": [
+        {
+          "name": "endDistance",
+          "kind": "Parameter",
+          "scope": "src/chart/GuidanceChart.ts.slicePathByDistance",
+          "line": 137,
+          "exported": false,
+          "newOccurrence": true
+        }
+      ]
+    },
+    {
+      "name": "endPathDistance",
+      "status": "复用冻结/已追认",
+      "basis": "A步原标识符，docs/NAMEBOOK.md:494~512 已追认",
+      "isNewIdentifier": false,
+      "occurrences": [
+        {
+          "name": "endPathDistance",
+          "kind": "PropertySignature",
+          "scope": "src/chart/GuidanceChart.ts.HoldNode",
+          "line": 43,
+          "exported": false,
+          "newOccurrence": false
+        },
+        {
+          "name": "endPathDistance",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceNode",
+          "line": 229,
+          "exported": false,
+          "newOccurrence": true
+        }
+      ]
+    },
+    {
+      "name": "field",
+      "status": "复用冻结/已追认",
+      "basis": "A步原标识符，docs/NAMEBOOK.md:494~512 已追认",
+      "isNewIdentifier": false,
+      "occurrences": [
+        {
+          "name": "field",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.requireFields",
+          "line": 82,
+          "exported": false,
+          "newOccurrence": false
+        }
+      ]
+    },
+    {
+      "name": "fraction",
+      "status": "复用冻结/已追认",
+      "basis": "A步原标识符，docs/NAMEBOOK.md:494~512 已追认",
+      "isNewIdentifier": false,
+      "occurrences": [
+        {
+          "name": "fraction",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.positionAtPathDistance",
+          "line": 178,
+          "exported": false,
+          "newOccurrence": false
+        }
+      ]
+    },
+    {
+      "name": "getSlot",
+      "status": "复用冻结/已追认",
+      "basis": "Existing KeyboardPadLayout helper (名库v2.7 logic-names.json批次追认)",
+      "isNewIdentifier": true,
+      "occurrences": [
+        {
+          "name": "getSlot",
+          "kind": "ImportSpecifier",
+          "scope": "src/chart/GuidanceChart.ts",
+          "line": 6,
+          "exported": false,
+          "newOccurrence": true
+        }
+      ]
+    },
+    {
+      "name": "GuidanceChart",
+      "status": "复用冻结/已追认",
+      "basis": "A步原标识符，docs/NAMEBOOK.md:494~512 已追认",
+      "isNewIdentifier": false,
+      "occurrences": [
+        {
+          "name": "GuidanceChart",
+          "kind": "InterfaceDeclaration",
+          "scope": "src/chart/GuidanceChart.ts",
+          "line": 60,
+          "exported": true,
+          "newOccurrence": false
+        }
+      ]
+    },
+    {
+      "name": "GuidanceLine",
+      "status": "复用冻结/已追认",
+      "basis": "A步原标识符，docs/NAMEBOOK.md:494~512 已追认",
+      "isNewIdentifier": false,
+      "occurrences": [
+        {
+          "name": "GuidanceLine",
+          "kind": "InterfaceDeclaration",
+          "scope": "src/chart/GuidanceChart.ts",
+          "line": 51,
+          "exported": true,
+          "newOccurrence": false
+        }
+      ]
+    },
+    {
+      "name": "GuidanceNode",
+      "status": "复用冻结/已追认",
+      "basis": "A步原标识符，docs/NAMEBOOK.md:494~512 已追认",
+      "isNewIdentifier": false,
+      "occurrences": [
+        {
+          "name": "GuidanceNode",
+          "kind": "TypeAliasDeclaration",
+          "scope": "src/chart/GuidanceChart.ts",
+          "line": 48,
+          "exported": true,
+          "newOccurrence": false
+        }
+      ]
+    },
+    {
+      "name": "GuidancePosition",
+      "status": "复用冻结/已追认",
+      "basis": "A步原标识符，docs/NAMEBOOK.md:494~512 已追认",
+      "isNewIdentifier": false,
+      "occurrences": [
+        {
+          "name": "GuidancePosition",
+          "kind": "InterfaceDeclaration",
+          "scope": "src/chart/GuidanceChart.ts",
+          "line": 11,
+          "exported": true,
+          "newOccurrence": false
+        }
+      ]
+    },
+    {
+      "name": "head",
+      "status": "复用冻结/已追认",
+      "basis": "A步原标识符，docs/NAMEBOOK.md:494~512 已追认",
+      "isNewIdentifier": false,
+      "occurrences": [
+        {
+          "name": "head",
+          "kind": "PropertySignature",
+          "scope": "src/chart/GuidanceChart.ts.GuidanceLine",
+          "line": 53,
+          "exported": false,
+          "newOccurrence": false
+        },
+        {
+          "name": "head",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceChart",
+          "line": 345,
+          "exported": false,
+          "newOccurrence": false
+        }
+      ]
+    },
+    {
+      "name": "HEAD_WINDOW_MS",
+      "status": "复用冻结/已追认",
+      "basis": "A步原标识符，docs/NAMEBOOK.md:494~512 已追认",
+      "isNewIdentifier": false,
+      "occurrences": [
+        {
+          "name": "HEAD_WINDOW_MS",
+          "kind": "ImportSpecifier",
+          "scope": "src/chart/GuidanceChart.ts",
+          "line": 4,
+          "exported": false,
+          "newOccurrence": false
+        }
+      ]
+    },
+    {
+      "name": "headId",
+      "status": "复用冻结/已追认",
+      "basis": "A步原标识符，docs/NAMEBOOK.md:494~512 已追认",
+      "isNewIdentifier": false,
+      "occurrences": [
+        {
+          "name": "headId",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceChart",
+          "line": 298,
+          "exported": false,
+          "newOccurrence": false
+        }
+      ]
+    },
+    {
+      "name": "HeadNode",
+      "status": "复用冻结/已追认",
+      "basis": "A步原标识符，docs/NAMEBOOK.md:494~512 已追认",
+      "isNewIdentifier": false,
+      "occurrences": [
+        {
+          "name": "HeadNode",
+          "kind": "InterfaceDeclaration",
+          "scope": "src/chart/GuidanceChart.ts",
+          "line": 21,
+          "exported": true,
+          "newOccurrence": false
+        }
+      ]
+    },
+    {
+      "name": "headSource",
+      "status": "复用冻结/已追认",
+      "basis": "A步原标识符，docs/NAMEBOOK.md:494~512 已追认",
+      "isNewIdentifier": false,
+      "occurrences": [
+        {
+          "name": "headSource",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceChart",
+          "line": 296,
+          "exported": false,
+          "newOccurrence": false
+        }
+      ]
+    },
+    {
+      "name": "HoldNode",
+      "status": "复用冻结/已追认",
+      "basis": "A步原标识符，docs/NAMEBOOK.md:494~512 已追认",
+      "isNewIdentifier": false,
+      "occurrences": [
+        {
+          "name": "HoldNode",
+          "kind": "InterfaceDeclaration",
+          "scope": "src/chart/GuidanceChart.ts",
+          "line": 39,
+          "exported": true,
+          "newOccurrence": false
+        }
+      ]
+    },
+    {
+      "name": "id",
+      "status": "复用冻结/已追认",
+      "basis": "A步原标识符，docs/NAMEBOOK.md:494~512 已追认",
+      "isNewIdentifier": false,
+      "occurrences": [
+        {
+          "name": "id",
+          "kind": "PropertySignature",
+          "scope": "src/chart/GuidanceChart.ts.HeadNode",
+          "line": 22,
+          "exported": false,
+          "newOccurrence": false
+        },
+        {
+          "name": "id",
+          "kind": "PropertySignature",
+          "scope": "src/chart/GuidanceChart.ts.TapNode",
+          "line": 27,
+          "exported": false,
+          "newOccurrence": false
+        },
+        {
+          "name": "id",
+          "kind": "PropertySignature",
+          "scope": "src/chart/GuidanceChart.ts.DragNode",
+          "line": 33,
+          "exported": false,
+          "newOccurrence": false
+        },
+        {
+          "name": "id",
+          "kind": "PropertySignature",
+          "scope": "src/chart/GuidanceChart.ts.HoldNode",
+          "line": 40,
+          "exported": false,
+          "newOccurrence": false
+        },
+        {
+          "name": "id",
+          "kind": "PropertySignature",
+          "scope": "src/chart/GuidanceChart.ts.GuidanceLine",
+          "line": 52,
+          "exported": false,
+          "newOccurrence": false
+        },
+        {
+          "name": "id",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceNode",
+          "line": 217,
+          "exported": false,
+          "newOccurrence": true
+        },
+        {
+          "name": "id",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceChart",
+          "line": 295,
+          "exported": false,
+          "newOccurrence": false
+        }
+      ]
+    },
+    {
+      "name": "identities",
+      "status": "复用冻结/已追认",
+      "basis": "A步原标识符，docs/NAMEBOOK.md:494~512 已追认",
+      "isNewIdentifier": false,
+      "occurrences": [
+        {
+          "name": "identities",
+          "kind": "Parameter",
+          "scope": "src/chart/GuidanceChart.ts.requireId",
+          "line": 96,
+          "exported": false,
+          "newOccurrence": false
+        },
+        {
+          "name": "identities",
+          "kind": "Parameter",
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceNode",
+          "line": 204,
+          "exported": false,
+          "newOccurrence": true
+        },
+        {
+          "name": "identities",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceChart",
+          "line": 292,
+          "exported": false,
+          "newOccurrence": false
+        }
+      ]
+    },
+    {
+      "name": "incomingDirectionU",
+      "status": "待 PROTOCOL 追认",
+      "basis": "B步新增parser/path helper实现名",
+      "isNewIdentifier": true,
+      "occurrences": [
+        {
+          "name": "incomingDirectionU",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.assertTurnsHaveNodes",
+          "line": 253,
+          "exported": false,
+          "newOccurrence": true
+        }
+      ]
+    },
+    {
+      "name": "incomingDirectionV",
+      "status": "待 PROTOCOL 追认",
+      "basis": "B步新增parser/path helper实现名",
+      "isNewIdentifier": true,
+      "occurrences": [
+        {
+          "name": "incomingDirectionV",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.assertTurnsHaveNodes",
+          "line": 254,
+          "exported": false,
+          "newOccurrence": true
+        }
+      ]
+    },
+    {
+      "name": "incomingLength",
+      "status": "待 PROTOCOL 追认",
+      "basis": "B步新增parser/path helper实现名",
+      "isNewIdentifier": true,
+      "occurrences": [
+        {
+          "name": "incomingLength",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.assertTurnsHaveNodes",
+          "line": 249,
+          "exported": false,
+          "newOccurrence": true
+        }
+      ]
+    },
+    {
+      "name": "incomingU",
+      "status": "待 PROTOCOL 追认",
+      "basis": "B步新增parser/path helper实现名",
+      "isNewIdentifier": true,
+      "occurrences": [
+        {
+          "name": "incomingU",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.assertTurnsHaveNodes",
+          "line": 245,
+          "exported": false,
+          "newOccurrence": true
+        }
+      ]
+    },
+    {
+      "name": "incomingV",
+      "status": "待 PROTOCOL 追认",
+      "basis": "B步新增parser/path helper实现名",
+      "isNewIdentifier": true,
+      "occurrences": [
+        {
+          "name": "incomingV",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.assertTurnsHaveNodes",
+          "line": 246,
+          "exported": false,
+          "newOccurrence": true
+        }
+      ]
+    },
+    {
+      "name": "index",
+      "status": "复用冻结/已追认",
+      "basis": "A步原标识符，docs/NAMEBOOK.md:494~512 已追认",
+      "isNewIdentifier": false,
+      "occurrences": [
+        {
+          "name": "index",
+          "kind": "Parameter",
+          "scope": "src/chart/GuidanceChart.ts.parsePosition",
+          "line": 107,
+          "exported": false,
+          "newOccurrence": false
+        },
+        {
+          "name": "index",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.measurePathLength",
+          "line": 121,
+          "exported": false,
+          "newOccurrence": false
+        },
+        {
+          "name": "index",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.slicePathByDistance",
+          "line": 153,
+          "exported": false,
+          "newOccurrence": true
+        },
+        {
+          "name": "index",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.positionAtPathDistance",
+          "line": 173,
+          "exported": false,
+          "newOccurrence": false
+        },
+        {
+          "name": "index",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.assertTurnsHaveNodes",
+          "line": 241,
+          "exported": false,
+          "newOccurrence": true
+        },
+        {
+          "name": "index",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceChart",
+          "line": 315,
+          "exported": false,
+          "newOccurrence": true
+        }
+      ]
+    },
+    {
+      "name": "isTurn",
+      "status": "待 PROTOCOL 追认",
+      "basis": "B步新增parser/path helper实现名",
+      "isNewIdentifier": true,
+      "occurrences": [
+        {
+          "name": "isTurn",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.assertTurnsHaveNodes",
+          "line": 259,
+          "exported": false,
+          "newOccurrence": true
+        }
+      ]
+    },
+    {
+      "name": "JudgmentPoint",
+      "status": "复用冻结/已追认",
+      "basis": "A步原标识符，docs/NAMEBOOK.md:494~512 已追认",
+      "isNewIdentifier": false,
+      "occurrences": [
+        {
+          "name": "JudgmentPoint",
+          "kind": "InterfaceDeclaration",
+          "scope": "src/chart/GuidanceChart.ts",
+          "line": 69,
+          "exported": true,
+          "newOccurrence": false
+        }
+      ]
+    },
+    {
+      "name": "KeyboardPadLayout",
+      "status": "复用冻结/已追认",
+      "basis": "A步原标识符，docs/NAMEBOOK.md:494~512 已追认",
+      "isNewIdentifier": false,
+      "occurrences": [
+        {
+          "name": "KeyboardPadLayout",
+          "kind": "ImportSpecifier",
+          "scope": "src/chart/GuidanceChart.ts",
+          "line": 5,
+          "exported": false,
+          "newOccurrence": false
+        }
+      ]
+    },
+    {
+      "name": "keyId",
+      "status": "复用冻结/已追认",
+      "basis": "A步原标识符，docs/NAMEBOOK.md:494~512 已追认",
+      "isNewIdentifier": false,
+      "occurrences": [
+        {
+          "name": "keyId",
+          "kind": "PropertySignature",
+          "scope": "src/chart/GuidanceChart.ts.DragNode",
+          "line": 36,
+          "exported": false,
+          "newOccurrence": false
+        },
+        {
+          "name": "keyId",
+          "kind": "PropertySignature",
+          "scope": "src/chart/GuidanceChart.ts.HoldNode",
+          "line": 44,
+          "exported": false,
+          "newOccurrence": false
+        },
+        {
+          "name": "keyId",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.parseBoundKey",
+          "line": 193,
+          "exported": false,
+          "newOccurrence": true
+        },
+        {
+          "name": "keyId",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceNode",
+          "line": 225,
+          "exported": false,
+          "newOccurrence": true
+        }
+      ]
+    },
+    {
+      "name": "kind",
+      "status": "复用冻结/已追认",
+      "basis": "A步原标识符，docs/NAMEBOOK.md:494~512 已追认",
+      "isNewIdentifier": false,
+      "occurrences": [
+        {
+          "name": "kind",
+          "kind": "PropertySignature",
+          "scope": "src/chart/GuidanceChart.ts.NodePath",
+          "line": 17,
+          "exported": false,
+          "newOccurrence": false
+        },
+        {
+          "name": "kind",
+          "kind": "PropertySignature",
+          "scope": "src/chart/GuidanceChart.ts.TapNode",
+          "line": 28,
+          "exported": false,
+          "newOccurrence": false
+        },
+        {
+          "name": "kind",
+          "kind": "PropertySignature",
+          "scope": "src/chart/GuidanceChart.ts.DragNode",
+          "line": 34,
+          "exported": false,
+          "newOccurrence": false
+        },
+        {
+          "name": "kind",
+          "kind": "PropertySignature",
+          "scope": "src/chart/GuidanceChart.ts.HoldNode",
+          "line": 41,
+          "exported": false,
+          "newOccurrence": false
+        },
+        {
+          "name": "kind",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceNode",
+          "line": 207,
+          "exported": false,
+          "newOccurrence": true
+        }
+      ]
+    },
+    {
+      "name": "label",
+      "status": "复用冻结/已追认",
+      "basis": "A步原标识符，docs/NAMEBOOK.md:494~512 已追认",
+      "isNewIdentifier": false,
+      "occurrences": [
+        {
+          "name": "label",
+          "kind": "Parameter",
+          "scope": "src/chart/GuidanceChart.ts.requireRecord",
+          "line": 74,
+          "exported": false,
+          "newOccurrence": false
+        },
+        {
+          "name": "label",
+          "kind": "Parameter",
+          "scope": "src/chart/GuidanceChart.ts.requireFields",
+          "line": 81,
+          "exported": false,
+          "newOccurrence": false
+        },
+        {
+          "name": "label",
+          "kind": "Parameter",
+          "scope": "src/chart/GuidanceChart.ts.requireFinite",
+          "line": 89,
+          "exported": false,
+          "newOccurrence": false
+        },
+        {
+          "name": "label",
+          "kind": "Parameter",
+          "scope": "src/chart/GuidanceChart.ts.requireId",
+          "line": 96,
+          "exported": false,
+          "newOccurrence": false
+        }
+      ]
+    },
+    {
+      "name": "layout",
+      "status": "复用冻结/已追认",
+      "basis": "A步原标识符，docs/NAMEBOOK.md:494~512 已追认",
+      "isNewIdentifier": false,
+      "occurrences": [
+        {
+          "name": "layout",
+          "kind": "Parameter",
+          "scope": "src/chart/GuidanceChart.ts.parseBoundKey",
+          "line": 189,
+          "exported": false,
+          "newOccurrence": true
+        },
+        {
+          "name": "layout",
+          "kind": "Parameter",
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceNode",
+          "line": 202,
+          "exported": false,
+          "newOccurrence": true
+        },
+        {
+          "name": "layout",
+          "kind": "Parameter",
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceChart",
+          "line": 271,
+          "exported": false,
+          "newOccurrence": false
+        }
+      ]
+    },
+    {
+      "name": "layoutVersion",
+      "status": "复用冻结/已追认",
+      "basis": "A步原标识符，docs/NAMEBOOK.md:494~512 已追认",
+      "isNewIdentifier": false,
+      "occurrences": [
+        {
+          "name": "layoutVersion",
+          "kind": "PropertySignature",
+          "scope": "src/chart/GuidanceChart.ts.GuidanceChart",
+          "line": 64,
+          "exported": false,
+          "newOccurrence": false
+        }
+      ]
+    },
+    {
+      "name": "left",
+      "status": "待 PROTOCOL 追认",
+      "basis": "B步新增parser/path helper实现名",
+      "isNewIdentifier": true,
+      "occurrences": [
+        {
+          "name": "left",
+          "kind": "Parameter",
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceChart",
+          "line": 338,
+          "exported": false,
+          "newOccurrence": true
+        }
+      ]
+    },
+    {
+      "name": "length",
+      "status": "复用冻结/已追认",
+      "basis": "A步原标识符，docs/NAMEBOOK.md:494~512 已追认",
+      "isNewIdentifier": false,
+      "occurrences": [
+        {
+          "name": "length",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.measurePathLength",
+          "line": 120,
+          "exported": false,
+          "newOccurrence": false
+        },
+        {
+          "name": "length",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.positionAtPathDistance",
+          "line": 176,
+          "exported": false,
+          "newOccurrence": false
+        },
+        {
+          "name": "length",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceChart",
+          "line": 326,
+          "exported": false,
+          "newOccurrence": false
+        }
+      ]
+    },
+    {
+      "name": "line",
+      "status": "复用冻结/已追认",
+      "basis": "A步原标识符，docs/NAMEBOOK.md:494~512 已追认",
+      "isNewIdentifier": false,
+      "occurrences": [
+        {
+          "name": "line",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceChart",
+          "line": 346,
+          "exported": false,
+          "newOccurrence": false
+        }
+      ]
+    },
+    {
+      "name": "lines",
+      "status": "复用冻结/已追认",
+      "basis": "A步原标识符，docs/NAMEBOOK.md:494~512 已追认",
+      "isNewIdentifier": false,
+      "occurrences": [
+        {
+          "name": "lines",
+          "kind": "PropertySignature",
+          "scope": "src/chart/GuidanceChart.ts.GuidanceChart",
+          "line": 66,
+          "exported": false,
+          "newOccurrence": false
+        }
+      ]
+    },
+    {
+      "name": "lineSource",
+      "status": "复用冻结/已追认",
+      "basis": "A步原标识符，docs/NAMEBOOK.md:494~512 已追认",
+      "isNewIdentifier": false,
+      "occurrences": [
+        {
+          "name": "lineSource",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceChart",
+          "line": 293,
+          "exported": false,
+          "newOccurrence": false
+        }
+      ]
+    },
+    {
+      "name": "measurePathLength",
+      "status": "复用冻结/已追认",
+      "basis": "A步原标识符，docs/NAMEBOOK.md:494~512 已追认",
+      "isNewIdentifier": false,
+      "occurrences": [
+        {
+          "name": "measurePathLength",
+          "kind": "FunctionDeclaration",
+          "scope": "src/chart/GuidanceChart.ts",
+          "line": 119,
+          "exported": true,
+          "newOccurrence": false
+        }
+      ]
+    },
+    {
+      "name": "next",
+      "status": "复用冻结/已追认",
+      "basis": "A步原标识符，docs/NAMEBOOK.md:494~512 已追认",
+      "isNewIdentifier": false,
+      "occurrences": [
+        {
+          "name": "next",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.measurePathLength",
+          "line": 123,
+          "exported": false,
+          "newOccurrence": false
+        },
+        {
+          "name": "next",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.slicePathByDistance",
+          "line": 155,
+          "exported": false,
+          "newOccurrence": true
+        },
+        {
+          "name": "next",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.positionAtPathDistance",
+          "line": 175,
+          "exported": false,
+          "newOccurrence": false
+        },
+        {
+          "name": "next",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.assertTurnsHaveNodes",
+          "line": 244,
+          "exported": false,
+          "newOccurrence": true
+        },
+        {
+          "name": "next",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceChart",
+          "line": 317,
+          "exported": false,
+          "newOccurrence": true
+        }
+      ]
+    },
+    {
+      "name": "node",
+      "status": "复用冻结/已追认",
+      "basis": "A步原标识符，docs/NAMEBOOK.md:494~512 已追认",
+      "isNewIdentifier": false,
+      "occurrences": [
+        {
+          "name": "node",
+          "kind": "Parameter",
+          "scope": "src/chart/GuidanceChart.ts.assertTurnsHaveNodes",
+          "line": 260,
+          "exported": false,
+          "newOccurrence": true
+        },
+        {
+          "name": "node",
+          "kind": "Parameter",
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceChart",
+          "line": 337,
+          "exported": false,
+          "newOccurrence": true
+        }
+      ]
+    },
+    {
+      "name": "NodePath",
+      "status": "复用冻结/已追认",
+      "basis": "A步原标识符，docs/NAMEBOOK.md:494~512 已追认",
+      "isNewIdentifier": false,
+      "occurrences": [
+        {
+          "name": "NodePath",
+          "kind": "InterfaceDeclaration",
+          "scope": "src/chart/GuidanceChart.ts",
+          "line": 16,
+          "exported": true,
+          "newOccurrence": false
+        }
+      ]
+    },
+    {
+      "name": "nodes",
+      "status": "复用冻结/已追认",
+      "basis": "A步原标识符，docs/NAMEBOOK.md:494~512 已追认",
+      "isNewIdentifier": false,
+      "occurrences": [
+        {
+          "name": "nodes",
+          "kind": "PropertySignature",
+          "scope": "src/chart/GuidanceChart.ts.GuidanceLine",
+          "line": 57,
+          "exported": false,
+          "newOccurrence": false
+        },
+        {
+          "name": "nodes",
+          "kind": "Parameter",
+          "scope": "src/chart/GuidanceChart.ts.assertTurnsHaveNodes",
+          "line": 237,
+          "exported": false,
+          "newOccurrence": true
+        },
+        {
+          "name": "nodes",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceChart",
+          "line": 337,
+          "exported": false,
+          "newOccurrence": true
+        }
+      ]
+    },
+    {
+      "name": "outgoingDirectionU",
+      "status": "待 PROTOCOL 追认",
+      "basis": "B步新增parser/path helper实现名",
+      "isNewIdentifier": true,
+      "occurrences": [
+        {
+          "name": "outgoingDirectionU",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.assertTurnsHaveNodes",
+          "line": 255,
+          "exported": false,
+          "newOccurrence": true
+        }
+      ]
+    },
+    {
+      "name": "outgoingDirectionV",
+      "status": "待 PROTOCOL 追认",
+      "basis": "B步新增parser/path helper实现名",
+      "isNewIdentifier": true,
+      "occurrences": [
+        {
+          "name": "outgoingDirectionV",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.assertTurnsHaveNodes",
+          "line": 256,
+          "exported": false,
+          "newOccurrence": true
+        }
+      ]
+    },
+    {
+      "name": "outgoingLength",
+      "status": "待 PROTOCOL 追认",
+      "basis": "B步新增parser/path helper实现名",
+      "isNewIdentifier": true,
+      "occurrences": [
+        {
+          "name": "outgoingLength",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.assertTurnsHaveNodes",
+          "line": 250,
+          "exported": false,
+          "newOccurrence": true
+        }
+      ]
+    },
+    {
+      "name": "outgoingU",
+      "status": "待 PROTOCOL 追认",
+      "basis": "B步新增parser/path helper实现名",
+      "isNewIdentifier": true,
+      "occurrences": [
+        {
+          "name": "outgoingU",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.assertTurnsHaveNodes",
+          "line": 247,
+          "exported": false,
+          "newOccurrence": true
+        }
+      ]
+    },
+    {
+      "name": "outgoingV",
+      "status": "待 PROTOCOL 追认",
+      "basis": "B步新增parser/path helper实现名",
+      "isNewIdentifier": true,
+      "occurrences": [
+        {
+          "name": "outgoingV",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.assertTurnsHaveNodes",
+          "line": 248,
+          "exported": false,
+          "newOccurrence": true
+        }
+      ]
+    },
+    {
+      "name": "parseBoundKey",
+      "status": "待 PROTOCOL 追认",
+      "basis": "B步新增parser/path helper实现名",
+      "isNewIdentifier": true,
+      "occurrences": [
+        {
+          "name": "parseBoundKey",
+          "kind": "FunctionDeclaration",
+          "scope": "src/chart/GuidanceChart.ts",
+          "line": 189,
+          "exported": false,
+          "newOccurrence": true
+        }
+      ]
+    },
+    {
+      "name": "parseGuidanceChart",
+      "status": "复用冻结/已追认",
+      "basis": "A步原标识符，docs/NAMEBOOK.md:494~512 已追认",
+      "isNewIdentifier": false,
+      "occurrences": [
+        {
+          "name": "parseGuidanceChart",
+          "kind": "FunctionDeclaration",
+          "scope": "src/chart/GuidanceChart.ts",
+          "line": 271,
+          "exported": true,
+          "newOccurrence": false
+        }
+      ]
+    },
+    {
+      "name": "parseGuidanceNode",
+      "status": "待 PROTOCOL 追认",
+      "basis": "B步新增parser/path helper实现名",
+      "isNewIdentifier": true,
+      "occurrences": [
+        {
+          "name": "parseGuidanceNode",
+          "kind": "FunctionDeclaration",
+          "scope": "src/chart/GuidanceChart.ts",
+          "line": 200,
+          "exported": false,
+          "newOccurrence": true
+        }
+      ]
+    },
+    {
+      "name": "parsePosition",
+      "status": "复用冻结/已追认",
+      "basis": "A步原标识符，docs/NAMEBOOK.md:494~512 已追认",
+      "isNewIdentifier": false,
+      "occurrences": [
+        {
+          "name": "parsePosition",
+          "kind": "FunctionDeclaration",
+          "scope": "src/chart/GuidanceChart.ts",
+          "line": 107,
+          "exported": false,
+          "newOccurrence": false
+        }
+      ]
+    },
+    {
+      "name": "path",
+      "status": "复用冻结/已追认",
+      "basis": "A步原标识符，docs/NAMEBOOK.md:494~512 已追认",
+      "isNewIdentifier": false,
+      "occurrences": [
+        {
+          "name": "path",
+          "kind": "PropertySignature",
+          "scope": "src/chart/GuidanceChart.ts.GuidanceLine",
+          "line": 54,
+          "exported": false,
+          "newOccurrence": false
+        },
+        {
+          "name": "path",
+          "kind": "Parameter",
+          "scope": "src/chart/GuidanceChart.ts.measurePathLength",
+          "line": 119,
+          "exported": false,
+          "newOccurrence": false
+        },
+        {
+          "name": "path",
+          "kind": "Parameter",
+          "scope": "src/chart/GuidanceChart.ts.slicePathByDistance",
+          "line": 134,
+          "exported": false,
+          "newOccurrence": true
+        },
+        {
+          "name": "path",
+          "kind": "Parameter",
+          "scope": "src/chart/GuidanceChart.ts.positionAtPathDistance",
+          "line": 167,
+          "exported": false,
+          "newOccurrence": false
+        },
+        {
+          "name": "path",
+          "kind": "Parameter",
+          "scope": "src/chart/GuidanceChart.ts.assertTurnsHaveNodes",
+          "line": 237,
+          "exported": false,
+          "newOccurrence": true
+        },
+        {
+          "name": "path",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceChart",
+          "line": 311,
+          "exported": false,
+          "newOccurrence": false
+        }
+      ]
+    },
+    {
+      "name": "PATH_CALCULATION_EPSILON",
+      "status": "待 PROTOCOL 追认",
+      "basis": "B步新增parser/path helper实现名",
+      "isNewIdentifier": true,
+      "occurrences": [
+        {
+          "name": "PATH_CALCULATION_EPSILON",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts",
+          "line": 9,
+          "exported": false,
+          "newOccurrence": true
+        }
+      ]
+    },
+    {
+      "name": "pathDistance",
+      "status": "复用冻结/已追认",
+      "basis": "A步原标识符，docs/NAMEBOOK.md:494~512 已追认",
+      "isNewIdentifier": false,
+      "occurrences": [
+        {
+          "name": "pathDistance",
+          "kind": "PropertySignature",
+          "scope": "src/chart/GuidanceChart.ts.TapNode",
+          "line": 29,
+          "exported": false,
+          "newOccurrence": false
+        },
+        {
+          "name": "pathDistance",
+          "kind": "PropertySignature",
+          "scope": "src/chart/GuidanceChart.ts.DragNode",
+          "line": 35,
+          "exported": false,
+          "newOccurrence": false
+        },
+        {
+          "name": "pathDistance",
+          "kind": "PropertySignature",
+          "scope": "src/chart/GuidanceChart.ts.HoldNode",
+          "line": 42,
+          "exported": false,
+          "newOccurrence": false
+        },
+        {
+          "name": "pathDistance",
+          "kind": "PropertySignature",
+          "scope": "src/chart/GuidanceChart.ts.JudgmentPoint",
+          "line": 71,
+          "exported": false,
+          "newOccurrence": false
+        },
+        {
+          "name": "pathDistance",
+          "kind": "Parameter",
+          "scope": "src/chart/GuidanceChart.ts.positionAtPathDistance",
+          "line": 169,
+          "exported": false,
+          "newOccurrence": false
+        },
+        {
+          "name": "pathDistance",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceNode",
+          "line": 218,
+          "exported": false,
+          "newOccurrence": true
+        }
+      ]
+    },
+    {
+      "name": "pathLength",
+      "status": "待 PROTOCOL 追认",
+      "basis": "B步新增parser/path helper实现名",
+      "isNewIdentifier": true,
+      "occurrences": [
+        {
+          "name": "pathLength",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.slicePathByDistance",
+          "line": 139,
+          "exported": false,
+          "newOccurrence": true
+        },
+        {
+          "name": "pathLength",
+          "kind": "Parameter",
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceNode",
+          "line": 203,
+          "exported": false,
+          "newOccurrence": true
+        },
+        {
+          "name": "pathLength",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.assertTurnsHaveNodes",
+          "line": 238,
+          "exported": false,
+          "newOccurrence": true
+        }
+      ]
+    },
+    {
+      "name": "pathSource",
+      "status": "复用冻结/已追认",
+      "basis": "A步原标识符，docs/NAMEBOOK.md:494~512 已追认",
+      "isNewIdentifier": false,
+      "occurrences": [
+        {
+          "name": "pathSource",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceChart",
+          "line": 303,
+          "exported": false,
+          "newOccurrence": false
+        }
+      ]
+    },
+    {
+      "name": "points",
+      "status": "复用冻结/已追认",
+      "basis": "A步原标识符，docs/NAMEBOOK.md:494~512 已追认",
+      "isNewIdentifier": false,
+      "occurrences": [
+        {
+          "name": "points",
+          "kind": "PropertySignature",
+          "scope": "src/chart/GuidanceChart.ts.NodePath",
+          "line": 18,
+          "exported": false,
+          "newOccurrence": false
+        },
+        {
+          "name": "points",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.slicePathByDistance",
+          "line": 149,
+          "exported": false,
+          "newOccurrence": true
+        }
+      ]
+    },
+    {
+      "name": "position",
+      "status": "复用冻结/已追认",
+      "basis": "A步原标识符，docs/NAMEBOOK.md:494~512 已追认",
+      "isNewIdentifier": false,
+      "occurrences": [
+        {
+          "name": "position",
+          "kind": "PropertySignature",
+          "scope": "src/chart/GuidanceChart.ts.JudgmentPoint",
+          "line": 70,
+          "exported": false,
+          "newOccurrence": false
+        }
+      ]
+    },
+    {
+      "name": "positionAtPathDistance",
+      "status": "复用冻结/已追认",
+      "basis": "A步原标识符，docs/NAMEBOOK.md:494~512 已追认",
+      "isNewIdentifier": false,
+      "occurrences": [
+        {
+          "name": "positionAtPathDistance",
+          "kind": "FunctionDeclaration",
+          "scope": "src/chart/GuidanceChart.ts",
+          "line": 166,
+          "exported": true,
+          "newOccurrence": false
+        }
+      ]
+    },
+    {
+      "name": "previous",
+      "status": "复用冻结/已追认",
+      "basis": "A步原标识符，docs/NAMEBOOK.md:494~512 已追认",
+      "isNewIdentifier": false,
+      "occurrences": [
+        {
+          "name": "previous",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.measurePathLength",
+          "line": 122,
+          "exported": false,
+          "newOccurrence": false
+        },
+        {
+          "name": "previous",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.slicePathByDistance",
+          "line": 154,
+          "exported": false,
+          "newOccurrence": true
+        },
+        {
+          "name": "previous",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.positionAtPathDistance",
+          "line": 174,
+          "exported": false,
+          "newOccurrence": false
+        },
+        {
+          "name": "previous",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.assertTurnsHaveNodes",
+          "line": 242,
+          "exported": false,
+          "newOccurrence": true
+        },
+        {
+          "name": "previous",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceChart",
+          "line": 316,
+          "exported": false,
+          "newOccurrence": true
+        }
+      ]
+    },
+    {
+      "name": "raw",
+      "status": "复用冻结/已追认",
+      "basis": "A步原标识符，docs/NAMEBOOK.md:494~512 已追认",
+      "isNewIdentifier": false,
+      "occurrences": [
+        {
+          "name": "raw",
+          "kind": "Parameter",
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceNode",
+          "line": 201,
+          "exported": false,
+          "newOccurrence": true
+        },
+        {
+          "name": "raw",
+          "kind": "Parameter",
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceChart",
+          "line": 271,
+          "exported": false,
+          "newOccurrence": false
+        }
+      ]
+    },
+    {
+      "name": "remaining",
+      "status": "复用冻结/已追认",
+      "basis": "A步原标识符，docs/NAMEBOOK.md:494~512 已追认",
+      "isNewIdentifier": false,
+      "occurrences": [
+        {
+          "name": "remaining",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.positionAtPathDistance",
+          "line": 172,
+          "exported": false,
+          "newOccurrence": false
+        }
+      ]
+    },
+    {
+      "name": "requireFields",
+      "status": "复用冻结/已追认",
+      "basis": "A步原标识符，docs/NAMEBOOK.md:494~512 已追认",
+      "isNewIdentifier": false,
+      "occurrences": [
+        {
+          "name": "requireFields",
+          "kind": "FunctionDeclaration",
+          "scope": "src/chart/GuidanceChart.ts",
+          "line": 81,
+          "exported": false,
+          "newOccurrence": false
+        }
+      ]
+    },
+    {
+      "name": "requireFinite",
+      "status": "复用冻结/已追认",
+      "basis": "A步原标识符，docs/NAMEBOOK.md:494~512 已追认",
+      "isNewIdentifier": false,
+      "occurrences": [
+        {
+          "name": "requireFinite",
+          "kind": "FunctionDeclaration",
+          "scope": "src/chart/GuidanceChart.ts",
+          "line": 89,
+          "exported": false,
+          "newOccurrence": false
+        }
+      ]
+    },
+    {
+      "name": "requireId",
+      "status": "复用冻结/已追认",
+      "basis": "A步原标识符，docs/NAMEBOOK.md:494~512 已追认",
+      "isNewIdentifier": false,
+      "occurrences": [
+        {
+          "name": "requireId",
+          "kind": "FunctionDeclaration",
+          "scope": "src/chart/GuidanceChart.ts",
+          "line": 96,
+          "exported": false,
+          "newOccurrence": false
+        }
+      ]
+    },
+    {
+      "name": "requireRecord",
+      "status": "复用冻结/已追认",
+      "basis": "A步原标识符，docs/NAMEBOOK.md:494~512 已追认",
+      "isNewIdentifier": false,
+      "occurrences": [
+        {
+          "name": "requireRecord",
+          "kind": "FunctionDeclaration",
+          "scope": "src/chart/GuidanceChart.ts",
+          "line": 74,
+          "exported": false,
+          "newOccurrence": false
+        }
+      ]
+    },
+    {
+      "name": "right",
+      "status": "待 PROTOCOL 追认",
+      "basis": "B步新增parser/path helper实现名",
+      "isNewIdentifier": true,
+      "occurrences": [
+        {
+          "name": "right",
+          "kind": "Parameter",
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceChart",
+          "line": 338,
+          "exported": false,
+          "newOccurrence": true
+        }
+      ]
+    },
+    {
+      "name": "schemaVersion",
+      "status": "复用冻结/已追认",
+      "basis": "A步原标识符，docs/NAMEBOOK.md:494~512 已追认",
+      "isNewIdentifier": false,
+      "occurrences": [
+        {
+          "name": "schemaVersion",
+          "kind": "PropertySignature",
+          "scope": "src/chart/GuidanceChart.ts.GuidanceChart",
+          "line": 61,
+          "exported": false,
+          "newOccurrence": false
+        }
+      ]
+    },
+    {
+      "name": "segmentLength",
+      "status": "待 PROTOCOL 追认",
+      "basis": "B步新增parser/path helper实现名",
+      "isNewIdentifier": true,
+      "occurrences": [
+        {
+          "name": "segmentLength",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceChart",
+          "line": 321,
+          "exported": false,
+          "newOccurrence": true
+        }
+      ]
+    },
+    {
+      "name": "slicePathByDistance",
+      "status": "待 PROTOCOL 追认",
+      "basis": "B步新增parser/path helper实现名",
+      "isNewIdentifier": true,
+      "occurrences": [
+        {
+          "name": "slicePathByDistance",
+          "kind": "FunctionDeclaration",
+          "scope": "src/chart/GuidanceChart.ts",
+          "line": 133,
+          "exported": true,
+          "newOccurrence": true
+        }
+      ]
+    },
+    {
+      "name": "source",
+      "status": "复用冻结/已追认",
+      "basis": "A步原标识符，docs/NAMEBOOK.md:494~512 已追认",
+      "isNewIdentifier": false,
+      "occurrences": [
+        {
+          "name": "source",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.parsePosition",
+          "line": 108,
+          "exported": false,
+          "newOccurrence": false
+        },
+        {
+          "name": "source",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceNode",
+          "line": 206,
+          "exported": false,
+          "newOccurrence": true
+        },
+        {
+          "name": "source",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceChart",
+          "line": 272,
+          "exported": false,
+          "newOccurrence": false
+        }
+      ]
+    },
+    {
+      "name": "spawnTimeMs",
+      "status": "复用冻结/已追认",
+      "basis": "A步原标识符，docs/NAMEBOOK.md:494~512 已追认",
+      "isNewIdentifier": false,
+      "occurrences": [
+        {
+          "name": "spawnTimeMs",
+          "kind": "PropertySignature",
+          "scope": "src/chart/GuidanceChart.ts.HeadNode",
+          "line": 23,
+          "exported": false,
+          "newOccurrence": false
+        },
+        {
+          "name": "spawnTimeMs",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceChart",
+          "line": 299,
+          "exported": false,
+          "newOccurrence": false
+        }
+      ]
+    },
+    {
+      "name": "speed",
+      "status": "复用冻结/已追认",
+      "basis": "A步原标识符，docs/NAMEBOOK.md:494~512 已追认",
+      "isNewIdentifier": false,
+      "occurrences": [
+        {
+          "name": "speed",
+          "kind": "PropertySignature",
+          "scope": "src/chart/GuidanceChart.ts.GuidanceLine",
+          "line": 56,
+          "exported": false,
+          "newOccurrence": false
+        },
+        {
+          "name": "speed",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceChart",
+          "line": 330,
+          "exported": false,
+          "newOccurrence": false
+        }
+      ]
+    },
+    {
+      "name": "startDistance",
+      "status": "待 PROTOCOL 追认",
+      "basis": "B步新增parser/path helper实现名",
+      "isNewIdentifier": true,
+      "occurrences": [
+        {
+          "name": "startDistance",
+          "kind": "Parameter",
+          "scope": "src/chart/GuidanceChart.ts.slicePathByDistance",
+          "line": 136,
+          "exported": false,
+          "newOccurrence": true
+        }
+      ]
+    },
+    {
+      "name": "TapNode",
+      "status": "复用冻结/已追认",
+      "basis": "A步原标识符，docs/NAMEBOOK.md:494~512 已追认",
+      "isNewIdentifier": false,
+      "occurrences": [
+        {
+          "name": "TapNode",
+          "kind": "InterfaceDeclaration",
+          "scope": "src/chart/GuidanceChart.ts",
+          "line": 26,
+          "exported": true,
+          "newOccurrence": false
+        }
+      ]
+    },
+    {
+      "name": "tier",
+      "status": "复用冻结/已追认",
+      "basis": "A步原标识符，docs/NAMEBOOK.md:494~512 已追认",
+      "isNewIdentifier": false,
+      "occurrences": [
+        {
+          "name": "tier",
+          "kind": "PropertySignature",
+          "scope": "src/chart/GuidanceChart.ts.GuidanceChart",
+          "line": 63,
+          "exported": false,
+          "newOccurrence": false
+        },
+        {
+          "name": "tier",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceChart",
+          "line": 281,
+          "exported": false,
+          "newOccurrence": false
+        }
+      ]
+    },
+    {
+      "name": "u",
+      "status": "复用冻结/已追认",
+      "basis": "A步原标识符，docs/NAMEBOOK.md:494~512 已追认",
+      "isNewIdentifier": false,
+      "occurrences": [
+        {
+          "name": "u",
+          "kind": "PropertySignature",
+          "scope": "src/chart/GuidanceChart.ts.GuidancePosition",
+          "line": 12,
+          "exported": false,
+          "newOccurrence": false
+        },
+        {
+          "name": "u",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.parsePosition",
+          "line": 110,
+          "exported": false,
+          "newOccurrence": false
+        }
+      ]
+    },
+    {
+      "name": "v",
+      "status": "复用冻结/已追认",
+      "basis": "A步原标识符，docs/NAMEBOOK.md:494~512 已追认",
+      "isNewIdentifier": false,
+      "occurrences": [
+        {
+          "name": "v",
+          "kind": "PropertySignature",
+          "scope": "src/chart/GuidanceChart.ts.GuidancePosition",
+          "line": 13,
+          "exported": false,
+          "newOccurrence": false
+        },
+        {
+          "name": "v",
+          "kind": "VariableDeclaration",
+          "scope": "src/chart/GuidanceChart.ts.parsePosition",
+          "line": 111,
+          "exported": false,
+          "newOccurrence": false
+        }
+      ]
+    },
+    {
+      "name": "value",
+      "status": "复用冻结/已追认",
+      "basis": "A步原标识符，docs/NAMEBOOK.md:494~512 已追认",
+      "isNewIdentifier": false,
+      "occurrences": [
+        {
+          "name": "value",
+          "kind": "Parameter",
+          "scope": "src/chart/GuidanceChart.ts.requireRecord",
+          "line": 74,
+          "exported": false,
+          "newOccurrence": false
+        },
+        {
+          "name": "value",
+          "kind": "Parameter",
+          "scope": "src/chart/GuidanceChart.ts.requireFields",
+          "line": 81,
+          "exported": false,
+          "newOccurrence": false
+        },
+        {
+          "name": "value",
+          "kind": "Parameter",
+          "scope": "src/chart/GuidanceChart.ts.requireFinite",
+          "line": 89,
+          "exported": false,
+          "newOccurrence": false
+        },
+        {
+          "name": "value",
+          "kind": "Parameter",
+          "scope": "src/chart/GuidanceChart.ts.requireId",
+          "line": 96,
+          "exported": false,
+          "newOccurrence": false
+        },
+        {
+          "name": "value",
+          "kind": "Parameter",
+          "scope": "src/chart/GuidanceChart.ts.parsePosition",
+          "line": 107,
+          "exported": false,
+          "newOccurrence": false
+        },
+        {
+          "name": "value",
+          "kind": "Parameter",
+          "scope": "src/chart/GuidanceChart.ts.parseBoundKey",
+          "line": 189,
+          "exported": false,
+          "newOccurrence": true
+        }
+      ]
+    }
+  ],
+  "technicalValues": [
+    {
+      "name": "PATH_CALCULATION_EPSILON",
+      "value": "Number.EPSILON * 32",
+      "status": "待 PROTOCOL 追认",
+      "purpose": "路径方向共线判定与转角节点距离匹配，仅计算舍入误差；不扩大输入时间判定窗口"
+    }
+  ],
+  "behavior": {
+    "scope": "B单线、多Tap/Drag/Hold、仅Polyline",
+    "nodeOrdering": "复制nodes并按pathDistance、稳定ID的字典序排序，原input不变。",
+    "turns": "真正方向转折含反向折返，必须有Tap或Hold起点；正向共线内部点不强制绑定节点；相邻重合点拒绝。",
+    "slice": "slicePathByDistance 返回首末切点及其间原始顶点；零长度区段返回冻结空数组。"
+  },
+  "verification": {
+    "targetedParser": "passed：mixed节点/排序冻结/折线区段/合法转折/非法Drag转折/折返/共线/非法键/未知字段/多线曲线/Hold范围/相邻重复/精度误差",
+    "typecheck": "当前并行施工时，仅presentation引用尚未落盘runtime snapshot扩展报错；本parser无TypeScript错误。"
+  }
+}

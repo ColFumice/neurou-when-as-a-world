@@ -1,0 +1,717 @@
+diff --git a/src/director/IntentPort.ts b/src/director/IntentPort.ts
+--- a/src/director/IntentPort.ts
++++ b/src/director/IntentPort.ts
+@@ -945,3 +945,9 @@
+ export type { AccountStartupReader, AccountStartupPort, AccountStartupIntent, AccountStartupSnapshot } from './AccountStartupSession';
+ // B2.1 metadata intents use the existing presentation -> director type-only route.
+ export type { WorldFolderRecord, WorldFolderSnapshot, WorldFolderIntent, WorldFolderPort } from './WorldFolderSession';
++// B2.2 foundations remain on the existing presentation -> director type-only route.
++export type { AccountMilestoneProjection, AccountMilestoneSnapshot, AccountMilestoneReader } from './AccountMilestone';
++export type {
++  WorldStateSnapshot, WorldStateCaptureResult, WorldStateRestoreResult,
++  WorldStateDiagnostic, WorldStateReader, WorldForkAvailability,
++} from './WorldStateSession';
+diff --git a/src/presentation/WorldFolderView.ts b/src/presentation/WorldFolderView.ts
+--- a/src/presentation/WorldFolderView.ts
++++ b/src/presentation/WorldFolderView.ts
+@@ -1,5 +1,7 @@
+ import type { WorldFolderEntry, WorldFolderReader } from './FolderCatalog';
+-import type { WorldFolderPort } from '../director/IntentPort';
++import type {
++  WorldFolderPort, AccountMilestoneReader, WorldStateCaptureResult, WorldStateRestoreResult,
++} from '../director/IntentPort';
+ import { applyFolderTheme } from './FolderTheme';
+ 
+ // AC-29 灰盒：只读取目录并发出导航回调，不持有世界运行实例。
+@@ -12,6 +14,9 @@
+     private readonly openEditors: () => void,
+     private readonly port: WorldFolderPort,
+     private readonly reload: () => void,
++    private readonly milestones?: AccountMilestoneReader,
++    private readonly inspectWorldState?: (worldId: string) => WorldStateCaptureResult,
++    private readonly checkWorldRestore?: (worldId: string) => WorldStateRestoreResult,
+   ) {}
+ 
+   mount(): void {
+@@ -49,11 +54,17 @@
+       #world-folder textarea{resize:vertical;min-height:72px}#world-folder .folder-panel-actions{display:flex;gap:10px}
+       #world-folder #world-folder-status{min-height:24px;margin:0 0 12px;color:#f0d3a0;overflow-wrap:anywhere}
+       #world-folder .folder-editor{margin-top:16px}#world-folder footer{margin-top:auto}
++      #world-folder .folder-foundation-summary{display:flex;gap:12px 28px;flex-wrap:wrap;padding-top:16px;font-size:14px;color:var(--folder-muted)}
++      #world-folder .folder-state-panel{margin-top:18px;font-size:14px;padding:16px}
++      #world-folder .folder-state-panel h3{font-size:17px}#world-folder .folder-state-panel ul{padding-left:20px;margin:12px 0}
++      #world-folder .folder-state-panel li{margin-bottom:8px;overflow-wrap:anywhere}
++      #world-folder .folder-state-panel p{overflow-wrap:anywhere}
+       @media(max-width:760px){#world-folder .folder-shell{width:calc(100% - 32px);padding:24px 0}#world-folder header{align-items:flex-start}#world-folder h1{font-size:23px}#world-folder main{grid-template-columns:1fr;gap:28px}#world-folder button{min-height:140px;padding:20px}#world-folder .folder-title{font-size:21px}}
+       @media(max-height:600px){#world-folder .folder-shell{padding:18px 0}#world-folder main{padding:20px 0}#world-folder button{min-height:135px}}
+       </style>
+       <div class="folder-shell">
+         <header><div><div class="folder-brand">雨若</div><h1>世界文件夹</h1></div><div class="folder-account" id="folder-account"></div></header>
++        <div class="folder-foundation-summary"><span id="account-copy-permission">复制权限：尚未读取</span><span id="world-fork-availability" data-availability="NotImplemented">分叉功能尚未实施</span></div>
+         <main><div>
+           <div class="folder-toolbar"><h2>我的世界</h2><button class="folder-small" id="refresh-worlds" type="button">刷新</button><button class="folder-small" id="create-world" type="button">新建世界</button></div>
+           <p id="world-folder-status" role="status" aria-live="polite"></p>
+@@ -69,7 +80,15 @@
+             <div class="folder-panel-actions"><button class="folder-small" id="confirm-delete-world" type="button">确认删除</button><button class="folder-small" id="cancel-delete-world" type="button">取消</button></div>
+           </section>
+           <div class="folder-worlds" id="folder-worlds"></div>
+-        </div><div><h2>创作</h2><button class="folder-editor" id="open-editor-folder" type="button"><span class="folder-title">世界编辑器文件夹</span><span class="folder-description">打开编辑器目录</span></button></div></main>
++        </div><div><h2>创作</h2><button class="folder-editor" id="open-editor-folder" type="button"><span class="folder-title">世界编辑器文件夹</span><span class="folder-description">打开编辑器目录</span></button>
++          <section id="world-state-diagnostics" class="folder-panel folder-state-panel" aria-labelledby="world-state-title" hidden>
++            <h3 id="world-state-title">世界状态诊断</h3><p id="world-state-world-title"></p>
++            <p id="world-state-capture-kind" role="status"></p><ul id="world-state-diagnostic-list"></ul>
++            <p>状态捕获基础接口已接入；完整状态恢复尚未实施。</p>
++            <button class="folder-small" id="world-state-restore-reject" type="button">检查恢复可用性</button>
++            <p id="world-state-restore-status" role="status" aria-live="polite"></p>
++          </section>
++        </div></main>
+         <footer>选择世界继续，或新建一个世界。世界编辑器文件夹独立于世界。</footer>
+       </div>`;
+     this.root = root;
+@@ -99,6 +118,8 @@
+ 
+   refresh(): void {
+     if (!this.root) { return; }
++    this.refreshMilestones();
++    this.root.querySelector<HTMLElement>('#world-state-diagnostics')!.hidden = true;
+     const worlds = this.root.querySelector('#folder-worlds')!;
+     worlds.replaceChildren();
+     for (const entry of this.reader.getWorlds()) {
+@@ -121,11 +142,23 @@
+       const fork = this.actionButton('分叉', 'fork-world', entry.worldId);
+       fork.onclick = () => {
+         try { this.port.submitWorldFolderIntent({ kind: 'WorldFork', worldId: entry.worldId }); }
+-        catch (error) { this.showStatus(String(error)); }
++        catch (error) {
++          if (error instanceof Error && error.message === '分叉尚未开放') {
++            this.refreshMilestones();
++            const permission = this.root!.querySelector('#account-copy-permission')!.textContent;
++            this.showStatus(permission + '；分叉功能尚未实施。');
++          } else { this.showStatus(String(error)); }
++        }
+       };
+       const remove = this.actionButton('删除', 'delete-world', entry.worldId);
+       remove.onclick = () => this.confirmDelete(entry);
+-      actions.append(fork, remove); card.append(button, actions); worlds.appendChild(card);
++      actions.append(fork, remove);
++      if (this.inspectWorldState) {
++        const inspect = this.actionButton('状态诊断', 'inspect-world-state', entry.worldId);
++        inspect.onclick = () => this.showStateDiagnostics(entry);
++        actions.appendChild(inspect);
++      }
++      card.append(button, actions); worlds.appendChild(card);
+     }
+     if (!worlds.childElementCount) { worlds.textContent = '还没有世界，创建一个开始。'; }
+   }
+@@ -133,6 +166,59 @@
+   showStatus(message: string): void {
+     const status = this.root?.querySelector('#world-folder-status');
+     if (status) { status.textContent = message; }
++  }
++
++  private refreshMilestones(): void {
++    const label = this.root!.querySelector<HTMLElement>('#account-copy-permission')!;
++    delete label.dataset.firstWorldCleared; delete label.dataset.copyPermission;
++    try {
++      if (!this.milestones) { throw new Error('账号里程碑读取接口未接线'); }
++      const snapshot = this.milestones.getMilestoneSnapshot();
++      label.textContent = '复制权限：' + (snapshot.CopyPermission ? '已取得' : '未取得');
++      label.dataset.firstWorldCleared = String(snapshot.FirstWorldCleared);
++      label.dataset.copyPermission = String(snapshot.CopyPermission);
++      label.dataset.readState = 'Ready';
++    } catch (error) {
++      label.textContent = '复制权限读取失败：' + String(error);
++      label.dataset.readState = 'Error';
++    }
++  }
++
++  private showStateDiagnostics(entry: WorldFolderEntry): void {
++    if (!this.root || !this.inspectWorldState) { return; }
++    const panel = this.root.querySelector<HTMLElement>('#world-state-diagnostics')!;
++    const status = panel.querySelector<HTMLElement>('#world-state-capture-kind')!;
++    const list = panel.querySelector('#world-state-diagnostic-list')!;
++    const restoreStatus = panel.querySelector<HTMLElement>('#world-state-restore-status')!;
++    const restore = panel.querySelector<HTMLButtonElement>('#world-state-restore-reject')!;
++    panel.hidden = false; list.replaceChildren(); restoreStatus.textContent = '';
++    delete restoreStatus.dataset.kind; delete status.dataset.kind;
++    panel.querySelector('#world-state-world-title')!.textContent = entry.title;
++    try {
++      const result = this.inspectWorldState(entry.worldId);
++      status.dataset.kind = result.kind;
++      status.textContent = result.kind === 'Incomplete' ? 'Incomplete · 状态捕获不完整' : 'Complete · 状态捕获完整';
++      if (result.kind === 'Incomplete') {
++        for (const issue of result.issues) {
++          const item = document.createElement('li');
++          item.dataset.section = issue.section; item.dataset.reason = issue.reason;
++          item.textContent = issue.detail; list.appendChild(item);
++        }
++      }
++    } catch (error) { status.textContent = '状态诊断读取失败：' + String(error); }
++    restore.disabled = !this.checkWorldRestore;
++    restore.onclick = () => {
++      try {
++        const result = this.checkWorldRestore!(entry.worldId);
++        restoreStatus.dataset.kind = result.kind;
++        restoreStatus.textContent = result.kind === 'Rejected'
++          ? '完整恢复请求已拒绝：完整恢复尚未实施。'
++          : '完整恢复已完成';
++      } catch (error) {
++        delete restoreStatus.dataset.kind;
++        restoreStatus.textContent = '恢复可用性检查失败：' + String(error);
++      }
++    };
+   }
+ 
+   private actionButton(title: string, action: string, worldId: string): HTMLButtonElement {
+diff --git a/assets/scripts/WorldFolderBuilder.ts b/assets/scripts/WorldFolderBuilder.ts
+--- a/assets/scripts/WorldFolderBuilder.ts
++++ b/assets/scripts/WorldFolderBuilder.ts
+@@ -11,6 +11,11 @@
+ import { GuidanceEditorBuilder } from './GuidanceEditorBuilder';
+ import { MusicEditorBuilder } from './MusicEditorBuilder';
+ import { MinimalWorldBuilder } from './MinimalWorldBuilder';
++import { createAccountMilestoneReader } from './src/director/AccountMilestone';
++import type { AccountMilestoneReader } from './src/director/AccountMilestone';
++import { AccountMilestoneStorage } from './src/presentation/AccountMilestoneStorage';
++import { WorldStateSession } from './src/director/WorldStateSession';
++import { WorldStateStorage } from './src/presentation/WorldStateStorage';
+ 
+ const { ccclass } = _decorator;
+ 
+@@ -29,6 +34,10 @@
+   private folderPending = false;
+   private folderSession: WorldFolderSession | null = null;
+   private readonly worldStorage = new WorldLocalStorage();
++  private readonly milestoneStorage = new AccountMilestoneStorage();
++  private milestoneReader: AccountMilestoneReader | null = null;
++  private readonly stateStorage = new WorldStateStorage();
++  private readonly stateSessions = new Map<string, WorldStateSession>();
+ 
+   bindWorldFactory(factory: (node: Node) => void): void { this.worldFactory = factory; }
+ 
+@@ -61,15 +70,34 @@
+     try { this.folderSession = this.loadFolderSession(accountId); }
+     catch (failure) { this.folderSession = null; error = failure; }
+     this.clearViews();
++    // Read projection only: this composition root never writes a world-clear fact.
++    this.milestoneReader = Object.freeze({ getMilestoneSnapshot: () =>
++      createAccountMilestoneReader(accountId, this.milestoneStorage.readProjection(accountId)).getMilestoneSnapshot() });
++    this.stateSessions.clear();
+     this.folderView = new WorldFolderView(createWorldFolderReader(accountId,
+       () => this.folderSession?.getWorlds() ?? []),
+       entry => this.openWorld(entry), () => this.showEditorFolder(),
+       { submitWorldFolderIntent: intent => {
+         if (!this.folderSession) { throw new Error('世界目录尚未加载，请刷新后重试'); }
+         this.folderSession.submitWorldFolderIntent(intent);
+-      } }, () => this.showWorldFolder());
++      } }, () => this.showWorldFolder(), this.milestoneReader,
++      worldId => this.getStateSession(accountId, worldId).captureWorldState(),
++      worldId => this.getStateSession(accountId, worldId).restoreWorldState(
++        this.stateStorage.readSnapshot(accountId, worldId)));
+     this.folderView.mount();
+     if (error !== null) { this.folderView.showStatus('世界目录未能加载：' + String(error)); }
++  }
++
++  private getStateSession(accountId: string, worldId: string): WorldStateSession {
++    // Validate active directory membership; a diagnostic must not load or create gameplay.
++    if (this.worldStorage.readSnapshot(accountId) === null) { throw new Error('世界目录不存在，请刷新后重试'); }
++    this.loadFolderSession(accountId).getWorldRecord(worldId);
++    let session = this.stateSessions.get(worldId);
++    if (!session) {
++      session = new WorldStateSession(accountId, worldId);
++      this.stateSessions.set(worldId, session);
++    }
++    return session;
+   }
+ 
+   private loadFolderSession(accountId: string): WorldFolderSession {
+diff --git a/src/director/AccountMilestone.ts b/src/director/AccountMilestone.ts
+new file mode 100644
+--- /dev/null
++++ b/src/director/AccountMilestone.ts
+@@ -0,0 +1,66 @@
++// B2.2a: local account projection only. Real world-clear writes belong to B2.2c.
++export interface AccountMilestoneProjection {
++  readonly schemaVersion: 1;
++  readonly accountId: string;
++  readonly FirstWorldCleared: boolean;
++}
++
++/** CopyPermission is derived at the read boundary; it is never a stored field. */
++export interface AccountMilestoneSnapshot {
++  readonly accountId: string;
++  readonly FirstWorldCleared: boolean;
++  readonly CopyPermission: boolean;
++}
++
++export interface AccountMilestoneReader {
++  getMilestoneSnapshot(): AccountMilestoneSnapshot;
++}
++
++/** A missing local projection means false, while an invalid projection must fail. */
++export function createAccountMilestoneReader(
++  accountId: string,
++  stored: unknown | null,
++): AccountMilestoneReader {
++  validAccountId(accountId);
++  const FirstWorldCleared = stored === null ? false : parseProjection(stored, accountId).FirstWorldCleared;
++  const snapshot: AccountMilestoneSnapshot = Object.freeze({
++    accountId, FirstWorldCleared, CopyPermission: FirstWorldCleared,
++  });
++  return Object.freeze({ getMilestoneSnapshot: (): AccountMilestoneSnapshot => snapshot });
++}
++
++function validAccountId(value: unknown): asserts value is string {
++  if (typeof value !== 'string' || value.length < 1 || value.length > 64 || value !== value.trim()) {
++    throw new Error('账号标识须为不带首尾空白的 1～64 个字符');
++  }
++  // Storage keys use encodeURIComponent; malformed UTF-16 must not alias a key.
++  try { encodeURIComponent(value); } catch { throw new Error('账号标识编码无效'); }
++}
++
++function parseProjection(raw: unknown, accountId: string): AccountMilestoneProjection {
++  if (raw === null || typeof raw !== 'object') {
++    throw new Error('首次世界通关投影格式无效');
++  }
++  const fields = ['schemaVersion', 'accountId', 'FirstWorldCleared'];
++  let descriptors: PropertyDescriptorMap;
++  try {
++    const prototype: unknown = Object.getPrototypeOf(raw);
++    if (Array.isArray(raw) || (prototype !== Object.prototype && prototype !== null)) {
++      throw new Error('首次世界通关投影格式无效');
++    }
++    descriptors = Object.getOwnPropertyDescriptors(raw);
++    if (Reflect.ownKeys(descriptors).length !== fields.length || !fields.every(field => {
++      const descriptor = descriptors[field];
++      return descriptor !== undefined && Object.prototype.hasOwnProperty.call(descriptor, 'value');
++    })) { throw new Error('首次世界通关投影字段无效'); }
++  } catch { throw new Error('首次世界通关投影字段无效或无法安全读取'); }
++  // Read descriptor values once: an in-process Proxy cannot change a value after validation.
++  const schemaVersion: unknown = descriptors.schemaVersion.value;
++  const storedAccountId: unknown = descriptors.accountId.value;
++  const FirstWorldCleared: unknown = descriptors.FirstWorldCleared.value;
++  if (schemaVersion !== 1) { throw new Error('首次世界通关投影版本不受支持'); }
++  validAccountId(storedAccountId);
++  if (storedAccountId !== accountId) { throw new Error('首次世界通关投影账号不匹配'); }
++  if (typeof FirstWorldCleared !== 'boolean') { throw new Error('首次世界通关事实必须为布尔值'); }
++  return Object.freeze({ schemaVersion: 1, accountId, FirstWorldCleared });
++}
+diff --git a/src/director/AccountMilestone.ts.meta b/src/director/AccountMilestone.ts.meta
+new file mode 100644
+--- /dev/null
++++ b/src/director/AccountMilestone.ts.meta
+@@ -0,0 +1,9 @@
++{
++  "ver": "4.0.24",
++  "importer": "typescript",
++  "imported": true,
++  "uuid": "4b201bbc-8840-4bf1-8509-d938b6f94cbb",
++  "files": [],
++  "subMetas": {},
++  "userData": {}
++}
+diff --git a/src/director/WorldStateSession.ts b/src/director/WorldStateSession.ts
+new file mode 100644
+--- /dev/null
++++ b/src/director/WorldStateSession.ts
+@@ -0,0 +1,235 @@
++/** B2.2b foundation: diagnostics and opaque contracts, without gameplay hydration. */
++
++/** No full codec exists in B2.2b. Only a later validated codec may create this brand. */
++declare const validatedWorldState: unique symbol;
++
++/**
++ * Opaque complete state. The public surface describes its candidate header only;
++ * the brand represents the seven validated payloads and their control state.
++ * There is intentionally no producer, JSON cast, or complete codec in this batch.
++ */
++export interface WorldStateSnapshot {
++  readonly schemaVersion: 1;
++  readonly accountId: string;
++  readonly worldId: string;
++  readonly worldKind: 'Primary' | 'Shore';
++  readonly shoreOrigin: 'BugShore' | 'FinalShore' | null;
++  readonly revision: number;
++  readonly capturedAt: number;
++  readonly [validatedWorldState]: true;
++}
++
++export interface WorldStateDiagnostic {
++  readonly section:
++    | 'Ledger' | 'PuzzleProgress' | 'RecallCount' | 'FormatTime'
++    | 'WorldLink' | 'ChartSnapshot' | 'ChartScore' | 'RuntimeBoundary';
++  readonly reason:
++    | 'MechanismMissing' | 'ProjectionUndefined' | 'AuthorityUnavailable'
++    | 'IdentityUnavailable' | 'RestoreUnsupported' | 'UnsupportedBoundary'
++    | 'InvalidSnapshot' | 'SchemaUnsupported' | 'IdentityMismatch'
++    | 'ReferenceMismatch' | 'StaleRevision';
++  readonly detail: string;
++}
++
++export type WorldForkAvailability = 'NotImplemented';
++
++/**
++ * Ownership contracts are metadata, never captured gameplay data. Inner indexes
++ * supplement the account/world isolation boundary. None belongs to AccountProfile.
++ * FormatTime's proposed value shape is { epochMs: number }; it remains unfrozen.
++ */
++const stateOwnership = Object.freeze({
++  Ledger: Object.freeze({
++    owner: 'WorldObserver' as const,
++    indexes: Object.freeze(['accountId', 'worldId', 'characterId'] as const),
++    codec: 'NotImplemented' as const,
++    requires: Object.freeze(['AuthoritativeReadWriteSource', 'RoleIdentity', 'OrderedEvents', 'SideEffectFreeHydration'] as const),
++  }),
++  PuzzleProgress: Object.freeze({
++    owner: 'WorldObserver' as const,
++    indexes: Object.freeze(['accountId', 'worldId', 'chainId'] as const),
++    codec: 'NotImplemented' as const,
++    requires: Object.freeze(['PrivateChainTiming', 'EndpointDeduplication', 'DeepTraceState', 'EntryLifecycle'] as const),
++  }),
++  RecallCount: Object.freeze({
++    owner: 'WorldObserver' as const,
++    indexes: Object.freeze(['accountId', 'worldId', 'characterId', 'NarrativeEventId'] as const),
++    codec: 'NotImplemented' as const,
++    requires: Object.freeze(['AuthoritativeCounter', 'LegalRecallBehavior', 'LedgerReferenceValidation'] as const),
++  }),
++  FormatTime: Object.freeze({
++    owner: 'WorldInstance' as const,
++    indexes: Object.freeze(['accountId', 'worldId'] as const),
++    codec: 'NotImplemented' as const,
++    proposal: Object.freeze({ epochMs: 'NonNegativeSafeInteger' as const }),
++    requires: Object.freeze(['AuthoritativeCreationTime', 'ImmutableValue', 'ProposalFreeze'] as const),
++  }),
++  WorldLink: Object.freeze({
++    owner: 'WorldInstance' as const,
++    indexes: Object.freeze(['accountId', 'worldId', 'sourceWorldId'] as const),
++    codec: 'NotImplemented' as const,
++    appliesTo: 'BugShore' as const,
++    requires: Object.freeze(['WorldKindAndShoreOrigin', 'SingleWeakSource', 'OrphanedSemantics', 'AIProfileSnapshot'] as const),
++  }),
++  ChartSnapshot: Object.freeze({
++    owner: 'WorldObserver' as const,
++    indexes: Object.freeze(['accountId', 'worldId', 'ChartRef'] as const),
++    codec: 'NotImplemented' as const,
++    requires: Object.freeze(['PremiereFreeze', 'StableContentReference', 'LedgerAssociation'] as const),
++  }),
++  ChartScore: Object.freeze({
++    owner: 'WorldObserver' as const,
++    indexes: Object.freeze(['accountId', 'worldId', 'ChartRef'] as const),
++    codec: 'NotImplemented' as const,
++    requires: Object.freeze(['PersistentScorePolicy', 'SnapshotAssociation', 'ReplayUpdateSemantics'] as const),
++  }),
++});
++
++export type WorldStateCaptureResult =
++  | { readonly kind: 'Complete'; readonly snapshot: WorldStateSnapshot }
++  | {
++      readonly kind: 'Incomplete';
++      /** Unknown identity/control fields are explicit, not invented Primary/null/0. */
++      readonly candidate: {
++        readonly schemaVersion: 1;
++        readonly accountId: string;
++        readonly worldId: string;
++        readonly worldKind: 'Unavailable';
++        readonly shoreOrigin: 'Unavailable';
++        readonly revision: 'Unavailable';
++        readonly capturedAt: number;
++      };
++      /** No authoritative payload is captured at the directory boundary. */
++      readonly capturedParts: Readonly<Record<string, never>>;
++      readonly issues: readonly WorldStateDiagnostic[];
++    };
++
++export type WorldStateRestoreResult =
++  | { readonly kind: 'Restored'; readonly snapshot: WorldStateSnapshot }
++  | { readonly kind: 'Rejected'; readonly issues: readonly WorldStateDiagnostic[] };
++
++export interface WorldStateReader {
++  readonly ownership: typeof stateOwnership;
++  readonly worldForkAvailability: WorldForkAvailability;
++  getLastCaptureResult(): WorldStateCaptureResult | null;
++}
++
++/** Aggregation boundary in the existing director module; no browser or cc access. */
++export class WorldStateSession implements WorldStateReader {
++  readonly ownership = stateOwnership;
++  readonly worldForkAvailability: WorldForkAvailability = 'NotImplemented';
++  private lastCaptureResult: WorldStateCaptureResult | null = null;
++
++  constructor(
++    private readonly accountId: string,
++    private readonly worldId: string,
++    private readonly now: () => number = Date.now,
++  ) {
++    validateIdentity(accountId, '账号', 64);
++    validateIdentity(worldId, '世界', 128);
++  }
++
++  /** Read-only diagnostic capture; only the last result reference is published. */
++  captureWorldState(): WorldStateCaptureResult {
++    const capturedAt = this.now();
++    if (!isTime(capturedAt)) { throw new Error('状态捕获时间无效'); }
++    const issues: readonly WorldStateDiagnostic[] = Object.freeze([
++      diagnostic('Ledger', 'AuthorityUnavailable', '账本缺少同一权威读写来源、角色身份和无副作用恢复。'),
++      diagnostic('PuzzleProgress', 'ProjectionUndefined', '解谜进度缺少完整链计时、终点防重、深痕和入口生命周期。'),
++      diagnostic('RecallCount', 'MechanismMissing', '回忆次数尚无正式载体和合法行为；不能用零值代替。'),
++      diagnostic('FormatTime', 'AuthorityUnavailable', '格式化时间尚无权威创建时间；不能由目录时间或当前时间代替。'),
++      diagnostic('WorldLink', 'MechanismMissing', '世界链接与孤立恢复尚未实现；不能视为已知无链接。'),
++      diagnostic('ChartSnapshot', 'MechanismMissing', '谱面首演内容尚未冻结；运行结果不能代替谱面快照。'),
++      diagnostic('ChartScore', 'ProjectionUndefined', '谱面成绩尚无持久化更新语义及快照关联。'),
++      diagnostic('RuntimeBoundary', 'IdentityUnavailable', '世界种类与彼岸来源尚无权威实例身份，目录模板不能代替。'),
++      diagnostic('RuntimeBoundary', 'AuthorityUnavailable', '世界状态版本尚无权威载体，不能虚构初始版本。'),
++      diagnostic('RuntimeBoundary', 'UnsupportedBoundary', '当前仅捕获目录诊断，完整玩法恢复边界尚未建立。'),
++    ]);
++    const result: WorldStateCaptureResult = Object.freeze({
++      kind: 'Incomplete' as const,
++      candidate: Object.freeze({
++        schemaVersion: 1 as const, accountId: this.accountId, worldId: this.worldId,
++        worldKind: 'Unavailable' as const, shoreOrigin: 'Unavailable' as const,
++        revision: 'Unavailable' as const, capturedAt,
++      }),
++      capturedParts: Object.freeze({}), issues,
++    });
++    this.lastCaptureResult = result;
++    return result;
++  }
++
++  getLastCaptureResult(): WorldStateCaptureResult | null { return this.lastCaptureResult; }
++
++  /** No complete restoration can succeed until B2.2d supplies all codecs/hydration. */
++  restoreWorldState(raw: unknown): WorldStateRestoreResult {
++    const issues = [...validateWorldStateHeader(raw, this.accountId, this.worldId),
++      diagnostic('RuntimeBoundary', 'RestoreUnsupported', '完整世界恢复尚未实现；原有世界状态与存储保持原状。')];
++    return Object.freeze({ kind: 'Rejected' as const, issues: Object.freeze(issues) });
++  }
++}
++
++/** Header validation is not full state validation and never yields Complete. */
++export function validateWorldStateHeader(
++  raw: unknown, accountId: string, worldId: string,
++): readonly WorldStateDiagnostic[] {
++  if (raw === null || typeof raw !== 'object') {
++    return Object.freeze([diagnostic('RuntimeBoundary', 'InvalidSnapshot', '世界状态必须是对象，不能是空值或数组。')]);
++  }
++  // Unknown in-process input can have accessors/proxies or inherited fields.
++  // Inspect own data descriptors before reading any values, without invoking getters.
++  let data: Record<string, unknown>;
++  try {
++    if (Array.isArray(raw)) {
++      return Object.freeze([diagnostic('RuntimeBoundary', 'InvalidSnapshot', '世界状态必须是对象，不能是空值或数组。')]);
++    }
++    const prototype: unknown = Object.getPrototypeOf(raw);
++    if (prototype !== Object.prototype && prototype !== null) {
++      return Object.freeze([diagnostic('RuntimeBoundary', 'InvalidSnapshot', '世界状态头部必须是自有数据字段，不能继承其他对象。')]);
++    }
++    const descriptors = Object.getOwnPropertyDescriptors(raw);
++    const fields = ['schemaVersion', 'accountId', 'worldId', 'worldKind', 'shoreOrigin', 'revision', 'capturedAt'];
++    data = Object.create(null) as Record<string, unknown>;
++    for (const field of fields) {
++      const descriptor = descriptors[field];
++      if (!descriptor || !Object.prototype.hasOwnProperty.call(descriptor, 'value')) {
++        return Object.freeze([diagnostic('RuntimeBoundary', 'InvalidSnapshot', '世界状态头部缺少自有数据字段，或使用了访问器。')]);
++      }
++      data[field] = descriptor.value;
++    }
++  } catch (_error: unknown) {
++    return Object.freeze([diagnostic('RuntimeBoundary', 'InvalidSnapshot', '世界状态头部无法安全读取。')]);
++  }
++  const issues: WorldStateDiagnostic[] = [];
++  if (data.schemaVersion !== 1) {
++    issues.push(diagnostic('RuntimeBoundary', 'SchemaUnsupported', '世界状态版本缺失或不受支持。'));
++  }
++  if (data.accountId !== accountId || data.worldId !== worldId) {
++    issues.push(diagnostic('RuntimeBoundary', 'IdentityMismatch', '世界状态账号或世界身份不匹配。'));
++  }
++  if (data.worldKind !== 'Primary' && data.worldKind !== 'Shore') {
++    issues.push(diagnostic('RuntimeBoundary', 'InvalidSnapshot', '世界种类必须为 Primary 或 Shore。'));
++  } else if ((data.worldKind === 'Primary' && data.shoreOrigin !== null) ||
++      (data.worldKind === 'Shore' && data.shoreOrigin !== 'BugShore' && data.shoreOrigin !== 'FinalShore')) {
++    issues.push(diagnostic('RuntimeBoundary', 'ReferenceMismatch', '世界种类与彼岸来源不一致。'));
++  }
++  if (!isTime(data.revision) || !isTime(data.capturedAt)) {
++    issues.push(diagnostic('RuntimeBoundary', 'InvalidSnapshot', '世界状态版本计数或捕获时间无效。'));
++  }
++  return Object.freeze(issues);
++}
++
++function diagnostic(
++  section: WorldStateDiagnostic['section'], reason: WorldStateDiagnostic['reason'], detail: string,
++): WorldStateDiagnostic { return Object.freeze({ section, reason, detail }); }
++
++function validateIdentity(value: string, label: string, maxLength: number): void {
++  if (typeof value !== 'string' || !value.trim() || value !== value.trim() || value.length > maxLength) {
++    throw new Error(label + '标识须为 1～' + maxLength + ' 个字符');
++  }
++  try { encodeURIComponent(value); }
++  catch (_error: unknown) { throw new Error(label + '标识包含无效字符，无法用于隔离存储'); }
++}
++
++function isTime(value: unknown): value is number {
++  return typeof value === 'number' && Number.isSafeInteger(value) && value >= 0;
++}
+diff --git a/src/director/WorldStateSession.ts.meta b/src/director/WorldStateSession.ts.meta
+new file mode 100644
+--- /dev/null
++++ b/src/director/WorldStateSession.ts.meta
+@@ -0,0 +1,9 @@
++{
++  "ver": "4.0.24",
++  "importer": "typescript",
++  "imported": true,
++  "uuid": "ae418c51-5fd8-4ec1-a4df-17aa89b89224",
++  "files": [],
++  "subMetas": {},
++  "userData": {}
++}
+diff --git a/src/presentation/AccountMilestoneStorage.ts b/src/presentation/AccountMilestoneStorage.ts
+new file mode 100644
+--- /dev/null
++++ b/src/presentation/AccountMilestoneStorage.ts
+@@ -0,0 +1,77 @@
++import type { AccountMilestoneProjection } from '../director/IntentPort';
++
++/** Local browser adapter only; no authentication or world-clear authority. */
++export class AccountMilestoneStorage {
++  constructor(private readonly storage: Pick<Storage, 'getItem' | 'setItem'> = localStorage) {}
++
++  readProjection(accountId: string): unknown | null {
++    const text = this.storage.getItem(this.key(accountId));
++    if (text === null) { return null; }
++    let raw: unknown;
++    try { raw = JSON.parse(text); } catch { throw new Error('首次世界通关投影 JSON 损坏'); }
++    return parseProjection(raw, accountId);
++  }
++
++  /**
++   * Adapter contract for future trusted orchestration and isolated contract tests.
++   * B2.2a has no production caller that produces a world-clear fact.
++   */
++  saveProjection(projection: AccountMilestoneProjection, expected: unknown | null): void {
++    const candidate = parseProjection(projection);
++    const previous = expected === null ? null : parseProjection(expected, candidate.accountId);
++    const current = this.readProjection(candidate.accountId) as AccountMilestoneProjection | null;
++    // Check actual persisted fact too: a stale false reader cannot erase a newer true.
++    if ((current?.FirstWorldCleared || previous?.FirstWorldCleared) && !candidate.FirstWorldCleared) {
++      throw new Error('首次世界通关事实不可由 true 回退为 false');
++    }
++    if (JSON.stringify(current) !== JSON.stringify(previous)) {
++      throw new Error('首次世界通关投影已在其他页面更新，请刷新后重试');
++    }
++    // No CopyPermission or other derived values cross the persistence boundary.
++    this.storage.setItem(this.key(candidate.accountId), JSON.stringify(candidate));
++  }
++
++  private key(accountId: string): string {
++    validAccountId(accountId);
++    return 'neurou-account-first-world-cleared-v1:' + encodeURIComponent(accountId);
++  }
++}
++
++// Structural validation is deliberately local: presentation cannot value-import director.
++// Director repeats domain validation when it constructs the read-only projection reader.
++function parseProjection(raw: unknown, accountId?: string): AccountMilestoneProjection {
++  if (accountId !== undefined) { validAccountId(accountId); }
++  if (raw === null || typeof raw !== 'object') {
++    throw new Error('首次世界通关投影格式无效');
++  }
++  const fields = ['schemaVersion', 'accountId', 'FirstWorldCleared'];
++  let descriptors: PropertyDescriptorMap;
++  try {
++    const prototype: unknown = Object.getPrototypeOf(raw);
++    if (Array.isArray(raw) || (prototype !== Object.prototype && prototype !== null)) {
++      throw new Error('首次世界通关投影格式无效');
++    }
++    descriptors = Object.getOwnPropertyDescriptors(raw);
++    if (Reflect.ownKeys(descriptors).length !== fields.length || !fields.every(field => {
++      const descriptor = descriptors[field];
++      return descriptor !== undefined && Object.prototype.hasOwnProperty.call(descriptor, 'value');
++    })) { throw new Error('首次世界通关投影字段无效'); }
++  } catch { throw new Error('首次世界通关投影字段无效或无法安全读取'); }
++  const schemaVersion: unknown = descriptors.schemaVersion.value;
++  const storedAccountId: unknown = descriptors.accountId.value;
++  const FirstWorldCleared: unknown = descriptors.FirstWorldCleared.value;
++  if (schemaVersion !== 1) { throw new Error('首次世界通关投影版本不受支持'); }
++  validAccountId(storedAccountId);
++  if (accountId !== undefined && storedAccountId !== accountId) {
++    throw new Error('首次世界通关投影账号不匹配');
++  }
++  if (typeof FirstWorldCleared !== 'boolean') { throw new Error('首次世界通关事实必须为布尔值'); }
++  return Object.freeze({ schemaVersion: 1, accountId: storedAccountId, FirstWorldCleared });
++}
++
++function validAccountId(value: unknown): asserts value is string {
++  if (typeof value !== 'string' || value.length < 1 || value.length > 64 || value !== value.trim()) {
++    throw new Error('账号标识须为不带首尾空白的 1～64 个字符');
++  }
++  try { encodeURIComponent(value); } catch { throw new Error('账号标识编码无效'); }
++}
+diff --git a/src/presentation/AccountMilestoneStorage.ts.meta b/src/presentation/AccountMilestoneStorage.ts.meta
+new file mode 100644
+--- /dev/null
++++ b/src/presentation/AccountMilestoneStorage.ts.meta
+@@ -0,0 +1,9 @@
++{
++  "ver": "4.0.24",
++  "importer": "typescript",
++  "imported": true,
++  "uuid": "a8db8527-274e-4cfd-b04b-dd6245b3d81d",
++  "files": [],
++  "subMetas": {},
++  "userData": {}
++}
+diff --git a/src/presentation/WorldStateStorage.ts b/src/presentation/WorldStateStorage.ts
+new file mode 100644
+--- /dev/null
++++ b/src/presentation/WorldStateStorage.ts
+@@ -0,0 +1,36 @@
++import type { WorldStateSnapshot } from '../director/IntentPort';
++
++/** B2.2b platform boundary. Diagnostic captures are never saved as complete state. */
++export class WorldStateStorage {
++  constructor(private readonly storage: Pick<Storage, 'getItem' | 'setItem'> = localStorage) {}
++
++  /** Missing is null; corrupt JSON/null is rejected without clearing the key. */
++  readSnapshot(accountId: string, worldId: string): unknown | null {
++    const text = this.storage.getItem(this.key(accountId, worldId));
++    if (text === null) { return null; }
++    const parsed: unknown = JSON.parse(text);
++    if (parsed === null || typeof parsed !== 'object' || Array.isArray(parsed)) {
++      throw new Error('世界状态存储格式无效；原始数据已保留');
++    }
++    // This unknown candidate must still pass director identity/header validation;
++    // successful JSON parsing never asserts a valid WorldStateSnapshot.
++    return parsed;
++  }
++
++  /** Full state serialization is deliberately unavailable until the B2.2d codec. */
++  saveSnapshot(_snapshot: WorldStateSnapshot, _expected: unknown | null = null): never {
++    throw new Error('世界完整状态保存尚未实现：缺少七项校验与序列化，原有存储保持原状');
++  }
++
++  private key(accountId: string, worldId: string): string {
++    for (const [label, value] of [['账号', accountId], ['世界', worldId]]) {
++      const maxLength = label === '账号' ? 64 : 128;
++      if (typeof value !== 'string' || !value.trim() || value !== value.trim() || value.length > maxLength) {
++        throw new Error(label + '标识须为 1～' + maxLength + ' 个字符');
++      }
++      try { encodeURIComponent(value); }
++      catch (_error: unknown) { throw new Error(label + '标识包含无效字符，无法用于隔离存储'); }
++    }
++    return 'neurou-world-state-v1:' + encodeURIComponent(accountId) + ':' + encodeURIComponent(worldId);
++  }
++}
+diff --git a/src/presentation/WorldStateStorage.ts.meta b/src/presentation/WorldStateStorage.ts.meta
+new file mode 100644
+--- /dev/null
++++ b/src/presentation/WorldStateStorage.ts.meta
+@@ -0,0 +1,9 @@
++{
++  "ver": "4.0.24",
++  "importer": "typescript",
++  "imported": true,
++  "uuid": "f72a9312-880f-46f1-a5cf-b3ed95bb9598",
++  "files": [],
++  "subMetas": {},
++  "userData": {}
++}

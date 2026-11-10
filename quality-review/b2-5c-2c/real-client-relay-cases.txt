@@ -1,0 +1,99 @@
+    const { RealCommitRelayAdapter } = require(path.join(output, 'src/presentation/RealCommitRelayAdapter.js'));
+    const { SharedCommitValidator } = require(path.join(output, 'src/director/SharedCommitValidator.js'));
+    const { SharedServiceProtocolCodec } = require(path.join(output, 'src/director/SharedServiceProtocolCodec.js'));
+    const statusNow = accepted(await root.authority.readServiceStatus(), 'validator clock');
+    const validationContext = { serviceInstanceId: instance, servicePublicKeyJwk: servicePublic,
+      serviceKeyFingerprint: serviceFingerprint, clockGeneration: statusNow.payload.clockGeneration,
+      developerTrustAnchor: anchor, genesisSha256: pin.genesisSha256, worldId, mapId,
+      contentManifestSha256: pin.contentManifestSha256, isEntityDefinitionApproved: () => false,
+      lookupWorldRelayKey: async descriptor => descriptor.worldRelayKeyId === epoch.payload.key.worldRelayKeyId
+        && descriptor.keyCommitmentSha256 === digestBytes(groupKey) ? new Uint8Array(groupKey) : null };
+    const validator = new SharedCommitValidator(nativeCryptoPort, validationContext);
+    const cache = new IsolatedCipherWal(path.join(__dirname, 'evidence/runtime/.local/cipher-client.wal'));
+    const relay = new RealCommitRelayAdapter(root.session, root.signer, SharedServiceProtocolCodec, validator, cache);
+    const initialCursor = { relayGeneration: 1, position: '0' };
+    let submitReceipt, batch;
+    await check('real Relay reports admitted-not-enqueued as conservative MissingAdmittedEnvelope Gap', async () => {
+      const result = accepted(await relay.pull(worldId, initialCursor, 128, 0), 'missing payload pull').payload;
+      assert.equal(result.kind, 'Gap'); assert.equal(result.reason, 'MissingAdmittedEnvelope');
+      relayEvidence.push({ case: 'MissingAdmittedEnvelope', worldId, identity: admittedWire.admissionReceipt.payload.identity });
+    });
+    await check('Relay transport outage rejects without fixture fallback and authority remains healthy', async () => {
+      rootTransport.send.relayOffline = true;
+      const result = await relay.submit(admittedWire); rootTransport.send.relayOffline = false;
+      assert.equal(result.kind, 'Rejected'); assert.equal(result.fault.layer, 'Relay');
+      accepted(await root.authority.readServiceStatus(), 'independent authority healthy');
+    });
+    await check('lost submit response retransmits exact nonce; real PG keeps one raw envelope and position', async () => {
+      rootTransport.send.dropSubmitReplyOnce = true;
+      submitReceipt = accepted(await relay.submit(admittedWire), 'submit with reply loss');
+      assert.equal(submitReceipt.payload.cursor.position, '1');
+      const rows = await pool.query('SELECT envelope_bytes,envelope_sha256,position::text,receipt FROM relay_commit_queue WHERE world_id=$1', [worldId]);
+      assert.equal(rows.rowCount, 1); assert.equal(rows.rows[0].position, '1');
+      assert.deepEqual(rows.rows[0].envelope_bytes, Buffer.from(admittedWire.envelopeBytesBase64Url, 'base64url'));
+      assert.equal(rows.rows[0].envelope_sha256, admittedWire.admissionReceipt.payload.envelopeSha256);
+      assert.equal(rows.rows[0].receipt.toString('utf8'), canonical(submitReceipt));
+      relayEvidence.push({ case: 'ExactPGBytesAndOriginalPosition', envelopeSha256: rows.rows[0].envelope_sha256, position: '1' });
+    });
+    await check('submit and relay aliases concurrently return original receipt/position', async () => {
+      const [a, b] = await Promise.all([relay.submit(admittedWire), relay.relay(admittedWire)]);
+      assert.equal(canonical(accepted(a, 'duplicate submit').payload), canonical(submitReceipt.payload));
+      assert.equal(canonical(accepted(b, 'duplicate relay').payload), canonical(submitReceipt.payload));
+      assert.equal((await pool.query('SELECT count(*)::int AS n FROM relay_commit_queue WHERE world_id=$1', [worldId])).rows[0].n, 1);
+    });
+    await check('signed real pull provides exact proof/bytes for full c-1 validator', async () => {
+      batch = accepted(await relay.pull(worldId, initialCursor, 128, 0), 'pull').payload;
+      assert.equal(batch.kind, 'Batch'); assert.equal(batch.commits.length, 1);
+      assert.equal(canonical(batch.commits[0]), canonical(admittedWire));
+      const verified = await validator.validateCommit(batch.commits[0]); assert.equal(verified.kind, 'Verified', verified.reason);
+      assert.equal(validator.ownsCommit(verified.value), true); assert.equal(verified.value.invalid, false);
+      cache.stage(batch.commits[0]);
+    });
+    const ack = { worldId, relayGeneration: submitReceipt.payload.cursor.relayGeneration,
+      entries: [{ position: '1', identity: admittedWire.admissionReceipt.payload.identity,
+        envelopeSha256: admittedWire.admissionReceipt.payload.envelopeSha256 }],
+      authorDeviceId: root.session.currentContext().deviceId, authorDeviceGeneration: root.session.currentContext().deviceGeneration,
+      deviceSignatureBase64Url: Buffer.alloc(64).toString('base64url') };
+    await check('missing group key yields no ACK HTTP or PG row', async () => {
+      const noKey = new SharedCommitValidator(nativeCryptoPort, { ...validationContext, lookupWorldRelayKey: async () => null });
+      const adapter = new RealCommitRelayAdapter(root.session, root.signer, SharedServiceProtocolCodec, noKey, cache);
+      const before = rootTransport.observed.filter(x => x.pathname.endsWith('/relay/ack')).length;
+      assert.equal((await adapter.acknowledge(ack)).kind, 'Rejected');
+      assert.equal(rootTransport.observed.filter(x => x.pathname.endsWith('/relay/ack')).length, before);
+      assert.equal((await pool.query('SELECT count(*)::int AS n FROM relay_acknowledgements WHERE world_id=$1', [worldId])).rows[0].n, 0);
+    });
+    await check('Host persistence failure yields no signed ACK or PG row', async () => {
+      cache.failPersist = true; assert.equal((await relay.acknowledge(ack)).kind, 'Rejected'); cache.failPersist = false;
+      assert.equal((await pool.query('SELECT count(*)::int AS n FROM relay_acknowledgements WHERE world_id=$1', [worldId])).rows[0].n, 0);
+    });
+    await check('full validator then fsynced WAL exact readback precedes real device-signed ACK transaction', async () => {
+      const receipt = accepted(await relay.acknowledge(ack), 'durable ACK');
+      assert.equal(receipt.payload.acknowledgedCount, 1);
+      const rows = await pool.query('SELECT receipt,confirmation_sha256 FROM relay_acknowledgements WHERE world_id=$1', [worldId]);
+      assert.equal(rows.rowCount, 1); assert.equal(rows.rows[0].receipt.toString('utf8'), canonical(receipt));
+      const reopened = new IsolatedCipherWal(cache.file);
+      assert.equal(canonical(await reopened.read(ack.entries[0].identity)), canonical(admittedWire));
+      relayEvidence.push({ case: 'ACKAfterExactDurableReadback', confirmationSha256: rows.rows[0].confirmation_sha256,
+        entriesSha256: receipt.payload.entriesSha256, acknowledgedCount: 1 });
+    });
+    await check('ACK does not delete live ciphertext before admittedAt+retention', async () => {
+      const row = (await pool.query('SELECT envelope_bytes,tombstone,admitted_at,retained_until FROM relay_commit_queue WHERE world_id=$1', [worldId])).rows[0];
+      assert.equal(row.tombstone, false); assert.ok(row.envelope_bytes);
+      assert.equal(Number(row.retained_until) - Number(row.admitted_at), 86400000);
+    });
+    await check('legal 13-second real HTTP pull exceeds prior 12-second cap without timeout', async () => {
+      const started = performance.now(), result = accepted(await relay.pull(worldId, batch.next, 128, 13000), 'long poll').payload;
+      const elapsedMs = performance.now() - started;
+      assert.equal(result.kind, 'Batch'); assert.equal(result.commits.length, 0); assert.ok(elapsedMs >= 12500, String(elapsedMs));
+      relayEvidence.push({ case: 'P10RealLongPoll', maximumWaitMs: 13000, deadlineMs: 20000, elapsedMs });
+    });
+    await check('production server restart preserves generation, queue bytes and original receipt', async () => {
+      const port = config.auth.port; await app.close();
+      app = await buildRelayServer(config, pool, new ReceiptSigner(instance, serviceKey), new SharedReceiptSigner(instance, serviceKey));
+      await app.listen({ host: '127.0.0.1', port });
+      const result = accepted(await relay.relay(admittedWire), 'retry after restart');
+      assert.equal(canonical(result.payload), canonical(submitReceipt.payload));
+      const row = (await pool.query('SELECT generation::text,retention_floor::text FROM relay_streams WHERE world_id=$1', [worldId])).rows[0];
+      assert.equal(row.generation, String(submitReceipt.payload.cursor.relayGeneration));
+      relayEvidence.push({ case: 'RestartKeepsOriginalReceipt', generation: row.generation, position: '1' });
+    });

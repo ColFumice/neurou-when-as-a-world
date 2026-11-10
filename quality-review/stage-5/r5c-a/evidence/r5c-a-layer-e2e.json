@@ -1,0 +1,58 @@
+{
+  "startedAt": "2026-10-26T05:03:55.864Z",
+  "error": null,
+  "logo": {
+    "src": "http://asset.localhost/D%3A%5CProject%5CA_New_Begin%5CNeurou_official%5Cassets%5Cresources%5Cguidance%5Chead-logo.png",
+    "naturalWidth": 172,
+    "naturalHeight": 168
+  },
+  "labels": "ASSETS\n引导 / 资源\nhead-logo\n引导 / 图片\nVIDEO\nrain-night-right-loop.mp4\n视频 / 前景\nAUDIO\ntheme.wav\n音频 / 音乐\nSFX\nsfx-hit-layer1.wav\n音频 / SFX\nSFX\nsfx-hit-layer2.wav\n音频 / SFX\nSFX\nsfx-hit-layer3.wav\n音频 / SFX\nEVENT\n事件接口\n事件 / 触发\nTRACE\n痕 / Trace\n痕 / 遮罩触发\nTEXT\n字幕\n资源 / 文本\nDRAG TO KEY\nROU",
+  "layerAudio": [
+    {
+      "layer": "1",
+      "text": "LAYER 1\nsfx-hit-layer1.wav\n×"
+    },
+    {
+      "layer": "2",
+      "text": "LAYER 2\nsfx-hit-layer2.wav\n×"
+    },
+    {
+      "layer": "3",
+      "text": "LAYER 3+\nsfx-hit-layer3.wav\n×"
+    }
+  ],
+  "beatGrid": 108,
+  "beatSnapBefore": "BEAT SNAP OFF",
+  "beatSnapAfter": "BEAT SNAP ON",
+  "selected": 12,
+  "layer3": {
+    "inspector": true,
+    "layerSelect": null,
+    "selectedCount": 1
+  },
+  "cleared": "LAYER 1\nDROP AUDIO",
+  "rebound": "LAYER 1\nsfx-hit-layer1.wav\n×",
+  "saved": {
+    "layerAudio": {
+      "1": "asset:audio:sfx-layer1",
+      "2": "asset:audio:sfx-layer2",
+      "3": "asset:audio:sfx-layer3"
+    },
+    "layer3": true,
+    "keyframes": 13
+  },
+  "game": {
+    "hitTime": "010.604",
+    "score": "003000",
+    "perfect": "1",
+    "layerAudio": {
+      "count": 1,
+      "last": {
+        "layerIndex": 3,
+        "assetId": "asset:audio:sfx-layer3",
+        "atMs": 10606.738999997391
+      }
+    }
+  },
+  "finishedAt": "2026-10-26T05:04:55.734Z"
+}

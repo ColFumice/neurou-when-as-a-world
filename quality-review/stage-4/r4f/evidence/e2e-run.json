@@ -1,0 +1,73 @@
+{
+  "startedAt": "2026-10-26T04:59:39.250Z",
+  "firewall": false,
+  "attempts": [
+    {
+      "attempt": 1,
+      "completed": true,
+      "counts": {
+        "perfect": 6,
+        "good": 0,
+        "miss": 0,
+        "combo": 6,
+        "time": "008.000",
+        "complete": true
+      },
+      "fired": 6
+    },
+    {
+      "attempt": "reopen",
+      "completed": true,
+      "counts": {
+        "perfect": 6,
+        "good": 0,
+        "miss": 0,
+        "combo": 6,
+        "time": "008.000",
+        "complete": true
+      },
+      "fired": 6
+    }
+  ],
+  "externalRequests": [],
+  "ledger": {
+    "lines": 1,
+    "valid": true,
+    "head": {
+      "checksum": "05d90831b8cf8aa1cfc782ace10467a38429478987a75f4c269845088a147efb",
+      "eventCount": 1,
+      "lastEventId": "premiere:chart-w1",
+      "positionSum": [
+        0,
+        50,
+        0,
+        0,
+        70,
+        0,
+        20,
+        45,
+        0,
+        60,
+        0,
+        0,
+        90,
+        3,
+        25,
+        0,
+        0,
+        60,
+        0,
+        55
+      ],
+      "schemaVersion": 1
+    }
+  },
+  "restored": true,
+  "error": null,
+  "ledgerAfterReopen": {
+    "lines": 1,
+    "valid": true
+  },
+  "treeVisible": true,
+  "finishedAt": "2026-10-26T05:00:36.911Z"
+}

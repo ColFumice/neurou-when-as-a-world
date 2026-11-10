@@ -1,0 +1,970 @@
+{
+  "task": "Authorized numerical-window widening",
+  "command": "node quality-review/judgement-window-2026-10-10/window-boundaries.cjs",
+  "configuration": {
+    "rhythmStrikeWindowMs": 100,
+    "perfectWindowMs": 100,
+    "goodWindowMs": 200,
+    "syncToleranceMs": 30,
+    "headWindowMs": 1000
+  },
+  "scope": "Real public pure-logic ChartPremiere/PuzzleChain execution; no cc mocks here, no media-rendering or new video-sync measurements claimed.",
+  "passed": 12,
+  "failed": 0,
+  "checks": [
+    {
+      "name": "01 exact authorized values, inclusive pure judge boundaries and sync relationship",
+      "pass": true,
+      "evidence": {
+        "configuration": {
+          "rhythmStrikeWindowMs": 100,
+          "perfectWindowMs": 100,
+          "goodWindowMs": 200,
+          "syncToleranceMs": 30,
+          "headWindowMs": 1000
+        },
+        "syncMeasurementClaim": "Only the unchanged 30 ms configuration and strict ordering are checked; this is not a new video synchronization measurement.",
+        "samples": [
+          {
+            "deltaMs": -200.001,
+            "tier": "Miss"
+          },
+          {
+            "deltaMs": -200,
+            "tier": "Good"
+          },
+          {
+            "deltaMs": -100.001,
+            "tier": "Good"
+          },
+          {
+            "deltaMs": -100,
+            "tier": "Perfect"
+          },
+          {
+            "deltaMs": 0,
+            "tier": "Perfect"
+          },
+          {
+            "deltaMs": 100,
+            "tier": "Perfect"
+          },
+          {
+            "deltaMs": 100.001,
+            "tier": "Good"
+          },
+          {
+            "deltaMs": 200,
+            "tier": "Good"
+          },
+          {
+            "deltaMs": 200.001,
+            "tier": "Miss"
+          }
+        ]
+      }
+    },
+    {
+      "name": "02 actual legacy T7 and guidance Tap accept both endpoints and miss immediately outside",
+      "pass": true,
+      "evidence": [
+        {
+          "flavor": "LegacyT7",
+          "deltaMs": -200.001,
+          "counts": {
+            "perfect": 0,
+            "good": 0,
+            "miss": 1,
+            "resolved": 1
+          },
+          "score": 0
+        },
+        {
+          "flavor": "LegacyT7",
+          "deltaMs": -200,
+          "counts": {
+            "perfect": 0,
+            "good": 1,
+            "miss": 0,
+            "resolved": 1
+          },
+          "score": 100
+        },
+        {
+          "flavor": "LegacyT7",
+          "deltaMs": -100.001,
+          "counts": {
+            "perfect": 0,
+            "good": 1,
+            "miss": 0,
+            "resolved": 1
+          },
+          "score": 100
+        },
+        {
+          "flavor": "LegacyT7",
+          "deltaMs": -100,
+          "counts": {
+            "perfect": 1,
+            "good": 0,
+            "miss": 0,
+            "resolved": 1
+          },
+          "score": 100
+        },
+        {
+          "flavor": "LegacyT7",
+          "deltaMs": 100,
+          "counts": {
+            "perfect": 1,
+            "good": 0,
+            "miss": 0,
+            "resolved": 1
+          },
+          "score": 100
+        },
+        {
+          "flavor": "LegacyT7",
+          "deltaMs": 100.001,
+          "counts": {
+            "perfect": 0,
+            "good": 1,
+            "miss": 0,
+            "resolved": 1
+          },
+          "score": 100
+        },
+        {
+          "flavor": "LegacyT7",
+          "deltaMs": 200,
+          "counts": {
+            "perfect": 0,
+            "good": 1,
+            "miss": 0,
+            "resolved": 1
+          },
+          "score": 100
+        },
+        {
+          "flavor": "LegacyT7",
+          "deltaMs": 200.001,
+          "counts": {
+            "perfect": 0,
+            "good": 0,
+            "miss": 1,
+            "resolved": 1
+          },
+          "score": 0
+        },
+        {
+          "flavor": "Guidance",
+          "deltaMs": -200.001,
+          "counts": {
+            "perfect": 0,
+            "good": 0,
+            "miss": 1,
+            "resolved": 1
+          },
+          "score": 0
+        },
+        {
+          "flavor": "Guidance",
+          "deltaMs": -200,
+          "counts": {
+            "perfect": 0,
+            "good": 1,
+            "miss": 0,
+            "resolved": 1
+          },
+          "score": 100
+        },
+        {
+          "flavor": "Guidance",
+          "deltaMs": -100.001,
+          "counts": {
+            "perfect": 0,
+            "good": 1,
+            "miss": 0,
+            "resolved": 1
+          },
+          "score": 100
+        },
+        {
+          "flavor": "Guidance",
+          "deltaMs": -100,
+          "counts": {
+            "perfect": 1,
+            "good": 0,
+            "miss": 0,
+            "resolved": 1
+          },
+          "score": 100
+        },
+        {
+          "flavor": "Guidance",
+          "deltaMs": 100,
+          "counts": {
+            "perfect": 1,
+            "good": 0,
+            "miss": 0,
+            "resolved": 1
+          },
+          "score": 100
+        },
+        {
+          "flavor": "Guidance",
+          "deltaMs": 100.001,
+          "counts": {
+            "perfect": 0,
+            "good": 1,
+            "miss": 0,
+            "resolved": 1
+          },
+          "score": 100
+        },
+        {
+          "flavor": "Guidance",
+          "deltaMs": 200,
+          "counts": {
+            "perfect": 0,
+            "good": 1,
+            "miss": 0,
+            "resolved": 1
+          },
+          "score": 100
+        },
+        {
+          "flavor": "Guidance",
+          "deltaMs": 200.001,
+          "counts": {
+            "perfect": 0,
+            "good": 0,
+            "miss": 1,
+            "resolved": 1
+          },
+          "score": 0
+        }
+      ]
+    },
+    {
+      "name": "03 previously failed offsets become valid in real premieres; previous Good offsets become Perfect",
+      "pass": true,
+      "evidence": {
+        "priorReference": "Explicit old numeric contract ±50 Perfect / ±120 Good; actual production executions use current new constants.",
+        "samples": [
+          {
+            "flavor": "LegacyT7",
+            "deltaMs": -200,
+            "oldTierReference": "Miss",
+            "actualNewTier": "Good",
+            "counts": {
+              "perfect": 0,
+              "good": 1,
+              "miss": 0,
+              "resolved": 1
+            }
+          },
+          {
+            "flavor": "LegacyT7",
+            "deltaMs": -150,
+            "oldTierReference": "Miss",
+            "actualNewTier": "Good",
+            "counts": {
+              "perfect": 0,
+              "good": 1,
+              "miss": 0,
+              "resolved": 1
+            }
+          },
+          {
+            "flavor": "LegacyT7",
+            "deltaMs": -120.001,
+            "oldTierReference": "Miss",
+            "actualNewTier": "Good",
+            "counts": {
+              "perfect": 0,
+              "good": 1,
+              "miss": 0,
+              "resolved": 1
+            }
+          },
+          {
+            "flavor": "LegacyT7",
+            "deltaMs": -100,
+            "oldTierReference": "Good",
+            "actualNewTier": "Perfect",
+            "counts": {
+              "perfect": 1,
+              "good": 0,
+              "miss": 0,
+              "resolved": 1
+            }
+          },
+          {
+            "flavor": "LegacyT7",
+            "deltaMs": -75,
+            "oldTierReference": "Good",
+            "actualNewTier": "Perfect",
+            "counts": {
+              "perfect": 1,
+              "good": 0,
+              "miss": 0,
+              "resolved": 1
+            }
+          },
+          {
+            "flavor": "LegacyT7",
+            "deltaMs": 75,
+            "oldTierReference": "Good",
+            "actualNewTier": "Perfect",
+            "counts": {
+              "perfect": 1,
+              "good": 0,
+              "miss": 0,
+              "resolved": 1
+            }
+          },
+          {
+            "flavor": "LegacyT7",
+            "deltaMs": 100,
+            "oldTierReference": "Good",
+            "actualNewTier": "Perfect",
+            "counts": {
+              "perfect": 1,
+              "good": 0,
+              "miss": 0,
+              "resolved": 1
+            }
+          },
+          {
+            "flavor": "LegacyT7",
+            "deltaMs": 120.001,
+            "oldTierReference": "Miss",
+            "actualNewTier": "Good",
+            "counts": {
+              "perfect": 0,
+              "good": 1,
+              "miss": 0,
+              "resolved": 1
+            }
+          },
+          {
+            "flavor": "LegacyT7",
+            "deltaMs": 150,
+            "oldTierReference": "Miss",
+            "actualNewTier": "Good",
+            "counts": {
+              "perfect": 0,
+              "good": 1,
+              "miss": 0,
+              "resolved": 1
+            }
+          },
+          {
+            "flavor": "LegacyT7",
+            "deltaMs": 200,
+            "oldTierReference": "Miss",
+            "actualNewTier": "Good",
+            "counts": {
+              "perfect": 0,
+              "good": 1,
+              "miss": 0,
+              "resolved": 1
+            }
+          },
+          {
+            "flavor": "Guidance",
+            "deltaMs": -200,
+            "oldTierReference": "Miss",
+            "actualNewTier": "Good",
+            "counts": {
+              "perfect": 0,
+              "good": 1,
+              "miss": 0,
+              "resolved": 1
+            }
+          },
+          {
+            "flavor": "Guidance",
+            "deltaMs": -150,
+            "oldTierReference": "Miss",
+            "actualNewTier": "Good",
+            "counts": {
+              "perfect": 0,
+              "good": 1,
+              "miss": 0,
+              "resolved": 1
+            }
+          },
+          {
+            "flavor": "Guidance",
+            "deltaMs": -120.001,
+            "oldTierReference": "Miss",
+            "actualNewTier": "Good",
+            "counts": {
+              "perfect": 0,
+              "good": 1,
+              "miss": 0,
+              "resolved": 1
+            }
+          },
+          {
+            "flavor": "Guidance",
+            "deltaMs": -100,
+            "oldTierReference": "Good",
+            "actualNewTier": "Perfect",
+            "counts": {
+              "perfect": 1,
+              "good": 0,
+              "miss": 0,
+              "resolved": 1
+            }
+          },
+          {
+            "flavor": "Guidance",
+            "deltaMs": -75,
+            "oldTierReference": "Good",
+            "actualNewTier": "Perfect",
+            "counts": {
+              "perfect": 1,
+              "good": 0,
+              "miss": 0,
+              "resolved": 1
+            }
+          },
+          {
+            "flavor": "Guidance",
+            "deltaMs": 75,
+            "oldTierReference": "Good",
+            "actualNewTier": "Perfect",
+            "counts": {
+              "perfect": 1,
+              "good": 0,
+              "miss": 0,
+              "resolved": 1
+            }
+          },
+          {
+            "flavor": "Guidance",
+            "deltaMs": 100,
+            "oldTierReference": "Good",
+            "actualNewTier": "Perfect",
+            "counts": {
+              "perfect": 1,
+              "good": 0,
+              "miss": 0,
+              "resolved": 1
+            }
+          },
+          {
+            "flavor": "Guidance",
+            "deltaMs": 120.001,
+            "oldTierReference": "Miss",
+            "actualNewTier": "Good",
+            "counts": {
+              "perfect": 0,
+              "good": 1,
+              "miss": 0,
+              "resolved": 1
+            }
+          },
+          {
+            "flavor": "Guidance",
+            "deltaMs": 150,
+            "oldTierReference": "Miss",
+            "actualNewTier": "Good",
+            "counts": {
+              "perfect": 0,
+              "good": 1,
+              "miss": 0,
+              "resolved": 1
+            }
+          },
+          {
+            "flavor": "Guidance",
+            "deltaMs": 200,
+            "oldTierReference": "Miss",
+            "actualNewTier": "Good",
+            "counts": {
+              "perfect": 0,
+              "good": 1,
+              "miss": 0,
+              "resolved": 1
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "04 legacy/guidance wider Good keeps unresolved Tap open through +200 inclusive and expires once after",
+      "pass": true,
+      "evidence": [
+        {
+          "flavor": "LegacyT7",
+          "oldDeadlineMs": 3120,
+          "newInclusiveDeadlineMs": 3200,
+          "expiryObservedAtMs": 3200.001,
+          "endpointAccepted": {
+            "perfect": 0,
+            "good": 1,
+            "miss": 0,
+            "resolved": 1
+          },
+          "expiredOnlyOnce": {
+            "perfect": 0,
+            "good": 0,
+            "miss": 1,
+            "resolved": 1
+          },
+          "lateInputAt3150Ms": {
+            "perfect": 0,
+            "good": 1,
+            "miss": 0,
+            "resolved": 1
+          }
+        },
+        {
+          "flavor": "Guidance",
+          "oldDeadlineMs": 3120,
+          "newInclusiveDeadlineMs": 3200,
+          "expiryObservedAtMs": 3200.001,
+          "endpointAccepted": {
+            "perfect": 0,
+            "good": 1,
+            "miss": 0,
+            "resolved": 1
+          },
+          "expiredOnlyOnce": {
+            "perfect": 0,
+            "good": 0,
+            "miss": 1,
+            "resolved": 1
+          },
+          "lateInputAt3150Ms": {
+            "perfect": 0,
+            "good": 1,
+            "miss": 0,
+            "resolved": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "05 widened overlapping windows still select nearest candidate and consume only one",
+      "pass": true,
+      "evidence": [
+        {
+          "flavor": "LegacyT7",
+          "inputMs": [
+            3160,
+            3200
+          ],
+          "targetMs": [
+            3000,
+            3300
+          ],
+          "firstSelected": 3300,
+          "firstDeltaMs": -140,
+          "secondDeltaMs": 200,
+          "finalCounts": {
+            "perfect": 0,
+            "good": 2,
+            "miss": 0,
+            "resolved": 2
+          }
+        },
+        {
+          "flavor": "Guidance",
+          "inputMs": [
+            3160,
+            3200
+          ],
+          "targetMs": [
+            3000,
+            3300
+          ],
+          "firstSelected": 3300,
+          "firstDeltaMs": -140,
+          "secondDeltaMs": 200,
+          "finalCounts": {
+            "perfect": 0,
+            "good": 2,
+            "miss": 0,
+            "resolved": 2
+          }
+        }
+      ]
+    },
+    {
+      "name": "06 overlap equal-distance ties retain target time then line/node identity ordering",
+      "pass": true,
+      "evidence": {
+        "targetTies": [
+          {
+            "flavor": "LegacyT7",
+            "equidistantInputMs": 3150,
+            "selectedEarlierTargetMs": 3000,
+            "counts": {
+              "perfect": 1,
+              "good": 1,
+              "miss": 0,
+              "resolved": 2
+            }
+          },
+          {
+            "flavor": "Guidance",
+            "equidistantInputMs": 3150,
+            "selectedEarlierTargetMs": 3000,
+            "counts": {
+              "perfect": 1,
+              "good": 1,
+              "miss": 0,
+              "resolved": 2
+            }
+          }
+        ],
+        "sameTimeWinner": {
+          "lineId": "a-line",
+          "nodeId": "a-node"
+        },
+        "oneConsumption": true
+      }
+    },
+    {
+      "name": "07 widening Tap windows preserves Drag held-at-arrival and Hold uninterrupted-span semantics",
+      "pass": true,
+      "evidence": {
+        "noLateDownGraceAddedToDragOrHold": true,
+        "observations": [
+          {
+            "kind": "Drag",
+            "downMs": 2800,
+            "upMs": 3001,
+            "expected": "Perfect"
+          },
+          {
+            "kind": "Drag",
+            "downMs": 3000,
+            "upMs": null,
+            "expected": "Perfect"
+          },
+          {
+            "kind": "Drag",
+            "downMs": 3001,
+            "upMs": null,
+            "expected": "Miss"
+          },
+          {
+            "kind": "Drag",
+            "downMs": 3150,
+            "upMs": null,
+            "expected": "Miss"
+          },
+          {
+            "kind": "Drag",
+            "downMs": 2900,
+            "upMs": 3000,
+            "expected": "Miss"
+          },
+          {
+            "kind": "Hold",
+            "downMs": 2800,
+            "upMs": 5000,
+            "expected": "Perfect",
+            "finalTimeMs": 5000
+          },
+          {
+            "kind": "Hold",
+            "downMs": 3000,
+            "upMs": 5000,
+            "expected": "Perfect",
+            "finalTimeMs": 5000
+          },
+          {
+            "kind": "Hold",
+            "downMs": 3001,
+            "upMs": 5000,
+            "expected": "Miss",
+            "finalTimeMs": 5000
+          },
+          {
+            "kind": "Hold",
+            "downMs": 3150,
+            "upMs": 5000,
+            "expected": "Miss",
+            "finalTimeMs": 5000
+          },
+          {
+            "kind": "Hold",
+            "downMs": 2900,
+            "upMs": 4999.999,
+            "expected": "Miss",
+            "finalTimeMs": 5000
+          },
+          {
+            "kind": "Hold",
+            "downMs": 2900,
+            "upMs": 5000.001,
+            "expected": "Perfect",
+            "finalTimeMs": 5000
+          }
+        ]
+      }
+    },
+    {
+      "name": "08 AC18 same real mixed-node performance at normalized transparency 0..1 keeps tiers and raises score monotonically",
+      "pass": true,
+      "evidence": {
+        "conversion": "GuideTransparency API remains percent 0..100; normalized user range 0..1 maps to percent by ×100.",
+        "identicalInputAndFeedback": true,
+        "inputs": [
+          {
+            "keyId": "KeyA",
+            "videoTimeMs": 2075,
+            "phase": "Down"
+          },
+          {
+            "keyId": "KeyA",
+            "videoTimeMs": 2076,
+            "phase": "Up"
+          },
+          {
+            "keyId": "KeyA",
+            "videoTimeMs": 2999,
+            "phase": "Down"
+          },
+          {
+            "keyId": "KeyA",
+            "videoTimeMs": 3001,
+            "phase": "Up"
+          },
+          {
+            "keyId": "KeyA",
+            "videoTimeMs": 4000,
+            "phase": "Down"
+          },
+          {
+            "keyId": "KeyA",
+            "videoTimeMs": 5000,
+            "phase": "Up"
+          },
+          {
+            "keyId": "KeyA",
+            "videoTimeMs": 6150,
+            "phase": "Down"
+          },
+          {
+            "keyId": "KeyA",
+            "videoTimeMs": 6151,
+            "phase": "Up"
+          }
+        ],
+        "inputSha256": "15917aa9c41f2e6e5a3ab41903b4e371cb77324bbb2b8d282c0361a8d1845bbc",
+        "observations": [
+          {
+            "normalizedTransparency": 0,
+            "actualGuideTransparencyPercent": 0,
+            "inputSha256": "15917aa9c41f2e6e5a3ab41903b4e371cb77324bbb2b8d282c0361a8d1845bbc",
+            "counts": {
+              "perfect": 3,
+              "good": 1,
+              "miss": 1,
+              "resolved": 5
+            },
+            "result": {
+              "chartId": "new-judgement-window",
+              "tier": "Regular",
+              "perfectCount": 3,
+              "goodCount": 1,
+              "missCount": 1,
+              "totalScore": 400,
+              "finishedAtMs": 7000,
+              "completed": true
+            }
+          },
+          {
+            "normalizedTransparency": 0.1,
+            "actualGuideTransparencyPercent": 10,
+            "inputSha256": "15917aa9c41f2e6e5a3ab41903b4e371cb77324bbb2b8d282c0361a8d1845bbc",
+            "counts": {
+              "perfect": 3,
+              "good": 1,
+              "miss": 1,
+              "resolved": 5
+            },
+            "result": {
+              "chartId": "new-judgement-window",
+              "tier": "Regular",
+              "perfectCount": 3,
+              "goodCount": 1,
+              "missCount": 1,
+              "totalScore": 440,
+              "finishedAtMs": 7000,
+              "completed": true
+            }
+          },
+          {
+            "normalizedTransparency": 0.25,
+            "actualGuideTransparencyPercent": 25,
+            "inputSha256": "15917aa9c41f2e6e5a3ab41903b4e371cb77324bbb2b8d282c0361a8d1845bbc",
+            "counts": {
+              "perfect": 3,
+              "good": 1,
+              "miss": 1,
+              "resolved": 5
+            },
+            "result": {
+              "chartId": "new-judgement-window",
+              "tier": "Regular",
+              "perfectCount": 3,
+              "goodCount": 1,
+              "missCount": 1,
+              "totalScore": 500,
+              "finishedAtMs": 7000,
+              "completed": true
+            }
+          },
+          {
+            "normalizedTransparency": 0.5,
+            "actualGuideTransparencyPercent": 50,
+            "inputSha256": "15917aa9c41f2e6e5a3ab41903b4e371cb77324bbb2b8d282c0361a8d1845bbc",
+            "counts": {
+              "perfect": 3,
+              "good": 1,
+              "miss": 1,
+              "resolved": 5
+            },
+            "result": {
+              "chartId": "new-judgement-window",
+              "tier": "Regular",
+              "perfectCount": 3,
+              "goodCount": 1,
+              "missCount": 1,
+              "totalScore": 600,
+              "finishedAtMs": 7000,
+              "completed": true
+            }
+          },
+          {
+            "normalizedTransparency": 0.75,
+            "actualGuideTransparencyPercent": 75,
+            "inputSha256": "15917aa9c41f2e6e5a3ab41903b4e371cb77324bbb2b8d282c0361a8d1845bbc",
+            "counts": {
+              "perfect": 3,
+              "good": 1,
+              "miss": 1,
+              "resolved": 5
+            },
+            "result": {
+              "chartId": "new-judgement-window",
+              "tier": "Regular",
+              "perfectCount": 3,
+              "goodCount": 1,
+              "missCount": 1,
+              "totalScore": 700,
+              "finishedAtMs": 7000,
+              "completed": true
+            }
+          },
+          {
+            "normalizedTransparency": 1,
+            "actualGuideTransparencyPercent": 100,
+            "inputSha256": "15917aa9c41f2e6e5a3ab41903b4e371cb77324bbb2b8d282c0361a8d1845bbc",
+            "counts": {
+              "perfect": 3,
+              "good": 1,
+              "miss": 1,
+              "resolved": 5
+            },
+            "result": {
+              "chartId": "new-judgement-window",
+              "tier": "Regular",
+              "perfectCount": 3,
+              "goodCount": 1,
+              "missCount": 1,
+              "totalScore": 800,
+              "finishedAtMs": 7000,
+              "completed": true
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "09 T6 pure inclusive ±100 endpoints, immediate outside rejection and newly admitted ±75 region",
+      "pass": true,
+      "evidence": [
+        {
+          "deltaMs": -100.001,
+          "newHit": false,
+          "oldReferenceHit": false
+        },
+        {
+          "deltaMs": -100,
+          "newHit": true,
+          "oldReferenceHit": false
+        },
+        {
+          "deltaMs": -75,
+          "newHit": true,
+          "oldReferenceHit": false
+        },
+        {
+          "deltaMs": 0,
+          "newHit": true,
+          "oldReferenceHit": true
+        },
+        {
+          "deltaMs": 75,
+          "newHit": true,
+          "oldReferenceHit": false
+        },
+        {
+          "deltaMs": 100,
+          "newHit": true,
+          "oldReferenceHit": false
+        },
+        {
+          "deltaMs": 100.001,
+          "newHit": false,
+          "oldReferenceHit": false
+        }
+      ]
+    },
+    {
+      "name": "10 T6 final target before seven-second end remains mandatory; +100 endpoint may complete after end",
+      "pass": true,
+      "evidence": {
+        "firstHitMs": 75,
+        "sevenSecondEndMs": 7075,
+        "mandatoryLastTargetMs": 7000,
+        "finalInclusiveHitMs": 7100,
+        "completedAtMs": 7100,
+        "noPrematureCompletionAtMs": [
+          7075,
+          7100
+        ]
+      }
+    },
+    {
+      "name": "11 T6 missed last beat resets only strictly after +100; late input cannot salvage it and a fresh run starts",
+      "pass": true,
+      "evidence": {
+        "inclusiveWindowEndMs": 7100,
+        "missedBeatResetAtMs": 7100.001,
+        "lateInputRepairs": false,
+        "freshRunStartMs": 8000
+      }
+    },
+    {
+      "name": "12 T6 earlier missed beats and leaving the valid region still reset; duplicate targets cannot extend the run",
+      "pass": true,
+      "evidence": {
+        "missedNextTargetMs": 1000,
+        "resetStrictlyAfterMs": 1100,
+        "duplicateTargetIgnored": true,
+        "leavingRegionResets": true
+      }
+    }
+  ]
+}

@@ -1,0 +1,385 @@
+{
+  "batch": "B2.3",
+  "generatedAt": "2026-10-10T12:54:20.017111+00:00",
+  "protected": [
+    {
+      "path": ".trae/skills/neurou-handoff-executor/SKILL.md",
+      "unchanged": true,
+      "concurrentExternalChange": false
+    },
+    {
+      "path": "641f3d33-4bab-4769-8f46-62a03315d1b1.jsonl",
+      "unchanged": true,
+      "concurrentExternalChange": false
+    },
+    {
+      "path": "archive/boss/ChartPremiere.ts",
+      "unchanged": true,
+      "concurrentExternalChange": false
+    },
+    {
+      "path": "archive/boss/ChartReplay.ts",
+      "unchanged": true,
+      "concurrentExternalChange": false
+    },
+    {
+      "path": "archive/boss/ChartScore.ts",
+      "unchanged": true,
+      "concurrentExternalChange": false
+    },
+    {
+      "path": "archive/boss/ChartTier.ts",
+      "unchanged": true,
+      "concurrentExternalChange": false
+    },
+    {
+      "path": "archive/ledger/MomentInfo.legacy.ts",
+      "unchanged": true,
+      "concurrentExternalChange": false
+    },
+    {
+      "path": "archive/ledger/SphereCrossing.ts",
+      "unchanged": true,
+      "concurrentExternalChange": false
+    },
+    {
+      "path": "archive/map/WorldMap.ts",
+      "unchanged": true,
+      "concurrentExternalChange": false
+    },
+    {
+      "path": "archive/presentation/ConstellationGate.ts",
+      "unchanged": true,
+      "concurrentExternalChange": false
+    },
+    {
+      "path": "archive/presentation/EmotionToTrailColor.ts",
+      "unchanged": true,
+      "concurrentExternalChange": false
+    },
+    {
+      "path": "archive/presentation/EndingMemoryPlayback.ts",
+      "unchanged": true,
+      "concurrentExternalChange": false
+    },
+    {
+      "path": "archive/presentation/GlitchGap.ts",
+      "unchanged": true,
+      "concurrentExternalChange": false
+    },
+    {
+      "path": "archive/presentation/MomentCapture.ts",
+      "unchanged": true,
+      "concurrentExternalChange": false
+    },
+    {
+      "path": "archive/service/AuthService.ts",
+      "unchanged": true,
+      "concurrentExternalChange": false
+    },
+    {
+      "path": "archive/service/AutopilotThreshold.ts",
+      "unchanged": true,
+      "concurrentExternalChange": false
+    },
+    {
+      "path": "archive/service/CommitRelay.ts",
+      "unchanged": true,
+      "concurrentExternalChange": false
+    },
+    {
+      "path": "archive/service/OfflineGrace.ts",
+      "unchanged": true,
+      "concurrentExternalChange": false
+    },
+    {
+      "path": "archive/service/WorldMigration.ts",
+      "unchanged": true,
+      "concurrentExternalChange": false
+    },
+    {
+      "path": "archive/sync/Observer.ts",
+      "unchanged": true,
+      "concurrentExternalChange": false
+    },
+    {
+      "path": "archive/sync/SettleHorizon.ts",
+      "unchanged": true,
+      "concurrentExternalChange": false
+    },
+    {
+      "path": "archive/sync/SharedWorldState.ts",
+      "unchanged": true,
+      "concurrentExternalChange": false
+    },
+    {
+      "path": "archive/sync/WorldChangeLog.ts",
+      "unchanged": true,
+      "concurrentExternalChange": false
+    },
+    {
+      "path": "archive/sync/WorldCheckpoint.ts",
+      "unchanged": true,
+      "concurrentExternalChange": false
+    },
+    {
+      "path": "archive/sync/WorldCommit.ts",
+      "unchanged": true,
+      "concurrentExternalChange": false
+    },
+    {
+      "path": "docs/NAMEBOOK.md",
+      "unchanged": true,
+      "concurrentExternalChange": false
+    },
+    {
+      "path": "docs/spec/stage-1-acceptance.md",
+      "unchanged": true,
+      "concurrentExternalChange": false
+    },
+    {
+      "path": "docs/spec/stage-1.md",
+      "unchanged": false,
+      "concurrentExternalChange": true
+    },
+    {
+      "path": "scripts/check-dependencies.js",
+      "unchanged": true,
+      "concurrentExternalChange": false
+    },
+    {
+      "path": "scripts/check-naming.js",
+      "unchanged": false,
+      "concurrentExternalChange": true
+    },
+    {
+      "path": "雨若_Neurou_core_gameplay.docx",
+      "unchanged": true,
+      "concurrentExternalChange": false
+    },
+    {
+      "path": "雨若_Neurou_main_describe.docx",
+      "unchanged": true,
+      "concurrentExternalChange": false
+    }
+  ],
+  "evidenceScope": "OriginalAcceptedB23State",
+  "historicalProtectedSnapshots": {
+    "batch": "B2.3",
+    "evidenceScope": "OriginalAcceptedB23State",
+    "snapshotPreparedAt": "2026-10-10T12:53:14.837747+00:00",
+    "originalReportGeneratedAt": "2026-10-10T12:40:13.561780+00:00",
+    "originalReportPath": "accepted-delivery-results.json",
+    "originalReportSha256": "dc78a0f538bbeb0a85e5db6545cb838912776bc5f1dab2278132c86555313870",
+    "note": "Prepared after PROTOCOL clarification, not a contemporaneous capture. Reconstructed bytes are verified against original accepted hashes; live protected files are never restored.",
+    "files": [
+      {
+        "path": "docs/spec/stage-1.md",
+        "snapshotPath": "accepted-protected/docs/spec/stage-1.md",
+        "sha256": "86be27d38426bb6e8483a90979fc193deafe336240c93c01833031c895c296ea",
+        "bytes": 43022,
+        "provenance": "Reconstructed bytewise by applying only the d2 evidence-label insertion to the baseline, retaining its original final CRLF; original accepted SHA256 and size matched"
+      },
+      {
+        "path": "docs/NAMEBOOK.md",
+        "snapshotPath": "accepted-protected/docs/NAMEBOOK.md",
+        "sha256": "566c6ea998b92e5945dc0f4f37d824fb96a5975f62fdc31717db2ff7f46459b9",
+        "bytes": 62426,
+        "provenance": "Exact bytes from pre-B2.3 baseline; accepted original report records unchanged"
+      },
+      {
+        "path": "scripts/check-naming.js",
+        "snapshotPath": "accepted-protected/scripts/check-naming.js",
+        "sha256": "73dec0e7d35b52b07d55d40cc26fa5ce2f59f20c0408faed42d74790e56499b8",
+        "bytes": 16151,
+        "provenance": "Current preserved bytes exactly match the original accepted concurrent SHA256"
+      }
+    ]
+  },
+  "subsequentTraeLandings": {
+    "batch": "B2.3",
+    "category": "SubsequentProtocolAuthorizedTraeLanding",
+    "executor": "Trae",
+    "authorizedBy": "PROTOCOL",
+    "observedAt": "2026-10-10T12:53:14.837747+00:00",
+    "editedByB23Implementer": false,
+    "note": "Later authorized documentation landings are separate from original B2.3 implementation and acceptance counts. Snapshot times record observation, not original test execution.",
+    "files": [
+      {
+        "path": "docs/spec/stage-1.md",
+        "snapshotPath": "post-acceptance-trae/docs/spec/stage-1.md",
+        "acceptedSha256": "86be27d38426bb6e8483a90979fc193deafe336240c93c01833031c895c296ea",
+        "observedSha256": "7b495e9e0b403b515c475ce41df08ea6cd1f63552cfd8983bb20559cca42be26",
+        "bytes": 46640,
+        "lastWriteTimeUtc": "2026-10-10T12:50:46.125242+00:00"
+      },
+      {
+        "path": "docs/NAMEBOOK.md",
+        "snapshotPath": "post-acceptance-trae/docs/NAMEBOOK.md",
+        "acceptedSha256": "566c6ea998b92e5945dc0f4f37d824fb96a5975f62fdc31717db2ff7f46459b9",
+        "observedSha256": "9fc3c2d253ee71a3abf2340cb46f694fbefa2cd46d2f868a9ae7d29c2419d570",
+        "bytes": 69887,
+        "lastWriteTimeUtc": "2026-10-10T12:45:06.812649+00:00"
+      }
+    ]
+  },
+  "workspaceProtectedBytesAllUnchangedScope": "Original acceptance, not current post-acceptance documentation",
+  "additionalProtected": [],
+  "unexpectedChanges": [],
+  "deleted": [],
+  "logicCcImports": [],
+  "unchangedBaselineCount": 302,
+  "workspaceProtectedBytesAllUnchanged": false,
+  "concurrentExternalChanges": [
+    {
+      "path": "docs/spec/stage-1.md",
+      "status": "Modified",
+      "beforeSha256": "ebc90280f9930b45653154802440ec7f003fa7cbdb4f142a8c4210b8ec02fa47",
+      "afterSha256": "86be27d38426bb6e8483a90979fc193deafe336240c93c01833031c895c296ea",
+      "bytes": 43022,
+      "matchesObservedExternalBytes": true
+    },
+    {
+      "path": "scripts/check-naming.js",
+      "status": "Modified",
+      "beforeSha256": "bfe1a53af4e6cb79f0a4f33814b6052dbc3d4652eae9ff8b1f57c697d6c30191",
+      "afterSha256": "73dec0e7d35b52b07d55d40cc26fa5ce2f59f20c0408faed42d74790e56499b8",
+      "bytes": 16151,
+      "matchesObservedExternalBytes": true
+    }
+  ],
+  "confirmedAttribution": {
+    "kind": "ProtocolAuthorizedConcurrentLanding",
+    "executor": "Trae",
+    "authorizedBy": "PROTOCOL",
+    "confirmedByUser": true,
+    "files": [
+      {
+        "path": "docs/spec/stage-1.md",
+        "authorizedWork": "Append section 4 B2.2d-1/B2.2d-2 scope and section 8 B2.2d-2-01 through B2.2d-2-08 evidence labels",
+        "observedB23ConcurrentDiff": "Section 8 evidence labels; section 4 scope already existed in the B2.3 baseline"
+      },
+      {
+        "path": "scripts/check-naming.js",
+        "authorizedWork": "Add traceBindings, t6TraceId and bindT6Trace to the R4 trace-domain whitelist for v3.10"
+      }
+    ],
+    "preservation": "Keep the authorized concurrent landing and its original diff and hashes",
+    "legacyEvidenceFileNames": "concurrent-external-changes.json and concurrent-external.diff are retained for continuity; attribution is confirmed"
+  },
+  "protocolAcceptanceStatus": "AcceptedByProtocol",
+  "coreAlgorithmsUnchanged": [
+    "src/character/DecorationPalette.ts",
+    "src/character/DecorationPalette.ts.meta",
+    "src/character/HairColor.ts",
+    "src/character/HairColor.ts.meta",
+    "src/character/MoveSpeed.ts",
+    "src/character/MoveSpeed.ts.meta",
+    "src/character/Protagonist.ts",
+    "src/character/Protagonist.ts.meta",
+    "src/character/TrailLength.ts",
+    "src/character/TrailLength.ts.meta",
+    "src/chart/ChartEntry.ts",
+    "src/chart/ChartEntry.ts.meta",
+    "src/chart/ChartPlaybackState.ts",
+    "src/chart/ChartPlaybackState.ts.meta",
+    "src/chart/ChartPremiere.ts",
+    "src/chart/ChartPremiere.ts.meta",
+    "src/chart/ChartScore.ts",
+    "src/chart/ChartScore.ts.meta",
+    "src/chart/FrameLocator.ts",
+    "src/chart/FrameLocator.ts.meta",
+    "src/chart/GuidanceChart.ts",
+    "src/chart/GuidanceChart.ts.meta",
+    "src/chart/GuidanceChartRuntime.ts",
+    "src/chart/GuidanceChartRuntime.ts.meta",
+    "src/chart/GuidanceLineRuntime.ts",
+    "src/chart/GuidanceLineRuntime.ts.meta",
+    "src/chart/GuidanceTiming.ts",
+    "src/chart/GuidanceTiming.ts.meta",
+    "src/chart/KeyboardPadLayout.ts",
+    "src/chart/KeyboardPadLayout.ts.meta",
+    "src/chart/Note.ts",
+    "src/chart/Note.ts.meta",
+    "src/chart/Strike.ts",
+    "src/chart/Strike.ts.meta",
+    "src/chart/VideoSyncTest.ts",
+    "src/chart/VideoSyncTest.ts.meta",
+    "src/chart/WorldBossChartSource.ts",
+    "src/chart/WorldBossChartSource.ts.meta",
+    "src/director/AccountMilestone.ts",
+    "src/director/AccountMilestone.ts.meta",
+    "src/director/AccountStartupSession.ts",
+    "src/director/AccountStartupSession.ts.meta",
+    "src/director/LedgerHydration.ts",
+    "src/director/LedgerHydration.ts.meta",
+    "src/director/PuzzleHydration.ts",
+    "src/director/PuzzleHydration.ts.meta",
+    "src/director/SphereCrossing.ts",
+    "src/director/SphereCrossing.ts.meta",
+    "src/director/WorldClearSession.ts.meta",
+    "src/editor/GuidanceEditorSession.ts",
+    "src/editor/GuidanceEditorSession.ts.meta",
+    "src/ledger/LedgerAppend.ts",
+    "src/ledger/LedgerAppend.ts.meta",
+    "src/ledger/LedgerPosition.ts",
+    "src/ledger/LedgerPosition.ts.meta",
+    "src/ledger/LedgerRead.ts",
+    "src/ledger/LedgerRead.ts.meta",
+    "src/ledger/MomentInfo.ts",
+    "src/ledger/MomentInfo.ts.meta",
+    "src/ledger/NarrativeEvent.ts",
+    "src/ledger/NarrativeEvent.ts.meta",
+    "src/ledger/deriveLedgerPosition.ts",
+    "src/ledger/deriveLedgerPosition.ts.meta",
+    "src/musicEditor/ChartSourceBuilder.ts",
+    "src/musicEditor/ChartSourceBuilder.ts.meta",
+    "src/musicEditor/MusicEditorSession.ts",
+    "src/musicEditor/MusicEditorSession.ts.meta",
+    "src/musicEditor/MusicProjectData.ts",
+    "src/musicEditor/MusicProjectData.ts.meta",
+    "src/musicEditor/MusicTiming.ts",
+    "src/musicEditor/MusicTiming.ts.meta",
+    "src/trace/DeepTrace.ts",
+    "src/trace/DeepTrace.ts.meta",
+    "src/trace/EchoTrace.ts",
+    "src/trace/EchoTrace.ts.meta",
+    "src/trace/ElementEntity.ts",
+    "src/trace/ElementEntity.ts.meta",
+    "src/trace/EmpathyScaling.ts",
+    "src/trace/EmpathyScaling.ts.meta",
+    "src/trace/PuzzleChain.ts",
+    "src/trace/PuzzleChain.ts.meta",
+    "src/trace/PuzzleProgress.ts",
+    "src/trace/PuzzleProgress.ts.meta",
+    "src/trace/RhythmStrike.ts",
+    "src/trace/RhythmStrike.ts.meta",
+    "src/trace/Trace.ts",
+    "src/trace/Trace.ts.meta",
+    "src/trace/TraceOrigin.ts",
+    "src/trace/TraceOrigin.ts.meta",
+    "src/trace/TraceProximityVolume.ts",
+    "src/trace/TraceProximityVolume.ts.meta",
+    "src/trace/TraceTier.ts",
+    "src/trace/TraceTier.ts.meta",
+    "src/trace/VisibilityState.ts",
+    "src/trace/VisibilityState.ts.meta",
+    "src/trace/VisibilityTransition.ts",
+    "src/trace/VisibilityTransition.ts.meta",
+    "src/world/DepthAxis.ts",
+    "src/world/DepthAxis.ts.meta",
+    "src/world/LateralAxis.ts",
+    "src/world/LateralAxis.ts.meta",
+    "src/world/MapCenter.ts",
+    "src/world/MapCenter.ts.meta",
+    "src/world/VerticalAxis.ts",
+    "src/world/VerticalAxis.ts.meta",
+    "src/world/WorldInstance.ts",
+    "src/world/WorldInstance.ts.meta",
+    "src/world/WorldMap.ts",
+    "src/world/WorldMap.ts.meta",
+    "src/world/WorldMeter.ts",
+    "src/world/WorldMeter.ts.meta"
+  ],
+  "pass": true
+}

@@ -1,0 +1,47 @@
+{
+  "observedUtc": "2026-10-11T03:00:07.7954677Z",
+  "finalRuntimeState": "StoppedAfterFinalAcceptance",
+  "stopCommand": "quality-review/b2-real-auth/evidence/runtime/stop-postgres.ps1",
+  "stopExitCode": 0,
+  "cycles": [
+    {
+      "cycle": 1,
+      "purpose": "Initial full server16/client29 acceptance",
+      "runningObservedUtc": "2026-10-11T02:47:19.2860178Z",
+      "stoppedObservedUtc": "2026-10-11T02:58:23.4289602Z",
+      "stopExitCode": 0,
+      "preservedEvidence": "pre-expiry-review/runtime-lifecycle.json"
+    },
+    {
+      "cycle": 2,
+      "purpose": "Final client30 acceptance after async verification deadline review fix",
+      "startedUtcFromPostmasterPid": "2026-10-11T02:59:13.0000000Z",
+      "runningObservedUtc": "2026-10-11T03:00:06.5166846Z",
+      "listenerCountBeforeStop": 1,
+      "stoppedObservedUtc": "2026-10-11T03:00:07.7954677Z",
+      "stopExitCode": 0
+    }
+  ],
+  "PostgreSQL": {
+    "address": "127.0.0.1",
+    "port": 55436,
+    "listenerCount": 0,
+    "postmasterPidFilePresent": false,
+    "clusterDataRetained": true,
+    "privateConnectionRetained": true
+  },
+  "HTTP": {
+    "clientTestAddress": "127.0.0.1",
+    "clientTestPort": 43126,
+    "clientTestListenerCount": 0,
+    "defaultMainPort": 43125,
+    "defaultMainListenerCount": 0,
+    "matchingMainOrTestNodeProcesses": 0,
+    "ephemeralHarnessPorts": "Not retained; actual child main processes exit in test cleanup and final Node test runner has exited."
+  },
+  "restartCommand": "quality-review/b2-real-auth/evidence/runtime/start-postgres.ps1",
+  "noDeletion": true,
+  "pointInTimeReadinessUntouched": true,
+  "finalVerificationPass": true,
+  "verification": "Both cycles stopped normally; no postmaster.pid, PostgreSQL55436/clientHTTP43126/defaultHTTP43125 listener, or matching server/test Node child remains. Data and private configuration are retained."
+}

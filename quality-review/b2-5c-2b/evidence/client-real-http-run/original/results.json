@@ -1,0 +1,103 @@
+{
+  "kind": "ProductionClientRealHttp",
+  "realHttp": true,
+  "realPostgreSQL": true,
+  "realClock": true,
+  "isolatedClock": false,
+  "database": "c2b_client_authority",
+  "pgMajor": 17,
+  "passed": 11,
+  "failed": 0,
+  "authorityMethods": [
+    "admitCommit",
+    "allocateSegment",
+    "issueAppendPermit",
+    "publishMembershipEpoch",
+    "readAccountFacts",
+    "readAdmission",
+    "readMembershipEpoch",
+    "readServiceStatus",
+    "readWorldFacts",
+    "redeemObserverChallenge",
+    "registerAgreementCredential",
+    "registerWorld",
+    "requestCredentialChallenge",
+    "requestObserverChallenge",
+    "sealPrefix",
+    "setAccessCode"
+  ],
+  "publicPin": {
+    "serviceInstanceId": "neurou-client-http-7ddad38b-0979-4918-b23b-df22d848cb7d",
+    "worldId": "337f374f-3f0e-4c48-aab3-b0dbfcad96e2",
+    "mapId": "b66681c4-3e23-4296-943e-3fb223a7c588",
+    "worldDeveloperAccountId": "88b87d2b-5801-4ad6-af15-0a7b85cbf050",
+    "developerTrustAnchor": {
+      "schemaVersion": 1,
+      "worldId": "337f374f-3f0e-4c48-aab3-b0dbfcad96e2",
+      "worldDeveloperAccountId": "88b87d2b-5801-4ad6-af15-0a7b85cbf050",
+      "developerSigningKeyId": "cv-CwuRKm8g0oheQzxAsiTJzGqya4GNMAgv6yIpBGmQ",
+      "developerPublicKey": {
+        "kty": "EC",
+        "crv": "P-256",
+        "x": "2lLZEOggqmi3anwyWPxUhvgVooVdtCwGaCdoG2N9wfw",
+        "y": "BRq0DmJbW7WoO9jKSdDu2cNoL7cfk5NWpsKIFf_Lbu0"
+      },
+      "developerPublicKeyFingerprint": "cv-CwuRKm8g0oheQzxAsiTJzGqya4GNMAgv6yIpBGmQ"
+    },
+    "developerTrustAnchorSha256": "4502f18643e237c0e4dce79e441080c06af3f22a9647e46cdf6a42a9954530ed",
+    "genesisSha256": "05e081229cfc2dd72f139ab7a8f2b46b5bbaf44b8ecd4f2180dc770efe3a0521",
+    "contentManifestSha256": "67ffd06a53572ca46605c56374df32d787baca7194ba51d40a095534461cff6a"
+  },
+  "nodeVersion": "v24.19.0",
+  "noRelay": true,
+  "noProductChain": true,
+  "noKeyPackageDelivery": true,
+  "emptyProductionSealOnly": true,
+  "ordinaryObserverViaActualAccessCode": true,
+  "cases": [
+    {
+      "label": "independent production Builder authenticates real registered devices through b routes",
+      "pass": true
+    },
+    {
+      "label": "service status signature and real clock/policy trusted through production client",
+      "pass": true
+    },
+    {
+      "label": "world registration uses installed public tuple, in-memory root, and registered session signature",
+      "pass": true
+    },
+    {
+      "label": "six-digit code automatically admits real ordinary Observer; no fixture membership",
+      "pass": true
+    },
+    {
+      "label": "actual ECDH/GCM/HMAC possession uses registered production author-signing capability",
+      "pass": true
+    },
+    {
+      "label": "real root membership CAS activates only previously proven Observer/device credentials",
+      "pass": true
+    },
+    {
+      "label": "concurrent real PG author segments are disjoint; same nonce preserves original signed receipt",
+      "pass": true
+    },
+    {
+      "label": "permit-generated AppendedAt and registered claim produce real original admission facts",
+      "pass": true
+    },
+    {
+      "label": "production real-clock empty seal obeys S-H; prematurely including fresh admission rejected",
+      "pass": true
+    },
+    {
+      "label": "all 15 incremental authority methods plus unchanged account-facts port used real HTTP",
+      "pass": true
+    },
+    {
+      "label": "logout rejects further production authority admission and registered signing",
+      "pass": true
+    }
+  ]
+}

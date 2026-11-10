@@ -1,0 +1,4264 @@
+{
+  "phase": "B2.5c-2c mechanical declaration names with unified public-count scope",
+  "status": "FinalInventory",
+  "stageComplete": false,
+  "generatedUtc": "2026-10-11T10:11:05.671Z",
+  "typescriptVersion": "5.5.4",
+  "sourceFileCount": 5,
+  "declarationCount": 420,
+  "uniqueDeclarationNameCount": 217,
+  "topLevelDeclarationCount": 27,
+  "publicExportCount": 8,
+  "publicExports": [
+    {
+      "path": "server/src/RelayStorage.ts",
+      "name": "RelayStoredStream",
+      "kind": "InterfaceDeclaration",
+      "line": 5
+    },
+    {
+      "path": "server/src/RelayStorage.ts",
+      "name": "RelayStoredCommit",
+      "kind": "InterfaceDeclaration",
+      "line": 12
+    },
+    {
+      "path": "server/src/RelayStorage.ts",
+      "name": "RelayStorage",
+      "kind": "ClassDeclaration",
+      "line": 28
+    },
+    {
+      "path": "server/src/RelayService.ts",
+      "name": "RelayService",
+      "kind": "ClassDeclaration",
+      "line": 34
+    },
+    {
+      "path": "server/src/RelayRoute.ts",
+      "name": "relayRoutes",
+      "kind": "FunctionDeclaration",
+      "line": 24
+    },
+    {
+      "path": "server/src/buildRelayServer.ts",
+      "name": "buildRelayServer",
+      "kind": "FunctionDeclaration",
+      "line": 15
+    },
+    {
+      "path": "server/src/buildRelayServer.ts",
+      "name": "buildIsolatedRelayServer",
+      "kind": "FunctionDeclaration",
+      "line": 20
+    },
+    {
+      "path": "src/presentation/RealCommitRelayAdapter.ts",
+      "name": "RealCommitRelayAdapter",
+      "kind": "ClassDeclaration",
+      "line": 16
+    }
+  ],
+  "sources": [
+    {
+      "path": "server/src/RelayStorage.ts",
+      "bytes": 4841,
+      "sha256": "78ad6663951c166c16eb74dee259f62d8fde58484f0d778162c2f1dd3cb4e0d7",
+      "declarationCount": 51,
+      "declarations": [
+        {
+          "name": "RelayStoredStream",
+          "kind": "InterfaceDeclaration",
+          "line": 5,
+          "character": 18,
+          "scope": "<module>",
+          "topLevel": true,
+          "exported": true
+        },
+        {
+          "name": "world_id",
+          "kind": "PropertySignature",
+          "line": 6,
+          "character": 12,
+          "scope": "RelayStoredStream",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "generation",
+          "kind": "PropertySignature",
+          "line": 7,
+          "character": 3,
+          "scope": "RelayStoredStream",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "next_position",
+          "kind": "PropertySignature",
+          "line": 8,
+          "character": 3,
+          "scope": "RelayStoredStream",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "retention_floor",
+          "kind": "PropertySignature",
+          "line": 9,
+          "character": 3,
+          "scope": "RelayStoredStream",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "RelayStoredCommit",
+          "kind": "InterfaceDeclaration",
+          "line": 12,
+          "character": 18,
+          "scope": "<module>",
+          "topLevel": true,
+          "exported": true
+        },
+        {
+          "name": "world_id",
+          "kind": "PropertySignature",
+          "line": 13,
+          "character": 12,
+          "scope": "RelayStoredCommit",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "generation",
+          "kind": "PropertySignature",
+          "line": 14,
+          "character": 12,
+          "scope": "RelayStoredCommit",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "position",
+          "kind": "PropertySignature",
+          "line": 15,
+          "character": 12,
+          "scope": "RelayStoredCommit",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "account_id",
+          "kind": "PropertySignature",
+          "line": 16,
+          "character": 12,
+          "scope": "RelayStoredCommit",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "author_sequence",
+          "kind": "PropertySignature",
+          "line": 17,
+          "character": 12,
+          "scope": "RelayStoredCommit",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "envelope_bytes",
+          "kind": "PropertySignature",
+          "line": 18,
+          "character": 12,
+          "scope": "RelayStoredCommit",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "public_proof",
+          "kind": "PropertySignature",
+          "line": 19,
+          "character": 12,
+          "scope": "RelayStoredCommit",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "envelope_sha256",
+          "kind": "PropertySignature",
+          "line": 20,
+          "character": 12,
+          "scope": "RelayStoredCommit",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "admitted_at",
+          "kind": "PropertySignature",
+          "line": 21,
+          "character": 12,
+          "scope": "RelayStoredCommit",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "retained_until",
+          "kind": "PropertySignature",
+          "line": 22,
+          "character": 12,
+          "scope": "RelayStoredCommit",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "tombstone",
+          "kind": "PropertySignature",
+          "line": 23,
+          "character": 12,
+          "scope": "RelayStoredCommit",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "receipt",
+          "kind": "PropertySignature",
+          "line": 24,
+          "character": 12,
+          "scope": "RelayStoredCommit",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "RelayStorage",
+          "kind": "ClassDeclaration",
+          "line": 28,
+          "character": 14,
+          "scope": "<module>",
+          "topLevel": true,
+          "exported": true
+        },
+        {
+          "name": "constructor",
+          "kind": "Constructor",
+          "line": 29,
+          "character": 3,
+          "scope": "RelayStorage",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "pool",
+          "kind": "ParameterBinding",
+          "line": 29,
+          "character": 24,
+          "scope": "constructor",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "transaction",
+          "kind": "MethodDeclaration",
+          "line": 31,
+          "character": 9,
+          "scope": "RelayStorage",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "T",
+          "kind": "TypeParameterBinding",
+          "line": 31,
+          "character": 21,
+          "scope": "transaction",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "action",
+          "kind": "ParameterBinding",
+          "line": 31,
+          "character": 24,
+          "scope": "transaction",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "client",
+          "kind": "ParameterBinding",
+          "line": 31,
+          "character": 33,
+          "scope": "transaction",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "client",
+          "kind": "VariableBinding",
+          "line": 32,
+          "character": 11,
+          "scope": "transaction",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "value",
+          "kind": "VariableBinding",
+          "line": 35,
+          "character": 13,
+          "scope": "transaction",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "error",
+          "kind": "VariableBinding",
+          "line": 38,
+          "character": 14,
+          "scope": "transaction",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "lockStream",
+          "kind": "MethodDeclaration",
+          "line": 46,
+          "character": 9,
+          "scope": "RelayStorage",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "client",
+          "kind": "ParameterBinding",
+          "line": 46,
+          "character": 20,
+          "scope": "lockStream",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "worldId",
+          "kind": "ParameterBinding",
+          "line": 46,
+          "character": 40,
+          "scope": "lockStream",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "expire",
+          "kind": "MethodDeclaration",
+          "line": 52,
+          "character": 9,
+          "scope": "RelayStorage",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "client",
+          "kind": "ParameterBinding",
+          "line": 52,
+          "character": 16,
+          "scope": "expire",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "stream",
+          "kind": "ParameterBinding",
+          "line": 52,
+          "character": 36,
+          "scope": "expire",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "trustedTime",
+          "kind": "ParameterBinding",
+          "line": 52,
+          "character": 63,
+          "scope": "expire",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "expired",
+          "kind": "VariableBinding",
+          "line": 54,
+          "character": 11,
+          "scope": "expire",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "floor",
+          "kind": "PropertySignature",
+          "line": 54,
+          "character": 43,
+          "scope": "expire",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "detectLostRange",
+          "kind": "MethodDeclaration",
+          "line": 65,
+          "character": 9,
+          "scope": "RelayStorage",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "client",
+          "kind": "ParameterBinding",
+          "line": 65,
+          "character": 25,
+          "scope": "detectLostRange",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "stream",
+          "kind": "ParameterBinding",
+          "line": 65,
+          "character": 45,
+          "scope": "detectLostRange",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "row",
+          "kind": "VariableBinding",
+          "line": 66,
+          "character": 11,
+          "scope": "detectLostRange",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "count",
+          "kind": "PropertySignature",
+          "line": 66,
+          "character": 39,
+          "scope": "detectLostRange",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "damaged",
+          "kind": "PropertySignature",
+          "line": 66,
+          "character": 54,
+          "scope": "detectLostRange",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "generation",
+          "kind": "VariableBinding",
+          "line": 68,
+          "character": 11,
+          "scope": "detectLostRange",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "missingAdmission",
+          "kind": "MethodDeclaration",
+          "line": 77,
+          "character": 9,
+          "scope": "RelayStorage",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "client",
+          "kind": "ParameterBinding",
+          "line": 77,
+          "character": 26,
+          "scope": "missingAdmission",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "stream",
+          "kind": "ParameterBinding",
+          "line": 77,
+          "character": 46,
+          "scope": "missingAdmission",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "bytes",
+          "kind": "MethodDeclaration",
+          "line": 81,
+          "character": 10,
+          "scope": "RelayStorage",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "value",
+          "kind": "ParameterBinding",
+          "line": 81,
+          "character": 16,
+          "scope": "bytes",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "commit",
+          "kind": "MethodDeclaration",
+          "line": 83,
+          "character": 10,
+          "scope": "RelayStorage",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "row",
+          "kind": "ParameterBinding",
+          "line": 83,
+          "character": 17,
+          "scope": "commit",
+          "topLevel": false,
+          "exported": false
+        }
+      ],
+      "topLevelDeclarations": [
+        {
+          "name": "RelayStoredStream",
+          "kind": "InterfaceDeclaration",
+          "line": 5,
+          "character": 18,
+          "scope": "<module>",
+          "topLevel": true,
+          "exported": true
+        },
+        {
+          "name": "RelayStoredCommit",
+          "kind": "InterfaceDeclaration",
+          "line": 12,
+          "character": 18,
+          "scope": "<module>",
+          "topLevel": true,
+          "exported": true
+        },
+        {
+          "name": "RelayStorage",
+          "kind": "ClassDeclaration",
+          "line": 28,
+          "character": 14,
+          "scope": "<module>",
+          "topLevel": true,
+          "exported": true
+        }
+      ],
+      "publicExports": [
+        {
+          "name": "RelayStoredStream",
+          "kind": "InterfaceDeclaration",
+          "line": 5
+        },
+        {
+          "name": "RelayStoredCommit",
+          "kind": "InterfaceDeclaration",
+          "line": 12
+        },
+        {
+          "name": "RelayStorage",
+          "kind": "ClassDeclaration",
+          "line": 28
+        }
+      ],
+      "exportReferences": [],
+      "parseDiagnostics": []
+    },
+    {
+      "path": "server/src/RelayService.ts",
+      "bytes": 31208,
+      "sha256": "55ffe45f60aeb69b9c32c1b4a3e498c8e184f921fdd4db23554f8baf85491549",
+      "declarationCount": 217,
+      "declarations": [
+        {
+          "name": "Data",
+          "kind": "TypeAliasDeclaration",
+          "line": 16,
+          "character": 6,
+          "scope": "<module>",
+          "topLevel": true,
+          "exported": false
+        },
+        {
+          "name": "RelayOperation",
+          "kind": "TypeAliasDeclaration",
+          "line": 17,
+          "character": 6,
+          "scope": "<module>",
+          "topLevel": true,
+          "exported": false
+        },
+        {
+          "name": "PreparedRelayCommit",
+          "kind": "InterfaceDeclaration",
+          "line": 18,
+          "character": 11,
+          "scope": "<module>",
+          "topLevel": true,
+          "exported": false
+        },
+        {
+          "name": "wire",
+          "kind": "PropertySignature",
+          "line": 18,
+          "character": 42,
+          "scope": "PreparedRelayCommit",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "bytes",
+          "kind": "PropertySignature",
+          "line": 18,
+          "character": 78,
+          "scope": "PreparedRelayCommit",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "envelope",
+          "kind": "PropertySignature",
+          "line": 18,
+          "character": 102,
+          "scope": "PreparedRelayCommit",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "header",
+          "kind": "PropertySignature",
+          "line": 18,
+          "character": 142,
+          "scope": "PreparedRelayCommit",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "RelayPullResultMemory",
+          "kind": "InterfaceDeclaration",
+          "line": 19,
+          "character": 11,
+          "scope": "<module>",
+          "topLevel": true,
+          "exported": false
+        },
+        {
+          "name": "schemaVersion",
+          "kind": "PropertySignature",
+          "line": 20,
+          "character": 12,
+          "scope": "RelayPullResultMemory",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "kind",
+          "kind": "PropertySignature",
+          "line": 21,
+          "character": 12,
+          "scope": "RelayPullResultMemory",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "wireSha256",
+          "kind": "PropertySignature",
+          "line": 22,
+          "character": 12,
+          "scope": "RelayPullResultMemory",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "receipt",
+          "kind": "PropertySignature",
+          "line": 23,
+          "character": 12,
+          "scope": "RelayPullResultMemory",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "entries",
+          "kind": "PropertySignature",
+          "line": 24,
+          "character": 12,
+          "scope": "RelayPullResultMemory",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "position",
+          "kind": "PropertySignature",
+          "line": 24,
+          "character": 41,
+          "scope": "RelayPullResultMemory",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "identity",
+          "kind": "PropertySignature",
+          "line": 24,
+          "character": 68,
+          "scope": "RelayPullResultMemory",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "authorAccountId",
+          "kind": "PropertySignature",
+          "line": 24,
+          "character": 89,
+          "scope": "RelayPullResultMemory",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "authorSequence",
+          "kind": "PropertySignature",
+          "line": 24,
+          "character": 123,
+          "scope": "RelayPullResultMemory",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "envelopeSha256",
+          "kind": "PropertySignature",
+          "line": 24,
+          "character": 158,
+          "scope": "RelayPullResultMemory",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "RETENTION_MS",
+          "kind": "VariableBinding",
+          "line": 26,
+          "character": 7,
+          "scope": "<module>",
+          "topLevel": true,
+          "exported": false
+        },
+        {
+          "name": "MAX_CURSOR",
+          "kind": "VariableBinding",
+          "line": 27,
+          "character": 7,
+          "scope": "<module>",
+          "topLevel": true,
+          "exported": false
+        },
+        {
+          "name": "RESPONSE_LIMIT",
+          "kind": "VariableBinding",
+          "line": 28,
+          "character": 7,
+          "scope": "<module>",
+          "topLevel": true,
+          "exported": false
+        },
+        {
+          "name": "fail",
+          "kind": "FunctionDeclaration",
+          "line": 29,
+          "character": 10,
+          "scope": "<module>",
+          "topLevel": true,
+          "exported": false
+        },
+        {
+          "name": "detail",
+          "kind": "ParameterBinding",
+          "line": 29,
+          "character": 15,
+          "scope": "fail",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "status",
+          "kind": "ParameterBinding",
+          "line": 29,
+          "character": 31,
+          "scope": "fail",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "code",
+          "kind": "ParameterBinding",
+          "line": 29,
+          "character": 45,
+          "scope": "fail",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "same",
+          "kind": "FunctionDeclaration",
+          "line": 30,
+          "character": 10,
+          "scope": "<module>",
+          "topLevel": true,
+          "exported": false
+        },
+        {
+          "name": "a",
+          "kind": "ParameterBinding",
+          "line": 30,
+          "character": 15,
+          "scope": "same",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "b",
+          "kind": "ParameterBinding",
+          "line": 30,
+          "character": 27,
+          "scope": "same",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "fromBytes",
+          "kind": "FunctionDeclaration",
+          "line": 31,
+          "character": 10,
+          "scope": "<module>",
+          "topLevel": true,
+          "exported": false
+        },
+        {
+          "name": "bytes",
+          "kind": "ParameterBinding",
+          "line": 31,
+          "character": 20,
+          "scope": "fromBytes",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "RelayService",
+          "kind": "ClassDeclaration",
+          "line": 34,
+          "character": 14,
+          "scope": "<module>",
+          "topLevel": true,
+          "exported": true
+        },
+        {
+          "name": "codec",
+          "kind": "PropertyDeclaration",
+          "line": 35,
+          "character": 20,
+          "scope": "RelayService",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "verifier",
+          "kind": "PropertyDeclaration",
+          "line": 36,
+          "character": 20,
+          "scope": "RelayService",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "rates",
+          "kind": "PropertyDeclaration",
+          "line": 37,
+          "character": 20,
+          "scope": "RelayService",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "count",
+          "kind": "PropertySignature",
+          "line": 37,
+          "character": 46,
+          "scope": "RelayService",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "expires",
+          "kind": "PropertySignature",
+          "line": 37,
+          "character": 61,
+          "scope": "RelayService",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "pendingPulls",
+          "kind": "PropertyDeclaration",
+          "line": 38,
+          "character": 20,
+          "scope": "RelayService",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "constructor",
+          "kind": "Constructor",
+          "line": 40,
+          "character": 3,
+          "scope": "RelayService",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "storage",
+          "kind": "ParameterBinding",
+          "line": 40,
+          "character": 32,
+          "scope": "constructor",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "signer",
+          "kind": "ParameterBinding",
+          "line": 40,
+          "character": 72,
+          "scope": "constructor",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "clock",
+          "kind": "ParameterBinding",
+          "line": 40,
+          "character": 118,
+          "scope": "constructor",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "handle",
+          "kind": "MethodDeclaration",
+          "line": 42,
+          "character": 9,
+          "scope": "RelayService",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "operation",
+          "kind": "ParameterBinding",
+          "line": 42,
+          "character": 16,
+          "scope": "handle",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "input",
+          "kind": "ParameterBinding",
+          "line": 42,
+          "character": 43,
+          "scope": "handle",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "raw",
+          "kind": "ParameterBinding",
+          "line": 42,
+          "character": 78,
+          "scope": "handle",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "request",
+          "kind": "ParameterBinding",
+          "line": 42,
+          "character": 91,
+          "scope": "handle",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "wire",
+          "kind": "PropertySignature",
+          "line": 42,
+          "character": 127,
+          "scope": "handle",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "status",
+          "kind": "PropertySignature",
+          "line": 42,
+          "character": 141,
+          "scope": "handle",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "payload",
+          "kind": "VariableBinding",
+          "line": 43,
+          "character": 11,
+          "scope": "handle",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "prepared",
+          "kind": "VariableBinding",
+          "line": 44,
+          "character": 11,
+          "scope": "handle",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "started",
+          "kind": "VariableBinding",
+          "line": 45,
+          "character": 11,
+          "scope": "handle",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "maximumWait",
+          "kind": "VariableBinding",
+          "line": 46,
+          "character": 11,
+          "scope": "handle",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "pendingKey",
+          "kind": "VariableBinding",
+          "line": 47,
+          "character": 9,
+          "scope": "handle",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "charged",
+          "kind": "VariableBinding",
+          "line": 48,
+          "character": 9,
+          "scope": "handle",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "disconnected",
+          "kind": "VariableBinding",
+          "line": 49,
+          "character": 11,
+          "scope": "handle",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "final",
+          "kind": "VariableBinding",
+          "line": 53,
+          "character": 15,
+          "scope": "handle",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "result",
+          "kind": "VariableBinding",
+          "line": 54,
+          "character": 15,
+          "scope": "handle",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "client",
+          "kind": "ParameterBinding",
+          "line": 54,
+          "character": 61,
+          "scope": "<arrow-function>",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "session",
+          "kind": "VariableBinding",
+          "line": 56,
+          "character": 17,
+          "scope": "<arrow-function>",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "sample",
+          "kind": "VariableBinding",
+          "line": 57,
+          "character": 17,
+          "scope": "<arrow-function>",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "worldId",
+          "kind": "VariableBinding",
+          "line": 58,
+          "character": 17,
+          "scope": "<arrow-function>",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "requestSha",
+          "kind": "VariableBinding",
+          "line": 59,
+          "character": 17,
+          "scope": "<arrow-function>",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "prior",
+          "kind": "VariableBinding",
+          "line": 60,
+          "character": 17,
+          "scope": "<arrow-function>",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "key",
+          "kind": "VariableBinding",
+          "line": 72,
+          "character": 19,
+          "scope": "<arrow-function>",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "world",
+          "kind": "VariableBinding",
+          "line": 78,
+          "character": 17,
+          "scope": "<arrow-function>",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "service_instance_id",
+          "kind": "PropertySignature",
+          "line": 78,
+          "character": 61,
+          "scope": "<arrow-function>",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "value",
+          "kind": "VariableBinding",
+          "line": 81,
+          "character": 15,
+          "scope": "<arrow-function>",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "status",
+          "kind": "VariableBinding",
+          "line": 82,
+          "character": 15,
+          "scope": "<arrow-function>",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "empty",
+          "kind": "VariableBinding",
+          "line": 83,
+          "character": 15,
+          "scope": "<arrow-function>",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "stream",
+          "kind": "VariableBinding",
+          "line": 85,
+          "character": 19,
+          "scope": "<arrow-function>",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "memory",
+          "kind": "VariableBinding",
+          "line": 94,
+          "character": 21,
+          "scope": "<arrow-function>",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "batch",
+          "kind": "VariableBinding",
+          "line": 95,
+          "character": 21,
+          "scope": "<arrow-function>",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "finalSample",
+          "kind": "VariableBinding",
+          "line": 101,
+          "character": 19,
+          "scope": "<arrow-function>",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "error",
+          "kind": "VariableBinding",
+          "line": 103,
+          "character": 20,
+          "scope": "<arrow-function>",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "reply",
+          "kind": "VariableBinding",
+          "line": 111,
+          "character": 17,
+          "scope": "<arrow-function>",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "wire",
+          "kind": "VariableBinding",
+          "line": 112,
+          "character": 17,
+          "scope": "<arrow-function>",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "stored",
+          "kind": "VariableBinding",
+          "line": 116,
+          "character": 19,
+          "scope": "<arrow-function>",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "resolve",
+          "kind": "ParameterBinding",
+          "line": 123,
+          "character": 33,
+          "scope": "<arrow-function>",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "error",
+          "kind": "VariableBinding",
+          "line": 125,
+          "character": 14,
+          "scope": "handle",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "storedStatus",
+          "kind": "MethodDeclaration",
+          "line": 133,
+          "character": 11,
+          "scope": "RelayService",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "bytes",
+          "kind": "ParameterBinding",
+          "line": 133,
+          "character": 24,
+          "scope": "storedStatus",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "result",
+          "kind": "VariableBinding",
+          "line": 134,
+          "character": 11,
+          "scope": "storedStatus",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "f",
+          "kind": "VariableBinding",
+          "line": 136,
+          "character": 11,
+          "scope": "storedStatus",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "limit",
+          "kind": "MethodDeclaration",
+          "line": 140,
+          "character": 11,
+          "scope": "RelayService",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "session",
+          "kind": "ParameterBinding",
+          "line": 140,
+          "character": 17,
+          "scope": "limit",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "operation",
+          "kind": "ParameterBinding",
+          "line": 140,
+          "character": 41,
+          "scope": "limit",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "worldId",
+          "kind": "ParameterBinding",
+          "line": 140,
+          "character": 68,
+          "scope": "limit",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "now",
+          "kind": "VariableBinding",
+          "line": 141,
+          "character": 11,
+          "scope": "limit",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "window",
+          "kind": "VariableBinding",
+          "line": 142,
+          "character": 11,
+          "scope": "limit",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "charge",
+          "kind": "VariableBinding",
+          "line": 143,
+          "character": 11,
+          "scope": "limit",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "key",
+          "kind": "ParameterBinding",
+          "line": 143,
+          "character": 21,
+          "scope": "<arrow-function>",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "maximum",
+          "kind": "ParameterBinding",
+          "line": 143,
+          "character": 34,
+          "scope": "<arrow-function>",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "previous",
+          "kind": "VariableBinding",
+          "line": 144,
+          "character": 13,
+          "scope": "<arrow-function>",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "key",
+          "kind": "VariableBinding",
+          "line": 150,
+          "character": 47,
+          "scope": "limit",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "value",
+          "kind": "VariableBinding",
+          "line": 150,
+          "character": 52,
+          "scope": "limit",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "authorization",
+          "kind": "MethodDeclaration",
+          "line": 153,
+          "character": 11,
+          "scope": "RelayService",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "operation",
+          "kind": "ParameterBinding",
+          "line": 153,
+          "character": 25,
+          "scope": "authorization",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "input",
+          "kind": "ParameterBinding",
+          "line": 153,
+          "character": 52,
+          "scope": "authorization",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "session",
+          "kind": "ParameterBinding",
+          "line": 153,
+          "character": 87,
+          "scope": "authorization",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "authorization",
+          "kind": "VariableBinding",
+          "line": 155,
+          "character": 11,
+          "scope": "authorization",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "unsigned",
+          "kind": "VariableBinding",
+          "line": 157,
+          "character": 11,
+          "scope": "authorization",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "prepareCommit",
+          "kind": "MethodDeclaration",
+          "line": 161,
+          "character": 11,
+          "scope": "RelayService",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "input",
+          "kind": "ParameterBinding",
+          "line": 161,
+          "character": 25,
+          "scope": "prepareCommit",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "wire",
+          "kind": "VariableBinding",
+          "line": 162,
+          "character": 11,
+          "scope": "prepareCommit",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "bytes",
+          "kind": "VariableBinding",
+          "line": 163,
+          "character": 11,
+          "scope": "prepareCommit",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "claim",
+          "kind": "VariableBinding",
+          "line": 164,
+          "character": 11,
+          "scope": "prepareCommit",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "header",
+          "kind": "VariableBinding",
+          "line": 165,
+          "character": 11,
+          "scope": "prepareCommit",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "receipts",
+          "kind": "VariableBinding",
+          "line": 167,
+          "character": 11,
+          "scope": "prepareCommit",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "receipt",
+          "kind": "VariableBinding",
+          "line": 168,
+          "character": 22,
+          "scope": "prepareCommit",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "binding",
+          "kind": "VariableBinding",
+          "line": 170,
+          "character": 11,
+          "scope": "prepareCommit",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "envelope",
+          "kind": "VariableBinding",
+          "line": 172,
+          "character": 11,
+          "scope": "prepareCommit",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "currentMember",
+          "kind": "MethodDeclaration",
+          "line": 177,
+          "character": 17,
+          "scope": "RelayService",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "client",
+          "kind": "ParameterBinding",
+          "line": 177,
+          "character": 31,
+          "scope": "currentMember",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "world",
+          "kind": "ParameterBinding",
+          "line": 177,
+          "character": 51,
+          "scope": "currentMember",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "session",
+          "kind": "ParameterBinding",
+          "line": 177,
+          "character": 71,
+          "scope": "currentMember",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "row",
+          "kind": "VariableBinding",
+          "line": 179,
+          "character": 11,
+          "scope": "currentMember",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "payload",
+          "kind": "PropertySignature",
+          "line": 179,
+          "character": 39,
+          "scope": "currentMember",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "c",
+          "kind": "ParameterBinding",
+          "line": 180,
+          "character": 47,
+          "scope": "<arrow-function>",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "verifyStoredSource",
+          "kind": "MethodDeclaration",
+          "line": 184,
+          "character": 17,
+          "scope": "RelayService",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "client",
+          "kind": "ParameterBinding",
+          "line": 184,
+          "character": 36,
+          "scope": "verifyStoredSource",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "world",
+          "kind": "ParameterBinding",
+          "line": 184,
+          "character": 56,
+          "scope": "verifyStoredSource",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "prepared",
+          "kind": "ParameterBinding",
+          "line": 184,
+          "character": 76,
+          "scope": "verifyStoredSource",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "wire",
+          "kind": "VariableBinding",
+          "line": 185,
+          "character": 13,
+          "scope": "verifyStoredSource",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "header",
+          "kind": "VariableBinding",
+          "line": 185,
+          "character": 19,
+          "scope": "verifyStoredSource",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "admission",
+          "kind": "VariableBinding",
+          "line": 186,
+          "character": 11,
+          "scope": "verifyStoredSource",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "segment",
+          "kind": "VariableBinding",
+          "line": 188,
+          "character": 11,
+          "scope": "verifyStoredSource",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "permit",
+          "kind": "VariableBinding",
+          "line": 189,
+          "character": 11,
+          "scope": "verifyStoredSource",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "epoch",
+          "kind": "VariableBinding",
+          "line": 190,
+          "character": 11,
+          "scope": "verifyStoredSource",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "bindings",
+          "kind": "VariableBinding",
+          "line": 191,
+          "character": 11,
+          "scope": "verifyStoredSource",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "row",
+          "kind": "ParameterBinding",
+          "line": 192,
+          "character": 249,
+          "scope": "<arrow-function>",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "membership",
+          "kind": "VariableBinding",
+          "line": 193,
+          "character": 11,
+          "scope": "verifyStoredSource",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "anchor",
+          "kind": "VariableBinding",
+          "line": 194,
+          "character": 11,
+          "scope": "verifyStoredSource",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "unsigned",
+          "kind": "VariableBinding",
+          "line": 195,
+          "character": 11,
+          "scope": "verifyStoredSource",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "roster",
+          "kind": "VariableBinding",
+          "line": 197,
+          "character": 11,
+          "scope": "verifyStoredSource",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "observer",
+          "kind": "VariableBinding",
+          "line": 199,
+          "character": 13,
+          "scope": "verifyStoredSource",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "submit",
+          "kind": "MethodDeclaration",
+          "line": 204,
+          "character": 17,
+          "scope": "RelayService",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "client",
+          "kind": "ParameterBinding",
+          "line": 204,
+          "character": 24,
+          "scope": "submit",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "world",
+          "kind": "ParameterBinding",
+          "line": 204,
+          "character": 44,
+          "scope": "submit",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "stream",
+          "kind": "ParameterBinding",
+          "line": 204,
+          "character": 64,
+          "scope": "submit",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "prepared",
+          "kind": "ParameterBinding",
+          "line": 204,
+          "character": 91,
+          "scope": "submit",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "nonce",
+          "kind": "ParameterBinding",
+          "line": 204,
+          "character": 122,
+          "scope": "submit",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "session",
+          "kind": "ParameterBinding",
+          "line": 204,
+          "character": 137,
+          "scope": "submit",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "wire",
+          "kind": "VariableBinding",
+          "line": 205,
+          "character": 13,
+          "scope": "submit",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "header",
+          "kind": "VariableBinding",
+          "line": 205,
+          "character": 19,
+          "scope": "submit",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "prior",
+          "kind": "VariableBinding",
+          "line": 208,
+          "character": 11,
+          "scope": "submit",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "current",
+          "kind": "VariableBinding",
+          "line": 214,
+          "character": 11,
+          "scope": "submit",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "position",
+          "kind": "VariableBinding",
+          "line": 217,
+          "character": 11,
+          "scope": "submit",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "admittedAt",
+          "kind": "VariableBinding",
+          "line": 218,
+          "character": 11,
+          "scope": "submit",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "retainedUntil",
+          "kind": "VariableBinding",
+          "line": 219,
+          "character": 11,
+          "scope": "submit",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "fact",
+          "kind": "VariableBinding",
+          "line": 221,
+          "character": 11,
+          "scope": "submit",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "receipt",
+          "kind": "VariableBinding",
+          "line": 222,
+          "character": 11,
+          "scope": "submit",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "omitted",
+          "kind": "VariableBinding",
+          "line": 223,
+          "character": 37,
+          "scope": "submit",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "proof",
+          "kind": "VariableBinding",
+          "line": 223,
+          "character": 49,
+          "scope": "submit",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "recipients",
+          "kind": "VariableBinding",
+          "line": 225,
+          "character": 11,
+          "scope": "submit",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "a",
+          "kind": "ParameterBinding",
+          "line": 225,
+          "character": 83,
+          "scope": "<arrow-function>",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "b",
+          "kind": "ParameterBinding",
+          "line": 225,
+          "character": 86,
+          "scope": "<arrow-function>",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "recipient",
+          "kind": "VariableBinding",
+          "line": 226,
+          "character": 16,
+          "scope": "submit",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "pull",
+          "kind": "MethodDeclaration",
+          "line": 232,
+          "character": 17,
+          "scope": "RelayService",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "client",
+          "kind": "ParameterBinding",
+          "line": 232,
+          "character": 22,
+          "scope": "pull",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "world",
+          "kind": "ParameterBinding",
+          "line": 232,
+          "character": 42,
+          "scope": "pull",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "stream",
+          "kind": "ParameterBinding",
+          "line": 232,
+          "character": 62,
+          "scope": "pull",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "payload",
+          "kind": "ParameterBinding",
+          "line": 232,
+          "character": 89,
+          "scope": "pull",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "session",
+          "kind": "ParameterBinding",
+          "line": 232,
+          "character": 104,
+          "scope": "pull",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "after",
+          "kind": "VariableBinding",
+          "line": 235,
+          "character": 11,
+          "scope": "pull",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "floor",
+          "kind": "VariableBinding",
+          "line": 236,
+          "character": 11,
+          "scope": "pull",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "gap",
+          "kind": "VariableBinding",
+          "line": 237,
+          "character": 11,
+          "scope": "pull",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "reason",
+          "kind": "ParameterBinding",
+          "line": 237,
+          "character": 18,
+          "scope": "<arrow-function>",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "rows",
+          "kind": "VariableBinding",
+          "line": 242,
+          "character": 11,
+          "scope": "pull",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "commits",
+          "kind": "VariableBinding",
+          "line": 243,
+          "character": 11,
+          "scope": "pull",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "next",
+          "kind": "VariableBinding",
+          "line": 244,
+          "character": 9,
+          "scope": "pull",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "row",
+          "kind": "VariableBinding",
+          "line": 245,
+          "character": 16,
+          "scope": "pull",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "commit",
+          "kind": "VariableBinding",
+          "line": 247,
+          "character": 13,
+          "scope": "pull",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "candidate",
+          "kind": "VariableBinding",
+          "line": 250,
+          "character": 13,
+          "scope": "pull",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "pullReceipt",
+          "kind": "MethodDeclaration",
+          "line": 261,
+          "character": 11,
+          "scope": "RelayService",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "batch",
+          "kind": "ParameterBinding",
+          "line": 261,
+          "character": 23,
+          "scope": "pullReceipt",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "nonce",
+          "kind": "ParameterBinding",
+          "line": 261,
+          "character": 46,
+          "scope": "pullReceipt",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "rememberPull",
+          "kind": "MethodDeclaration",
+          "line": 263,
+          "character": 11,
+          "scope": "RelayService",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "receipt",
+          "kind": "ParameterBinding",
+          "line": 263,
+          "character": 24,
+          "scope": "rememberPull",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "wire",
+          "kind": "ParameterBinding",
+          "line": 263,
+          "character": 39,
+          "scope": "rememberPull",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "payload",
+          "kind": "VariableBinding",
+          "line": 264,
+          "character": 11,
+          "scope": "rememberPull",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "entries",
+          "kind": "VariableBinding",
+          "line": 265,
+          "character": 11,
+          "scope": "rememberPull",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "commit",
+          "kind": "ParameterBinding",
+          "line": 265,
+          "character": 69,
+          "scope": "<arrow-function>",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "index",
+          "kind": "ParameterBinding",
+          "line": 265,
+          "character": 77,
+          "scope": "<arrow-function>",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "skeleton",
+          "kind": "VariableBinding",
+          "line": 266,
+          "character": 11,
+          "scope": "rememberPull",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "pullMemory",
+          "kind": "MethodDeclaration",
+          "line": 270,
+          "character": 11,
+          "scope": "RelayService",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "bytes",
+          "kind": "ParameterBinding",
+          "line": 270,
+          "character": 22,
+          "scope": "pullMemory",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "memory",
+          "kind": "VariableBinding",
+          "line": 271,
+          "character": 11,
+          "scope": "pullMemory",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "exact",
+          "kind": "VariableBinding",
+          "line": 272,
+          "character": 11,
+          "scope": "pullMemory",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "value",
+          "kind": "ParameterBinding",
+          "line": 272,
+          "character": 20,
+          "scope": "<arrow-function>",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "keys",
+          "kind": "ParameterBinding",
+          "line": 272,
+          "character": 36,
+          "scope": "<arrow-function>",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "skeletonWire",
+          "kind": "VariableBinding",
+          "line": 275,
+          "character": 11,
+          "scope": "pullMemory",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "position",
+          "kind": "VariableBinding",
+          "line": 278,
+          "character": 9,
+          "scope": "pullMemory",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "entry",
+          "kind": "VariableBinding",
+          "line": 279,
+          "character": 16,
+          "scope": "pullMemory",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "reconstructPull",
+          "kind": "MethodDeclaration",
+          "line": 287,
+          "character": 17,
+          "scope": "RelayService",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "client",
+          "kind": "ParameterBinding",
+          "line": 287,
+          "character": 33,
+          "scope": "reconstructPull",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "memory",
+          "kind": "ParameterBinding",
+          "line": 287,
+          "character": 53,
+          "scope": "reconstructPull",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "skeleton",
+          "kind": "VariableBinding",
+          "line": 288,
+          "character": 11,
+          "scope": "reconstructPull",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "commits",
+          "kind": "VariableBinding",
+          "line": 289,
+          "character": 11,
+          "scope": "reconstructPull",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "entry",
+          "kind": "VariableBinding",
+          "line": 290,
+          "character": 16,
+          "scope": "reconstructPull",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "row",
+          "kind": "VariableBinding",
+          "line": 291,
+          "character": 13,
+          "scope": "reconstructPull",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "payload",
+          "kind": "VariableBinding",
+          "line": 295,
+          "character": 11,
+          "scope": "reconstructPull",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "receipt",
+          "kind": "VariableBinding",
+          "line": 296,
+          "character": 11,
+          "scope": "reconstructPull",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "wire",
+          "kind": "VariableBinding",
+          "line": 297,
+          "character": 11,
+          "scope": "reconstructPull",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "acknowledge",
+          "kind": "MethodDeclaration",
+          "line": 302,
+          "character": 17,
+          "scope": "RelayService",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "client",
+          "kind": "ParameterBinding",
+          "line": 302,
+          "character": 29,
+          "scope": "acknowledge",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "world",
+          "kind": "ParameterBinding",
+          "line": 302,
+          "character": 49,
+          "scope": "acknowledge",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "stream",
+          "kind": "ParameterBinding",
+          "line": 302,
+          "character": 69,
+          "scope": "acknowledge",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "payload",
+          "kind": "ParameterBinding",
+          "line": 302,
+          "character": 96,
+          "scope": "acknowledge",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "nonce",
+          "kind": "ParameterBinding",
+          "line": 302,
+          "character": 122,
+          "scope": "acknowledge",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "session",
+          "kind": "ParameterBinding",
+          "line": 302,
+          "character": 137,
+          "scope": "acknowledge",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "unsigned",
+          "kind": "VariableBinding",
+          "line": 305,
+          "character": 11,
+          "scope": "acknowledge",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "entry",
+          "kind": "VariableBinding",
+          "line": 307,
+          "character": 16,
+          "scope": "acknowledge",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "row",
+          "kind": "VariableBinding",
+          "line": 308,
+          "character": 13,
+          "scope": "acknowledge",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "entriesSha",
+          "kind": "VariableBinding",
+          "line": 311,
+          "character": 11,
+          "scope": "acknowledge",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "fact",
+          "kind": "VariableBinding",
+          "line": 312,
+          "character": 11,
+          "scope": "acknowledge",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "receipt",
+          "kind": "VariableBinding",
+          "line": 313,
+          "character": 11,
+          "scope": "acknowledge",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "entry",
+          "kind": "VariableBinding",
+          "line": 314,
+          "character": 16,
+          "scope": "acknowledge",
+          "topLevel": false,
+          "exported": false
+        }
+      ],
+      "topLevelDeclarations": [
+        {
+          "name": "Data",
+          "kind": "TypeAliasDeclaration",
+          "line": 16,
+          "character": 6,
+          "scope": "<module>",
+          "topLevel": true,
+          "exported": false
+        },
+        {
+          "name": "RelayOperation",
+          "kind": "TypeAliasDeclaration",
+          "line": 17,
+          "character": 6,
+          "scope": "<module>",
+          "topLevel": true,
+          "exported": false
+        },
+        {
+          "name": "PreparedRelayCommit",
+          "kind": "InterfaceDeclaration",
+          "line": 18,
+          "character": 11,
+          "scope": "<module>",
+          "topLevel": true,
+          "exported": false
+        },
+        {
+          "name": "RelayPullResultMemory",
+          "kind": "InterfaceDeclaration",
+          "line": 19,
+          "character": 11,
+          "scope": "<module>",
+          "topLevel": true,
+          "exported": false
+        },
+        {
+          "name": "RETENTION_MS",
+          "kind": "VariableBinding",
+          "line": 26,
+          "character": 7,
+          "scope": "<module>",
+          "topLevel": true,
+          "exported": false
+        },
+        {
+          "name": "MAX_CURSOR",
+          "kind": "VariableBinding",
+          "line": 27,
+          "character": 7,
+          "scope": "<module>",
+          "topLevel": true,
+          "exported": false
+        },
+        {
+          "name": "RESPONSE_LIMIT",
+          "kind": "VariableBinding",
+          "line": 28,
+          "character": 7,
+          "scope": "<module>",
+          "topLevel": true,
+          "exported": false
+        },
+        {
+          "name": "fail",
+          "kind": "FunctionDeclaration",
+          "line": 29,
+          "character": 10,
+          "scope": "<module>",
+          "topLevel": true,
+          "exported": false
+        },
+        {
+          "name": "same",
+          "kind": "FunctionDeclaration",
+          "line": 30,
+          "character": 10,
+          "scope": "<module>",
+          "topLevel": true,
+          "exported": false
+        },
+        {
+          "name": "fromBytes",
+          "kind": "FunctionDeclaration",
+          "line": 31,
+          "character": 10,
+          "scope": "<module>",
+          "topLevel": true,
+          "exported": false
+        },
+        {
+          "name": "RelayService",
+          "kind": "ClassDeclaration",
+          "line": 34,
+          "character": 14,
+          "scope": "<module>",
+          "topLevel": true,
+          "exported": true
+        }
+      ],
+      "publicExports": [
+        {
+          "name": "RelayService",
+          "kind": "ClassDeclaration",
+          "line": 34
+        }
+      ],
+      "exportReferences": [],
+      "parseDiagnostics": []
+    },
+    {
+      "path": "server/src/RelayRoute.ts",
+      "bytes": 3840,
+      "sha256": "d15e6323479eb36b8f7ada83578c628d287db252e2eb78e6f27799236971bd6b",
+      "declarationCount": 27,
+      "declarations": [
+        {
+          "name": "operations",
+          "kind": "VariableBinding",
+          "line": 8,
+          "character": 7,
+          "scope": "<module>",
+          "topLevel": true,
+          "exported": false
+        },
+        {
+          "name": "schemaFailure",
+          "kind": "FunctionDeclaration",
+          "line": 10,
+          "character": 10,
+          "scope": "<module>",
+          "topLevel": true,
+          "exported": false
+        },
+        {
+          "name": "error",
+          "kind": "ParameterBinding",
+          "line": 10,
+          "character": 24,
+          "scope": "schemaFailure",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "request",
+          "kind": "ParameterBinding",
+          "line": 10,
+          "character": 50,
+          "scope": "schemaFailure",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "value",
+          "kind": "VariableBinding",
+          "line": 14,
+          "character": 11,
+          "scope": "schemaFailure",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "version",
+          "kind": "VariableBinding",
+          "line": 16,
+          "character": 13,
+          "scope": "schemaFailure",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "relayRoutes",
+          "kind": "FunctionDeclaration",
+          "line": 24,
+          "character": 23,
+          "scope": "<module>",
+          "topLevel": true,
+          "exported": true
+        },
+        {
+          "name": "app",
+          "kind": "ParameterBinding",
+          "line": 24,
+          "character": 35,
+          "scope": "relayRoutes",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "service",
+          "kind": "ParameterBinding",
+          "line": 24,
+          "character": 57,
+          "scope": "relayRoutes",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "_request",
+          "kind": "ParameterBinding",
+          "line": 26,
+          "character": 72,
+          "scope": "<arrow-function>",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "source",
+          "kind": "ParameterBinding",
+          "line": 26,
+          "character": 82,
+          "scope": "<arrow-function>",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "done",
+          "kind": "ParameterBinding",
+          "line": 26,
+          "character": 90,
+          "scope": "<arrow-function>",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "error",
+          "kind": "ParameterBinding",
+          "line": 27,
+          "character": 24,
+          "scope": "<arrow-function>",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "request",
+          "kind": "ParameterBinding",
+          "line": 27,
+          "character": 31,
+          "scope": "<arrow-function>",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "reply",
+          "kind": "ParameterBinding",
+          "line": 27,
+          "character": 40,
+          "scope": "<arrow-function>",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "legacy",
+          "kind": "VariableBinding",
+          "line": 28,
+          "character": 11,
+          "scope": "<arrow-function>",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "statusCode",
+          "kind": "PropertySignature",
+          "line": 28,
+          "character": 39,
+          "scope": "<arrow-function>",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "code",
+          "kind": "PropertySignature",
+          "line": 28,
+          "character": 60,
+          "scope": "<arrow-function>",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "fault",
+          "kind": "VariableBinding",
+          "line": 29,
+          "character": 9,
+          "scope": "<arrow-function>",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "nonce",
+          "kind": "VariableBinding",
+          "line": 37,
+          "character": 9,
+          "scope": "<arrow-function>",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "operation",
+          "kind": "VariableBinding",
+          "line": 41,
+          "character": 15,
+          "scope": "relayRoutes",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "bodyLimit",
+          "kind": "VariableBinding",
+          "line": 41,
+          "character": 26,
+          "scope": "relayRoutes",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "Body",
+          "kind": "PropertySignature",
+          "line": 42,
+          "character": 16,
+          "scope": "relayRoutes",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "request",
+          "kind": "ParameterBinding",
+          "line": 42,
+          "character": 84,
+          "scope": "<arrow-function>",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "reply",
+          "kind": "ParameterBinding",
+          "line": 42,
+          "character": 93,
+          "scope": "<arrow-function>",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "input",
+          "kind": "VariableBinding",
+          "line": 43,
+          "character": 13,
+          "scope": "<arrow-function>",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "result",
+          "kind": "VariableBinding",
+          "line": 44,
+          "character": 13,
+          "scope": "<arrow-function>",
+          "topLevel": false,
+          "exported": false
+        }
+      ],
+      "topLevelDeclarations": [
+        {
+          "name": "operations",
+          "kind": "VariableBinding",
+          "line": 8,
+          "character": 7,
+          "scope": "<module>",
+          "topLevel": true,
+          "exported": false
+        },
+        {
+          "name": "schemaFailure",
+          "kind": "FunctionDeclaration",
+          "line": 10,
+          "character": 10,
+          "scope": "<module>",
+          "topLevel": true,
+          "exported": false
+        },
+        {
+          "name": "relayRoutes",
+          "kind": "FunctionDeclaration",
+          "line": 24,
+          "character": 23,
+          "scope": "<module>",
+          "topLevel": true,
+          "exported": true
+        }
+      ],
+      "publicExports": [
+        {
+          "name": "relayRoutes",
+          "kind": "FunctionDeclaration",
+          "line": 24
+        }
+      ],
+      "exportReferences": [],
+      "parseDiagnostics": []
+    },
+    {
+      "path": "server/src/buildRelayServer.ts",
+      "bytes": 2603,
+      "sha256": "89f08e60c8c1a699c585384047bf003e981f19ba6b8043193712f10aa9798430",
+      "declarationCount": 24,
+      "declarations": [
+        {
+          "name": "buildRelayServer",
+          "kind": "FunctionDeclaration",
+          "line": 15,
+          "character": 23,
+          "scope": "<module>",
+          "topLevel": true,
+          "exported": true
+        },
+        {
+          "name": "config",
+          "kind": "ParameterBinding",
+          "line": 15,
+          "character": 40,
+          "scope": "buildRelayServer",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "pool",
+          "kind": "ParameterBinding",
+          "line": 15,
+          "character": 68,
+          "scope": "buildRelayServer",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "authSigner",
+          "kind": "ParameterBinding",
+          "line": 15,
+          "character": 80,
+          "scope": "buildRelayServer",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "sharedSigner",
+          "kind": "ParameterBinding",
+          "line": 15,
+          "character": 107,
+          "scope": "buildRelayServer",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "buildIsolatedRelayServer",
+          "kind": "FunctionDeclaration",
+          "line": 20,
+          "character": 23,
+          "scope": "<module>",
+          "topLevel": true,
+          "exported": true
+        },
+        {
+          "name": "config",
+          "kind": "ParameterBinding",
+          "line": 20,
+          "character": 48,
+          "scope": "buildIsolatedRelayServer",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "pool",
+          "kind": "ParameterBinding",
+          "line": 20,
+          "character": 76,
+          "scope": "buildIsolatedRelayServer",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "authSigner",
+          "kind": "ParameterBinding",
+          "line": 20,
+          "character": 88,
+          "scope": "buildIsolatedRelayServer",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "sharedSigner",
+          "kind": "ParameterBinding",
+          "line": 20,
+          "character": 115,
+          "scope": "buildIsolatedRelayServer",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "clock",
+          "kind": "ParameterBinding",
+          "line": 20,
+          "character": 150,
+          "scope": "buildIsolatedRelayServer",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "build",
+          "kind": "FunctionDeclaration",
+          "line": 24,
+          "character": 16,
+          "scope": "<module>",
+          "topLevel": true,
+          "exported": false
+        },
+        {
+          "name": "config",
+          "kind": "ParameterBinding",
+          "line": 24,
+          "character": 22,
+          "scope": "build",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "pool",
+          "kind": "ParameterBinding",
+          "line": 24,
+          "character": 50,
+          "scope": "build",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "authSigner",
+          "kind": "ParameterBinding",
+          "line": 24,
+          "character": 62,
+          "scope": "build",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "sharedSigner",
+          "kind": "ParameterBinding",
+          "line": 24,
+          "character": 89,
+          "scope": "build",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "clock",
+          "kind": "ParameterBinding",
+          "line": 24,
+          "character": 124,
+          "scope": "build",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "pin",
+          "kind": "ParameterBinding",
+          "line": 27,
+          "character": 37,
+          "scope": "<arrow-function>",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "app",
+          "kind": "VariableBinding",
+          "line": 28,
+          "character": 9,
+          "scope": "build",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "authority",
+          "kind": "VariableBinding",
+          "line": 32,
+          "character": 11,
+          "scope": "build",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "relay",
+          "kind": "VariableBinding",
+          "line": 33,
+          "character": 11,
+          "scope": "build",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "child",
+          "kind": "ParameterBinding",
+          "line": 34,
+          "character": 30,
+          "scope": "<arrow-function>",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "child",
+          "kind": "ParameterBinding",
+          "line": 35,
+          "character": 30,
+          "scope": "<arrow-function>",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "error",
+          "kind": "VariableBinding",
+          "line": 37,
+          "character": 12,
+          "scope": "build",
+          "topLevel": false,
+          "exported": false
+        }
+      ],
+      "topLevelDeclarations": [
+        {
+          "name": "buildRelayServer",
+          "kind": "FunctionDeclaration",
+          "line": 15,
+          "character": 23,
+          "scope": "<module>",
+          "topLevel": true,
+          "exported": true
+        },
+        {
+          "name": "buildIsolatedRelayServer",
+          "kind": "FunctionDeclaration",
+          "line": 20,
+          "character": 23,
+          "scope": "<module>",
+          "topLevel": true,
+          "exported": true
+        },
+        {
+          "name": "build",
+          "kind": "FunctionDeclaration",
+          "line": 24,
+          "character": 16,
+          "scope": "<module>",
+          "topLevel": true,
+          "exported": false
+        }
+      ],
+      "publicExports": [
+        {
+          "name": "buildRelayServer",
+          "kind": "FunctionDeclaration",
+          "line": 15
+        },
+        {
+          "name": "buildIsolatedRelayServer",
+          "kind": "FunctionDeclaration",
+          "line": 20
+        }
+      ],
+      "exportReferences": [],
+      "parseDiagnostics": []
+    },
+    {
+      "path": "src/presentation/RealCommitRelayAdapter.ts",
+      "bytes": 12005,
+      "sha256": "ec4b5d8cb11caf06f499d65706a64cd880ce8c7f3ba849ff557225cebd9fd9a9",
+      "declarationCount": 101,
+      "declarations": [
+        {
+          "name": "RelayClientFault",
+          "kind": "ClassDeclaration",
+          "line": 9,
+          "character": 7,
+          "scope": "<module>",
+          "topLevel": true,
+          "exported": false
+        },
+        {
+          "name": "constructor",
+          "kind": "Constructor",
+          "line": 10,
+          "character": 3,
+          "scope": "RelayClientFault",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "code",
+          "kind": "ParameterBinding",
+          "line": 10,
+          "character": 24,
+          "scope": "constructor",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "detail",
+          "kind": "ParameterBinding",
+          "line": 10,
+          "character": 67,
+          "scope": "constructor",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "RealCommitRelayAdapter",
+          "kind": "ClassDeclaration",
+          "line": 16,
+          "character": 14,
+          "scope": "<module>",
+          "topLevel": true,
+          "exported": true
+        },
+        {
+          "name": "mode",
+          "kind": "PropertyDeclaration",
+          "line": 17,
+          "character": 12,
+          "scope": "RealCommitRelayAdapter",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "constructor",
+          "kind": "Constructor",
+          "line": 19,
+          "character": 3,
+          "scope": "RealCommitRelayAdapter",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "session",
+          "kind": "ParameterBinding",
+          "line": 19,
+          "character": 32,
+          "scope": "constructor",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "signer",
+          "kind": "ParameterBinding",
+          "line": 20,
+          "character": 22,
+          "scope": "constructor",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "codec",
+          "kind": "ParameterBinding",
+          "line": 21,
+          "character": 22,
+          "scope": "constructor",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "validator",
+          "kind": "ParameterBinding",
+          "line": 22,
+          "character": 22,
+          "scope": "constructor",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "cache",
+          "kind": "ParameterBinding",
+          "line": 23,
+          "character": 22,
+          "scope": "constructor",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "relay",
+          "kind": "MethodDeclaration",
+          "line": 25,
+          "character": 3,
+          "scope": "RealCommitRelayAdapter",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "commit",
+          "kind": "ParameterBinding",
+          "line": 25,
+          "character": 9,
+          "scope": "relay",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "submit",
+          "kind": "MethodDeclaration",
+          "line": 29,
+          "character": 9,
+          "scope": "RealCommitRelayAdapter",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "commit",
+          "kind": "ParameterBinding",
+          "line": 29,
+          "character": 16,
+          "scope": "submit",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "requestNonce",
+          "kind": "VariableBinding",
+          "line": 30,
+          "character": 11,
+          "scope": "submit",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "stable",
+          "kind": "VariableBinding",
+          "line": 32,
+          "character": 13,
+          "scope": "submit",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "reply",
+          "kind": "VariableBinding",
+          "line": 34,
+          "character": 13,
+          "scope": "submit",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "fact",
+          "kind": "VariableBinding",
+          "line": 36,
+          "character": 15,
+          "scope": "submit",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "claim",
+          "kind": "VariableBinding",
+          "line": 37,
+          "character": 15,
+          "scope": "submit",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "admission",
+          "kind": "VariableBinding",
+          "line": 38,
+          "character": 15,
+          "scope": "submit",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "error",
+          "kind": "VariableBinding",
+          "line": 48,
+          "character": 14,
+          "scope": "submit",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "pull",
+          "kind": "MethodDeclaration",
+          "line": 51,
+          "character": 9,
+          "scope": "RealCommitRelayAdapter",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "worldId",
+          "kind": "ParameterBinding",
+          "line": 51,
+          "character": 14,
+          "scope": "pull",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "after",
+          "kind": "ParameterBinding",
+          "line": 51,
+          "character": 31,
+          "scope": "pull",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "maximumCount",
+          "kind": "ParameterBinding",
+          "line": 51,
+          "character": 51,
+          "scope": "pull",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "maximumWaitMs",
+          "kind": "ParameterBinding",
+          "line": 52,
+          "character": 5,
+          "scope": "pull",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "requestNonce",
+          "kind": "VariableBinding",
+          "line": 53,
+          "character": 11,
+          "scope": "pull",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "payload",
+          "kind": "VariableBinding",
+          "line": 55,
+          "character": 13,
+          "scope": "pull",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "reply",
+          "kind": "VariableBinding",
+          "line": 57,
+          "character": 13,
+          "scope": "pull",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "batch",
+          "kind": "VariableBinding",
+          "line": 59,
+          "character": 15,
+          "scope": "pull",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "commit",
+          "kind": "ParameterBinding",
+          "line": 70,
+          "character": 35,
+          "scope": "<arrow-function>",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "error",
+          "kind": "VariableBinding",
+          "line": 77,
+          "character": 14,
+          "scope": "pull",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "acknowledge",
+          "kind": "MethodDeclaration",
+          "line": 80,
+          "character": 9,
+          "scope": "RealCommitRelayAdapter",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "request",
+          "kind": "ParameterBinding",
+          "line": 80,
+          "character": 21,
+          "scope": "acknowledge",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "requestNonce",
+          "kind": "VariableBinding",
+          "line": 82,
+          "character": 11,
+          "scope": "acknowledge",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "stable",
+          "kind": "VariableBinding",
+          "line": 84,
+          "character": 13,
+          "scope": "acknowledge",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "context",
+          "kind": "VariableBinding",
+          "line": 86,
+          "character": 13,
+          "scope": "acknowledge",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "entry",
+          "kind": "VariableBinding",
+          "line": 91,
+          "character": 18,
+          "scope": "acknowledge",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "source",
+          "kind": "VariableBinding",
+          "line": 92,
+          "character": 15,
+          "scope": "acknowledge",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "candidate",
+          "kind": "VariableBinding",
+          "line": 95,
+          "character": 15,
+          "scope": "acknowledge",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "validated",
+          "kind": "VariableBinding",
+          "line": 102,
+          "character": 15,
+          "scope": "acknowledge",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "confirmation",
+          "kind": "VariableBinding",
+          "line": 114,
+          "character": 15,
+          "scope": "acknowledge",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "readBack",
+          "kind": "VariableBinding",
+          "line": 116,
+          "character": 15,
+          "scope": "acknowledge",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "unsignedAck",
+          "kind": "VariableBinding",
+          "line": 127,
+          "character": 13,
+          "scope": "acknowledge",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "deviceSignatureBase64Url",
+          "kind": "VariableBinding",
+          "line": 129,
+          "character": 13,
+          "scope": "acknowledge",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "payload",
+          "kind": "VariableBinding",
+          "line": 131,
+          "character": 13,
+          "scope": "acknowledge",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "reply",
+          "kind": "VariableBinding",
+          "line": 133,
+          "character": 13,
+          "scope": "acknowledge",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "fact",
+          "kind": "VariableBinding",
+          "line": 135,
+          "character": 15,
+          "scope": "acknowledge",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "entriesSha256",
+          "kind": "VariableBinding",
+          "line": 136,
+          "character": 15,
+          "scope": "acknowledge",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "error",
+          "kind": "VariableBinding",
+          "line": 146,
+          "character": 14,
+          "scope": "acknowledge",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "invoke",
+          "kind": "MethodDeclaration",
+          "line": 149,
+          "character": 17,
+          "scope": "RealCommitRelayAdapter",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "O",
+          "kind": "TypeParameterBinding",
+          "line": 149,
+          "character": 24,
+          "scope": "invoke",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "operation",
+          "kind": "ParameterBinding",
+          "line": 149,
+          "character": 59,
+          "scope": "invoke",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "payload",
+          "kind": "ParameterBinding",
+          "line": 150,
+          "character": 5,
+          "scope": "invoke",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "requestNonce",
+          "kind": "ParameterBinding",
+          "line": 150,
+          "character": 43,
+          "scope": "invoke",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "reply",
+          "kind": "VariableBinding",
+          "line": 152,
+          "character": 11,
+          "scope": "invoke",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "parsed",
+          "kind": "VariableBinding",
+          "line": 153,
+          "character": 11,
+          "scope": "invoke",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "requireContext",
+          "kind": "MethodDeclaration",
+          "line": 161,
+          "character": 11,
+          "scope": "RealCommitRelayAdapter",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "value",
+          "kind": "VariableBinding",
+          "line": 162,
+          "character": 11,
+          "scope": "requireContext",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "assertCurrent",
+          "kind": "MethodDeclaration",
+          "line": 167,
+          "character": 11,
+          "scope": "RealCommitRelayAdapter",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "context",
+          "kind": "ParameterBinding",
+          "line": 167,
+          "character": 25,
+          "scope": "assertCurrent",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "current",
+          "kind": "VariableBinding",
+          "line": 168,
+          "character": 11,
+          "scope": "assertCurrent",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "same",
+          "kind": "MethodDeclaration",
+          "line": 175,
+          "character": 11,
+          "scope": "RealCommitRelayAdapter",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "first",
+          "kind": "ParameterBinding",
+          "line": 175,
+          "character": 16,
+          "scope": "same",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "second",
+          "kind": "ParameterBinding",
+          "line": 175,
+          "character": 32,
+          "scope": "same",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "copy",
+          "kind": "MethodDeclaration",
+          "line": 179,
+          "character": 11,
+          "scope": "RealCommitRelayAdapter",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "T",
+          "kind": "TypeParameterBinding",
+          "line": 179,
+          "character": 16,
+          "scope": "copy",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "value",
+          "kind": "ParameterBinding",
+          "line": 179,
+          "character": 19,
+          "scope": "copy",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "failure",
+          "kind": "MethodDeclaration",
+          "line": 181,
+          "character": 11,
+          "scope": "RealCommitRelayAdapter",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "error",
+          "kind": "ParameterBinding",
+          "line": 181,
+          "character": 19,
+          "scope": "failure",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "requestNonce",
+          "kind": "ParameterBinding",
+          "line": 181,
+          "character": 35,
+          "scope": "failure",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "kind",
+          "kind": "PropertySignature",
+          "line": 181,
+          "character": 69,
+          "scope": "failure",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "fault",
+          "kind": "PropertySignature",
+          "line": 181,
+          "character": 96,
+          "scope": "failure",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "schemaFailure",
+          "kind": "VariableBinding",
+          "line": 182,
+          "character": 11,
+          "scope": "failure",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "code",
+          "kind": "PropertySignature",
+          "line": 183,
+          "character": 102,
+          "scope": "failure",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "code",
+          "kind": "VariableBinding",
+          "line": 184,
+          "character": 11,
+          "scope": "failure",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "detail",
+          "kind": "VariableBinding",
+          "line": 185,
+          "character": 11,
+          "scope": "failure",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "comparePosition",
+          "kind": "FunctionDeclaration",
+          "line": 192,
+          "character": 10,
+          "scope": "<module>",
+          "topLevel": true,
+          "exported": false
+        },
+        {
+          "name": "first",
+          "kind": "ParameterBinding",
+          "line": 192,
+          "character": 26,
+          "scope": "comparePosition",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "second",
+          "kind": "ParameterBinding",
+          "line": 192,
+          "character": 41,
+          "scope": "comparePosition",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "advancePosition",
+          "kind": "FunctionDeclaration",
+          "line": 197,
+          "character": 10,
+          "scope": "<module>",
+          "topLevel": true,
+          "exported": false
+        },
+        {
+          "name": "position",
+          "kind": "ParameterBinding",
+          "line": 197,
+          "character": 26,
+          "scope": "advancePosition",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "count",
+          "kind": "ParameterBinding",
+          "line": 197,
+          "character": 44,
+          "scope": "advancePosition",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "digits",
+          "kind": "VariableBinding",
+          "line": 198,
+          "character": 9,
+          "scope": "advancePosition",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "carry",
+          "kind": "VariableBinding",
+          "line": 199,
+          "character": 7,
+          "scope": "advancePosition",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "index",
+          "kind": "VariableBinding",
+          "line": 200,
+          "character": 12,
+          "scope": "advancePosition",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "value",
+          "kind": "VariableBinding",
+          "line": 201,
+          "character": 11,
+          "scope": "advancePosition",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "envelopeDigest",
+          "kind": "FunctionDeclaration",
+          "line": 208,
+          "character": 16,
+          "scope": "<module>",
+          "topLevel": true,
+          "exported": false
+        },
+        {
+          "name": "value",
+          "kind": "ParameterBinding",
+          "line": 208,
+          "character": 31,
+          "scope": "envelopeDigest",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "binary",
+          "kind": "VariableBinding",
+          "line": 209,
+          "character": 9,
+          "scope": "envelopeDigest",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "bytes",
+          "kind": "VariableBinding",
+          "line": 210,
+          "character": 9,
+          "scope": "envelopeDigest",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "index",
+          "kind": "VariableBinding",
+          "line": 211,
+          "character": 12,
+          "scope": "envelopeDigest",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "textDigest",
+          "kind": "FunctionDeclaration",
+          "line": 215,
+          "character": 16,
+          "scope": "<module>",
+          "topLevel": true,
+          "exported": false
+        },
+        {
+          "name": "value",
+          "kind": "ParameterBinding",
+          "line": 215,
+          "character": 27,
+          "scope": "textDigest",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "hexDigest",
+          "kind": "FunctionDeclaration",
+          "line": 219,
+          "character": 16,
+          "scope": "<module>",
+          "topLevel": true,
+          "exported": false
+        },
+        {
+          "name": "bytes",
+          "kind": "ParameterBinding",
+          "line": 219,
+          "character": 26,
+          "scope": "hexDigest",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "digest",
+          "kind": "VariableBinding",
+          "line": 220,
+          "character": 9,
+          "scope": "hexDigest",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "result",
+          "kind": "VariableBinding",
+          "line": 221,
+          "character": 7,
+          "scope": "hexDigest",
+          "topLevel": false,
+          "exported": false
+        },
+        {
+          "name": "byte",
+          "kind": "VariableBinding",
+          "line": 222,
+          "character": 14,
+          "scope": "hexDigest",
+          "topLevel": false,
+          "exported": false
+        }
+      ],
+      "topLevelDeclarations": [
+        {
+          "name": "RelayClientFault",
+          "kind": "ClassDeclaration",
+          "line": 9,
+          "character": 7,
+          "scope": "<module>",
+          "topLevel": true,
+          "exported": false
+        },
+        {
+          "name": "RealCommitRelayAdapter",
+          "kind": "ClassDeclaration",
+          "line": 16,
+          "character": 14,
+          "scope": "<module>",
+          "topLevel": true,
+          "exported": true
+        },
+        {
+          "name": "comparePosition",
+          "kind": "FunctionDeclaration",
+          "line": 192,
+          "character": 10,
+          "scope": "<module>",
+          "topLevel": true,
+          "exported": false
+        },
+        {
+          "name": "advancePosition",
+          "kind": "FunctionDeclaration",
+          "line": 197,
+          "character": 10,
+          "scope": "<module>",
+          "topLevel": true,
+          "exported": false
+        },
+        {
+          "name": "envelopeDigest",
+          "kind": "FunctionDeclaration",
+          "line": 208,
+          "character": 16,
+          "scope": "<module>",
+          "topLevel": true,
+          "exported": false
+        },
+        {
+          "name": "textDigest",
+          "kind": "FunctionDeclaration",
+          "line": 215,
+          "character": 16,
+          "scope": "<module>",
+          "topLevel": true,
+          "exported": false
+        },
+        {
+          "name": "hexDigest",
+          "kind": "FunctionDeclaration",
+          "line": 219,
+          "character": 16,
+          "scope": "<module>",
+          "topLevel": true,
+          "exported": false
+        }
+      ],
+      "publicExports": [
+        {
+          "name": "RealCommitRelayAdapter",
+          "kind": "ClassDeclaration",
+          "line": 16
+        }
+      ],
+      "exportReferences": [],
+      "parseDiagnostics": []
+    }
+  ],
+  "approvedP10LocalDeclarationDelta": {
+    "path": "src/presentation/RealSharedServiceSessionAdapter.ts",
+    "added": [
+      {
+        "name": "requestLimitMs",
+        "kind": "VariableBinding",
+        "line": 235,
+        "character": 13,
+        "scope": "request",
+        "topLevel": false,
+        "exported": false
+      },
+      {
+        "name": "maximumWaitMs",
+        "kind": "PropertySignature",
+        "line": 236,
+        "character": 34,
+        "scope": "request",
+        "topLevel": false,
+        "exported": false
+      }
+    ],
+    "removed": [],
+    "beforeSha256": "46238bab2bd3d082622d0b22ba2e3cb82f0330b40f77d70c4de6b229b8af1f8e",
+    "currentSha256": "8a1b8d778fc1d25e4c93855a2929b2c7fe3dded476599b250863a163edd2c452"
+  },
+  "intentTypeOnlyReferences": [
+    {
+      "name": "SharedCommitValidator",
+      "sourceName": "SharedCommitValidator",
+      "typeOnly": true,
+      "module": "./SharedCommitValidator"
+    },
+    {
+      "name": "ValidatedSharedCommit",
+      "sourceName": "ValidatedSharedCommit",
+      "typeOnly": true,
+      "module": "./SharedCommitValidator"
+    },
+    {
+      "name": "SharedValidationResult",
+      "sourceName": "SharedValidationResult",
+      "typeOnly": true,
+      "module": "./SharedCommitValidator"
+    }
+  ],
+  "acceptedC2bCounts": {
+    "reference": "quality-review/b2-5c-2b/evidence/new-names.json",
+    "referenceSha256": "4c3067924c8b15971735b306791903bb5e26b2675499846c06ceebc85ff83931",
+    "newImplementationTsFiles": 17,
+    "publicTopLevelDeclarations": 64,
+    "sharedProtocolPublicTypes": 37
+  },
+  "cumulativeAdditiveCounts": {
+    "newImplementationTsFiles": 22,
+    "publicTopLevelDeclarations": 72,
+    "sharedProtocolPublicTypes": 37
+  },
+  "excluded": [
+    "Imports",
+    "Pre-existing source declarations except explicit P10 local delta",
+    "Generated copies",
+    "Test/harness declarations",
+    "IntentPort type-only re-export references"
+  ],
+  "policy": "Public export count means top-level exported declaration occurrences in new implementation TS files only: class/interface/type/function/enum/variable declarations. It excludes methods, fields, parameters, locals, imports, re-exports, tests and generated copies. The accepted c-2b 64 count and 37 protocol types are distinct subscopes; c-2c uses the same top-level-declaration counting rule and reports incremental and cumulative values. Mechanical declaration inventory is not independent namebook approval.",
+  "pass": true
+}

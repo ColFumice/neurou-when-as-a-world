@@ -1,0 +1,27 @@
+{
+  "generatedUtc": "2026-10-11T08:04:58.739Z",
+  "checks": [
+    {
+      "name": "SharedServiceProtocolContracts.js",
+      "pureProtocolSha256": "d43aa81f5bc89faa359e0f97c814ba25155591ff078fbb9bfd40f8c7c9683230",
+      "finalIsolatedSha256": "d43aa81f5bc89faa359e0f97c814ba25155591ff078fbb9bfd40f8c7c9683230"
+    },
+    {
+      "name": "SharedServiceProtocolCodec.js",
+      "pureProtocolSha256": "1182df7457e9d45d91f435ca2f8243657ba5f332da8ad972c3458fcd72a20694",
+      "finalIsolatedSha256": "1182df7457e9d45d91f435ca2f8243657ba5f332da8ad972c3458fcd72a20694"
+    },
+    {
+      "name": "SharedCanonicalBytes.js",
+      "pureProtocolSha256": "ceaa486b54f0c7ca1096c301149514124940fcdf9b6acca1ece9e902b0c71cb2",
+      "finalIsolatedSha256": "ceaa486b54f0c7ca1096c301149514124940fcdf9b6acca1ece9e902b0c71cb2"
+    },
+    {
+      "name": "SharedCommitCodec.js",
+      "pureProtocolSha256": "7ec12d746e544e095b41dbe4717700e280a38c007bbd77918fabec585d4cef5b",
+      "finalIsolatedSha256": "7ec12d746e544e095b41dbe4717700e280a38c007bbd77918fabec585d4cef5b"
+    }
+  ],
+  "pass": true,
+  "scope": "Existing 32 pure protocol checks used byte-identical JS to final current-source isolated ES2020 compilation; no stale compiler output."
+}

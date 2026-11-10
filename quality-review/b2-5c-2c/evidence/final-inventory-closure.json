@@ -1,0 +1,11 @@
+{
+  "phase": "c2c final inventory closure",
+  "checkedUtc": "2026-10-11T10:21:07.771Z",
+  "pass": true,
+  "indexSha256": "4cbf509509bc022729735b295765bcc317dd43e207ded533ecb3bf7a442d73de",
+  "artifactCount": 399,
+  "mismatches": [],
+  "missingReferences": [],
+  "changedSource": [],
+  "limits": "Read-only closure of final manifest and references; closure record intentionally created after manifest and not recursively indexed."
+}

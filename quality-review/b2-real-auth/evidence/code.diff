@@ -1,0 +1,2524 @@
+diff --git a/src/director/IntentPort.ts b/src/director/IntentPort.ts
+--- a/src/director/IntentPort.ts
++++ b/src/director/IntentPort.ts
+@@ -1040,3 +1040,9 @@
+   RealityPauseRecord, DeviceAccountBinding, RestrictedMigrationCorePayload, MigrationReceipt,
+   MigrationAdmission, MigrationAuthorityPort, WorldMigrationPhase, WorldMigrationEntry,
+   WorldMigrationJournal, WorldMigrationStorageReceipt, MigrationCompleteValidator } from './WorldMigration';
++// B2.5b external-service contracts only. Existing synchronous archive ports stay untouched.
++export type { RealServiceMode, RegisteredDeviceAssurance, ServicePublicKey, AuthorityTrustAnchor,
++  RealServiceEnvironment, RealAccountFact, RealRegisteredDeviceFact, AuthenticatedServiceContext,
++  AccountLoginRequest, ServiceFault, ServiceReply, ServiceReceiptPurpose, SignedServiceReceipt,
++  DeviceChallenge, ServiceAuthenticationPayload, ServerTimeSample, RealAccountFacts,
++  RealAuthServicePort, RealWorldAuthorityPort, RealCommitRelayPort } from './RealServiceContracts';
+
+diff --git a/assets/scripts/RealServiceBuilder.ts b/assets/scripts/RealServiceBuilder.ts
+new file mode 100644
+--- /dev/null
++++ b/assets/scripts/RealServiceBuilder.ts
+@@ -0,0 +1,12 @@
++import type { RealAuthServicePort, RealServiceEnvironment } from './src/director/IntentPort';
++import { RealAuthServiceAdapter } from './src/presentation/RealAuthServiceAdapter';
++
++/**
++ * Explicit independent composition. The caller supplies installed origin/key pins.
++ * No gameplay UI, bootstrap side effect, ContractAdapter substitution or offline admission.
++ * Browser deployment must serve the client and /api on this exact same configured origin.
++ */
++export function buildRealAuthService(environment: RealServiceEnvironment): RealAuthServicePort {
++  if (environment.mode !== 'ExternalService') { throw Error('真实服务模式必须为 ExternalService'); }
++  return new RealAuthServiceAdapter(environment);
++}
+
+diff --git a/server/.env.example b/server/.env.example
+new file mode 100644
+--- /dev/null
++++ b/server/.env.example
+@@ -0,0 +1,7 @@
++DATABASE_URL=postgresql://neurou_app:REPLACE_WITH_PRIVATE_PASSWORD@127.0.0.1:5432/neurou_auth
++PORT=43125
++SERVICE_ORIGIN=http://127.0.0.1:43125
++SERVICE_INSTANCE_ID=neurou-local-development
++SIGNING_KEY_PATH=.local/service-signing-key.pem
++# Operator must confirm OS clock synchronization. Signature alone does not establish clock correctness.
++CLOCK_TRUSTED=false
+
+diff --git a/server/.gitignore b/server/.gitignore
+new file mode 100644
+--- /dev/null
++++ b/server/.gitignore
+@@ -0,0 +1,6 @@
++node_modules/
++dist/
++.env
++.secret/
++.local/
++.test-output/
+
+diff --git a/server/README.md b/server/README.md
+new file mode 100644
+--- /dev/null
++++ b/server/README.md
+@@ -0,0 +1,41 @@
++# B2.5b 独立真实账号服务
++
++Node.js 24 LTS、Fastify 5、PostgreSQL 17。只提供账号认证、RegisteredCredential 设备登记、轻量事实、服务签名时间。没有 Relay、世界状态、迁移载荷、FileCarry、OfflineGrant、物理设备或通关权限 API。此包不依赖 Creator、archive 或客户端核心。
++
++## 本机运行
++
++1. 安装 Node 24 和 PostgreSQL 17；也可在本目录执行 `docker compose up -d postgres` 启动持久数据库（须先私密设置 POSTGRES_ADMIN_PASSWORD）。Docker 只承担数据库，Node 服务在宿主机运行。
++2. 使用数据库管理员创建独立非超级用户应用角色并授予本数据库 schema CREATE/USAGE 与建表权限；连接必须指向本项目专用数据库，不复用游戏 fixture 数据。数据库要求 SCRAM-SHA-256；管理员密码不可当应用密码。
++3. Windows 执行 `./initialize-private-directory.ps1`，再把配置保存在 `.local` 受限目录或当前进程环境；Linux/macOS 使用当前用户私有目录权限 0700 和文件权限 0600。Node 的 mode 0600 在 Windows 上不替代 ACL。
++4. `npm ci`、`npm run build`，按 `.env.example` 设置 DATABASE_URL 等环境变量。可选 `.env` 自动读取；若使用该文件，操作者需保护其 ACL。生产凭据、签名私钥不入源码、日志或报告。
++5. `npm run migrate` 创建版本 1 schema。迁移使用 advisory lock、单事务、只追加表/索引/版本，不删既有数据。
++6. 将随机强密码放入当前进程 ACCOUNT_PASSWORD，再执行 `npm run account-create -- <accountName>`。密码不放命令行、不输出；客户端不允许自建权限或注入 fixture 事实。账号名逐字区分大小写，3～64 位 `[A-Za-z0-9_.-]`；密码12～1024字符且无控制字符。
++7. `npm run trust-anchor` 在本机带外导出公钥配置，核对实例与 RFC7638 SHA-256 base64url 指纹后写入客户端可信安装配置。`/service/keys` 是诊断展示，不能自动成为信任根。私钥首次生成后持久复用；丢失私钥须带外重新引导，不让客户端接受任意自签公钥。
++8. 确认 OS 同步健康后显式设置 CLOCK_TRUSTED=true，执行 `npm start`。默认时钟未被信任，`/health/ready` 返回503，时间样本声明 Untrusted。进程监测墙钟与单调时差>2秒或倒退并永久降级；重新确认后重启获得新的持久 clockGeneration。它不证明 NTP可信或暂停期经过。
++
++服务仅监听127.0.0.1；HTTP是开发例外。Host和浏览器 POST Origin 必须精确等于 SERVICE_ORIGIN。无 CORS、无反向代理信任、无公网部署；LAN双设备需后续HTTPS部署与证书/域名配置，本轮没有宣称外部验收。客户端资源必须由同 origin 的可信宿主提供；开发时先用 Node HTTP契约验收，不能靠关闭Origin检查接跨域Creator。
++
++## 固定 wire
++
++所有 POST 为严格 JSON：拒绝未知字段、重复键、非安全整数、无效Unicode、深度>32、正文>16KiB。requestNonce是32-byte canonical base64url(43字符)，ID为小写UUID，签名为64-byte P1363 canonical base64url(86字符)。设备公钥只有 `{kty:'EC',crv:'P-256',x,y}`，拒绝私钥/其他字段；标签1～128字符、无控制字符。设备上限256/账号。
++
++| 路径 | 输入/资格 | 签名 purpose |
++|---|---|---|
++| POST `/api/v1/device/challenge` | `{purpose:'LoginDevice',accountName,publicKeyJwk,deviceId:null或既有ID,requestNonce}`；注册新设备时purpose RegisterDevice，deviceId null且需会话+CSRF | DeviceChallenge |
++| POST `/api/v1/auth/login` | `{accountName,password,challengeId,signatureBase64Url,deviceLabel,requestNonce}`，密码+一次设备proof | Authentication |
++| POST `/api/v1/auth/verify` | `{requestNonce}`，会话+CSRF | Authentication |
++| POST `/api/v1/auth/refresh` | `{requestNonce}`，refresh cookie+CSRF | Authentication |
++| POST `/api/v1/auth/logout` | `{requestNonce}`，refresh cookie+CSRF | Logout |
++| POST `/api/v1/time` | `{requestNonce}`，会话+CSRF | ServerTime |
++| POST `/api/v1/account/facts` | `{requestNonce}`，会话+CSRF | AccountFacts |
++| POST `/api/v1/device/register` | `{challengeId,signatureBase64Url,deviceLabel,requestId,requestNonce}`，会话+CSRF | DeviceFacts |
++
++精确结构见 `src/contracts.ts`。SignedServiceReceipt正文签名为 `UTF8("Neurou/service/v1\0") || UTF8(JCS(除signatureBase64Url外全部receipt))`；设备proof为 `UTF8("Neurou/device/v1\0") || UTF8(JCS(DeviceChallenge))`。签名均P256/SHA256/ES256-P1363。challenge绑定服务、账号、公钥指纹、设备世代、用途、一次随机nonce和30秒绝对截止；登录成功事务消费，失败不生成会话。首次密码+proof可登记同账号新凭据；已有/撤销同fingerprint不能恢复更高可信度。RegisteredCredential只证明注册密钥持有，不证明物理机唯一。
++
++账号facts仅identity和devices，revision固定0为B2.5b最小schema标记；没有授予玩法或归属权限。额外设备写口只登记RegisteredCredential；设备改标签/撤销API、恢复、OAuth、密码重置留后续。注册requestId按账号幂等，精确规范请求摘要不同返回Conflict；幂等重试必须使用相同完整请求字节数据（含nonce）。
++
++成功响应为原始signed receipt。失败为 `{kind:'Rejected',fault:{code,requestId,retryAfterMs}}`，不披露数据库/密码/堆栈。登录/challenge按IP合计30次/分钟，其余240次/分钟；单进程开发配额，不宣称分布式限流。会话cookie为HttpOnly/SameSite=Strict，开发HTTP不设Secure；access15分钟、refresh家族7天绝对TTL，DB仅存随机token和CSRF的SHA256。刷新事务统一 account→device→family→token 锁顺序，旋转后旧token复用提交family撤销，再返回拒绝。客户端需串行refresh；合法并发两次刷新也会触发复用撤销。登出撤销服务family，不删除本地世界、不解除暂停。
++
++## 验证
++
++`B25B_DATABASE_URL`指向独立PostgreSQL17库后执行 `npm test`。测试创建唯一账号而不DROP/TRUNCATE/重置库，不提供内存替身；通过真实TCP HTTP监听验证账号、设备proof、严格JSON、CSRF/Host/Origin、签名、DB摘要存储、刷新旋转/复用/并发、服务重启持久会话、固定绝对TTL、登出与未可信时钟拒绝健康声明。测试账号留在专用验收数据库；数据库备份/留存清理由操作者决定，不自动删除用户数据。
+
+diff --git a/server/compose.yaml b/server/compose.yaml
+new file mode 100644
+--- /dev/null
++++ b/server/compose.yaml
+@@ -0,0 +1,18 @@
++services:
++  postgres:
++    image: postgres:17.11
++    environment:
++      POSTGRES_USER: neurou_admin
++      POSTGRES_DB: neurou_auth
++      POSTGRES_PASSWORD: ${POSTGRES_ADMIN_PASSWORD:?Set private POSTGRES_ADMIN_PASSWORD}
++    ports:
++      - "127.0.0.1:5432:5432"
++    volumes:
++      - neurou_auth_data:/var/lib/postgresql/data
++    healthcheck:
++      test: ["CMD-SHELL", "pg_isready -U neurou_admin -d neurou_auth"]
++      interval: 5s
++      timeout: 3s
++      retries: 10
++volumes:
++  neurou_auth_data:
+
+diff --git a/server/initialize-private-directory.ps1 b/server/initialize-private-directory.ps1
+new file mode 100644
+--- /dev/null
++++ b/server/initialize-private-directory.ps1
+@@ -0,0 +1,20 @@
++param([string]$Path = (Join-Path $PSScriptRoot '.local'))
++$ErrorActionPreference = 'Stop'
++$resolved = [System.IO.Path]::GetFullPath($Path)
++$workspace = [System.IO.Path]::GetFullPath($PSScriptRoot)
++if (-not $resolved.StartsWith($workspace + [System.IO.Path]::DirectorySeparatorChar, [System.StringComparison]::OrdinalIgnoreCase)) { throw 'Private directory must be inside server package' }
++New-Item -ItemType Directory -Path $resolved -Force | Out-Null
++$acl = New-Object System.Security.AccessControl.DirectorySecurity
++$acl.SetAccessRuleProtection($true, $false)
++$inherit = [System.Security.AccessControl.InheritanceFlags]'ContainerInherit, ObjectInherit'
++$propagate = [System.Security.AccessControl.PropagationFlags]::None
++$allow = [System.Security.AccessControl.AccessControlType]::Allow
++$identity = [System.Security.Principal.WindowsIdentity]::GetCurrent().User
++foreach ($sid in @($identity, (New-Object System.Security.Principal.SecurityIdentifier 'S-1-5-18'), (New-Object System.Security.Principal.SecurityIdentifier 'S-1-5-32-544'))) {
++  $rule = New-Object System.Security.AccessControl.FileSystemAccessRule($sid, 'FullControl', $inherit, $propagate, $allow)
++  $acl.AddAccessRule($rule)
++}
++Set-Acl -LiteralPath $resolved -AclObject $acl
++$verified = Get-Acl -LiteralPath $resolved
++if (-not $verified.AreAccessRulesProtected) { throw 'Private directory inheritance remains enabled' }
++Write-Output 'Private directory created with protected Windows ACL (current user, SYSTEM, Administrators).'
+
+diff --git a/server/migrations/001.sql b/server/migrations/001.sql
+new file mode 100644
+--- /dev/null
++++ b/server/migrations/001.sql
+@@ -0,0 +1,35 @@
++BEGIN;
++CREATE TABLE IF NOT EXISTS service_schema_versions (version integer PRIMARY KEY, applied_at timestamptz NOT NULL DEFAULT now());
++CREATE TABLE IF NOT EXISTS accounts (
++ account_id uuid PRIMARY KEY, account_name text UNIQUE NOT NULL CHECK (account_name ~ '^[A-Za-z0-9_.-]{3,64}$'),
++ password_hash text NOT NULL, created_at bigint NOT NULL, disabled boolean NOT NULL DEFAULT false
++);
++CREATE TABLE IF NOT EXISTS devices (
++ device_id uuid PRIMARY KEY, account_id uuid NOT NULL REFERENCES accounts(account_id), generation integer NOT NULL CHECK (generation > 0),
++ key_fingerprint text NOT NULL, public_key_jwk jsonb NOT NULL, label text NOT NULL,
++ assurance text NOT NULL CHECK (assurance = 'RegisteredCredential'), status text NOT NULL CHECK (status IN ('Active','Revoked')),
++ created_at bigint NOT NULL, UNIQUE(account_id,key_fingerprint)
++);
++CREATE TABLE IF NOT EXISTS auth_families (
++ session_id uuid PRIMARY KEY, account_id uuid NOT NULL REFERENCES accounts(account_id), device_id uuid NOT NULL REFERENCES devices(device_id),
++ csrf_hash text NOT NULL, absolute_expires_at bigint NOT NULL, revoked boolean NOT NULL DEFAULT false,
++ created_at bigint NOT NULL
++);
++CREATE TABLE IF NOT EXISTS auth_tokens (
++ token_hash text PRIMARY KEY, session_id uuid NOT NULL REFERENCES auth_families(session_id),
++ kind text NOT NULL CHECK (kind IN ('Access','Refresh')), expires_at bigint NOT NULL, used boolean NOT NULL DEFAULT false
++);
++CREATE INDEX IF NOT EXISTS auth_tokens_session_index ON auth_tokens(session_id);
++CREATE TABLE IF NOT EXISTS device_challenges (
++ challenge_id uuid PRIMARY KEY, purpose text NOT NULL CHECK (purpose IN ('LoginDevice','RegisterDevice')),
++ account_name text NOT NULL, device_id uuid, public_key_jwk jsonb NOT NULL, key_fingerprint text NOT NULL,
++ challenge_data jsonb NOT NULL, expires_at bigint NOT NULL, consumed boolean NOT NULL DEFAULT false,
++ owner_session_id uuid REFERENCES auth_families(session_id)
++);
++CREATE TABLE IF NOT EXISTS lightweight_requests (
++ account_id uuid NOT NULL REFERENCES accounts(account_id), request_id uuid NOT NULL, operation text NOT NULL,
++ request_digest text NOT NULL, result jsonb NOT NULL, PRIMARY KEY(account_id,request_id)
++);
++CREATE SEQUENCE IF NOT EXISTS service_clock_generation;
++INSERT INTO service_schema_versions(version) VALUES (1) ON CONFLICT DO NOTHING;
++COMMIT;
+
+diff --git a/server/package-lock.json b/server/package-lock.json
+new file mode 100644
+--- /dev/null
++++ b/server/package-lock.json
+@@ -0,0 +1,999 @@
++{
++  "name": "neurou-real-service",
++  "version": "0.1.0",
++  "lockfileVersion": 3,
++  "requires": true,
++  "packages": {
++    "": {
++      "name": "neurou-real-service",
++      "version": "0.1.0",
++      "dependencies": {
++        "@fastify/cookie": "^11.0.2",
++        "argon2": "^0.44.0",
++        "fastify": "^5.6.2",
++        "pg": "^8.16.3"
++      },
++      "devDependencies": {
++        "@types/node": "^24.0.0",
++        "@types/pg": "^8.15.5",
++        "typescript": "^5.9.3"
++      },
++      "engines": {
++        "node": ">=24 <25"
++      }
++    },
++    "node_modules/@epic-web/invariant": {
++      "version": "1.0.0",
++      "resolved": "https://registry.npmmirror.com/@epic-web/invariant/-/invariant-1.0.0.tgz",
++      "integrity": "sha512-lrTPqgvfFQtR/eY/qkIzp98OGdNJu0m5ji3q/nJI8v3SXkRKEnWiOxMmbvcSoAIzv/cGiuvRy57k4suKQSAdwA==",
++      "license": "MIT"
++    },
++    "node_modules/@fastify/ajv-compiler": {
++      "version": "4.0.7",
++      "resolved": "https://registry.npmmirror.com/@fastify/ajv-compiler/-/ajv-compiler-4.0.7.tgz",
++      "integrity": "sha512-VP0yIfwlc1ohj733keYDqyHm1VWeP9VQxYomunhr90jkC4aNNibbkrRiaNgPgqj1ORxUenILR4qzA/ppYBNAtQ==",
++      "funding": [
++        {
++          "type": "github",
++          "url": "https://github.com/sponsors/fastify"
++        },
++        {
++          "type": "opencollective",
++          "url": "https://opencollective.com/fastify"
++        }
++      ],
++      "license": "MIT",
++      "dependencies": {
++        "ajv": "^8.12.0",
++        "ajv-formats": "^3.0.1",
++        "fast-uri": "^4.0.0"
++      }
++    },
++    "node_modules/@fastify/cookie": {
++      "version": "11.1.3",
++      "resolved": "https://registry.npmmirror.com/@fastify/cookie/-/cookie-11.1.3.tgz",
++      "integrity": "sha512-RBhlMNsmSG6C5KGiTkhSXBF75xIrUMSytDDBcpnVewhJ8XVYnJTu+SV6FYKXClIRsBuRjOfKbBSULvnPD3X/mg==",
++      "funding": [
++        {
++          "type": "github",
++          "url": "https://github.com/sponsors/fastify"
++        },
++        {
++          "type": "opencollective",
++          "url": "https://opencollective.com/fastify"
++        }
++      ],
++      "license": "MIT",
++      "dependencies": {
++        "cookie": "^2.0.0",
++        "fastify-plugin": "^6.0.0"
++      }
++    },
++    "node_modules/@fastify/deepmerge": {
++      "version": "3.2.2",
++      "resolved": "https://registry.npmmirror.com/@fastify/deepmerge/-/deepmerge-3.2.2.tgz",
++      "integrity": "sha512-155eqA/WMQdN6gUD4RrhS2K0Pcz2Ou9pQ86L0sipOpP9ONbTA6oYw/hW4VdBjR4egcDHqmWUK9x80oUX7S1mDQ==",
++      "funding": [
++        {
++          "type": "github",
++          "url": "https://github.com/sponsors/fastify"
++        },
++        {
++          "type": "opencollective",
++          "url": "https://opencollective.com/fastify"
++        }
++      ],
++      "license": "MIT"
++    },
++    "node_modules/@fastify/error": {
++      "version": "4.2.1",
++      "resolved": "https://registry.npmmirror.com/@fastify/error/-/error-4.2.1.tgz",
++      "integrity": "sha512-MYBumuIwP+5MIpXSyKm6/o1Eigcoij186lWUssX3LH5U8KWqU0ktZhzC4CErIX9EJeQeRGI+zJZQWakBlFbUcg==",
++      "funding": [
++        {
++          "type": "github",
++          "url": "https://github.com/sponsors/fastify"
++        },
++        {
++          "type": "opencollective",
++          "url": "https://opencollective.com/fastify"
++        }
++      ],
++      "license": "MIT"
++    },
++    "node_modules/@fastify/fast-json-stringify-compiler": {
++      "version": "5.1.1",
++      "resolved": "https://registry.npmmirror.com/@fastify/fast-json-stringify-compiler/-/fast-json-stringify-compiler-5.1.1.tgz",
++      "integrity": "sha512-pyxRKk7UpUnnrztP9pF4+ZYxusEQ4LifTyzRdiXmyql1QezNHxO02D25MVU2o4kMeAMYWAjG6RKRlojgkbiDAw==",
++      "funding": [
++        {
++          "type": "github",
++          "url": "https://github.com/sponsors/fastify"
++        },
++        {
++          "type": "opencollective",
++          "url": "https://opencollective.com/fastify"
++        }
++      ],
++      "license": "MIT",
++      "dependencies": {
++        "fast-json-stringify": "^7.0.0"
++      }
++    },
++    "node_modules/@fastify/forwarded": {
++      "version": "3.1.1",
++      "resolved": "https://registry.npmmirror.com/@fastify/forwarded/-/forwarded-3.1.1.tgz",
++      "integrity": "sha512-XfDtW2Icvhqi6DP1YHFK4q/E8WpNd3+raBdzAyVZxmTInbFTtnEEKvEAMMOVdFuRyv+ynYipaA9D8FvjPqACkw==",
++      "funding": [
++        {
++          "type": "github",
++          "url": "https://github.com/sponsors/fastify"
++        },
++        {
++          "type": "opencollective",
++          "url": "https://opencollective.com/fastify"
++        }
++      ],
++      "license": "MIT"
++    },
++    "node_modules/@fastify/merge-json-schemas": {
++      "version": "0.2.2",
++      "resolved": "https://registry.npmmirror.com/@fastify/merge-json-schemas/-/merge-json-schemas-0.2.2.tgz",
++      "integrity": "sha512-d/gx9sRbUCVgGRGzma46wLcwiY8noTqO2Nmjg/vbTARxHRE5bdh5PIL8s97Lt1X7ScRWRW52eVYxwIoPwIdVUA==",
++      "funding": [
++        {
++          "type": "github",
++          "url": "https://github.com/sponsors/fastify"
++        },
++        {
++          "type": "opencollective",
++          "url": "https://opencollective.com/fastify"
++        }
++      ],
++      "license": "MIT",
++      "dependencies": {
++        "dequal": "^2.0.3"
++      }
++    },
++    "node_modules/@fastify/proxy-addr": {
++      "version": "5.1.2",
++      "resolved": "https://registry.npmmirror.com/@fastify/proxy-addr/-/proxy-addr-5.1.2.tgz",
++      "integrity": "sha512-uqB4QsgVoro0XDC+DIftIMGXHdBPn+lK6Ek3xXAIxPMCJfqxnbtyEoMCm2KPUVOuIosd7Cyw9HawEqMFM/UA+g==",
++      "funding": [
++        {
++          "type": "github",
++          "url": "https://github.com/sponsors/fastify"
++        },
++        {
++          "type": "opencollective",
++          "url": "https://opencollective.com/fastify"
++        }
++      ],
++      "license": "MIT",
++      "dependencies": {
++        "@fastify/forwarded": "^3.0.0",
++        "ipaddr.js": "^2.1.0"
++      }
++    },
++    "node_modules/@phc/format": {
++      "version": "1.0.0",
++      "resolved": "https://registry.npmmirror.com/@phc/format/-/format-1.0.0.tgz",
++      "integrity": "sha512-m7X9U6BG2+J+R1lSOdCiITLLrxm+cWlNI3HUFA92oLO77ObGNzaKdh8pMLqdZcshtkKuV84olNNXDfMc4FezBQ==",
++      "license": "MIT",
++      "engines": {
++        "node": ">=10"
++      }
++    },
++    "node_modules/@pinojs/redact": {
++      "version": "0.4.0",
++      "resolved": "https://registry.npmmirror.com/@pinojs/redact/-/redact-0.4.0.tgz",
++      "integrity": "sha512-k2ENnmBugE/rzQfEcdWHcCY+/FM3VLzH9cYEsbdsoqrvzAKRhUZeRNhAZvB8OitQJ1TBed3yqWtdjzS6wJKBwg==",
++      "license": "MIT"
++    },
++    "node_modules/@types/node": {
++      "version": "24.19.2",
++      "resolved": "https://registry.npmmirror.com/@types/node/-/node-24.19.2.tgz",
++      "integrity": "sha512-93d49wCWJkCyN87MxLpNN6KXPCwFw7bVUg79mGUV1OS40JGWwVCr8n61DXCSqz7CV6/VfPkb7xec7uP2M+QHWQ==",
++      "dev": true,
++      "license": "MIT",
++      "dependencies": {
++        "undici-types": ">=7.24.0 <7.24.7"
++      }
++    },
++    "node_modules/@types/pg": {
++      "version": "8.23.1",
++      "resolved": "https://registry.npmmirror.com/@types/pg/-/pg-8.23.1.tgz",
++      "integrity": "sha512-fKVHpikPdg4GKks3JuLEhvwSyvwzF23hnabPy6DD8ljVbC7+6J5dQzdv4arV6jqq57djnMgs1HKBxX4P8aBI3A==",
++      "dev": true,
++      "license": "MIT",
++      "dependencies": {
++        "@types/node": "*",
++        "pg-protocol": "*",
++        "pg-types": "^2.2.0"
++      }
++    },
++    "node_modules/abstract-logging": {
++      "version": "2.0.1",
++      "resolved": "https://registry.npmmirror.com/abstract-logging/-/abstract-logging-2.0.1.tgz",
++      "integrity": "sha512-2BjRTZxTPvheOvGbBslFSYOUkr+SjPtOnrLP33f+VIWLzezQpZcqVg7ja3L4dBXmzzgwT+a029jRx5PCi3JuiA==",
++      "license": "MIT"
++    },
++    "node_modules/ajv": {
++      "version": "8.20.0",
++      "resolved": "https://registry.npmmirror.com/ajv/-/ajv-8.20.0.tgz",
++      "integrity": "sha512-Thbli+OlOj+iMPYFBVBfJ3OmCAnaSyNn4M1vz9T6Gka5Jt9ba/HIR56joy65tY6kx/FCF5VXNB819Y7/GUrBGA==",
++      "license": "MIT",
++      "dependencies": {
++        "fast-deep-equal": "^3.1.3",
++        "fast-uri": "^3.0.1",
++        "json-schema-traverse": "^1.0.0",
++        "require-from-string": "^2.0.2"
++      },
++      "funding": {
++        "type": "github",
++        "url": "https://github.com/sponsors/epoberezkin"
++      }
++    },
++    "node_modules/ajv-formats": {
++      "version": "3.0.1",
++      "resolved": "https://registry.npmmirror.com/ajv-formats/-/ajv-formats-3.0.1.tgz",
++      "integrity": "sha512-8iUql50EUR+uUcdRQ3HDqa6EVyo3docL8g5WJ3FNcWmu62IbkGUue/pEyLBW8VGKKucTPgqeks4fIU1DA4yowQ==",
++      "license": "MIT",
++      "dependencies": {
++        "ajv": "^8.0.0"
++      },
++      "peerDependencies": {
++        "ajv": "^8.0.0"
++      },
++      "peerDependenciesMeta": {
++        "ajv": {
++          "optional": true
++        }
++      }
++    },
++    "node_modules/ajv/node_modules/fast-uri": {
++      "version": "3.1.8",
++      "resolved": "https://registry.npmmirror.com/fast-uri/-/fast-uri-3.1.8.tgz",
++      "integrity": "sha512-GZMtZUTNRpOVIECoXwLNZS5xUGE+mVNbTB8h/7Rwh2TFWcBQiPzTgyZi05BF9UMZKkLJv8XBRJTlU7zg8+ZfMg==",
++      "funding": [
++        {
++          "type": "github",
++          "url": "https://github.com/sponsors/fastify"
++        },
++        {
++          "type": "opencollective",
++          "url": "https://opencollective.com/fastify"
++        }
++      ],
++      "license": "BSD-3-Clause"
++    },
++    "node_modules/argon2": {
++      "version": "0.44.0",
++      "resolved": "https://registry.npmmirror.com/argon2/-/argon2-0.44.0.tgz",
++      "integrity": "sha512-zHPGN3S55sihSQo0dBbK0A5qpi2R31z7HZDZnry3ifOyj8bZZnpZND2gpmhnRGO1V/d555RwBqIK5W4Mrmv3ig==",
++      "hasInstallScript": true,
++      "license": "MIT",
++      "dependencies": {
++        "@phc/format": "^1.0.0",
++        "cross-env": "^10.0.0",
++        "node-addon-api": "^8.5.0",
++        "node-gyp-build": "^4.8.4"
++      },
++      "engines": {
++        "node": ">=16.17.0"
++      }
++    },
++    "node_modules/atomic-sleep": {
++      "version": "1.0.0",
++      "resolved": "https://registry.npmmirror.com/atomic-sleep/-/atomic-sleep-1.0.0.tgz",
++      "integrity": "sha512-kNOjDqAh7px0XWNI+4QbzoiR/nTkHAWNud2uvnJquD1/x5a7EQZMJT0AczqK0Qn67oY/TTQ1LbUKajZpp3I9tQ==",
++      "license": "MIT",
++      "engines": {
++        "node": ">=8.0.0"
++      }
++    },
++    "node_modules/avvio": {
++      "version": "9.3.1",
++      "resolved": "https://registry.npmmirror.com/avvio/-/avvio-9.3.1.tgz",
++      "integrity": "sha512-QyTKW61/qlba+cUQBm/sT9X8lri4UdomqSDwCnrnj1IvLVDRRiXRkz4CgBRWB+/cmfC7SK5WQc8T1vSdGvaUcQ==",
++      "funding": [
++        {
++          "type": "github",
++          "url": "https://github.com/sponsors/fastify"
++        },
++        {
++          "type": "opencollective",
++          "url": "https://opencollective.com/fastify"
++        }
++      ],
++      "license": "MIT",
++      "dependencies": {
++        "@fastify/error": "^4.0.0",
++        "fastq": "^1.17.1"
++      }
++    },
++    "node_modules/cookie": {
++      "version": "2.0.1",
++      "resolved": "https://registry.npmmirror.com/cookie/-/cookie-2.0.1.tgz",
++      "integrity": "sha512-yuToqVvRrj6pfDXREyQAAv8SkAEk/8GS3jQRTiUMm66TVtBYmqQeoEjL2Lmq8Rpo6271vH76InTChTitEAm65w==",
++      "license": "MIT",
++      "engines": {
++        "node": ">=22"
++      },
++      "funding": {
++        "type": "opencollective",
++        "url": "https://opencollective.com/express"
++      }
++    },
++    "node_modules/cross-env": {
++      "version": "10.1.0",
++      "resolved": "https://registry.npmmirror.com/cross-env/-/cross-env-10.1.0.tgz",
++      "integrity": "sha512-GsYosgnACZTADcmEyJctkJIoqAhHjttw7RsFrVoJNXbsWWqaq6Ym+7kZjq6mS45O0jij6vtiReppKQEtqWy6Dw==",
++      "license": "MIT",
++      "dependencies": {
++        "@epic-web/invariant": "^1.0.0",
++        "cross-spawn": "^7.0.6"
++      },
++      "bin": {
++        "cross-env": "dist/bin/cross-env.js",
++        "cross-env-shell": "dist/bin/cross-env-shell.js"
++      },
++      "engines": {
++        "node": ">=20"
++      }
++    },
++    "node_modules/cross-spawn": {
++      "version": "7.0.6",
++      "resolved": "https://registry.npmmirror.com/cross-spawn/-/cross-spawn-7.0.6.tgz",
++      "integrity": "sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==",
++      "license": "MIT",
++      "dependencies": {
++        "path-key": "^3.1.0",
++        "shebang-command": "^2.0.0",
++        "which": "^2.0.1"
++      },
++      "engines": {
++        "node": ">= 8"
++      }
++    },
++    "node_modules/dequal": {
++      "version": "2.0.3",
++      "resolved": "https://registry.npmmirror.com/dequal/-/dequal-2.0.3.tgz",
++      "integrity": "sha512-0je+qPKHEMohvfRTCEo3CrPG6cAzAYgmzKyxRiYSSDkS6eGJdyVJm7WaYA5ECaAD9wLB2T4EEeymA5aFVcYXCA==",
++      "license": "MIT",
++      "engines": {
++        "node": ">=6"
++      }
++    },
++    "node_modules/fast-decode-uri-component": {
++      "version": "1.0.1",
++      "resolved": "https://registry.npmmirror.com/fast-decode-uri-component/-/fast-decode-uri-component-1.0.1.tgz",
++      "integrity": "sha512-WKgKWg5eUxvRZGwW8FvfbaH7AXSh2cL+3j5fMGzUMCxWBJ3dV3a7Wz8y2f/uQ0e3B6WmodD3oS54jTQ9HVTIIg==",
++      "license": "MIT"
++    },
++    "node_modules/fast-deep-equal": {
++      "version": "3.1.3",
++      "resolved": "https://registry.npmmirror.com/fast-deep-equal/-/fast-deep-equal-3.1.3.tgz",
++      "integrity": "sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q==",
++      "license": "MIT"
++    },
++    "node_modules/fast-json-stringify": {
++      "version": "7.1.0",
++      "resolved": "https://registry.npmmirror.com/fast-json-stringify/-/fast-json-stringify-7.1.0.tgz",
++      "integrity": "sha512-wAhAQ+es0aH+x5OofdCHlZZFdqwtiM6lpEosaRIwfg271WYeEQ/tPcXdu5vpzlqZpbJ4WNqaW4QR5UjfG4Dc2w==",
++      "funding": [
++        {
++          "type": "github",
++          "url": "https://github.com/sponsors/fastify"
++        },
++        {
++          "type": "opencollective",
++          "url": "https://opencollective.com/fastify"
++        }
++      ],
++      "license": "MIT",
++      "dependencies": {
++        "@fastify/merge-json-schemas": "^0.2.0",
++        "ajv": "^8.12.0",
++        "ajv-formats": "^3.0.1",
++        "fast-uri": "^4.0.0",
++        "json-schema-ref-resolver": "^3.0.0",
++        "rfdc": "^1.2.0"
++      }
++    },
++    "node_modules/fast-querystring": {
++      "version": "1.1.2",
++      "resolved": "https://registry.npmmirror.com/fast-querystring/-/fast-querystring-1.1.2.tgz",
++      "integrity": "sha512-g6KuKWmFXc0fID8WWH0jit4g0AGBoJhCkJMb1RmbsSEUNvQ+ZC8D6CUZ+GtF8nMzSPXnhiePyyqqipzNNEnHjg==",
++      "license": "MIT",
++      "dependencies": {
++        "fast-decode-uri-component": "^1.0.1"
++      }
++    },
++    "node_modules/fast-uri": {
++      "version": "4.2.2",
++      "resolved": "https://registry.npmmirror.com/fast-uri/-/fast-uri-4.2.2.tgz",
++      "integrity": "sha512-EwVpUMzLVNOmcWW0zi5G3JJwkopB6XXjnVvNBGfqrMMsVew2hkQWl5e/pe/CfYUeS6jt4cIO2MnamEW7v/7wPw==",
++      "funding": [
++        {
++          "type": "github",
++          "url": "https://github.com/sponsors/fastify"
++        },
++        {
++          "type": "opencollective",
++          "url": "https://opencollective.com/fastify"
++        }
++      ],
++      "license": "BSD-3-Clause"
++    },
++    "node_modules/fastify": {
++      "version": "5.12.5",
++      "resolved": "https://registry.npmmirror.com/fastify/-/fastify-5.12.5.tgz",
++      "integrity": "sha512-OB2k1dlxs5/NAABqeKV2FUHkSD2BbENsCak8yULVcymn3fHIPDVa9TI3SDnJSWYSllZmSYuZXy2gTnsT+Sut1A==",
++      "funding": [
++        {
++          "type": "github",
++          "url": "https://github.com/sponsors/fastify"
++        },
++        {
++          "type": "opencollective",
++          "url": "https://opencollective.com/fastify"
++        }
++      ],
++      "license": "MIT",
++      "dependencies": {
++        "@fastify/ajv-compiler": "^4.0.5",
++        "@fastify/error": "^4.0.0",
++        "@fastify/fast-json-stringify-compiler": "^5.0.0",
++        "@fastify/proxy-addr": "^5.0.0",
++        "abstract-logging": "^2.0.1",
++        "avvio": "^9.0.0",
++        "fast-json-stringify": "^7.0.0",
++        "find-my-way": "^9.6.0",
++        "light-my-request": "^6.0.0",
++        "pino": "^9.14.0 || ^10.1.0",
++        "process-warning": "^5.1.0",
++        "rfdc": "^1.3.1",
++        "secure-json-parse": "^4.0.0",
++        "semver": "^7.6.0",
++        "toad-cache": "^3.7.0"
++      }
++    },
++    "node_modules/fastify-plugin": {
++      "version": "6.0.1",
++      "resolved": "https://registry.npmmirror.com/fastify-plugin/-/fastify-plugin-6.0.1.tgz",
++      "integrity": "sha512-4wW4RxSmvPXLrh5mgQEiu43qU3bw44N2ss4FTkTkQIbprUhE+/s43QX0j/ttcztdWK7PEkHqVthdc5GdEGDvjA==",
++      "funding": [
++        {
++          "type": "github",
++          "url": "https://github.com/sponsors/fastify"
++        },
++        {
++          "type": "opencollective",
++          "url": "https://opencollective.com/fastify"
++        }
++      ],
++      "license": "MIT"
++    },
++    "node_modules/fastq": {
++      "version": "1.20.3",
++      "resolved": "https://registry.npmmirror.com/fastq/-/fastq-1.20.3.tgz",
++      "integrity": "sha512-XKv5nnLs6nLF71NgiKJLIZFLkPyIEuOselLG7ujZnGrRfQK8HpvY+WqKhAJUAdLomwVHErVS4LfxFlPq0/FTAw==",
++      "license": "ISC",
++      "dependencies": {
++        "reusify": "^1.0.4"
++      }
++    },
++    "node_modules/find-my-way": {
++      "version": "9.10.0",
++      "resolved": "https://registry.npmmirror.com/find-my-way/-/find-my-way-9.10.0.tgz",
++      "integrity": "sha512-eru+uCPQ2g+nLBkf84MHP/KyNNMar0BDy0j+i8Fb72GF9/YHBZ58q7FODUtfVV7XU9nfRUHXSmaM8NmZcIbZ4Q==",
++      "license": "MIT",
++      "dependencies": {
++        "fast-deep-equal": "^3.1.3",
++        "fast-querystring": "^1.0.0",
++        "safe-regex2": "^5.0.0"
++      },
++      "engines": {
++        "node": ">=20"
++      }
++    },
++    "node_modules/ipaddr.js": {
++      "version": "2.5.0",
++      "resolved": "https://registry.npmmirror.com/ipaddr.js/-/ipaddr.js-2.5.0.tgz",
++      "integrity": "sha512-aq+t5NAc+cS6rZQQVWC2x98CPqGtKKTMDd4Gaodv0wShnItdKg/51djkGJ1hqH+Oy0ivDftCbSLCQob8zso01w==",
++      "license": "MIT",
++      "engines": {
++        "node": ">= 10"
++      }
++    },
++    "node_modules/isexe": {
++      "version": "2.0.0",
++      "resolved": "https://registry.npmmirror.com/isexe/-/isexe-2.0.0.tgz",
++      "integrity": "sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==",
++      "license": "ISC"
++    },
++    "node_modules/json-schema-ref-resolver": {
++      "version": "3.0.1",
++      "resolved": "https://registry.npmmirror.com/json-schema-ref-resolver/-/json-schema-ref-resolver-3.0.1.tgz",
++      "integrity": "sha512-w+HwgljXpVwZ3IidoUR1qPZxSOQ+NRQWuVe6a5pe8XbHsNZE4UAwVPUvzZagn7yBKbJtt6UJnRFYbNTRPZI45Q==",
++      "funding": [
++        {
++          "type": "github",
++          "url": "https://github.com/sponsors/fastify"
++        },
++        {
++          "type": "opencollective",
++          "url": "https://opencollective.com/fastify"
++        }
++      ],
++      "license": "MIT",
++      "dependencies": {
++        "dequal": "^2.0.3"
++      }
++    },
++    "node_modules/json-schema-traverse": {
++      "version": "1.0.0",
++      "resolved": "https://registry.npmmirror.com/json-schema-traverse/-/json-schema-traverse-1.0.0.tgz",
++      "integrity": "sha512-NM8/P9n3XjXhIZn1lLhkFaACTOURQXjWhV4BA/RnOv8xvgqtqpAX9IO4mRQxSx1Rlo4tqzeqb0sOlruaOy3dug==",
++      "license": "MIT"
++    },
++    "node_modules/light-my-request": {
++      "version": "6.8.0",
++      "resolved": "https://registry.npmmirror.com/light-my-request/-/light-my-request-6.8.0.tgz",
++      "integrity": "sha512-5Q8PjoSEdtGIB8fikZsTem5vgRo4F2mR6vUKTDW/H1g6MtAt8e3duQbg/QxL5yzg6BZhor2KOUm3hhWMWLTZwg==",
++      "funding": [
++        {
++          "type": "github",
++          "url": "https://github.com/sponsors/fastify"
++        },
++        {
++          "type": "opencollective",
++          "url": "https://opencollective.com/fastify"
++        }
++      ],
++      "license": "BSD-3-Clause",
++      "dependencies": {
++        "@fastify/deepmerge": "^3.1.0",
++        "cookie": "^2.0.0",
++        "process-warning": "^5.0.0",
++        "set-cookie-parser": "^3.0.1"
++      }
++    },
++    "node_modules/node-addon-api": {
++      "version": "8.9.2",
++      "resolved": "https://registry.npmmirror.com/node-addon-api/-/node-addon-api-8.9.2.tgz",
++      "integrity": "sha512-VijLXbi3UACN69I0JVXJsX4tjACjNoQDgv2gTF6sx2wWEi8tkSg2eX8p5gSIFi8z2+DL3oHmY6OyKce38SDolg==",
++      "license": "MIT",
++      "engines": {
++        "node": "^18 || ^20 || >= 21"
++      }
++    },
++    "node_modules/node-gyp-build": {
++      "version": "4.8.4",
++      "resolved": "https://registry.npmmirror.com/node-gyp-build/-/node-gyp-build-4.8.4.tgz",
++      "integrity": "sha512-LA4ZjwlnUblHVgq0oBF3Jl/6h/Nvs5fzBLwdEF4nuxnFdsfajde4WfxtJr3CaiH+F6ewcIB/q4jQ4UzPyid+CQ==",
++      "license": "MIT",
++      "bin": {
++        "node-gyp-build": "bin.js",
++        "node-gyp-build-optional": "optional.js",
++        "node-gyp-build-test": "build-test.js"
++      }
++    },
++    "node_modules/on-exit-leak-free": {
++      "version": "2.1.2",
++      "resolved": "https://registry.npmmirror.com/on-exit-leak-free/-/on-exit-leak-free-2.1.2.tgz",
++      "integrity": "sha512-0eJJY6hXLGf1udHwfNftBqH+g73EU4B504nZeKpz1sYRKafAghwxEJunB2O7rDZkL4PGfsMVnTXZ2EjibbqcsA==",
++      "license": "MIT",
++      "engines": {
++        "node": ">=14.0.0"
++      }
++    },
++    "node_modules/path-key": {
++      "version": "3.1.1",
++      "resolved": "https://registry.npmmirror.com/path-key/-/path-key-3.1.1.tgz",
++      "integrity": "sha512-ojmeN0qd+y0jszEtoY48r0Peq5dwMEkIlCOu6Q5f41lfkswXuKtYrhgoTpLnyIcHm24Uhqx+5Tqm2InSwLhE6Q==",
++      "license": "MIT",
++      "engines": {
++        "node": ">=8"
++      }
++    },
++    "node_modules/pg": {
++      "version": "8.23.1",
++      "resolved": "https://registry.npmmirror.com/pg/-/pg-8.23.1.tgz",
++      "integrity": "sha512-aL96AHANtWjPLDOLqnhx+ngp9+UK7ETEU8VJrDCGvsSSi/mGLcWYsS6Herg7lmaBJe4uwrfqsa7gTEFaSizDoQ==",
++      "license": "MIT",
++      "dependencies": {
++        "pg-connection-string": "^2.14.1",
++        "pg-pool": "^3.14.0",
++        "pg-protocol": "^1.16.1",
++        "pg-types": "2.2.0",
++        "pgpass": "1.0.5"
++      },
++      "engines": {
++        "node": ">= 16.0.0"
++      },
++      "optionalDependencies": {
++        "pg-cloudflare": "^1.4.1"
++      },
++      "peerDependencies": {
++        "pg-native": ">=3.0.1"
++      },
++      "peerDependenciesMeta": {
++        "pg-native": {
++          "optional": true
++        }
++      }
++    },
++    "node_modules/pg-cloudflare": {
++      "version": "1.4.1",
++      "resolved": "https://registry.npmmirror.com/pg-cloudflare/-/pg-cloudflare-1.4.1.tgz",
++      "integrity": "sha512-6PQbsFWZcp9EmJEwy5cGQ2La+AMWpP46lgbb8X+U/XsHIUweYDNCpeuKck5RxL2MdVFi7krbbEi5nX4Zh7JhrQ==",
++      "license": "MIT",
++      "optional": true
++    },
++    "node_modules/pg-connection-string": {
++      "version": "2.14.1",
++      "resolved": "https://registry.npmmirror.com/pg-connection-string/-/pg-connection-string-2.14.1.tgz",
++      "integrity": "sha512-qR3kGNPBLpCNtz0evbKA0Y/MRFXwSSdT+pTJvYp/bXTcReZbvX1kzF0IyTc1QnxqF7AZbOeBhNL8R5mYQZV/MA==",
++      "license": "MIT"
++    },
++    "node_modules/pg-int8": {
++      "version": "1.0.1",
++      "resolved": "https://registry.npmmirror.com/pg-int8/-/pg-int8-1.0.1.tgz",
++      "integrity": "sha512-WCtabS6t3c8SkpDBUlb1kjOs7l66xsGdKpIPZsg4wR+B3+u9UAum2odSsF9tnvxg80h4ZxLWMy4pRjOsFIqQpw==",
++      "license": "ISC",
++      "engines": {
++        "node": ">=4.0.0"
++      }
++    },
++    "node_modules/pg-pool": {
++      "version": "3.14.0",
++      "resolved": "https://registry.npmmirror.com/pg-pool/-/pg-pool-3.14.0.tgz",
++      "integrity": "sha512-gKtPkFdQPU3DksooVLi9LsjZxrsBUZIpa+7aVx+LV5pNh0KzP4Zleud2po+ConrxbuXGBJ6Hfer6hdgpIBpBaw==",
++      "license": "MIT",
++      "peerDependencies": {
++        "pg": ">=8.0"
++      }
++    },
++    "node_modules/pg-protocol": {
++      "version": "1.16.1",
++      "resolved": "https://registry.npmmirror.com/pg-protocol/-/pg-protocol-1.16.1.tgz",
++      "integrity": "sha512-p9VOFMiHB/ZbJATetbg+99PxssTVSQRnyuPSQ67mN1+1KBOjZaZ83ZQzltnxPhJwSsC3nwVjJ10DVJlerbFzLg==",
++      "license": "MIT"
++    },
++    "node_modules/pg-types": {
++      "version": "2.2.0",
++      "resolved": "https://registry.npmmirror.com/pg-types/-/pg-types-2.2.0.tgz",
++      "integrity": "sha512-qTAAlrEsl8s4OiEQY69wDvcMIdQN6wdz5ojQiOy6YRMuynxenON0O5oCpJI6lshc6scgAY8qvJ2On/p+CXY0GA==",
++      "license": "MIT",
++      "dependencies": {
++        "pg-int8": "1.0.1",
++        "postgres-array": "~2.0.0",
++        "postgres-bytea": "~1.0.0",
++        "postgres-date": "~1.0.4",
++        "postgres-interval": "^1.1.0"
++      },
++      "engines": {
++        "node": ">=4"
++      }
++    },
++    "node_modules/pgpass": {
++      "version": "1.0.5",
++      "resolved": "https://registry.npmmirror.com/pgpass/-/pgpass-1.0.5.tgz",
++      "integrity": "sha512-FdW9r/jQZhSeohs1Z3sI1yxFQNFvMcnmfuj4WBMUTxOrAyLMaTcE1aAMBiTlbMNaXvBCQuVi0R7hd8udDSP7ug==",
++      "license": "MIT",
++      "dependencies": {
++        "split2": "^4.1.0"
++      }
++    },
++    "node_modules/pino": {
++      "version": "10.4.0",
++      "resolved": "https://registry.npmmirror.com/pino/-/pino-10.4.0.tgz",
++      "integrity": "sha512-bk1ZMTwG/Vymx+zPoa28MhNzucFvXJWp3csrSuxuHPSMeUettaCoQ5Jvg07mtC4JGNpcfTwz41oVCnNgBK9+vA==",
++      "license": "MIT",
++      "dependencies": {
++        "@pinojs/redact": "^0.4.0",
++        "atomic-sleep": "^1.0.0",
++        "on-exit-leak-free": "^2.1.0",
++        "pino-abstract-transport": "^3.0.0",
++        "pino-std-serializers": "^7.0.0",
++        "process-warning": "^5.0.0",
++        "quick-format-unescaped": "^4.0.3",
++        "real-require": "^1.0.0",
++        "safe-stable-stringify": "^2.3.1",
++        "sonic-boom": "^4.0.1",
++        "thread-stream": "^4.0.0"
++      },
++      "bin": {
++        "pino": "bin.js"
++      }
++    },
++    "node_modules/pino-abstract-transport": {
++      "version": "3.0.0",
++      "resolved": "https://registry.npmmirror.com/pino-abstract-transport/-/pino-abstract-transport-3.0.0.tgz",
++      "integrity": "sha512-wlfUczU+n7Hy/Ha5j9a/gZNy7We5+cXp8YL+X+PG8S0KXxw7n/JXA3c46Y0zQznIJ83URJiwy7Lh56WLokNuxg==",
++      "license": "MIT",
++      "dependencies": {
++        "split2": "^4.0.0"
++      }
++    },
++    "node_modules/pino-std-serializers": {
++      "version": "7.1.0",
++      "resolved": "https://registry.npmmirror.com/pino-std-serializers/-/pino-std-serializers-7.1.0.tgz",
++      "integrity": "sha512-BndPH67/JxGExRgiX1dX0w1FvZck5Wa4aal9198SrRhZjH3GxKQUKIBnYJTdj2HDN3UQAS06HlfcSbQj2OHmaw==",
++      "license": "MIT"
++    },
++    "node_modules/postgres-array": {
++      "version": "2.0.0",
++      "resolved": "https://registry.npmmirror.com/postgres-array/-/postgres-array-2.0.0.tgz",
++      "integrity": "sha512-VpZrUqU5A69eQyW2c5CA1jtLecCsN2U/bD6VilrFDWq5+5UIEVO7nazS3TEcHf1zuPYO/sqGvUvW62g86RXZuA==",
++      "license": "MIT",
++      "engines": {
++        "node": ">=4"
++      }
++    },
++    "node_modules/postgres-bytea": {
++      "version": "1.0.1",
++      "resolved": "https://registry.npmmirror.com/postgres-bytea/-/postgres-bytea-1.0.1.tgz",
++      "integrity": "sha512-5+5HqXnsZPE65IJZSMkZtURARZelel2oXUEO8rH83VS/hxH5vv1uHquPg5wZs8yMAfdv971IU+kcPUczi7NVBQ==",
++      "license": "MIT",
++      "engines": {
++        "node": ">=0.10.0"
++      }
++    },
++    "node_modules/postgres-date": {
++      "version": "1.0.7",
++      "resolved": "https://registry.npmmirror.com/postgres-date/-/postgres-date-1.0.7.tgz",
++      "integrity": "sha512-suDmjLVQg78nMK2UZ454hAG+OAW+HQPZ6n++TNDUX+L0+uUlLywnoxJKDou51Zm+zTCjrCl0Nq6J9C5hP9vK/Q==",
++      "license": "MIT",
++      "engines": {
++        "node": ">=0.10.0"
++      }
++    },
++    "node_modules/postgres-interval": {
++      "version": "1.2.0",
++      "resolved": "https://registry.npmmirror.com/postgres-interval/-/postgres-interval-1.2.0.tgz",
++      "integrity": "sha512-9ZhXKM/rw350N1ovuWHbGxnGh/SNJ4cnxHiM0rxE4VN41wsg8P8zWn9hv/buK00RP4WvlOyr/RBDiptyxVbkZQ==",
++      "license": "MIT",
++      "dependencies": {
++        "xtend": "^4.0.0"
++      },
++      "engines": {
++        "node": ">=0.10.0"
++      }
++    },
++    "node_modules/process-warning": {
++      "version": "5.1.1",
++      "resolved": "https://registry.npmmirror.com/process-warning/-/process-warning-5.1.1.tgz",
++      "integrity": "sha512-oCkNVj4OKnKEcocVBcDfiIugN1/cE6rgfT3nCtzeqZPA8+rIxMaQ0xXzIkGP8Gj2qUaP1UR7uhJ1VD8lUCpzCg==",
++      "funding": [
++        {
++          "type": "github",
++          "url": "https://github.com/sponsors/fastify"
++        },
++        {
++          "type": "opencollective",
++          "url": "https://opencollective.com/fastify"
++        }
++      ],
++      "license": "MIT"
++    },
++    "node_modules/quick-format-unescaped": {
++      "version": "4.0.4",
++      "resolved": "https://registry.npmmirror.com/quick-format-unescaped/-/quick-format-unescaped-4.0.4.tgz",
++      "integrity": "sha512-tYC1Q1hgyRuHgloV/YXs2w15unPVh8qfu/qCTfhTYamaw7fyhumKa2yGpdSo87vY32rIclj+4fWYQXUMs9EHvg==",
++      "license": "MIT"
++    },
++    "node_modules/real-require": {
++      "version": "1.0.0",
++      "resolved": "https://registry.npmmirror.com/real-require/-/real-require-1.0.0.tgz",
++      "integrity": "sha512-P4nbQYQfePJxRSmY+v/KINxVucm4NF3p3s7pJveMTtom52FR4YGltUQLB8idDXwDDWW+eYrWDFbuzUnjoWHF7g==",
++      "license": "MIT"
++    },
++    "node_modules/require-from-string": {
++      "version": "2.0.2",
++      "resolved": "https://registry.npmmirror.com/require-from-string/-/require-from-string-2.0.2.tgz",
++      "integrity": "sha512-Xf0nWe6RseziFMu+Ap9biiUbmplq6S9/p+7w7YXP/JBHhrUDDUhwa+vANyubuqfZWTveU//DYVGsDG7RKL/vEw==",
++      "license": "MIT",
++      "engines": {
++        "node": ">=0.10.0"
++      }
++    },
++    "node_modules/ret": {
++      "version": "0.5.0",
++      "resolved": "https://registry.npmmirror.com/ret/-/ret-0.5.0.tgz",
++      "integrity": "sha512-I1XxrZSQ+oErkRR4jYbAyEEu2I0avBvvMM5JN+6EBprOGRCs63ENqZ3vjavq8fBw2+62G5LF5XelKwuJpcvcxw==",
++      "license": "MIT",
++      "engines": {
++        "node": ">=10"
++      }
++    },
++    "node_modules/reusify": {
++      "version": "1.1.0",
++      "resolved": "https://registry.npmmirror.com/reusify/-/reusify-1.1.0.tgz",
++      "integrity": "sha512-g6QUff04oZpHs0eG5p83rFLhHeV00ug/Yf9nZM6fLeUrPguBTkTQOdpAWWspMh55TZfVQDPaN3NQJfbVRAxdIw==",
++      "license": "MIT",
++      "engines": {
++        "iojs": ">=1.0.0",
++        "node": ">=0.10.0"
++      }
++    },
++    "node_modules/rfdc": {
++      "version": "1.4.1",
++      "resolved": "https://registry.npmmirror.com/rfdc/-/rfdc-1.4.1.tgz",
++      "integrity": "sha512-q1b3N5QkRUWUl7iyylaaj3kOpIT0N2i9MqIEQXP73GVsN9cw3fdx8X63cEmWhJGi2PPCF23Ijp7ktmd39rawIA==",
++      "license": "MIT"
++    },
++    "node_modules/safe-regex2": {
++      "version": "5.1.2",
++      "resolved": "https://registry.npmmirror.com/safe-regex2/-/safe-regex2-5.1.2.tgz",
++      "integrity": "sha512-tAtCGFPPP02VroDVzp4daGi6bC7jWG+41D47GKf18FeH/ubvKQHT9VmhAkvtjNOmJwqtApzWeUpEhkyEYULvmw==",
++      "funding": [
++        {
++          "type": "github",
++          "url": "https://github.com/sponsors/fastify"
++        },
++        {
++          "type": "opencollective",
++          "url": "https://opencollective.com/fastify"
++        }
++      ],
++      "license": "MIT",
++      "dependencies": {
++        "ret": "~0.5.0"
++      },
++      "bin": {
++        "safe-regex2": "bin/safe-regex2.js"
++      }
++    },
++    "node_modules/safe-stable-stringify": {
++      "version": "2.5.0",
++      "resolved": "https://registry.npmmirror.com/safe-stable-stringify/-/safe-stable-stringify-2.5.0.tgz",
++      "integrity": "sha512-b3rppTKm9T+PsVCBEOUR46GWI7fdOs00VKZ1+9c1EWDaDMvjQc6tUwuFyIprgGgTcWoVHSKrU8H31ZHA2e0RHA==",
++      "license": "MIT",
++      "engines": {
++        "node": ">=10"
++      }
++    },
++    "node_modules/secure-json-parse": {
++      "version": "4.1.1",
++      "resolved": "https://registry.npmmirror.com/secure-json-parse/-/secure-json-parse-4.1.1.tgz",
++      "integrity": "sha512-lnd81MQEZKjhW/Gd2TQqdd4XP6QYNdDW/EP+I7nTrFHP9y2LmaGPIHk9xsnzcOiEr1c39c/e84xFgGviQKBTRw==",
++      "funding": [
++        {
++          "type": "github",
++          "url": "https://github.com/sponsors/fastify"
++        },
++        {
++          "type": "opencollective",
++          "url": "https://opencollective.com/fastify"
++        }
++      ],
++      "license": "BSD-3-Clause"
++    },
++    "node_modules/semver": {
++      "version": "7.8.5",
++      "resolved": "https://registry.npmmirror.com/semver/-/semver-7.8.5.tgz",
++      "integrity": "sha512-Y7/KDsb8LjooZpwaqGyulO6DQlksgCncchHGk+sZIY4SBvUocMBEFH5Ur1fI4dV+Jvl0w6cjvucaIi40puRioA==",
++      "license": "ISC",
++      "bin": {
++        "semver": "bin/semver.js"
++      },
++      "engines": {
++        "node": ">=10"
++      }
++    },
++    "node_modules/set-cookie-parser": {
++      "version": "3.1.3",
++      "resolved": "https://registry.npmmirror.com/set-cookie-parser/-/set-cookie-parser-3.1.3.tgz",
++      "integrity": "sha512-xletSdAI5efyVJjsatBbzDkXl3M/Zmad3xfnQe7ZXuBB0yNwW7C2WFsNGjdRNfZunmNHQuX79xs/ACMTLCdcew==",
++      "license": "MIT"
++    },
++    "node_modules/shebang-command": {
++      "version": "2.0.0",
++      "resolved": "https://registry.npmmirror.com/shebang-command/-/shebang-command-2.0.0.tgz",
++      "integrity": "sha512-kHxr2zZpYtdmrN1qDjrrX/Z1rR1kG8Dx+gkpK1G4eXmvXswmcE1hTWBWYUzlraYw1/yZp6YuDY77YtvbN0dmDA==",
++      "license": "MIT",
++      "dependencies": {
++        "shebang-regex": "^3.0.0"
++      },
++      "engines": {
++        "node": ">=8"
++      }
++    },
++    "node_modules/shebang-regex": {
++      "version": "3.0.0",
++      "resolved": "https://registry.npmmirror.com/shebang-regex/-/shebang-regex-3.0.0.tgz",
++      "integrity": "sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A==",
++      "license": "MIT",
++      "engines": {
++        "node": ">=8"
++      }
++    },
++    "node_modules/sonic-boom": {
++      "version": "4.2.1",
++      "resolved": "https://registry.npmmirror.com/sonic-boom/-/sonic-boom-4.2.1.tgz",
++      "integrity": "sha512-w6AxtubXa2wTXAUsZMMWERrsIRAdrK0Sc+FUytWvYAhBJLyuI4llrMIC1DtlNSdI99EI86KZum2MMq3EAZlF9Q==",
++      "license": "MIT",
++      "dependencies": {
++        "atomic-sleep": "^1.0.0"
++      }
++    },
++    "node_modules/split2": {
++      "version": "4.2.0",
++      "resolved": "https://registry.npmmirror.com/split2/-/split2-4.2.0.tgz",
++      "integrity": "sha512-UcjcJOWknrNkF6PLX83qcHM6KHgVKNkV62Y8a5uYDVv9ydGQVwAHMKqHdJje1VTWpljG0WYpCDhrCdAOYH4TWg==",
++      "license": "ISC",
++      "engines": {
++        "node": ">= 10.x"
++      }
++    },
++    "node_modules/thread-stream": {
++      "version": "4.2.0",
++      "resolved": "https://registry.npmmirror.com/thread-stream/-/thread-stream-4.2.0.tgz",
++      "integrity": "sha512-e2zZ96wSChazBsbENf/Pcm/4swHt2cEKQ92rhUjkL9GCKiTDJIaTBenjE/m9DXi0QBmTMDkFDdOomUy20A1tDQ==",
++      "license": "MIT",
++      "dependencies": {
++        "real-require": "^1.0.0"
++      },
++      "engines": {
++        "node": ">=20"
++      }
++    },
++    "node_modules/toad-cache": {
++      "version": "3.7.4",
++      "resolved": "https://registry.npmmirror.com/toad-cache/-/toad-cache-3.7.4.tgz",
++      "integrity": "sha512-m1TdR/rvT7kgGJZhspNtXdsdYk0fddFpJJFlG5s+UkPFo6lkLoZ3YLOaovPYjq1R75NP5JfeTlSHaOsE09peCg==",
++      "license": "MIT",
++      "engines": {
++        "node": ">=20"
++      }
++    },
++    "node_modules/typescript": {
++      "version": "5.9.3",
++      "resolved": "https://registry.npmmirror.com/typescript/-/typescript-5.9.3.tgz",
++      "integrity": "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw==",
++      "dev": true,
++      "license": "Apache-2.0",
++      "bin": {
++        "tsc": "bin/tsc",
++        "tsserver": "bin/tsserver"
++      },
++      "engines": {
++        "node": ">=14.17"
++      }
++    },
++    "node_modules/undici-types": {
++      "version": "7.24.6",
++      "resolved": "https://registry.npmmirror.com/undici-types/-/undici-types-7.24.6.tgz",
++      "integrity": "sha512-WRNW+sJgj5OBN4/0JpHFqtqzhpbnV0GuB+OozA9gCL7a993SmU+1JBZCzLNxYsbMfIeDL+lTsphD5jN5N+n0zg==",
++      "dev": true,
++      "license": "MIT"
++    },
++    "node_modules/which": {
++      "version": "2.0.2",
++      "resolved": "https://registry.npmmirror.com/which/-/which-2.0.2.tgz",
++      "integrity": "sha512-BLI3Tl1TW3Pvl70l3yq3Y64i+awpwXqsGBYWkkqMtnbXgrMD+yj7rhW0kuEDxzJaYXGjEW5ogapKNMEKNMjibA==",
++      "license": "ISC",
++      "dependencies": {
++        "isexe": "^2.0.0"
++      },
++      "bin": {
++        "node-which": "bin/node-which"
++      },
++      "engines": {
++        "node": ">= 8"
++      }
++    },
++    "node_modules/xtend": {
++      "version": "4.0.2",
++      "resolved": "https://registry.npmmirror.com/xtend/-/xtend-4.0.2.tgz",
++      "integrity": "sha512-LKYU1iAXJXUgAXn9URjiu+MWhyUXHsvfp7mcuYm9dSUKK0/CjtrUwFAxD82/mCWbtLsGjFIad0wIsod4zrTAEQ==",
++      "license": "MIT",
++      "engines": {
++        "node": ">=0.4"
++      }
++    }
++  }
++}
+
+diff --git a/server/package.json b/server/package.json
+new file mode 100644
+--- /dev/null
++++ b/server/package.json
+@@ -0,0 +1,17 @@
++{
++  "name": "neurou-real-service",
++  "version": "0.1.0",
++  "private": true,
++  "type": "module",
++  "engines": { "node": ">=24 <25" },
++  "scripts": {
++    "build": "tsc -p tsconfig.json",
++    "test": "npm run build && node --test dist/test/*.test.js",
++    "start": "node dist/src/main.js",
++    "migrate": "node dist/src/cli.js migrate",
++    "account-create": "node dist/src/cli.js account-create",
++    "trust-anchor": "node dist/src/cli.js trust-anchor"
++  },
++  "dependencies": { "@fastify/cookie": "^11.0.2", "argon2": "^0.44.0", "fastify": "^5.6.2", "pg": "^8.16.3" },
++  "devDependencies": { "@types/node": "^24.0.0", "@types/pg": "^8.15.5", "typescript": "^5.9.3" }
++}
+
+diff --git a/server/src/app.ts b/server/src/app.ts
+new file mode 100644
+--- /dev/null
++++ b/server/src/app.ts
+@@ -0,0 +1,150 @@
++import Fastify, { type FastifyInstance, type FastifyReply, type FastifyRequest } from 'fastify';
++import cookie from '@fastify/cookie';
++import argon2 from 'argon2';
++import { randomUUID, timingSafeEqual } from 'node:crypto';
++import { performance } from 'node:perf_hooks';
++import type { Pool, PoolClient } from 'pg';
++import type { ServiceConfig } from './config.js';
++import type { AuthenticationFact, DeviceChallenge, P256PublicJwk, RegisteredDeviceFact, ServiceFaultCode } from './contracts.js';
++import { canonical, keyFingerprint, randomToken, ReceiptSigner, sha256, validatePublicKey, verifyDeviceProof } from './crypto.js';
++import { passwordOptions, transaction } from './db.js';
++import { parseStrictJson } from './strict-json.js';
++
++const nonce = { type: 'string', pattern: '^[A-Za-z0-9_-]{43}$' };
++const uuid = { type: 'string', pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$' };
++const accountName = { type: 'string', pattern: '^[A-Za-z0-9_.-]{3,64}$' };
++const signature = { type: 'string', pattern: '^[A-Za-z0-9_-]{86}$' };
++const label = { type: 'string', minLength: 1, maxLength: 128, pattern: '^[^\\u0000-\\u001f\\u007f]+$' };
++const jwk = { type: 'object', additionalProperties: false, required: ['kty','crv','x','y'], properties: { kty: { const: 'EC' }, crv: { const: 'P-256' }, x: nonce, y: nonce } };
++const onlyNonce = { type: 'object', additionalProperties: false, required: ['requestNonce'], properties: { requestNonce: nonce } };
++function bodySchema(properties: Record<string, unknown>): object { return { type: 'object', additionalProperties: false, required: Object.keys(properties), properties }; }
++interface DeviceRow { device_id: string; generation: number; key_fingerprint: string; label: string; status: 'Active' | 'Revoked'; public_key_jwk: P256PublicJwk; account_id: string }
++interface FamilyRow { session_id: string; account_id: string; device_id: string; csrf_hash: string; absolute_expires_at: string; revoked: boolean; account_name: string; disabled: boolean; generation: number; key_fingerprint: string; label: string; status: 'Active' | 'Revoked' }
++interface TokenRow extends FamilyRow { token_hash: string; expires_at: string; used: boolean }
++interface ChallengeRow { challenge_id: string; purpose: 'LoginDevice' | 'RegisterDevice'; account_name: string; device_id: string | null; public_key_jwk: P256PublicJwk; key_fingerprint: string; challenge_data: DeviceChallenge; expires_at: string; consumed: boolean; owner_session_id: string | null }
++class Fault extends Error { constructor(readonly code: ServiceFaultCode, readonly status = 400) { super(code); } }
++function deviceFact(row: DeviceRow | FamilyRow): RegisteredDeviceFact { return { deviceId: row.device_id, generation: row.generation, keyFingerprint: row.key_fingerprint, assurance: 'RegisteredCredential', label: row.label, status: row.status }; }
++function validNonce(value: string): boolean { return Buffer.from(value,'base64url').toString('base64url') === value; }
++function csrfValid(request: FastifyRequest, family: FamilyRow): boolean {
++ const header = request.headers['x-csrf-token']; if (typeof header !== 'string' || !/^[A-Za-z0-9_-]{43}$/.test(header)) return false;
++ return timingSafeEqual(Buffer.from(sha256(header)), Buffer.from(family.csrf_hash));
++}
++const sessionSql = `SELECT t.token_hash,t.expires_at,t.used,f.*,a.account_name,a.disabled,d.generation,d.key_fingerprint,d.label,d.status FROM auth_tokens t JOIN auth_families f USING(session_id) JOIN accounts a ON a.account_id=f.account_id JOIN devices d ON d.device_id=f.device_id WHERE t.token_hash=$1 AND t.kind=$2`;
++
++export async function buildApp(config: ServiceConfig, pool: Pool, signer: ReceiptSigner): Promise<FastifyInstance> {
++ if (signer.serviceInstanceId !== config.serviceInstanceId) throw new Error('Signing service mismatch');
++ const app = Fastify({ logger: false, bodyLimit: 16384, trustProxy: false, ajv: { customOptions: { removeAdditional: false, coerceTypes: false, useDefaults: false } } });
++ await app.register(cookie);
++ app.removeContentTypeParser('application/json');
++ app.addContentTypeParser('application/json', { parseAs: 'string' }, (_request, text, done) => { try { done(null, parseStrictJson(text as string)); } catch { done(new Fault('InvalidData'), undefined); } });
++ const dummyHash = await argon2.hash(randomToken(), passwordOptions);
++ const clockRow = await pool.query<{ generation: string }>("SELECT nextval('service_clock_generation') AS generation");
++ const clockGeneration = Number(clockRow.rows[0]?.generation); if (!Number.isSafeInteger(clockGeneration) || clockGeneration < 1) throw new Error('Clock generation invalid');
++ let clockTrusted = config.clockInitiallyTrusted; let priorWall = Date.now(); let priorMono = performance.now();
++ function now(): number {
++  const wall = Date.now(); const mono = performance.now(); if (wall < priorWall || Math.abs((wall - priorWall) - (mono - priorMono)) > 2000) clockTrusted = false;
++  priorWall = wall; priorMono = mono; return wall;
++ }
++ const rateBuckets = new Map<string,{count:number;expires:number}>();
++ app.addHook('onRequest', async (request, reply) => {
++  if (request.headers.host !== new URL(config.origin).host) throw new Fault('Forbidden', 403);
++  if (request.url === '/health/ready') return;
++  if (request.headers.origin !== config.origin) throw new Fault('Forbidden', 403);
++  if (request.method !== 'GET' && request.headers['content-type']?.split(';')[0]?.trim().toLowerCase() !== 'application/json') throw new Fault('InvalidData', 415);
++  const time = now(); const sensitive = /\/auth\/login|\/device\/challenge/.test(request.url); const key = request.ip + (sensitive ? ':sensitive' : ':general');
++  if (rateBuckets.size > 4096) for (const [key,value] of rateBuckets) if (value.expires < time) rateBuckets.delete(key);
++  const bucket = rateBuckets.get(key); if (!bucket || bucket.expires <= time) rateBuckets.set(key,{count:1,expires:time+60_000});
++  else { bucket.count++; if (bucket.count > (sensitive ? 30 : 240)) { reply.header('Retry-After','60'); throw new Fault('RateLimited',429); } }
++ });
++ app.setErrorHandler((error, request, reply) => {
++  const details = error as {validation?:unknown;statusCode?:number};
++  const fault = error instanceof Fault ? error : new Fault(details.validation || details.statusCode === 400 || details.statusCode === 413 ? 'InvalidData' : 'AuthorityUnavailable', details.validation ? 400 : (details.statusCode === 413 ? 413 : details.statusCode === 400 ? 400 : 503));
++  reply.code(fault.status).send({ kind: 'Rejected', fault: { code: fault.code, requestId: request.id, retryAfterMs: fault.code === 'RateLimited' ? 60_000 : null } });
++ });
++ app.addHook('onSend', async (_request, reply, payload) => { reply.header('Cache-Control','no-store'); reply.header('X-Content-Type-Options','nosniff'); reply.header('Referrer-Policy','no-referrer'); return payload; });
++ async function family(request: FastifyRequest, client: Pool | PoolClient = pool, kind = 'Access', locked = false): Promise<TokenRow> {
++  const raw = request.cookies[kind === 'Access' ? 'neurou_access' : 'neurou_refresh'];
++  if (!raw || !/^[A-Za-z0-9_-]{43}$/.test(raw) || !validNonce(raw)) throw new Fault('Unauthenticated',401);
++  const hash = sha256(raw);
++  if (locked) {
++   const identity = await client.query<{account_id:string;device_id:string;session_id:string}>("SELECT f.account_id,f.device_id,f.session_id FROM auth_tokens t JOIN auth_families f USING(session_id) WHERE t.token_hash=$1 AND t.kind=$2",[hash,kind]);
++   const ids=identity.rows[0];if(!ids)throw new Fault('Unauthenticated',401);
++   // All mutating auth transactions lock account -> device -> family -> token.
++   // Locking the family first through arbitrary token rows can deadlock rotation/reuse.
++   await client.query('SELECT account_id FROM accounts WHERE account_id=$1 FOR UPDATE',[ids.account_id]);
++   await client.query('SELECT device_id FROM devices WHERE device_id=$1 FOR UPDATE',[ids.device_id]);
++   await client.query('SELECT session_id FROM auth_families WHERE session_id=$1 FOR UPDATE',[ids.session_id]);
++  }
++  const rows = await client.query<TokenRow>(sessionSql + (locked ? ' FOR UPDATE OF t' : ''), [hash,kind]); const row = rows.rows[0];
++  if (!row || row.revoked || row.disabled || row.status !== 'Active' || Number(row.absolute_expires_at) <= now() || Number(row.expires_at) <= now()) throw new Fault('Unauthenticated',401);
++  if (kind === 'Access' && row.used) throw new Fault('Unauthenticated',401);
++  if (!csrfValid(request,row)) throw new Fault('Forbidden',403); return row;
++ }
++ function cookies(reply: FastifyReply, access: string, refresh: string, absoluteExpiry: number): void {
++  const base = { httpOnly: true, sameSite: 'strict' as const, secure: false, path: '/' };
++  reply.setCookie('neurou_access',access,{...base,maxAge:Math.floor(config.accessTtlMs/1000)});
++  reply.setCookie('neurou_refresh',refresh,{...base,maxAge:Math.max(0,Math.floor((absoluteExpiry-now())/1000))});
++ }
++ function clearCookies(reply: FastifyReply): void { const base = { path:'/',httpOnly:true,sameSite:'strict' as const,secure:false }; reply.clearCookie('neurou_access',base); reply.clearCookie('neurou_refresh',base); }
++ function authFact(row: FamilyRow, csrfToken: string, requestNonce: string, expiresAt: number): AuthenticationFact { return { requestNonce, sessionId: row.session_id, csrfToken, account: { accountId:row.account_id,accountName:row.account_name }, device: deviceFact(row), expiresAtServerEpochMs:expiresAt }; }
++ async function makeTokens(client: PoolClient, sessionId: string, absoluteExpiry: number): Promise<{access:string;refresh:string;expiresAt:number}> {
++  const access = randomToken(); const refresh = randomToken(); const expiresAt = Math.min(now()+config.accessTtlMs,absoluteExpiry);
++  await client.query('INSERT INTO auth_tokens(token_hash,session_id,kind,expires_at) VALUES($1,$2,$3,$4),($5,$2,$6,$7)',[sha256(access),sessionId,'Access',expiresAt,sha256(refresh),'Refresh',absoluteExpiry]);
++  return {access,refresh,expiresAt};
++ }
++ app.get('/health/ready', async (_request,reply) => { await pool.query('SELECT 1'); now(); if(!clockTrusted)reply.code(503); return { ready:clockTrusted, serviceMode:'ExternalService', schemaVersion:1, clockStatus:clockTrusted?'Trusted':'Untrusted', serviceInstanceId:config.serviceInstanceId, keyId:signer.keyId }; });
++ app.get('/api/v1/service/keys', async () => ({serviceInstanceId:config.serviceInstanceId,keyId:signer.keyId,publicKeyJwk:signer.jwk,keyFingerprint:signer.keyId,trustSource:'OutOfBandConfigurationRequired'}));
++
++ app.post<{Body:{purpose:'LoginDevice'|'RegisterDevice';accountName:string;publicKeyJwk:P256PublicJwk;deviceId:string|null;requestNonce:string}}>('/api/v1/device/challenge',{schema:{body:bodySchema({purpose:{enum:['LoginDevice','RegisterDevice']},accountName,publicKeyJwk:jwk,deviceId:{anyOf:[uuid,{type:'null'}]},requestNonce:nonce})}},async request => {
++  const input=request.body; if(!validNonce(input.requestNonce)) throw new Fault('InvalidData'); try {validatePublicKey(input.publicKeyJwk);} catch{throw new Fault('InvalidData');}
++  const fingerprint=keyFingerprint(input.publicKeyJwk); let generation:number|null=null; let ownerSessionId:string|null=null;
++  if(input.purpose==='RegisterDevice') {const session=await family(request); if(session.account_name!==input.accountName||input.deviceId!==null) throw new Fault('Forbidden',403); ownerSessionId=session.session_id;}
++  else if(input.deviceId!==null) {const rows=await pool.query<DeviceRow & {account_name:string}>('SELECT d.*,a.account_name FROM devices d JOIN accounts a USING(account_id) WHERE device_id=$1',[input.deviceId]);const device=rows.rows[0];if(!device||device.account_name!==input.accountName||device.key_fingerprint!==fingerprint||device.status!=='Active') throw new Fault('Unauthenticated',401);generation=device.generation;}
++  const time=now();const challenge:DeviceChallenge={schemaVersion:1,purpose:input.purpose,challengeId:randomUUID(),nonceBase64Url:randomToken(),accountName:input.accountName,keyFingerprint:fingerprint,deviceId:input.deviceId,deviceGeneration:generation,expiresAtServerEpochMs:time+config.challengeTtlMs,serviceInstanceId:config.serviceInstanceId,requestNonce:input.requestNonce};
++  await pool.query('INSERT INTO device_challenges(challenge_id,purpose,account_name,device_id,public_key_jwk,key_fingerprint,challenge_data,expires_at,owner_session_id) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9)',[challenge.challengeId,input.purpose,input.accountName,input.deviceId,input.publicKeyJwk,fingerprint,challenge,challenge.expiresAtServerEpochMs,ownerSessionId]);
++  return signer.issue('DeviceChallenge',challenge,time);
++ });
++ app.post<{Body:{accountName:string;password:string;challengeId:string;signatureBase64Url:string;deviceLabel:string;requestNonce:string}}>('/api/v1/auth/login',{schema:{body:bodySchema({accountName,password:{type:'string',minLength:12,maxLength:1024,pattern:'^[^\\u0000-\\u001f\\u007f]+$'},challengeId:uuid,signatureBase64Url:signature,deviceLabel:label,requestNonce:nonce})}},async(request,reply)=>{
++  const input=request.body;if(!validNonce(input.requestNonce))throw new Fault('InvalidData');
++  const accounts=await pool.query<{account_id:string;account_name:string;password_hash:string;disabled:boolean}>('SELECT * FROM accounts WHERE account_name=$1',[input.accountName]); const account=accounts.rows[0];
++  const passwordOk=await argon2.verify(account?.password_hash??dummyHash,input.password);if(!account||!passwordOk||account.disabled)throw new Fault('Unauthenticated',401);
++  const result=await transaction(pool,async client=>{
++   const current=await client.query<{disabled:boolean;password_hash:string}>('SELECT disabled,password_hash FROM accounts WHERE account_id=$1 FOR UPDATE',[account.account_id]);
++   if(!current.rows[0]||current.rows[0].disabled||current.rows[0].password_hash!==account.password_hash)throw new Fault('Unauthenticated',401);
++   const rows=await client.query<ChallengeRow>('SELECT * FROM device_challenges WHERE challenge_id=$1 FOR UPDATE',[input.challengeId]);const challenge=rows.rows[0];
++   if(!challenge||challenge.consumed||challenge.purpose!=='LoginDevice'||challenge.account_name!==input.accountName||Number(challenge.expires_at)<=now()||!verifyDeviceProof(challenge.challenge_data,challenge.public_key_jwk,input.signatureBase64Url))throw new Fault('Unauthenticated',401);
++   let device:DeviceRow;
++   if(challenge.device_id===null){
++    const same=await client.query<DeviceRow>('SELECT * FROM devices WHERE account_id=$1 AND key_fingerprint=$2',[account.account_id,challenge.key_fingerprint]);
++    if(same.rows[0]){if(same.rows[0].status!=='Active')throw new Fault('DeviceUntrusted',403);device=same.rows[0];}
++    else{const count=await client.query<{count:string}>('SELECT count(*) FROM devices WHERE account_id=$1',[account.account_id]);if(Number(count.rows[0]?.count)>=256)throw new Fault('Conflict',409);const inserted=await client.query<DeviceRow>("INSERT INTO devices(device_id,account_id,generation,key_fingerprint,public_key_jwk,label,assurance,status,created_at) VALUES($1,$2,1,$3,$4,$5,'RegisteredCredential','Active',$6) RETURNING *",[randomUUID(),account.account_id,challenge.key_fingerprint,challenge.public_key_jwk,input.deviceLabel,now()]);device=inserted.rows[0]!;}
++   }else{const rows=await client.query<DeviceRow>('SELECT * FROM devices WHERE device_id=$1 FOR UPDATE',[challenge.device_id]);const existing=rows.rows[0];if(!existing||existing.account_id!==account.account_id||existing.status!=='Active'||existing.generation!==challenge.challenge_data.deviceGeneration||existing.key_fingerprint!==challenge.key_fingerprint)throw new Fault('DeviceUntrusted',403);device=existing;}
++   await client.query('UPDATE device_challenges SET consumed=true WHERE challenge_id=$1',[challenge.challenge_id]);
++   const sessionId=randomUUID();const csrfToken=randomToken();const absoluteExpiry=now()+config.refreshTtlMs;
++   await client.query('INSERT INTO auth_families(session_id,account_id,device_id,csrf_hash,absolute_expires_at,created_at) VALUES($1,$2,$3,$4,$5,$6)',[sessionId,account.account_id,device.device_id,sha256(csrfToken),absoluteExpiry,now()]);
++   const tokens=await makeTokens(client,sessionId,absoluteExpiry);const fact:AuthenticationFact={requestNonce:input.requestNonce,sessionId,csrfToken,account:{accountId:account.account_id,accountName:account.account_name},device:deviceFact(device),expiresAtServerEpochMs:tokens.expiresAt};return{tokens,absoluteExpiry,fact};
++  });cookies(reply,result.tokens.access,result.tokens.refresh,result.absoluteExpiry);return signer.issue('Authentication',result.fact,now());
++ });
++ app.post<{Body:{requestNonce:string}}>('/api/v1/auth/verify',{schema:{body:onlyNonce}},async request=>{if(!validNonce(request.body.requestNonce))throw new Fault('InvalidData');const row=await family(request);if(row.used)throw new Fault('Unauthenticated',401);return signer.issue('Authentication',authFact(row,request.headers['x-csrf-token'] as string,request.body.requestNonce,Number(row.expires_at)),now());});
++ app.post<{Body:{requestNonce:string}}>('/api/v1/auth/refresh',{schema:{body:onlyNonce}},async(request,reply)=>{
++  if(!validNonce(request.body.requestNonce))throw new Fault('InvalidData');
++  const result=await transaction(pool,async client=>{const row=await family(request,client,'Refresh',true);if(row.used){await client.query('UPDATE auth_families SET revoked=true WHERE session_id=$1',[row.session_id]);return null;}
++   await client.query('UPDATE auth_tokens SET used=true WHERE session_id=$1',[row.session_id]);const tokens=await makeTokens(client,row.session_id,Number(row.absolute_expires_at));return{row,tokens};});
++  if(!result){clearCookies(reply);throw new Fault('Unauthenticated',401);}cookies(reply,result.tokens.access,result.tokens.refresh,Number(result.row.absolute_expires_at));return signer.issue('Authentication',authFact(result.row,request.headers['x-csrf-token'] as string,request.body.requestNonce,result.tokens.expiresAt),now());
++ });
++ app.post<{Body:{requestNonce:string}}>('/api/v1/auth/logout',{schema:{body:onlyNonce}},async(request,reply)=>{if(!validNonce(request.body.requestNonce))throw new Fault('InvalidData');const session=await family(request,pool,'Refresh');await pool.query('UPDATE auth_families SET revoked=true WHERE session_id=$1',[session.session_id]);clearCookies(reply);return signer.issue('Logout',{requestNonce:request.body.requestNonce,sessionId:session.session_id,revoked:true},now());});
++ app.post<{Body:{requestNonce:string}}>('/api/v1/time',{schema:{body:onlyNonce}},async request=>{if(!validNonce(request.body.requestNonce))throw new Fault('InvalidData');const session=await family(request);if(session.used)throw new Fault('Unauthenticated',401);const time=now();return signer.issue('ServerTime',{requestNonce:request.body.requestNonce,serverEpochMs:time,clockGeneration,clockStatus:clockTrusted?'Trusted':'Untrusted'},time);});
++ app.post<{Body:{requestNonce:string}}>('/api/v1/account/facts',{schema:{body:onlyNonce}},async request=>{if(!validNonce(request.body.requestNonce))throw new Fault('InvalidData');const session=await family(request);const rows=await pool.query<DeviceRow>('SELECT * FROM devices WHERE account_id=$1 ORDER BY device_id',[session.account_id]);return signer.issue('AccountFacts',{requestNonce:request.body.requestNonce,account:{accountId:session.account_id,accountName:session.account_name},devices:rows.rows.map(deviceFact),revision:0},now());});
++ app.post<{Body:{challengeId:string;signatureBase64Url:string;deviceLabel:string;requestId:string;requestNonce:string}}>('/api/v1/device/register',{schema:{body:bodySchema({challengeId:uuid,signatureBase64Url:signature,deviceLabel:label,requestId:uuid,requestNonce:nonce})}},async request=>{
++  const input=request.body;if(!validNonce(input.requestNonce))throw new Fault('InvalidData');const digest=sha256(canonical(input));
++  const device=await transaction(pool,async client=>{const session=await family(request,client,'Access',true);if(session.used)throw new Fault('Unauthenticated',401);
++   await client.query('SELECT account_id FROM accounts WHERE account_id=$1 FOR UPDATE',[session.account_id]);
++   const previous=await client.query<{request_digest:string;result:RegisteredDeviceFact}>('SELECT * FROM lightweight_requests WHERE account_id=$1 AND request_id=$2',[session.account_id,input.requestId]);if(previous.rows[0]){if(previous.rows[0].request_digest!==digest)throw new Fault('Conflict',409);return previous.rows[0].result;}
++   const rows=await client.query<ChallengeRow>('SELECT * FROM device_challenges WHERE challenge_id=$1 FOR UPDATE',[input.challengeId]);const challenge=rows.rows[0];if(!challenge||challenge.consumed||challenge.purpose!=='RegisterDevice'||challenge.owner_session_id!==session.session_id||challenge.account_name!==session.account_name||Number(challenge.expires_at)<=now()||!verifyDeviceProof(challenge.challenge_data,challenge.public_key_jwk,input.signatureBase64Url))throw new Fault('DeviceUntrusted',403);
++   const count=await client.query<{count:string}>('SELECT count(*) FROM devices WHERE account_id=$1',[session.account_id]);if(Number(count.rows[0]?.count)>=256)throw new Fault('Conflict',409);
++   const same=await client.query('SELECT 1 FROM devices WHERE account_id=$1 AND key_fingerprint=$2',[session.account_id,challenge.key_fingerprint]);if(same.rowCount)throw new Fault('Conflict',409);
++   const inserted=await client.query<DeviceRow>("INSERT INTO devices(device_id,account_id,generation,key_fingerprint,public_key_jwk,label,assurance,status,created_at) VALUES($1,$2,1,$3,$4,$5,'RegisteredCredential','Active',$6) RETURNING *",[randomUUID(),session.account_id,challenge.key_fingerprint,challenge.public_key_jwk,input.deviceLabel,now()]);const fact=deviceFact(inserted.rows[0]!);
++   await client.query('UPDATE device_challenges SET consumed=true WHERE challenge_id=$1',[challenge.challenge_id]);await client.query('INSERT INTO lightweight_requests(account_id,request_id,operation,request_digest,result) VALUES($1,$2,$3,$4,$5)',[session.account_id,input.requestId,'RegisterDevice',digest,fact]);return fact;});return signer.issue('DeviceFacts',{requestNonce:input.requestNonce,device},now());
++ });
++ return app;
++}
+
+diff --git a/server/src/cli.ts b/server/src/cli.ts
+new file mode 100644
+--- /dev/null
++++ b/server/src/cli.ts
+@@ -0,0 +1,14 @@
++import { existsSync } from 'node:fs';
++import { environmentConfig } from './config.js';
++import { loadSigner } from './crypto.js';
++import { createAccount, createPool, migrate } from './db.js';
++if(existsSync('.env'))process.loadEnvFile('.env');
++const config=environmentConfig();const pool=createPool(config.databaseUrl);
++try {
++ switch(process.argv[2]){
++  case 'migrate':await migrate(pool);process.stdout.write('Schema 1 ready (PostgreSQL 17).\n');break;
++  case 'account-create':{const accountName=process.argv[3];const password=process.env.ACCOUNT_PASSWORD;if(!accountName||!password)throw new Error('Use account-create -- <accountName> and ACCOUNT_PASSWORD environment; do not pass password as command argument');const accountId=await createAccount(pool,accountName,password);delete process.env.ACCOUNT_PASSWORD;process.stdout.write(JSON.stringify({accountId,accountName})+'\n');break;}
++  case 'trust-anchor':{const signer=await loadSigner(config.serviceInstanceId,config.signingKeyPath);process.stdout.write(JSON.stringify({serviceInstanceId:config.serviceInstanceId,keyId:signer.keyId,publicKeyJwk:signer.jwk,jwkSha256:signer.keyId})+'\n');break;}
++  default:throw new Error('Expected migrate | account-create | trust-anchor');
++ }
++}catch{process.stderr.write('Command failed; verify local configuration, schema and credential policy. No secrets were printed.\n');process.exitCode=1;}finally{await pool.end();}
+
+diff --git a/server/src/config.ts b/server/src/config.ts
+new file mode 100644
+--- /dev/null
++++ b/server/src/config.ts
+@@ -0,0 +1,16 @@
++import { resolve } from 'node:path';
++export interface ServiceConfig {
++ databaseUrl: string; host: '127.0.0.1'; port: number; origin: string;
++ serviceInstanceId: string; signingKeyPath: string; clockInitiallyTrusted: boolean;
++ accessTtlMs: number; refreshTtlMs: number; challengeTtlMs: number;
++}
++export function environmentConfig(): ServiceConfig {
++ const port = Number(process.env.PORT ?? 43125); const origin = process.env.SERVICE_ORIGIN ?? `http://127.0.0.1:${port}`;
++ if (!Number.isInteger(port) || port < 1024 || port > 65535) throw new Error('PORT invalid');
++ const url = new URL(origin);
++ if (url.origin !== origin || url.protocol !== 'http:' || url.hostname !== '127.0.0.1' || url.port !== String(port)) throw new Error('This development server requires exact HTTP loopback origin');
++ if (!process.env.DATABASE_URL) throw new Error('DATABASE_URL required');
++ const serviceInstanceId = process.env.SERVICE_INSTANCE_ID ?? 'neurou-local-development';
++ if (!/^[A-Za-z0-9_.-]{3,128}$/.test(serviceInstanceId)) throw new Error('SERVICE_INSTANCE_ID invalid');
++ return { databaseUrl: process.env.DATABASE_URL, host: '127.0.0.1', port, origin, serviceInstanceId, signingKeyPath: resolve(process.env.SIGNING_KEY_PATH ?? '.local/service-signing-key.pem'), clockInitiallyTrusted: process.env.CLOCK_TRUSTED === 'true', accessTtlMs: 900_000, refreshTtlMs: 604_800_000, challengeTtlMs: 30_000 };
++}
+
+diff --git a/server/src/contracts.ts b/server/src/contracts.ts
+new file mode 100644
+--- /dev/null
++++ b/server/src/contracts.ts
+@@ -0,0 +1,29 @@
++export interface P256PublicJwk { readonly kty: 'EC'; readonly crv: 'P-256'; readonly x: string; readonly y: string }
++export type ReceiptPurpose = 'DeviceChallenge' | 'Authentication' | 'Logout' | 'ServerTime' | 'AccountFacts' | 'DeviceFacts';
++export interface SignedServiceReceipt<T> {
++ readonly schemaVersion: 1; readonly serviceInstanceId: string; readonly purpose: ReceiptPurpose;
++ readonly receiptId: string; readonly keyId: string; readonly issuedAtServerEpochMs: number;
++ readonly payload: T; readonly signatureBase64Url: string;
++}
++export interface RegisteredDeviceFact {
++ readonly deviceId: string; readonly generation: number; readonly keyFingerprint: string;
++ readonly assurance: 'RegisteredCredential'; readonly label: string; readonly status: 'Active' | 'Revoked';
++}
++export interface AccountIdentity { readonly accountId: string; readonly accountName: string }
++export interface DeviceChallenge {
++ readonly schemaVersion: 1; readonly purpose: 'LoginDevice' | 'RegisterDevice'; readonly challengeId: string;
++ readonly nonceBase64Url: string; readonly accountName: string; readonly keyFingerprint: string;
++ readonly deviceId: string | null; readonly deviceGeneration: number | null;
++ readonly expiresAtServerEpochMs: number; readonly serviceInstanceId: string; readonly requestNonce: string;
++}
++export interface AuthenticationFact {
++ readonly requestNonce: string; readonly sessionId: string; readonly csrfToken: string;
++ readonly account: AccountIdentity; readonly device: RegisteredDeviceFact; readonly expiresAtServerEpochMs: number;
++}
++export interface ServerTimeSample {
++ readonly requestNonce: string; readonly serverEpochMs: number; readonly clockGeneration: number;
++ readonly clockStatus: 'Trusted' | 'Untrusted';
++}
++export interface AccountFacts { readonly requestNonce: string; readonly account: AccountIdentity; readonly devices: readonly RegisteredDeviceFact[]; readonly revision: 0 }
++export type ServiceFaultCode = 'Unauthenticated' | 'DeviceUntrusted' | 'AuthorityUnavailable' | 'TimeUntrusted' | 'Conflict' | 'RateLimited' | 'InvalidData' | 'Forbidden';
++export interface ServiceFault { readonly kind: 'Rejected'; readonly fault: { readonly code: ServiceFaultCode; readonly requestId: string; readonly retryAfterMs: number | null } }
+
+diff --git a/server/src/crypto.ts b/server/src/crypto.ts
+new file mode 100644
+--- /dev/null
++++ b/server/src/crypto.ts
+@@ -0,0 +1,59 @@
++import { createHash, createPrivateKey, createPublicKey, generateKeyPairSync, randomBytes, randomUUID, sign, verify, type KeyObject } from 'node:crypto';
++import { mkdir, readFile, writeFile } from 'node:fs/promises';
++import { dirname } from 'node:path';
++import type { DeviceChallenge, P256PublicJwk, ReceiptPurpose, SignedServiceReceipt } from './contracts.js';
++
++export function canonical(value: unknown): string {
++ if (value === null || typeof value === 'boolean') return JSON.stringify(value);
++ if (typeof value === 'string') { if (/[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/u.test(value)) throw new Error('Invalid Unicode'); return JSON.stringify(value); }
++ if (typeof value === 'number') { if (!Number.isSafeInteger(value)) throw new Error('Unsafe numeric value'); return JSON.stringify(value); }
++ if (Array.isArray(value)) return '[' + value.map(canonical).join(',') + ']';
++ if (typeof value === 'object' && Object.getPrototypeOf(value) === Object.prototype) {
++  const object = value as Record<string, unknown>;
++  return '{' + Object.keys(object).sort().map(key => canonical(key) + ':' + canonical(object[key])).join(',') + '}';
++ }
++ throw new Error('Invalid canonical data');
++}
++export function sha256(value: string | Buffer): string { return createHash('sha256').update(value).digest('hex'); }
++export function randomToken(): string { return randomBytes(32).toString('base64url'); }
++export function publicJwk(key: KeyObject): P256PublicJwk {
++ const jwk = createPublicKey(key).export({ format: 'jwk' });
++ if (jwk.kty !== 'EC' || jwk.crv !== 'P-256' || !jwk.x || !jwk.y) throw new Error('Not P-256');
++ return { kty: 'EC', crv: 'P-256', x: jwk.x, y: jwk.y };
++}
++export function keyFingerprint(jwk: P256PublicJwk): string {
++ return createHash('sha256').update(canonical({ crv: jwk.crv, kty: jwk.kty, x: jwk.x, y: jwk.y })).digest('base64url');
++}
++export function validatePublicKey(jwk: P256PublicJwk): void {
++ if (!/^[A-Za-z0-9_-]{43}$/.test(jwk.x) || !/^[A-Za-z0-9_-]{43}$/.test(jwk.y)) throw new Error('Invalid coordinates');
++ if (Buffer.from(jwk.x, 'base64url').toString('base64url') !== jwk.x || Buffer.from(jwk.y, 'base64url').toString('base64url') !== jwk.y) throw new Error('Noncanonical coordinates');
++ createPublicKey({ key: { ...jwk }, format: 'jwk' });
++}
++export function deviceProofBytes(challenge: DeviceChallenge): Buffer { return Buffer.from('Neurou/device/v1\0' + canonical(challenge)); }
++export function verifyDeviceProof(challenge: DeviceChallenge, jwk: P256PublicJwk, signature: string): boolean {
++ if (!/^[A-Za-z0-9_-]{86}$/.test(signature)) return false;
++ const bytes = Buffer.from(signature, 'base64url');
++ if (bytes.length !== 64 || bytes.toString('base64url') !== signature) return false;
++ try { return verify('sha256', deviceProofBytes(challenge), { key: createPublicKey({ key: { ...jwk }, format: 'jwk' }), dsaEncoding: 'ieee-p1363' }, bytes); } catch { return false; }
++}
++export class ReceiptSigner {
++ readonly jwk: P256PublicJwk; readonly keyId: string;
++ constructor(readonly serviceInstanceId: string, private readonly privateKey: KeyObject) { this.jwk = publicJwk(privateKey); this.keyId = keyFingerprint(this.jwk); }
++ issue<T>(purpose: ReceiptPurpose, payload: T, now: number): SignedServiceReceipt<T> {
++  const unsigned = { schemaVersion: 1 as const, serviceInstanceId: this.serviceInstanceId, purpose, receiptId: randomUUID(), keyId: this.keyId, issuedAtServerEpochMs: now, payload };
++  const signatureBase64Url = sign('sha256', Buffer.from('Neurou/service/v1\0' + canonical(unsigned)), { key: this.privateKey, dsaEncoding: 'ieee-p1363' }).toString('base64url');
++  return { ...unsigned, signatureBase64Url };
++ }
++}
++export async function loadSigner(serviceInstanceId: string, keyPath: string): Promise<ReceiptSigner> {
++ await mkdir(dirname(keyPath), { recursive: true });
++ let pem: string;
++ try { pem = await readFile(keyPath, 'utf8'); }
++ catch (error) {
++  if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error;
++  const generated = generateKeyPairSync('ec', { namedCurve: 'prime256v1' }).privateKey.export({ format: 'pem', type: 'pkcs8' }).toString();
++  try { await writeFile(keyPath, generated, { flag: 'wx', mode: 0o600 }); pem = generated; }
++  catch (writeError) { if ((writeError as NodeJS.ErrnoException).code !== 'EEXIST') throw writeError; pem = await readFile(keyPath, 'utf8'); }
++ }
++ return new ReceiptSigner(serviceInstanceId, createPrivateKey(pem));
++}
+
+diff --git a/server/src/db.ts b/server/src/db.ts
+new file mode 100644
+--- /dev/null
++++ b/server/src/db.ts
+@@ -0,0 +1,27 @@
++import { Pool, type PoolClient } from 'pg';
++import { readFile } from 'node:fs/promises';
++import { resolve } from 'node:path';
++import { randomUUID } from 'node:crypto';
++import argon2 from 'argon2';
++export const passwordOptions = { type: argon2.argon2id, memoryCost: 65536, timeCost: 3, parallelism: 1, hashLength: 32 };
++export function createPool(connectionString: string): Pool { const pool=new Pool({ connectionString, max: 10, connectionTimeoutMillis: 5000, statement_timeout: 5000 }); pool.on('error',()=>undefined); return pool; }
++export async function migrate(pool: Pool, migrationDirectory = resolve(process.cwd(), 'migrations')): Promise<void> {
++ const client = await pool.connect();
++ try {
++  const version = await client.query<{ server_version_num: string }>('SHOW server_version_num');
++  if (Math.floor(Number(version.rows[0]?.server_version_num) / 10000) !== 17) throw new Error('PostgreSQL 17 required');
++  await client.query('SELECT pg_advisory_lock(253601)');
++  await client.query(await readFile(resolve(migrationDirectory, '001.sql'), 'utf8'));
++ } finally { await client.query('SELECT pg_advisory_unlock(253601)').catch(() => undefined); client.release(); }
++}
++export async function transaction<T>(pool: Pool, action: (client: PoolClient) => Promise<T>): Promise<T> {
++ const client = await pool.connect();
++ try { await client.query('BEGIN'); const result = await action(client); await client.query('COMMIT'); return result; }
++ catch (error) { await client.query('ROLLBACK'); throw error; }
++ finally { client.release(); }
++}
++export async function createAccount(pool: Pool, accountName: string, password: string): Promise<string> {
++ if (!/^[A-Za-z0-9_.-]{3,64}$/.test(accountName) || password.length < 12 || password.length > 1024 || /[\u0000-\u001f\u007f]/.test(password)) throw new Error('Account name or password does not meet policy');
++ const accountId = randomUUID(); const passwordHash = await argon2.hash(password, passwordOptions);
++ await pool.query('INSERT INTO accounts(account_id,account_name,password_hash,created_at) VALUES($1,$2,$3,$4)', [accountId, accountName, passwordHash, Date.now()]); return accountId;
++}
+
+diff --git a/server/src/main.ts b/server/src/main.ts
+new file mode 100644
+--- /dev/null
++++ b/server/src/main.ts
+@@ -0,0 +1,20 @@
++import { existsSync } from 'node:fs';
++import { buildApp } from './app.js';
++import { environmentConfig } from './config.js';
++import { loadSigner } from './crypto.js';
++import { createPool } from './db.js';
++let shutdown:(()=>Promise<void>)|undefined;
++try {
++ if (existsSync('.env')) process.loadEnvFile('.env');
++ const config = environmentConfig(); const pool = createPool(config.databaseUrl);
++ shutdown=()=>pool.end();
++ const signer = await loadSigner(config.serviceInstanceId,config.signingKeyPath);
++ const app = await buildApp(config,pool,signer);
++ shutdown=async()=>{await app.close();await pool.end();};
++ await app.listen({host:config.host,port:config.port});
++ process.stdout.write(`Neurou ExternalService listening at ${config.origin}; clock=${config.clockInitiallyTrusted?'operator-trusted':'untrusted'}\n`);
++ for(const signal of ['SIGINT','SIGTERM'] as const) process.once(signal,()=>{void shutdown?.().then(()=>process.exit(0));});
++} catch {
++ process.stderr.write('ExternalService startup failed; verify private configuration, database schema, signing key and loopback port.\n');
++ await shutdown?.().catch(()=>undefined);process.exitCode=1;
++}
+
+diff --git a/server/src/strict-json.ts b/server/src/strict-json.ts
+new file mode 100644
+--- /dev/null
++++ b/server/src/strict-json.ts
+@@ -0,0 +1,31 @@
++/** JSON grammar parser rejects duplicate keys before JSON.parse can erase them. */
++export function parseStrictJson(text: string): unknown {
++ let i = 0;
++ function whitespace(): void { while (/[\x20\x09\x0a\x0d]/.test(text[i] ?? '') && i < text.length) i++; }
++ function string(): string {
++  const start = i++;
++  while (i < text.length) {
++   const char = text[i++];
++   if (char === '"') { const value = JSON.parse(text.slice(start, i)) as string; if (/[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/u.test(value)) throw new Error('Invalid Unicode'); return value; }
++   if (char === '\\') i++;
++  }
++  throw new Error('Unterminated string');
++ }
++ function value(depth = 0): void {
++  if (depth > 32) throw new Error('Too deeply nested');
++  whitespace(); const char = text[i];
++  if (char === '"') { string(); return; }
++  if (char === '{') {
++   i++; whitespace(); const keys = new Set<string>(); if (text[i] === '}') { i++; return; }
++   for (;;) { whitespace(); if (text[i] !== '"') throw new Error('Object key required'); const key = string(); if (keys.has(key)) throw new Error('Duplicate key'); keys.add(key); whitespace(); if (text[i++] !== ':') throw new Error('Colon required'); value(depth + 1); whitespace(); const next = text[i++]; if (next === '}') return; if (next !== ',') throw new Error('Invalid object'); }
++  }
++  if (char === '[') {
++   i++; whitespace(); if (text[i] === ']') { i++; return; }
++   for (;;) { value(depth + 1); whitespace(); const next = text[i++]; if (next === ']') return; if (next !== ',') throw new Error('Invalid array'); }
++  }
++  const match = /^(?:true|false|null|-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?)/.exec(text.slice(i));
++  if (!match) throw new Error('Invalid value'); i += match[0].length;
++  if (/^-?\d/.test(match[0]) && !Number.isSafeInteger(Number(match[0]))) throw new Error('Unsafe number');
++ }
++ value(); whitespace(); if (i !== text.length) throw new Error('Trailing data'); return JSON.parse(text) as unknown;
++}
+
+diff --git a/server/test/http.test.ts b/server/test/http.test.ts
+new file mode 100644
+--- /dev/null
++++ b/server/test/http.test.ts
+@@ -0,0 +1,129 @@
++import { test, before, after } from 'node:test';
++import assert from 'node:assert/strict';
++import { generateKeyPairSync, randomUUID, sign, verify, createPublicKey } from 'node:crypto';
++import { request as httpRequest } from 'node:http';
++import type { FastifyInstance } from 'fastify';
++import type { Pool } from 'pg';
++import { buildApp } from '../src/app.js';
++import type { ServiceConfig } from '../src/config.js';
++import type { AuthenticationFact, DeviceChallenge, SignedServiceReceipt, P256PublicJwk } from '../src/contracts.js';
++import { canonical, deviceProofBytes, publicJwk, randomToken, ReceiptSigner, sha256 } from '../src/crypto.js';
++import { createAccount, createPool, migrate } from '../src/db.js';
++import { parseStrictJson } from '../src/strict-json.js';
++
++const databaseUrl = process.env.B25B_DATABASE_URL ?? process.env.DATABASE_URL;
++const integration = test;
++let pool:Pool; let app:FastifyInstance; let origin:string; let config:ServiceConfig;
++const privateKey = generateKeyPairSync('ec',{namedCurve:'prime256v1'}).privateKey;
++const signer = new ReceiptSigner('neurou-http-test',privateKey);
++const credential = generateKeyPairSync('ec',{namedCurve:'prime256v1'}).privateKey;
++const accountName='http_'+randomUUID().replaceAll('-','');const password=randomToken();let accountId:string;
++interface Jar {cookies:Map<string,string>;csrf:string}
++const jar:Jar={cookies:new Map(),csrf:''};let auth:AuthenticationFact;
++function copyJar(source:Jar):Jar{return{cookies:new Map(source.cookies),csrf:source.csrf};}
++async function request(path:string,body:unknown,session:Jar=jar,extra:Record<string,string>={}):Promise<{response:Response;value:any}> {
++ const headers:Record<string,string>={'Content-Type':'application/json',Origin:origin,...extra};if(session.cookies.size)headers.Cookie=[...session.cookies].map(([k,v])=>k+'='+v).join('; ');if(session.csrf)headers['X-CSRF-Token']=session.csrf;
++ const response=await fetch(origin+path,{method:'POST',headers,body:typeof body==='string'?body:JSON.stringify(body)});
++ for(const entry of response.headers.getSetCookie()){const pair=entry.split(';')[0]!;const index=pair.indexOf('=');const name=pair.slice(0,index);const value=pair.slice(index+1);if(value)session.cookies.set(name,value);else session.cookies.delete(name);}
++ return{response,value:await response.json()};
++}
++function checkedReceipt<T>(value:SignedServiceReceipt<T>,purpose:string,requestNonce:string):T{
++ assert.equal(value.schemaVersion,1);assert.equal(value.serviceInstanceId,signer.serviceInstanceId);assert.equal(value.keyId,signer.keyId);assert.equal(value.purpose,purpose);assert.equal((value.payload as {requestNonce:string}).requestNonce,requestNonce);
++ const {signatureBase64Url,...unsigned}=value;assert.equal(Buffer.from(signatureBase64Url,'base64url').length,64);assert.ok(verify('sha256',Buffer.from('Neurou/service/v1\0'+canonical(unsigned)),{key:createPublicKey(privateKey),dsaEncoding:'ieee-p1363'},Buffer.from(signatureBase64Url,'base64url')));return value.payload;
++}
++async function challenge(key=credential,deviceId:string|null=null,purpose:'LoginDevice'|'RegisterDevice'='LoginDevice'):Promise<DeviceChallenge>{
++ const requestNonce=randomToken();const result=await request('/api/v1/device/challenge',{purpose,accountName,publicKeyJwk:publicJwk(key),deviceId,requestNonce});assert.equal(result.response.status,200);return checkedReceipt<DeviceChallenge>(result.value,'DeviceChallenge',requestNonce);
++}
++function proof(value:DeviceChallenge,key=credential):string{return sign('sha256',deviceProofBytes(value),{key,dsaEncoding:'ieee-p1363'}).toString('base64url');}
++async function login(target:Jar=jar):Promise<AuthenticationFact>{const value=await challenge();const requestNonce=randomToken();const result=await request('/api/v1/auth/login',{accountName,password,challengeId:value.challengeId,signatureBase64Url:proof(value),deviceLabel:'HTTP integration credential',requestNonce},target);assert.equal(result.response.status,200);const fact=checkedReceipt<AuthenticationFact>(result.value,'Authentication',requestNonce);target.csrf=fact.csrfToken;return fact;}
++before(async()=>{
++ if(!databaseUrl)throw new Error('B25B_DATABASE_URL is required: these tests never substitute an in-memory database');
++ pool=createPool(databaseUrl);await migrate(pool);accountId=await createAccount(pool,accountName,password);
++ config={databaseUrl,host:'127.0.0.1',port:0,origin:'http://127.0.0.1:0',serviceInstanceId:signer.serviceInstanceId,signingKeyPath:'unused-in-memory-test-key',clockInitiallyTrusted:true,accessTtlMs:900000,refreshTtlMs:604800000,challengeTtlMs:30000};
++ app=await buildApp(config,pool,signer);await app.listen({host:config.host,port:0});const address=app.server.address();assert.ok(address&&typeof address!=='string');config.port=address.port;origin=config.origin=`http://127.0.0.1:${address.port}`;
++});
++after(async()=>{await app?.close();await pool?.end();});
++integration('strict JSON + canonical crypto reject duplicate keys, malformed Unicode and unsafe numbers',()=>{
++ for(const raw of ['{"a":1,"a":2}','{"a":1,"\\u0061":2}','{"n":9007199254740992}','{"x":"\\ud800"}','{"x":1} trailing','{"x":[1,]}'])assert.throws(()=>parseStrictJson(raw));
++ assert.equal(canonical(parseStrictJson('{"b":2,"a":1}')),'{"a":1,"b":2}');
++});
++integration('real PostgreSQL17 schema + HTTP readiness, exact Host/Origin, no CORS, no world payload route',async()=>{
++ const version=await pool.query('SHOW server_version_num');assert.equal(Math.floor(Number(version.rows[0].server_version_num)/10000),17);
++ const ready=await fetch(origin+'/health/ready');assert.equal(ready.status,200);assert.equal((await ready.json() as {serviceMode:string}).serviceMode,'ExternalService');
++ const badOrigin=await request('/api/v1/time',{requestNonce:randomToken()},jar,{Origin:'http://evil.test'});assert.equal(badOrigin.response.status,403);assert.equal(badOrigin.value.fault.code,'Forbidden');
++ const badHostStatus=await new Promise<number>(resolve=>{const raw=httpRequest(origin+'/api/v1/time',{method:'POST',headers:{Host:'evil.test',Origin:origin,'Content-Type':'application/json'}},response=>{response.resume();resolve(response.statusCode!);});raw.end(JSON.stringify({requestNonce:randomToken()}));});assert.equal(badHostStatus,403);
++ const noOrigin=await fetch(origin+'/api/v1/auth/verify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({requestNonce:randomToken()})});assert.equal(noOrigin.status,403);assert.equal(noOrigin.headers.get('access-control-allow-origin'),null);
++ const missing=await request('/api/v1/world/readMigrationPayload',{requestNonce:randomToken()});assert.equal(missing.response.status,404);
++});
++integration('password + one-time registered P256 challenge authenticate, forged proof and wrong password fail',async()=>{
++ const challengeValue=await challenge();const base={accountName,password,challengeId:challengeValue.challengeId,signatureBase64Url:proof(challengeValue),deviceLabel:'HTTP integration credential',requestNonce:randomToken()};
++ const forged=await request('/api/v1/auth/login',{...base,signatureBase64Url:proof(challengeValue,generateKeyPairSync('ec',{namedCurve:'prime256v1'}).privateKey)});assert.equal(forged.response.status,401);
++ const wrong=await request('/api/v1/auth/login',{...base,password:randomToken()});assert.equal(wrong.response.status,401);
++ const success=await request('/api/v1/auth/login',base);assert.equal(success.response.status,200);auth=checkedReceipt<AuthenticationFact>(success.value,'Authentication',base.requestNonce);jar.csrf=auth.csrfToken;assert.equal(auth.account.accountId,accountId);assert.equal(auth.device.assurance,'RegisteredCredential');
++ assert.ok(success.response.headers.getSetCookie().every(cookie=>/HttpOnly/.test(cookie)&&/SameSite=Strict/i.test(cookie)));assert.ok(success.response.headers.getSetCookie().every(cookie=>!/Secure/.test(cookie)));
++ const replay=await request('/api/v1/auth/login',base);assert.equal(replay.response.status,401);
++ const stored=await pool.query('SELECT token_hash FROM auth_tokens WHERE session_id=$1',[auth.sessionId]);for(const token of stored.rows){assert.match(token.token_hash,/^[0-9a-f]{64}$/);assert.ok(![...jar.cookies.values()].includes(token.token_hash));}
++ const credentials=await pool.query('SELECT password_hash FROM accounts WHERE account_id=$1',[accountId]);assert.match(credentials.rows[0].password_hash,/^\$argon2id\$v=19\$m=65536,t=3,p=1\$/);
++});
++integration('strict body schema, JSON duplicates, CSRF and nonce reject before trusted result',async()=>{
++ const unknown=await request('/api/v1/auth/verify',{requestNonce:randomToken(),isAdmin:true});assert.equal(unknown.response.status,400);assert.equal(unknown.value.fault.code,'InvalidData');
++ const duplicate=await request('/api/v1/auth/verify','{"requestNonce":"'+randomToken()+'","requestNonce":"'+randomToken()+'"}');assert.equal(duplicate.response.status,400);
++ const noCsrf=copyJar(jar);noCsrf.csrf='';const denied=await request('/api/v1/auth/verify',{requestNonce:randomToken()},noCsrf);assert.equal(denied.response.status,403);
++ const invalidNonce=await request('/api/v1/auth/verify',{requestNonce:'A'.repeat(42)+'B'});assert.equal(invalidNonce.response.status,400);
++});
++integration('verify, signed nonce-bound server time and lightweight account/device facts have no grants or gameplay data',async()=>{
++ const requestNonce=randomToken();const verified=await request('/api/v1/auth/verify',{requestNonce});const fact=checkedReceipt<AuthenticationFact>(verified.value,'Authentication',requestNonce);assert.equal(fact.sessionId,auth.sessionId);
++ const timeNonce=randomToken();const time=await request('/api/v1/time',{requestNonce:timeNonce});assert.equal(time.response.status,200);const sample=checkedReceipt<any>(time.value,'ServerTime',timeNonce);assert.equal(sample.clockStatus,'Trusted');assert.ok(sample.clockGeneration>=1);assert.equal(sample.serverEpochMs,time.value.issuedAtServerEpochMs);
++ const tampered=structuredClone(time.value);tampered.payload.serverEpochMs++;const{signatureBase64Url,...unsigned}=tampered;assert.equal(verify('sha256',Buffer.from('Neurou/service/v1\0'+canonical(unsigned)),{key:createPublicKey(privateKey),dsaEncoding:'ieee-p1363'},Buffer.from(signatureBase64Url,'base64url')),false);
++ const factsNonce=randomToken();const facts=await request('/api/v1/account/facts',{requestNonce:factsNonce});const account=checkedReceipt<any>(facts.value,'AccountFacts',factsNonce);assert.deepEqual(Object.keys(account).sort(),['account','devices','requestNonce','revision']);assert.equal(account.devices.length,1);assert.equal(account.revision,0);
++});
++integration('authenticated extra registered device uses separate proof, idempotency and exact request digest',async()=>{
++ const key=generateKeyPairSync('ec',{namedCurve:'prime256v1'}).privateKey;const value=await challenge(key,null,'RegisterDevice');const input={challengeId:value.challengeId,signatureBase64Url:proof(value,key),deviceLabel:'Second RegisteredCredential',requestId:randomUUID(),requestNonce:randomToken()};
++ const response=await request('/api/v1/device/register',input);assert.equal(response.response.status,200);const fact=checkedReceipt<any>(response.value,'DeviceFacts',input.requestNonce);assert.equal(fact.device.assurance,'RegisteredCredential');
++ const same=await request('/api/v1/device/register',input);assert.equal(same.response.status,200);assert.deepEqual(same.value.payload,fact);
++ const conflict=await request('/api/v1/device/register',{...input,deviceLabel:'changed'});assert.equal(conflict.response.status,409);
++});
++integration('PostgreSQL session survives service restart and clock generation advances',async()=>{
++ const sample=await request('/api/v1/time',{requestNonce:randomToken()});const priorGeneration=sample.value.payload.clockGeneration;await app.close();app=await buildApp(config,pool,signer);await app.listen({host:config.host,port:config.port});
++ const result=await request('/api/v1/auth/verify',{requestNonce:randomToken()});assert.equal(result.response.status,200);assert.equal(result.value.payload.sessionId,auth.sessionId);const time=await request('/api/v1/time',{requestNonce:randomToken()});assert.ok(time.value.payload.clockGeneration>priorGeneration);
++});
++integration('refresh rotates cookies; replay commits family revocation and invalidates newly rotated access',async()=>{
++ const old=copyJar(jar);const rotated=await request('/api/v1/auth/refresh',{requestNonce:randomToken()});assert.equal(rotated.response.status,200);assert.notEqual(jar.cookies.get('neurou_refresh'),old.cookies.get('neurou_refresh'));
++ const replay=await request('/api/v1/auth/refresh',{requestNonce:randomToken()},old);assert.equal(replay.response.status,401);const active=await request('/api/v1/auth/verify',{requestNonce:randomToken()});assert.equal(active.response.status,401);
++ const row=await pool.query('SELECT revoked FROM auth_families WHERE session_id=$1',[auth.sessionId]);assert.equal(row.rows[0].revoked,true);
++});
++integration('concurrent refresh of one token has one success, one rejection and durable revocation without deadlock',async()=>{
++ auth=await login();const a=copyJar(jar);const b=copyJar(jar);const results=await Promise.all([request('/api/v1/auth/refresh',{requestNonce:randomToken()},a),request('/api/v1/auth/refresh',{requestNonce:randomToken()},b)]);assert.deepEqual(results.map(value=>value.response.status).sort(),[200,401]);const row=await pool.query('SELECT revoked FROM auth_families WHERE session_id=$1',[auth.sessionId]);assert.equal(row.rows[0].revoked,true);
++});
++integration('refresh works after access expiry, absolute refresh expiry is fixed; logout revokes service state',async()=>{
++ auth=await login();await pool.query("UPDATE auth_tokens SET expires_at=$1 WHERE session_id=$2 AND kind='Access'",[Date.now()-1,auth.sessionId]);
++ const denied=await request('/api/v1/auth/verify',{requestNonce:randomToken()});assert.equal(denied.response.status,401);const old=await pool.query('SELECT absolute_expires_at FROM auth_families WHERE session_id=$1',[auth.sessionId]);
++ const refreshed=await request('/api/v1/auth/refresh',{requestNonce:randomToken()});assert.equal(refreshed.response.status,200);const current=await pool.query('SELECT absolute_expires_at FROM auth_families WHERE session_id=$1',[auth.sessionId]);assert.equal(current.rows[0].absolute_expires_at,old.rows[0].absolute_expires_at);
++ const requestNonce=randomToken();const revoked=await request('/api/v1/auth/logout',{requestNonce});assert.equal(revoked.response.status,200);const fact=checkedReceipt<any>(revoked.value,'Logout',requestNonce);assert.equal(fact.revoked,true);assert.equal(jar.cookies.size,0);
++});
++integration('untrusted clock signs explicit Untrusted sample and readiness refuses healthy claim',async()=>{
++ auth=await login();await app.close();app=await buildApp({...config,clockInitiallyTrusted:false},pool,signer);await app.listen({host:config.host,port:config.port});const readiness=await fetch(origin+'/health/ready');assert.equal(readiness.status,503);assert.equal((await readiness.json() as {ready:boolean}).ready,false);
++ const requestNonce=randomToken();const time=await request('/api/v1/time',{requestNonce});assert.equal(time.response.status,200);const sample=checkedReceipt<any>(time.value,'ServerTime',requestNonce);assert.equal(sample.clockStatus,'Untrusted');
++});
++integration('expired challenge, injected assurance/private key fields and foreign account proof are rejected',async()=>{
++ const value=await challenge();await pool.query('UPDATE device_challenges SET expires_at=$1 WHERE challenge_id=$2',[Date.now()-1,value.challengeId]);
++ const expired=await request('/api/v1/auth/login',{accountName,password,challengeId:value.challengeId,signatureBase64Url:proof(value),deviceLabel:'Expired',requestNonce:randomToken()});assert.equal(expired.response.status,401);
++ const injected=await request('/api/v1/device/challenge',{purpose:'LoginDevice',accountName,publicKeyJwk:{...publicJwk(credential),d:randomToken()},deviceId:null,requestNonce:randomToken()});assert.equal(injected.response.status,400);
++ const assurance=await request('/api/v1/auth/verify',{requestNonce:randomToken(),assurance:'PhysicalDevice'});assert.equal(assurance.response.status,400);
++ const foreign=await request('/api/v1/device/challenge',{purpose:'LoginDevice',accountName:'unknown_account',publicKeyJwk:publicJwk(credential),deviceId:auth.device.deviceId,requestNonce:randomToken()});assert.equal(foreign.response.status,401);
++});
++integration('refresh and register transactions share lock order, yielding authorized result or expired access without deadlock',async()=>{
++ auth=await login();const key=generateKeyPairSync('ec',{namedCurve:'prime256v1'}).privateKey;const value=await challenge(key,null,'RegisterDevice');const registerJar=copyJar(jar);const refreshJar=copyJar(jar);
++ const results=await Promise.all([request('/api/v1/device/register',{challengeId:value.challengeId,signatureBase64Url:proof(value,key),deviceLabel:'Concurrent registration',requestId:randomUUID(),requestNonce:randomToken()},registerJar),request('/api/v1/auth/refresh',{requestNonce:randomToken()},refreshJar)]);
++ assert.ok([200,401].includes(results[0]!.response.status));assert.equal(results[1]!.response.status,200);jar.cookies=refreshJar.cookies;jar.csrf=refreshJar.csrf;
++});
++integration('absolute refresh expiration never renews itself and revoked device cannot authenticate or verify',async()=>{
++ const old=copyJar(jar);await pool.query('UPDATE auth_families SET absolute_expires_at=$1 WHERE session_id=$2',[Date.now()-1,auth.sessionId]);const expired=await request('/api/v1/auth/refresh',{requestNonce:randomToken()},old);assert.equal(expired.response.status,401);
++ auth=await login();await pool.query("UPDATE devices SET status='Revoked' WHERE device_id=$1",[auth.device.deviceId]);const revoked=await request('/api/v1/auth/verify',{requestNonce:randomToken()});assert.equal(revoked.response.status,401);
++ const value=await challenge();const denied=await request('/api/v1/auth/login',{accountName,password,challengeId:value.challengeId,signatureBase64Url:proof(value),deviceLabel:'Cannot resurrect revoked credential',requestNonce:randomToken()});assert.equal(denied.response.status,403);assert.equal(denied.value.fault.code,'DeviceUntrusted');
++});
++integration('challenge/login rate boundary rejects excess attempts without creating facts',async()=>{
++ await app.close();app=await buildApp(config,pool,signer);await app.listen({host:config.host,port:config.port});
++ for(let index=0;index<30;index++){const result=await request('/api/v1/device/challenge',{invalid:true});assert.equal(result.response.status,400);}
++ const limited=await request('/api/v1/device/challenge',{invalid:true});assert.equal(limited.response.status,429);assert.equal(limited.value.fault.code,'RateLimited');assert.equal(limited.value.fault.retryAfterMs,60000);
++});
+
+diff --git a/server/test/main-process.test.ts b/server/test/main-process.test.ts
+new file mode 100644
+--- /dev/null
++++ b/server/test/main-process.test.ts
+@@ -0,0 +1,43 @@
++import { test } from 'node:test';
++import assert from 'node:assert/strict';
++import { spawn, type ChildProcess } from 'node:child_process';
++import { createServer } from 'node:net';
++import { mkdtemp, stat } from 'node:fs/promises';
++import { resolve, join } from 'node:path';
++import { generateKeyPairSync, randomUUID, sign, createPublicKey, verify } from 'node:crypto';
++import { canonical, deviceProofBytes, publicJwk, randomToken } from '../src/crypto.js';
++import type { DeviceChallenge, SignedServiceReceipt } from '../src/contracts.js';
++import { createPool, migrate } from '../src/db.js';
++
++test('independent main process: private stable signing key, CLI provisioning, HTTP authentication and persisted session after restart',async()=>{
++ const databaseUrl=process.env.B25B_DATABASE_URL??process.env.DATABASE_URL;if(!databaseUrl)throw new Error('B25B_DATABASE_URL required; no fake process smoke');
++ const pool=createPool(databaseUrl);await migrate(pool);await pool.end();
++ // Parent .local is operator-protected before execution (Windows ACL or Unix 0700).
++ const directory=await mkdtemp(resolve('.local/process-smoke-'));if(process.platform!=='win32')assert.equal((await stat(resolve('.local'))).mode&0o077,0);
++ const probe=createServer();await new Promise<void>(resolve=>probe.listen(0,'127.0.0.1',resolve));const address=probe.address();assert.ok(address&&typeof address!=='string');const port=address.port;await new Promise<void>((resolve,reject)=>probe.close(error=>error?reject(error):resolve()));
++ const origin=`http://127.0.0.1:${port}`;const serviceInstanceId='neurou-process-smoke-'+randomUUID();const environment={...process.env,DATABASE_URL:databaseUrl,PORT:String(port),SERVICE_ORIGIN:origin,SERVICE_INSTANCE_ID:serviceInstanceId,SIGNING_KEY_PATH:join(directory,'signing-key.pem'),CLOCK_TRUSTED:'true'};
++ async function cli(command:string,args:string[]=[],extra:Record<string,string>={}):Promise<any>{
++  return await new Promise((resolve,reject)=>{const child=spawn(process.execPath,['dist/src/cli.js',command,...args],{cwd:process.cwd(),env:{...environment,...extra},windowsHide:true});let text='';child.stdout.on('data',chunk=>text+=String(chunk));child.stderr.on('data',()=>undefined);child.once('error',()=>reject(new Error('CLI process failed')));child.once('exit',code=>code===0?resolve(JSON.parse(text)):reject(new Error('CLI process failed')));});
++ }
++ const anchor=await cli('trust-anchor');assert.equal(anchor.serviceInstanceId,serviceInstanceId);const accountName='process_'+randomUUID().replaceAll('-','');const password=randomToken();const created=await cli('account-create',[accountName],{ACCOUNT_PASSWORD:password});assert.equal(created.accountName,accountName);
++ let child:ChildProcess|undefined;
++ async function start():Promise<void>{
++  child=spawn(process.execPath,['dist/src/main.js'],{cwd:process.cwd(),env:environment,windowsHide:true});
++  await new Promise<void>((resolve,reject)=>{const timer=setTimeout(()=>reject(new Error('main process startup timeout')),10000);child!.once('error',()=>{clearTimeout(timer);reject(new Error('main process startup failed'));});child!.once('exit',()=>{clearTimeout(timer);reject(new Error('main process exited before listening'));});child!.stdout!.on('data',chunk=>{if(String(chunk).includes('ExternalService listening')){clearTimeout(timer);resolve();}});child!.stderr!.on('data',()=>undefined);});
++ }
++ async function stop():Promise<void>{if(!child||child.exitCode!==null)return;await new Promise<void>(resolve=>{child!.once('exit',()=>resolve());child!.kill('SIGTERM');});child=undefined;}
++ let cookieHeader='';let csrf='';
++ async function post(path:string,body:object):Promise<any>{
++  const response=await fetch(origin+path,{method:'POST',headers:{Origin:origin,'Content-Type':'application/json',...(cookieHeader?{Cookie:cookieHeader}:{}),...(csrf?{'X-CSRF-Token':csrf}:{})},body:JSON.stringify(body)});assert.equal(response.status,200);const cookies=response.headers.getSetCookie();if(cookies.length)cookieHeader=cookies.map(value=>value.split(';')[0]!).join('; ');return await response.json();
++ }
++ function validate(receipt:SignedServiceReceipt<unknown>):void{assert.equal(receipt.keyId,anchor.keyId);assert.equal(receipt.serviceInstanceId,anchor.serviceInstanceId);const{signatureBase64Url,...unsigned}=receipt;assert.ok(verify('sha256',Buffer.from('Neurou/service/v1\0'+canonical(unsigned)),{key:createPublicKey({key:anchor.publicKeyJwk,format:'jwk'}),dsaEncoding:'ieee-p1363'},Buffer.from(signatureBase64Url,'base64url')));}
++ try{
++  await start();const readiness=await fetch(origin+'/health/ready');assert.equal(readiness.status,200);assert.equal((await readiness.json() as {keyId:string}).keyId,anchor.keyId);
++  const privateKey=generateKeyPairSync('ec',{namedCurve:'prime256v1'}).privateKey;const challenge=await post('/api/v1/device/challenge',{purpose:'LoginDevice',accountName,publicKeyJwk:publicJwk(privateKey),deviceId:null,requestNonce:randomToken()});validate(challenge);
++  const challengePayload=challenge.payload as DeviceChallenge;const signatureBase64Url=sign('sha256',deviceProofBytes(challengePayload),{key:privateKey,dsaEncoding:'ieee-p1363'}).toString('base64url');
++  const login=await post('/api/v1/auth/login',{accountName,password,challengeId:challengePayload.challengeId,signatureBase64Url,deviceLabel:'Independent main process credential',requestNonce:randomToken()});validate(login);csrf=login.payload.csrfToken;const sessionId=login.payload.sessionId;
++  const firstTime=await post('/api/v1/time',{requestNonce:randomToken()});validate(firstTime);await stop();await start();
++  const restored=await post('/api/v1/auth/verify',{requestNonce:randomToken()});validate(restored);assert.equal(restored.payload.sessionId,sessionId);
++  const secondTime=await post('/api/v1/time',{requestNonce:randomToken()});validate(secondTime);assert.ok(secondTime.payload.clockGeneration>firstTime.payload.clockGeneration);assert.equal((await cli('trust-anchor')).keyId,anchor.keyId);
++ }finally{await stop();}
++});
+
+diff --git a/server/tsconfig.json b/server/tsconfig.json
+new file mode 100644
+--- /dev/null
++++ b/server/tsconfig.json
+@@ -0,0 +1,9 @@
++{
++  "compilerOptions": {
++    "target": "ES2023", "module": "NodeNext", "moduleResolution": "NodeNext",
++    "strict": true, "noUncheckedIndexedAccess": true, "exactOptionalPropertyTypes": true,
++    "outDir": "dist", "rootDir": ".", "esModuleInterop": true,
++    "skipLibCheck": true, "types": ["node"]
++  },
++  "include": ["src/**/*.ts", "test/**/*.ts"]
++}
+
+diff --git a/src/director/RealServiceContracts.ts b/src/director/RealServiceContracts.ts
+new file mode 100644
+--- /dev/null
++++ b/src/director/RealServiceContracts.ts
+@@ -0,0 +1,126 @@
++/** B2.5b additive external contracts. No archive signature, gameplay guard or storage changes. */
++export type RealServiceMode = 'ExternalService';
++export type RegisteredDeviceAssurance = 'RegisteredCredential';
++
++export interface ServicePublicKey {
++  readonly kty: 'EC';
++  readonly crv: 'P-256';
++  readonly x: string;
++  readonly y: string;
++}
++export interface AuthorityTrustAnchor {
++  readonly keyId: string;
++  readonly publicKeyJwk: ServicePublicKey;
++  /** RFC 7638 JWK thumbprint: SHA-256, unpadded base64url. Installed out of band. */
++  readonly jwkSha256: string;
++}
++export interface RealServiceEnvironment {
++  readonly mode: RealServiceMode;
++  readonly serviceInstanceId: string;
++  readonly apiOrigin: string;
++  readonly authorityTrustAnchor: AuthorityTrustAnchor;
++}
++export interface RealAccountFact {
++  readonly accountId: string;
++  readonly accountName: string;
++}
++export interface RealRegisteredDeviceFact {
++  readonly deviceId: string;
++  readonly generation: number;
++  readonly keyFingerprint: string;
++  readonly assurance: RegisteredDeviceAssurance;
++  readonly label: string;
++  readonly status: 'Active' | 'Revoked';
++}
++export interface AuthenticatedServiceContext {
++  readonly accountId: string;
++  readonly accountName: string;
++  readonly deviceId: string;
++  readonly deviceGeneration: number;
++  readonly deviceAssurance: RegisteredDeviceAssurance;
++  readonly authenticationId: string;
++  readonly expiresAtServerEpochMs: number;
++  readonly serviceInstanceId: string;
++}
++export interface AccountLoginRequest {
++  readonly accountName: string;
++  readonly password: string;
++  readonly deviceLabel: string;
++}
++export interface ServiceFault {
++  readonly code: 'Unauthenticated' | 'DeviceUntrusted' | 'AuthorityUnavailable'
++    | 'TimeUntrusted' | 'VersionUnsupported' | 'Conflict' | 'RateLimited' | 'InvalidData' | 'Forbidden';
++  readonly requestId: string;
++  readonly retryAfterMs: number | null;
++}
++export type ServiceReply<T> = { readonly kind: 'Accepted'; readonly value: T }
++  | { readonly kind: 'Rejected'; readonly fault: ServiceFault };
++export type ServiceReceiptPurpose = 'DeviceChallenge' | 'Authentication' | 'Logout'
++  | 'ServerTime' | 'AccountFacts' | 'DeviceFacts';
++export interface SignedServiceReceipt<T> {
++  readonly schemaVersion: 1;
++  readonly serviceInstanceId: string;
++  readonly purpose: ServiceReceiptPurpose;
++  readonly receiptId: string;
++  readonly keyId: string;
++  readonly issuedAtServerEpochMs: number;
++  readonly payload: T;
++  /** ES256 with a 64-byte IEEE-P1363 signature; DER is not accepted. */
++  readonly signatureBase64Url: string;
++}
++export interface DeviceChallenge {
++  readonly schemaVersion: 1;
++  readonly purpose: 'LoginDevice' | 'RegisterDevice';
++  readonly challengeId: string;
++  readonly nonceBase64Url: string;
++  readonly accountName: string;
++  readonly keyFingerprint: string;
++  readonly deviceId: string | null;
++  readonly deviceGeneration: number | null;
++  readonly expiresAtServerEpochMs: number;
++  readonly serviceInstanceId: string;
++  readonly requestNonce: string;
++}
++export interface ServiceAuthenticationPayload {
++  readonly requestNonce: string;
++  readonly sessionId: string;
++  readonly csrfToken: string;
++  readonly account: RealAccountFact;
++  readonly device: RealRegisteredDeviceFact;
++  readonly expiresAtServerEpochMs: number;
++}
++export interface ServerTimeSample {
++  readonly requestNonce: string;
++  readonly serverEpochMs: number;
++  readonly clockGeneration: number;
++  readonly clockStatus: 'Trusted';
++}
++export interface RealAccountFacts {
++  readonly requestNonce: string;
++  readonly account: RealAccountFact;
++  readonly devices: readonly RealRegisteredDeviceFact[];
++  /** Account/device metadata only; never clear-state or CopyPermission. */
++  readonly revision: number;
++}
++export interface RealAuthServicePort {
++  readonly mode: RealServiceMode;
++  login(request: AccountLoginRequest): Promise<ServiceReply<AuthenticatedServiceContext>>;
++  logout(): Promise<ServiceReply<{ readonly serverRevoked: true }>>;
++  verify(): Promise<ServiceReply<AuthenticatedServiceContext>>;
++  refresh(): Promise<ServiceReply<AuthenticatedServiceContext>>;
++  fetchServerTime(): Promise<number>;
++  readServerTime(): Promise<ServiceReply<SignedServiceReceipt<ServerTimeSample>>>;
++  readAccountFacts(): Promise<ServiceReply<SignedServiceReceipt<RealAccountFacts>>>;
++}
++
++/** Reserved ports are intentionally unimplemented until their stage-specific freeze. */
++export interface RealWorldAuthorityPort {
++  readonly mode: RealServiceMode;
++  readonly context: AuthenticatedServiceContext;
++  readAccountFacts(): Promise<ServiceReply<SignedServiceReceipt<RealAccountFacts>>>;
++}
++/** Generic transport boundary only; no WorldCommit schema is guessed before P3. */
++export interface RealCommitRelayPort<TWorldCommit, TRelayReceipt> {
++  readonly mode: RealServiceMode;
++  relay(commit: TWorldCommit): Promise<ServiceReply<TRelayReceipt>>;
++}
+
+diff --git a/src/presentation/RealAuthServiceAdapter.ts b/src/presentation/RealAuthServiceAdapter.ts
+new file mode 100644
+--- /dev/null
++++ b/src/presentation/RealAuthServiceAdapter.ts
+@@ -0,0 +1,571 @@
++import type {
++  AccountLoginRequest, AuthenticatedServiceContext, DeviceChallenge, RealAccountFact,
++  RealAccountFacts, RealAuthServicePort, RealRegisteredDeviceFact, RealServiceEnvironment,
++  ServerTimeSample, ServiceAuthenticationPayload, ServiceFault, ServicePublicKey,
++  ServiceReceiptPurpose, ServiceReply, SignedServiceReceipt,
++} from '../director/IntentPort';
++
++interface MemoryDeviceCredential {
++  readonly privateKey: CryptoKey;
++  readonly publicKeyJwk: ServicePublicKey;
++  readonly keyFingerprint: string;
++  deviceId: string | null;
++  generation: number | null;
++}
++type DataObject = { [name: string]: unknown };
++const SERVICE_DOMAIN = 'Neurou/service/v1\0';
++const DEVICE_DOMAIN = 'Neurou/device/v1\0';
++const REQUEST_LIMIT_MS = 12000;
++
++class ServiceClientFault extends Error {
++  constructor(readonly code: ServiceFault['code']) { super(code); }
++}
++
++/**
++ * Independent B2.5b browser HTTP adapter. Secrets and device keys remain in memory;
++ * HttpOnly cookies belong to the browser. No world data, fixture fallback or offline grant.
++ * The credential proves control of a registered key, not a physical machine.
++ */
++export class RealAuthServiceAdapter implements RealAuthServicePort {
++  readonly mode = 'ExternalService' as const;
++  private readonly environment: RealServiceEnvironment;
++  private readonly credentials = new Map<string, MemoryDeviceCredential>();
++  private context: AuthenticatedServiceContext | null = null;
++  private csrfToken: string | null = null;
++  private readonly anchor: Promise<CryptoKey>;
++  private transport: typeof fetch;
++  private busy = false;
++
++  constructor(environment: RealServiceEnvironment) {
++    this.environment = parseEnvironment(environment);
++    if (typeof crypto === 'undefined' || !crypto.subtle || typeof fetch !== 'function'
++      || (typeof isSecureContext === 'boolean' && !isSecureContext)) {
++      throw new ServiceClientFault('DeviceUntrusted');
++    }
++    if (typeof location !== 'undefined' && location.origin !== this.environment.apiOrigin) {
++      throw new ServiceClientFault('InvalidData');
++    }
++    this.transport = fetch.bind(globalThis);
++    this.anchor = importAuthorityKey(this.environment);
++    // Import failures are still returned by every operation; suppress an unobserved rejection.
++    void this.anchor.catch(() => undefined);
++  }
++
++  /** Cookie-jar transport for real loopback HTTP evidence only; signature checks stay enabled. */
++  static forLoopbackHttpTest(environment: RealServiceEnvironment, transport: typeof fetch): RealAuthServiceAdapter {
++    if (!isLoopbackHttp(environment.apiOrigin) || typeof transport !== 'function') {
++      throw new ServiceClientFault('InvalidData');
++    }
++    const adapter = new RealAuthServiceAdapter(environment);
++    adapter.transport = transport;
++    return adapter;
++  }
++
++  async login(request: AccountLoginRequest): Promise<ServiceReply<AuthenticatedServiceContext>> {
++    return this.exclusive(async () => {
++      const input = dataObject(request, ['accountName', 'password', 'deviceLabel']);
++      const accountName = accountNameField(input.accountName);
++      const password = textField(input.password, 1024);
++      if (password.length < 12) { throw new ServiceClientFault('InvalidData'); }
++      const deviceLabel = textField(input.deviceLabel, 128);
++      await this.anchor;
++      let credential = this.credentials.get(accountName);
++      if (!credential) {
++        if (this.credentials.size >= 16) { throw new ServiceClientFault('InvalidData'); }
++        credential = await createCredential();
++        this.credentials.set(accountName, credential);
++      }
++      const challengeNonce = nonce();
++      const challengeReceipt = await this.call('/api/v1/device/challenge', {
++        purpose: 'LoginDevice', accountName, publicKeyJwk: credential.publicKeyJwk,
++        deviceId: credential.deviceId, requestNonce: challengeNonce,
++      }, 'DeviceChallenge', challengeNonce, false);
++      const challenge = parseChallenge(challengeReceipt.payload);
++      if (challenge.purpose !== 'LoginDevice' || challenge.accountName !== accountName
++        || challenge.keyFingerprint !== credential.keyFingerprint
++        || challenge.deviceId !== credential.deviceId || challenge.deviceGeneration !== credential.generation
++        || challenge.serviceInstanceId !== this.environment.serviceInstanceId
++        || challenge.expiresAtServerEpochMs <= challengeReceipt.issuedAtServerEpochMs
++        || challenge.expiresAtServerEpochMs - challengeReceipt.issuedAtServerEpochMs > 30000) {
++        throw new ServiceClientFault('DeviceUntrusted');
++      }
++      const signature = await crypto.subtle.sign({ name: 'ECDSA', hash: 'SHA-256' }, credential.privateKey,
++        utf8(DEVICE_DOMAIN + canonicalJson(challenge)));
++      const requestNonce = nonce();
++      const receipt = await this.call('/api/v1/auth/login', {
++        accountName, password, challengeId: challenge.challengeId,
++        signatureBase64Url: base64Url(new Uint8Array(signature)), deviceLabel, requestNonce,
++      }, 'Authentication', requestNonce, false);
++      const auth = parseAuthentication(receipt.payload, receipt.issuedAtServerEpochMs);
++      if (auth.account.accountName !== accountName || auth.device.keyFingerprint !== credential.keyFingerprint
++        || (credential.deviceId !== null && (auth.device.deviceId !== credential.deviceId
++          || auth.device.generation !== credential.generation))) {
++        throw new ServiceClientFault('DeviceUntrusted');
++      }
++      credential.deviceId = auth.device.deviceId;
++      credential.generation = auth.device.generation;
++      return this.acceptAuthentication(auth);
++    }, true);
++  }
++
++  async verify(): Promise<ServiceReply<AuthenticatedServiceContext>> {
++    return this.authenticateExisting('/api/v1/auth/verify');
++  }
++
++  async refresh(): Promise<ServiceReply<AuthenticatedServiceContext>> {
++    return this.authenticateExisting('/api/v1/auth/refresh');
++  }
++
++  async logout(): Promise<ServiceReply<{ readonly serverRevoked: true }>> {
++    return this.exclusive(async () => {
++      const prior = this.requireContext();
++      try {
++        const requestNonce = nonce();
++        const receipt = await this.call('/api/v1/auth/logout', { requestNonce }, 'Logout', requestNonce, true);
++        const payload = dataObject(receipt.payload, ['requestNonce', 'sessionId', 'revoked']);
++        if (payload.sessionId !== prior.authenticationId || payload.revoked !== true) {
++          throw new ServiceClientFault('InvalidData');
++        }
++        return Object.freeze({ serverRevoked: true as const });
++      } finally {
++        // Remote revocation failure remains a Rejected result; local admission is always cleared.
++        this.context = null;
++        this.csrfToken = null;
++      }
++    });
++  }
++
++  async fetchServerTime(): Promise<number> {
++    const result = await this.readServerTime();
++    if (result.kind === 'Rejected') { throw new ServiceClientFault(result.fault.code); }
++    return result.value.payload.serverEpochMs;
++  }
++
++  async readServerTime(): Promise<ServiceReply<SignedServiceReceipt<ServerTimeSample>>> {
++    return this.exclusive(async () => {
++      this.requireContext();
++      const requestNonce = nonce();
++      const receipt = await this.call('/api/v1/time', { requestNonce }, 'ServerTime', requestNonce, true);
++      const payload = dataObject(receipt.payload, ['requestNonce', 'serverEpochMs', 'clockGeneration', 'clockStatus']);
++      if (payload.clockStatus !== 'Trusted') { throw new ServiceClientFault('TimeUntrusted'); }
++      if (integerField(payload.serverEpochMs) !== receipt.issuedAtServerEpochMs) {
++        throw new ServiceClientFault('TimeUntrusted');
++      }
++      integerField(payload.clockGeneration, 1);
++      return freezeTree(receipt) as unknown as SignedServiceReceipt<ServerTimeSample>;
++    });
++  }
++
++  async readAccountFacts(): Promise<ServiceReply<SignedServiceReceipt<RealAccountFacts>>> {
++    return this.exclusive(async () => {
++      const current = this.requireContext();
++      const requestNonce = nonce();
++      const receipt = await this.call('/api/v1/account/facts', { requestNonce }, 'AccountFacts', requestNonce, true);
++      const payload = dataObject(receipt.payload, ['requestNonce', 'account', 'devices', 'revision']);
++      const account = parseAccount(payload.account);
++      if (account.accountId !== current.accountId || account.accountName !== current.accountName
++        || !Array.isArray(payload.devices) || payload.devices.length > 256) {
++        throw new ServiceClientFault('InvalidData');
++      }
++      integerField(payload.revision);
++      if (payload.revision !== 0) { throw new ServiceClientFault('VersionUnsupported'); }
++      const deviceIds = new Set<string>();
++      const credential = this.credentials.get(current.accountName);
++      let currentFound = false;
++      for (const candidate of payload.devices) {
++        const device = parseDevice(candidate, false);
++        if (deviceIds.has(device.deviceId)) { throw new ServiceClientFault('InvalidData'); }
++        deviceIds.add(device.deviceId);
++        if (device.deviceId === current.deviceId) {
++          if (device.status !== 'Active' || device.generation !== current.deviceGeneration
++            || !credential || device.keyFingerprint !== credential.keyFingerprint) {
++            throw new ServiceClientFault('DeviceUntrusted');
++          }
++          currentFound = true;
++        }
++      }
++      if (!currentFound) { throw new ServiceClientFault('DeviceUntrusted'); }
++      return freezeTree(receipt) as unknown as SignedServiceReceipt<RealAccountFacts>;
++    });
++  }
++
++  private async authenticateExisting(path: string): Promise<ServiceReply<AuthenticatedServiceContext>> {
++    return this.exclusive(async () => {
++      const previous = this.requireContext();
++      const requestNonce = nonce();
++      const receipt = await this.call(path, { requestNonce }, 'Authentication', requestNonce, true);
++      const auth = parseAuthentication(receipt.payload, receipt.issuedAtServerEpochMs);
++      const credential = this.credentials.get(previous.accountName);
++      if (auth.account.accountId !== previous.accountId || auth.account.accountName !== previous.accountName
++        || auth.device.deviceId !== previous.deviceId || auth.device.generation !== previous.deviceGeneration
++        || !credential || auth.device.keyFingerprint !== credential.keyFingerprint) {
++        throw new ServiceClientFault('DeviceUntrusted');
++      }
++      return this.acceptAuthentication(auth);
++    }, path === '/api/v1/auth/refresh');
++  }
++
++  private acceptAuthentication(auth: ServiceAuthenticationPayload): AuthenticatedServiceContext {
++    this.csrfToken = auth.csrfToken;
++    this.context = Object.freeze({
++      accountId: auth.account.accountId, accountName: auth.account.accountName,
++      deviceId: auth.device.deviceId, deviceGeneration: auth.device.generation,
++      deviceAssurance: 'RegisteredCredential' as const, authenticationId: auth.sessionId,
++      expiresAtServerEpochMs: auth.expiresAtServerEpochMs, serviceInstanceId: this.environment.serviceInstanceId,
++    });
++    return this.context;
++  }
++
++  private requireContext(): AuthenticatedServiceContext {
++    if (!this.context || !this.csrfToken) { throw new ServiceClientFault('Unauthenticated'); }
++    return this.context;
++  }
++
++  private async exclusive<T>(operation: () => Promise<T>, revokeOnUnauthenticated = false): Promise<ServiceReply<T>> {
++    if (this.busy) { return rejected('Conflict'); }
++    this.busy = true;
++    try { return Object.freeze({ kind: 'Accepted' as const, value: await operation() }); }
++    catch (failure) {
++      const code = failure instanceof ServiceClientFault ? failure.code : 'AuthorityUnavailable';
++      // Access expiry denies the current operation. Preserve only the memory binding/CSRF
++      // needed for server-validated refresh; this cache has no public admission getter.
++      if ((code === 'Unauthenticated' && revokeOnUnauthenticated) || code === 'DeviceUntrusted'
++        || code === 'InvalidData' || code === 'VersionUnsupported' || code === 'Forbidden') {
++        this.context = null; this.csrfToken = null;
++      }
++      return rejected(code);
++    } finally { this.busy = false; }
++  }
++
++  private async call(path: string, body: DataObject, purpose: ServiceReceiptPurpose,
++    requestNonce: string, authenticated: boolean): Promise<SignedServiceReceipt<unknown>> {
++    const anchor = await this.anchor;
++    const controller = new AbortController();
++    const timer = setTimeout(() => controller.abort(), REQUEST_LIMIT_MS);
++    const started = performance.now();
++    try {
++      const headers: { [name: string]: string } = { Accept: 'application/json' };
++      headers['Content-Type'] = 'application/json';
++      if (authenticated) { this.requireContext(); headers['X-CSRF-Token'] = this.csrfToken as string; }
++      const url = this.environment.apiOrigin + path;
++      const response = await this.transport(url, {
++        method: 'POST', headers, credentials: 'include', mode: 'same-origin',
++        cache: 'no-store', redirect: 'error', referrerPolicy: 'no-referrer',
++        signal: controller.signal, body: canonicalJson(body),
++      });
++      if (!/^application\/json(?:\s*;|$)/i.test(response.headers.get('Content-Type') || '')) {
++        throw new ServiceClientFault('InvalidData');
++      }
++      const responseText = await limitedResponseText(response);
++      if (performance.now() - started > REQUEST_LIMIT_MS || controller.signal.aborted) {
++        throw new ServiceClientFault('AuthorityUnavailable');
++      }
++      const raw = strictJson(responseText);
++      if (!response.ok) { throw parseRejection(raw); }
++      const receipt = dataObject(raw, ['schemaVersion', 'serviceInstanceId', 'purpose', 'receiptId',
++        'keyId', 'issuedAtServerEpochMs', 'payload', 'signatureBase64Url']);
++      if (receipt.schemaVersion !== 1) { throw new ServiceClientFault('VersionUnsupported'); }
++      if (receipt.serviceInstanceId !== this.environment.serviceInstanceId || receipt.purpose !== purpose
++        || receipt.keyId !== this.environment.authorityTrustAnchor.keyId) {
++        throw new ServiceClientFault('InvalidData');
++      }
++      uuidField(receipt.receiptId);
++      integerField(receipt.issuedAtServerEpochMs);
++      const payload = dataObject(receipt.payload);
++      if (payload.requestNonce !== requestNonce) { throw new ServiceClientFault('InvalidData'); }
++      const signature = decodeBase64Url(receipt.signatureBase64Url, 64);
++      const unsigned: DataObject = {};
++      for (const key of Object.keys(receipt)) { if (key !== 'signatureBase64Url') { unsigned[key] = receipt[key]; } }
++      if (!await crypto.subtle.verify({ name: 'ECDSA', hash: 'SHA-256' }, anchor, signature,
++        utf8(SERVICE_DOMAIN + canonicalJson(unsigned)))) {
++        throw new ServiceClientFault('InvalidData');
++      }
++      if (performance.now() - started > REQUEST_LIMIT_MS || controller.signal.aborted) {
++        throw new ServiceClientFault('AuthorityUnavailable');
++      }
++      return freezeTree(receipt) as unknown as SignedServiceReceipt<unknown>;
++    } catch (failure) {
++      if (failure instanceof ServiceClientFault) { throw failure; }
++      throw new ServiceClientFault('AuthorityUnavailable');
++    } finally { clearTimeout(timer); }
++  }
++}
++
++function rejected(code: ServiceFault['code']): ServiceReply<never> {
++  return Object.freeze({ kind: 'Rejected' as const,
++    fault: Object.freeze({ code, requestId: nonce(), retryAfterMs: null }) });
++}
++
++function parseEnvironment(raw: unknown): RealServiceEnvironment {
++  const value = dataObject(raw, ['mode', 'serviceInstanceId', 'apiOrigin', 'authorityTrustAnchor']);
++  if (value.mode !== 'ExternalService') { throw new ServiceClientFault('InvalidData'); }
++  textField(value.serviceInstanceId, 256);
++  const origin = textField(value.apiOrigin, 2048);
++  const url = new URL(origin);
++  if (url.origin !== origin || url.username || url.password || url.pathname !== '/' || url.search || url.hash
++    || (url.protocol !== 'https:' && !isLoopbackHttp(origin))) {
++    throw new ServiceClientFault('InvalidData');
++  }
++  const anchor = dataObject(value.authorityTrustAnchor, ['keyId', 'publicKeyJwk', 'jwkSha256']);
++  textField(anchor.keyId, 256);
++  parsePublicKey(anchor.publicKeyJwk);
++  decodeBase64Url(anchor.jwkSha256, 32);
++  // Copy trusted configuration, so mutation after construction cannot change the origin or pin.
++  return freezeTree(strictJson(canonicalJson(value))) as unknown as RealServiceEnvironment;
++}
++
++function isLoopbackHttp(origin: string): boolean {
++  try {
++    const url = new URL(origin);
++    return url.protocol === 'http:' && (url.hostname === '127.0.0.1' || url.hostname === '[::1]')
++      && url.origin === origin;
++  } catch { return false; }
++}
++
++async function importAuthorityKey(environment: RealServiceEnvironment): Promise<CryptoKey> {
++  const jwk = environment.authorityTrustAnchor.publicKeyJwk;
++  if (await keyFingerprint(jwk) !== environment.authorityTrustAnchor.jwkSha256) {
++    throw new ServiceClientFault('InvalidData');
++  }
++  try { return await crypto.subtle.importKey('jwk', jwk, { name: 'ECDSA', namedCurve: 'P-256' }, false, ['verify']); }
++  catch { throw new ServiceClientFault('InvalidData'); }
++}
++
++async function createCredential(): Promise<MemoryDeviceCredential> {
++  const pair = await crypto.subtle.generateKey({ name: 'ECDSA', namedCurve: 'P-256' }, false, ['sign', 'verify']);
++  const exported = await crypto.subtle.exportKey('jwk', pair.publicKey);
++  const jwk: ServicePublicKey = Object.freeze({ kty: 'EC', crv: 'P-256',
++    x: textField(exported.x, 43), y: textField(exported.y, 43) });
++  parsePublicKey(jwk);
++  return { privateKey: pair.privateKey, publicKeyJwk: jwk, keyFingerprint: await keyFingerprint(jwk),
++    deviceId: null, generation: null };
++}
++
++async function keyFingerprint(jwk: ServicePublicKey): Promise<string> {
++  return base64Url(new Uint8Array(await crypto.subtle.digest('SHA-256', utf8(canonicalJson(jwk)))));
++}
++
++function parsePublicKey(raw: unknown): ServicePublicKey {
++  const key = dataObject(raw, ['kty', 'crv', 'x', 'y']);
++  if (key.kty !== 'EC' || key.crv !== 'P-256') { throw new ServiceClientFault('InvalidData'); }
++  decodeBase64Url(key.x, 32); decodeBase64Url(key.y, 32);
++  return key as unknown as ServicePublicKey;
++}
++
++function parseChallenge(raw: unknown): DeviceChallenge {
++  const payload = dataObject(raw, ['schemaVersion', 'purpose', 'challengeId', 'nonceBase64Url',
++    'accountName', 'keyFingerprint', 'deviceId', 'deviceGeneration', 'expiresAtServerEpochMs',
++    'serviceInstanceId', 'requestNonce']);
++  if (payload.schemaVersion !== 1 || (payload.purpose !== 'LoginDevice' && payload.purpose !== 'RegisterDevice')) {
++    throw new ServiceClientFault('InvalidData');
++  }
++  uuidField(payload.challengeId); accountNameField(payload.accountName); textField(payload.serviceInstanceId, 256);
++  decodeBase64Url(payload.nonceBase64Url, 32); decodeBase64Url(payload.keyFingerprint, 32);
++  decodeBase64Url(payload.requestNonce, 32); integerField(payload.expiresAtServerEpochMs);
++  if ((payload.deviceId === null) !== (payload.deviceGeneration === null)) { throw new ServiceClientFault('InvalidData'); }
++  if (payload.deviceId !== null) { uuidField(payload.deviceId); integerField(payload.deviceGeneration, 1); }
++  return payload as unknown as DeviceChallenge;
++}
++
++function parseAccount(raw: unknown): RealAccountFact {
++  const account = dataObject(raw, ['accountId', 'accountName']);
++  uuidField(account.accountId); accountNameField(account.accountName);
++  return account as unknown as RealAccountFact;
++}
++
++function parseDevice(raw: unknown, activeOnly: boolean): RealRegisteredDeviceFact {
++  const device = dataObject(raw, ['deviceId', 'generation', 'keyFingerprint', 'assurance', 'label', 'status']);
++  uuidField(device.deviceId); integerField(device.generation, 1);
++  decodeBase64Url(device.keyFingerprint, 32); textField(device.label, 128);
++  if (device.assurance !== 'RegisteredCredential' || (device.status !== 'Active' && device.status !== 'Revoked')
++    || (activeOnly && device.status !== 'Active')) { throw new ServiceClientFault('DeviceUntrusted'); }
++  return device as unknown as RealRegisteredDeviceFact;
++}
++
++function parseAuthentication(raw: unknown, issuedAt: number): ServiceAuthenticationPayload {
++  const auth = dataObject(raw, ['requestNonce', 'sessionId', 'csrfToken', 'account', 'device', 'expiresAtServerEpochMs']);
++  decodeBase64Url(auth.requestNonce, 32); decodeBase64Url(auth.csrfToken, 32); uuidField(auth.sessionId);
++  parseAccount(auth.account); parseDevice(auth.device, true);
++  if (integerField(auth.expiresAtServerEpochMs) <= issuedAt) { throw new ServiceClientFault('Unauthenticated'); }
++  return auth as unknown as ServiceAuthenticationPayload;
++}
++
++function parseRejection(raw: unknown): ServiceClientFault {
++  const result = dataObject(raw, ['kind', 'fault']);
++  if (result.kind !== 'Rejected') { throw new ServiceClientFault('InvalidData'); }
++  const fault = dataObject(result.fault, ['code', 'requestId', 'retryAfterMs']);
++  textField(fault.requestId, 256);
++  if (fault.retryAfterMs !== null) { integerField(fault.retryAfterMs); }
++  const codes: readonly unknown[] = ['Unauthenticated', 'DeviceUntrusted', 'AuthorityUnavailable', 'TimeUntrusted',
++    'VersionUnsupported', 'Conflict', 'RateLimited', 'InvalidData', 'Forbidden'];
++  if (!codes.includes(fault.code)) { throw new ServiceClientFault('InvalidData'); }
++  return new ServiceClientFault(fault.code as ServiceFault['code']);
++}
++
++function dataObject(raw: unknown, fields?: readonly string[]): DataObject {
++  if (!raw || typeof raw !== 'object' || Array.isArray(raw)
++    || (Object.getPrototypeOf(raw) !== null && Object.getPrototypeOf(raw) !== Object.prototype)
++    || Object.getOwnPropertySymbols(raw).length !== 0) { throw new ServiceClientFault('InvalidData'); }
++  const keys = Object.keys(raw);
++  if (Object.getOwnPropertyNames(raw).length !== keys.length
++    || (fields && (keys.length !== fields.length || keys.some(key => !fields.includes(key))))) {
++    throw new ServiceClientFault('InvalidData');
++  }
++  for (const key of keys) {
++    const descriptor = Object.getOwnPropertyDescriptor(raw, key);
++    if (!descriptor || !('value' in descriptor)) { throw new ServiceClientFault('InvalidData'); }
++  }
++  return raw as DataObject;
++}
++
++function textField(raw: unknown, maximum: number): string {
++  if (typeof raw !== 'string' || raw.length === 0 || raw.length > maximum || /[\u0000-\u001f\u007f]/.test(raw)) {
++    throw new ServiceClientFault('InvalidData');
++  }
++  for (let index = 0; index < raw.length; index += 1) {
++    const unit = raw.charCodeAt(index);
++    if (unit >= 0xd800 && unit <= 0xdbff) {
++      const next = raw.charCodeAt(++index);
++      if (!(next >= 0xdc00 && next <= 0xdfff)) { throw new ServiceClientFault('InvalidData'); }
++    } else if (unit >= 0xdc00 && unit <= 0xdfff) { throw new ServiceClientFault('InvalidData'); }
++  }
++  return raw;
++}
++
++function integerField(raw: unknown, minimum = 0): number {
++  if (typeof raw !== 'number' || !Number.isSafeInteger(raw) || raw < minimum || Object.is(raw, -0)) {
++    throw new ServiceClientFault('InvalidData');
++  }
++  return raw;
++}
++
++function uuidField(raw: unknown): string {
++  const value = textField(raw, 36);
++  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(value)) {
++    throw new ServiceClientFault('InvalidData');
++  }
++  return value;
++}
++
++function accountNameField(raw: unknown): string {
++  const value = textField(raw, 64);
++  if (!/^[A-Za-z0-9_.-]{3,64}$/.test(value)) { throw new ServiceClientFault('InvalidData'); }
++  return value;
++}
++
++function nonce(): string { return base64Url(crypto.getRandomValues(new Uint8Array(32))); }
++function utf8(text: string): Uint8Array { return new TextEncoder().encode(text); }
++function base64Url(bytes: Uint8Array): string {
++  let binary = '';
++  for (const byte of bytes) { binary += String.fromCharCode(byte); }
++  return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
++}
++function decodeBase64Url(raw: unknown, length: number): Uint8Array {
++  if (typeof raw !== 'string' || !/^[A-Za-z0-9_-]+$/.test(raw) || raw.length !== Math.ceil(length * 8 / 6)) {
++    throw new ServiceClientFault('InvalidData');
++  }
++  let binary: string;
++  try { binary = atob(raw.replace(/-/g, '+').replace(/_/g, '/') + '='.repeat((4 - raw.length % 4) % 4)); }
++  catch { throw new ServiceClientFault('InvalidData'); }
++  const bytes = new Uint8Array(binary.length);
++  for (let index = 0; index < binary.length; index += 1) { bytes[index] = binary.charCodeAt(index); }
++  if (bytes.length !== length || base64Url(bytes) !== raw) { throw new ServiceClientFault('InvalidData'); }
++  return bytes;
++}
++
++/** JCS subset used by this wire: objects/arrays, scalar strings, booleans and safe integers. */
++function canonicalJson(raw: unknown): string {
++  if (raw === null) { return 'null'; }
++  if (typeof raw === 'string') { if (raw.length) { textField(raw, 1048576); } return JSON.stringify(raw); }
++  if (typeof raw === 'boolean') { return raw ? 'true' : 'false'; }
++  if (typeof raw === 'number') { return String(integerField(raw)); }
++  if (Array.isArray(raw)) { return '[' + raw.map(canonicalJson).join(',') + ']'; }
++  const object = dataObject(raw);
++  return '{' + Object.keys(object).sort().map(key => JSON.stringify(key) + ':' + canonicalJson(object[key])).join(',') + '}';
++}
++
++function freezeTree<T>(raw: T): T {
++  if (raw && typeof raw === 'object') {
++    for (const value of Object.values(raw)) { freezeTree(value); }
++    Object.freeze(raw);
++  }
++  return raw;
++}
++
++async function limitedResponseText(response: Response): Promise<string> {
++  if (!response.body) { throw new ServiceClientFault('InvalidData'); }
++  const reader = response.body.getReader();
++  const decoder = new TextDecoder('utf-8', { fatal: true });
++  let size = 0;
++  let content = '';
++  try {
++    for (;;) {
++      const part = await reader.read();
++      if (part.done) { break; }
++      size += part.value.byteLength;
++      if (size > 1048576) { await reader.cancel(); throw new ServiceClientFault('InvalidData'); }
++      content += decoder.decode(part.value, { stream: true });
++    }
++    return content + decoder.decode();
++  } finally { reader.releaseLock(); }
++}
++
++/** Reject duplicate JSON keys before JSON.parse can overwrite one. No reviver or executable values. */
++function strictJson(source: string): unknown {
++  let offset = 0;
++  const whitespace = (): void => { while (/[\x20\x09\x0a\x0d]/.test(source.charAt(offset)) && offset < source.length) { offset += 1; } };
++  const fail = (): never => { throw new ServiceClientFault('InvalidData'); };
++  const parseString = (): string => {
++    const start = offset++;
++    while (offset < source.length) {
++      const character = source.charAt(offset++);
++      if (character === '\\') { offset += 1; }
++      else if (character === '"') {
++        try { const value: unknown = JSON.parse(source.slice(start, offset));
++          if (typeof value !== 'string') { return fail(); }
++          if (value.length) { textField(value, 1048576); } return value;
++        } catch { return fail(); }
++      }
++    }
++    return fail();
++  };
++  const parse = (depth: number): unknown => {
++    if (depth > 32) { return fail(); }
++    whitespace();
++    const character = source.charAt(offset);
++    if (character === '"') { return parseString(); }
++    if (character === '{') {
++      offset += 1; whitespace();
++      const object: DataObject = Object.create(null) as DataObject;
++      const names = new Set<string>();
++      if (source.charAt(offset) === '}') { offset += 1; return object; }
++      for (;;) {
++        if (source.charAt(offset) !== '"') { return fail(); }
++        const name = parseString();
++        if (names.has(name)) { return fail(); } names.add(name);
++        whitespace(); if (source.charAt(offset++) !== ':') { return fail(); }
++        object[name] = parse(depth + 1); whitespace();
++        const delimiter = source.charAt(offset++);
++        if (delimiter === '}') { return object; }
++        if (delimiter !== ',') { return fail(); } whitespace();
++      }
++    }
++    if (character === '[') {
++      offset += 1; whitespace(); const values: unknown[] = [];
++      if (source.charAt(offset) === ']') { offset += 1; return values; }
++      for (;;) {
++        if (values.length >= 256) { return fail(); }
++        values.push(parse(depth + 1)); whitespace(); const delimiter = source.charAt(offset++);
++        if (delimiter === ']') { return values; } if (delimiter !== ',') { return fail(); }
++      }
++    }
++    for (const literal of ['true', 'false', 'null']) {
++      if (source.slice(offset, offset + literal.length) === literal) {
++        offset += literal.length; return literal === 'null' ? null : literal === 'true';
++      }
++    }
++    const match = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?/.exec(source.slice(offset));
++    if (!match) { return fail(); } offset += match[0].length; return integerField(Number(match[0]));
++  };
++  const result = parse(0); whitespace(); if (offset !== source.length) { return fail(); } return result;
++}

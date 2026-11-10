@@ -1,0 +1,676 @@
+{
+  "schemaVersion": 1,
+  "phase": "B2.4e independent final Creator integrity review",
+  "generatedAt": "2026-10-10T16:27:19.080Z",
+  "pass": true,
+  "creatorReportSha256": "fd5e16def82d12ece92b77886667fd1eaaa00e12a39142da7ea592c278d480e3",
+  "harnessSha256": "74d93efb28cac8b67dbfdc8b40849837ebef0e7564bafbbcd9c08e3599f8572b",
+  "harnessMatches": true,
+  "harnessChecksCompilationBeforeAndAfter": true,
+  "compiledModulesVerified": 39,
+  "pngVerified": 40,
+  "lifecycleExitCode": 0,
+  "rendererErrors": 0,
+  "runtimeErrors": 0,
+  "externalRequests": 0,
+  "resolutions": [
+    {
+      "resolution": "1920x1080",
+      "pass": true,
+      "newUuidCopyAndSameIdMigration": true,
+      "sevenPartRebindingAndExactMigration": true,
+      "sharedHomeAuthority": true,
+      "copyCoreAndJournalPreserved": true,
+      "journalsIndependent": true,
+      "sourceCoreAndDirectoriesPreserved": true,
+      "accountFactsPreserved": true,
+      "peerMediaTimesSeconds": [
+        0.423647,
+        1.011889,
+        1.392548
+      ],
+      "naturalEndSeconds": 6,
+      "serviceClockAdvanceDuringReplay": 0,
+      "closedAdmissionWaitsForSafePoint": true
+    },
+    {
+      "resolution": "2560x1440",
+      "pass": true,
+      "newUuidCopyAndSameIdMigration": true,
+      "sevenPartRebindingAndExactMigration": true,
+      "sharedHomeAuthority": true,
+      "copyCoreAndJournalPreserved": true,
+      "journalsIndependent": true,
+      "sourceCoreAndDirectoriesPreserved": true,
+      "accountFactsPreserved": true,
+      "peerMediaTimesSeconds": [
+        0.419828,
+        1.075958,
+        1.476903
+      ],
+      "naturalEndSeconds": 6,
+      "serviceClockAdvanceDuringReplay": 0,
+      "closedAdmissionWaitsForSafePoint": true
+    }
+  ],
+  "pngs": [
+    {
+      "file": "1920x1080-00-new-account-created-format-time.png",
+      "sha256": "e042e17bd6d9bbff5a30a4e843397e7e5e72c547e015341d7a02d3d78244af24",
+      "width": 1920,
+      "height": 1080,
+      "pass": true
+    },
+    {
+      "file": "1920x1080-01-primary-empty-stable-core.png",
+      "sha256": "196f4221a0967392bb4ab1b27a2ea7b8d4076d8cd297a31f340487e23d04d385",
+      "width": 1920,
+      "height": 1080,
+      "pass": true
+    },
+    {
+      "file": "1920x1080-02-player-choice-durable-ledger-sphere-entry.png",
+      "sha256": "30727dd44ae08fa30dc5b76f7d87b2d58d1afeed6b43d891bce95a88beb7f3ed",
+      "width": 1920,
+      "height": 1080,
+      "pass": true
+    },
+    {
+      "file": "1920x1080-03-world-chart-native-media.png",
+      "sha256": "5f11507a20afcba5a8a833bfc462f5b5471be5a61b58c8dc7f7c0584d6cc9958",
+      "width": 1920,
+      "height": 1080,
+      "pass": true
+    },
+    {
+      "file": "1920x1080-04-world-completed-durable-ledger-account-record.png",
+      "sha256": "0d2992cc865bcb991a823f8c2e6137258da439b6c8568b6553fff113735ade47",
+      "width": 1920,
+      "height": 1080,
+      "pass": true
+    },
+    {
+      "file": "1920x1080-05-directory-after-world-clear-durable-core.png",
+      "sha256": "534ff211426ad6435df7b3e5d2758bce4f9e6a614e15c1c5e9255cd1e3b982d1",
+      "width": 1920,
+      "height": 1080,
+      "pass": true
+    },
+    {
+      "file": "1920x1080-06-world-ledger-seeded-reentry-byte-preserved.png",
+      "sha256": "270ea97702b10baf48811532adde57c65e8efb75a17a0b4c3cd4f6fb87b99e3e",
+      "width": 1920,
+      "height": 1080,
+      "pass": true
+    },
+    {
+      "file": "1920x1080-07-a-home-registered-restricted-core-export.png",
+      "sha256": "c0efe54c7cafb333129ec6a2b80eefeeadad8eb7052d8fc7b60c373ce9e116ce",
+      "width": 1920,
+      "height": 1080,
+      "pass": true
+    },
+    {
+      "file": "1920x1080-08-b-copy-new-uuid-seven-parts-published.png",
+      "sha256": "9d39a0d3badbc82c9fb3f98f60e3420c006622b15a48e1785c800262c1f268f5",
+      "width": 1920,
+      "height": 1080,
+      "pass": true
+    },
+    {
+      "file": "1920x1080-09-b-copy-formal-complete-restored.png",
+      "sha256": "bf540f3fe03d655c0b38d7487f45b66069ea609f7c9f43d61d713d2b09c9a2f2",
+      "width": 1920,
+      "height": 1080,
+      "pass": true
+    },
+    {
+      "file": "1920x1080-10-reality-pause-after-all-source-worlds-drained.png",
+      "sha256": "6777dfe465159aec40b25d5a72d90244ba7d7c42ae368e2b94f83a40ba6a8bbe",
+      "width": 1920,
+      "height": 1080,
+      "pass": true
+    },
+    {
+      "file": "1920x1080-11-pause-rejects-a-b-and-existing-copy.png",
+      "sha256": "7a812e4fa75ef8754cf70ea69e598f6fffe8bac727ee00fcac208726f8520d16",
+      "width": 1920,
+      "height": 1080,
+      "pass": true
+    },
+    {
+      "file": "1920x1080-12-rebuilt-client-preserves-device-binding.png",
+      "sha256": "5cc3ec033ec9eb855d82b37e3ac7c88181e9de9c2a9f786ccfdf0560d1a552c0",
+      "width": 1920,
+      "height": 1080,
+      "pass": true
+    },
+    {
+      "file": "1920x1080-13-service-fixture-cutoff-released.png",
+      "sha256": "c9b4ae24e8a5eb9b34a71923a407d0db763cf2f4afc7538c6b24c857edbbfc87",
+      "width": 1920,
+      "height": 1080,
+      "pass": true
+    },
+    {
+      "file": "1920x1080-14-b-same-id-published-alongside-copy.png",
+      "sha256": "e64efffb98e1002e214d29fd2e706e253238c5a37c98238bd852ab375886d8fc",
+      "width": 1920,
+      "height": 1080,
+      "pass": true
+    },
+    {
+      "file": "1920x1080-15-b-same-id-formal-complete-restored.png",
+      "sha256": "bf540f3fe03d655c0b38d7487f45b66069ea609f7c9f43d61d713d2b09c9a2f2",
+      "width": 1920,
+      "height": 1080,
+      "pass": true
+    },
+    {
+      "file": "1920x1080-16-rebuilt-client-same-id-reopened.png",
+      "sha256": "bf540f3fe03d655c0b38d7487f45b66069ea609f7c9f43d61d713d2b09c9a2f2",
+      "width": 1920,
+      "height": 1080,
+      "pass": true
+    },
+    {
+      "file": "1920x1080-17-other-window-release-closes-account.png",
+      "sha256": "278cd59667c93cb4e737ab6cbb64f4d1f322020a38cd6f4dabf8850cb6128431",
+      "width": 1920,
+      "height": 1080,
+      "pass": true
+    },
+    {
+      "file": "1920x1080-18-b-active-replay-keeps-native-timeline.png",
+      "sha256": "62679f359bc533b2d1dc3a8f891f4ac26864be00e69e403b8bfe0abd6c8dada1",
+      "width": 1920,
+      "height": 1080,
+      "pass": true
+    },
+    {
+      "file": "1920x1080-19-native-ended-and-core-settled-before-retirement.png",
+      "sha256": "d3995704e994e421f7d0f8fd7e6174c73c0c47f23cf978fdcacd4e07a4b2b02f",
+      "width": 1920,
+      "height": 1080,
+      "pass": true
+    },
+    {
+      "file": "2560x1440-00-new-account-created-format-time.png",
+      "sha256": "dcf1cc26bdec99dcfdc819c145d90e5ec155b940e35bfff50241c3a626d96182",
+      "width": 2560,
+      "height": 1440,
+      "pass": true
+    },
+    {
+      "file": "2560x1440-01-primary-empty-stable-core.png",
+      "sha256": "5fdb2518f97cdb5ae5d7365d195128b688718213c3153b9424d2149a47d4a657",
+      "width": 2560,
+      "height": 1440,
+      "pass": true
+    },
+    {
+      "file": "2560x1440-02-player-choice-durable-ledger-sphere-entry.png",
+      "sha256": "071c3dd17d3afdc47ed8e95e5b42ca81ad387702c061b36ce883e459312d5dda",
+      "width": 2560,
+      "height": 1440,
+      "pass": true
+    },
+    {
+      "file": "2560x1440-03-world-chart-native-media.png",
+      "sha256": "915168f3a24e119807bef64918e4ddd1c6b20bc97e7f2ab0d8bf34659b158e02",
+      "width": 2560,
+      "height": 1440,
+      "pass": true
+    },
+    {
+      "file": "2560x1440-04-world-completed-durable-ledger-account-record.png",
+      "sha256": "31c5d7ab4ab4925d2e91ab80b165c20da5d5bf8b5bb72e28e8819236a7c61568",
+      "width": 2560,
+      "height": 1440,
+      "pass": true
+    },
+    {
+      "file": "2560x1440-05-directory-after-world-clear-durable-core.png",
+      "sha256": "969c9b8e49fca0a9480b0813462559e801e144ad4350ec1851fafeddbcc750dd",
+      "width": 2560,
+      "height": 1440,
+      "pass": true
+    },
+    {
+      "file": "2560x1440-06-world-ledger-seeded-reentry-byte-preserved.png",
+      "sha256": "00ba79f00c831610522f81cb5485fe2edcb9eb5ba88e4309f11f1cec48548bc0",
+      "width": 2560,
+      "height": 1440,
+      "pass": true
+    },
+    {
+      "file": "2560x1440-07-a-home-registered-restricted-core-export.png",
+      "sha256": "9d7e717e8193b3ebd4851bfd92fbf9f4af35fa0822e7fc729e5079f2fb66bfbe",
+      "width": 2560,
+      "height": 1440,
+      "pass": true
+    },
+    {
+      "file": "2560x1440-08-b-copy-new-uuid-seven-parts-published.png",
+      "sha256": "b2e36f4cbd9c501e1d1cf1b1e6d7da403ba6b50e38f14d460d921f6be299e502",
+      "width": 2560,
+      "height": 1440,
+      "pass": true
+    },
+    {
+      "file": "2560x1440-09-b-copy-formal-complete-restored.png",
+      "sha256": "a351f935eb3000834a7b5b200ad6832edbc05eb1f4c8feb8c346a10b967fd45d",
+      "width": 2560,
+      "height": 1440,
+      "pass": true
+    },
+    {
+      "file": "2560x1440-10-reality-pause-after-all-source-worlds-drained.png",
+      "sha256": "be2490efe965eb95d3ce821013bf0d54ba494829cbb0b53afec16e390fff6b02",
+      "width": 2560,
+      "height": 1440,
+      "pass": true
+    },
+    {
+      "file": "2560x1440-11-pause-rejects-a-b-and-existing-copy.png",
+      "sha256": "c577f78fb694928cd89b8a5f88286cb99d5de48d390b77e34f9daf1a2be42123",
+      "width": 2560,
+      "height": 1440,
+      "pass": true
+    },
+    {
+      "file": "2560x1440-12-rebuilt-client-preserves-device-binding.png",
+      "sha256": "ad41e62a677b24c3c651d05d11f42f34b8aceda9d32ba6008e1623205453681c",
+      "width": 2560,
+      "height": 1440,
+      "pass": true
+    },
+    {
+      "file": "2560x1440-13-service-fixture-cutoff-released.png",
+      "sha256": "b1d8a010a21a0f5e1a286e6c055e15b20884cef28b8105a0d192de761d5bddb8",
+      "width": 2560,
+      "height": 1440,
+      "pass": true
+    },
+    {
+      "file": "2560x1440-14-b-same-id-published-alongside-copy.png",
+      "sha256": "7db70cb7104186a6bf716824b3e1a7a2f2173fdd3f046eede981831d27bfbb12",
+      "width": 2560,
+      "height": 1440,
+      "pass": true
+    },
+    {
+      "file": "2560x1440-15-b-same-id-formal-complete-restored.png",
+      "sha256": "a351f935eb3000834a7b5b200ad6832edbc05eb1f4c8feb8c346a10b967fd45d",
+      "width": 2560,
+      "height": 1440,
+      "pass": true
+    },
+    {
+      "file": "2560x1440-16-rebuilt-client-same-id-reopened.png",
+      "sha256": "a351f935eb3000834a7b5b200ad6832edbc05eb1f4c8feb8c346a10b967fd45d",
+      "width": 2560,
+      "height": 1440,
+      "pass": true
+    },
+    {
+      "file": "2560x1440-17-other-window-release-closes-account.png",
+      "sha256": "facf2925f725c6a7290fa6f6c5e00a8d79537dcc5f4a0bbdb37d5296bbf8f8e1",
+      "width": 2560,
+      "height": 1440,
+      "pass": true
+    },
+    {
+      "file": "2560x1440-18-b-active-replay-keeps-native-timeline.png",
+      "sha256": "603a2c67ac915ccb2483db545b2f993a566e7912e6fb5c0eb5944c36a109a83b",
+      "width": 2560,
+      "height": 1440,
+      "pass": true
+    },
+    {
+      "file": "2560x1440-19-native-ended-and-core-settled-before-retirement.png",
+      "sha256": "a3a88ab3fd1fe909b637ad3874df6d17c46b3ed467644ed3b17f34c321c25b10",
+      "width": 2560,
+      "height": 1440,
+      "pass": true
+    }
+  ],
+  "modules": [
+    {
+      "file": "assets/scripts/CrossDevicePrototype.ts",
+      "sourceSha256": "b192b335960ce6ba5f56a6df9daadee5697d294606ef991295aeba95d19a11ce",
+      "chunkSha256": "fa13a5e56648ccedca7dcfd5d95653ebe183091ec304c7c25d7cb4bf99dc71af",
+      "localAndServedSourceMapsMatch": true,
+      "pass": true
+    },
+    {
+      "file": "assets/scripts/SceneBuilder.ts",
+      "sourceSha256": "6f0903e6af74187ec2d611607084f736552de7f1ad1bfe80cd3a3310a43f1499",
+      "chunkSha256": "0a3e803f859cc2f1b898d2666ce4ab9aa89b2fe0910ac33d70afed38d51e8c20",
+      "localAndServedSourceMapsMatch": true,
+      "pass": true
+    },
+    {
+      "file": "assets/scripts/WorldFolderBuilder.ts",
+      "sourceSha256": "837b75c0355dc595fae1e872d8bcfc85dc914659a5f99e92416cc9231f1caae9",
+      "chunkSha256": "b5743f87c321afec038fc31203919f27701d96628ce9617f1b653c4eccf710f4",
+      "localAndServedSourceMapsMatch": true,
+      "pass": true
+    },
+    {
+      "file": "assets/scripts/WorldMigrationPrototype.ts",
+      "sourceSha256": "dd647ffef7acd25debed4a65a9c61747384cda947ab4f4dd509760e076910abe",
+      "chunkSha256": "9bf22a580bd7f32ae627c57fd46caa711669e34d0b8af3aa46855b5669febf84",
+      "localAndServedSourceMapsMatch": true,
+      "pass": true
+    },
+    {
+      "file": "src/chart/ChartPremiere.ts",
+      "sourceSha256": "50617d366ae7c5b8dd6b402389f1ef9e43822bf24e03f0687476e1558853eb6d",
+      "chunkSha256": "2ecf6adbf09c1f6fe227be17ce790a7c8ecf0cbd978e31dd035ff172a519b532",
+      "localAndServedSourceMapsMatch": true,
+      "pass": true
+    },
+    {
+      "file": "src/director/AccountMilestone.ts",
+      "sourceSha256": "ea937e6676b97cafd8a726d051db54d16077a9fe82438cce8374a4635d1b846e",
+      "chunkSha256": "0f8cb22774a1278321e5ca892cd4716e814002b764f45a2ca59580b8c1608a5d",
+      "localAndServedSourceMapsMatch": true,
+      "pass": true
+    },
+    {
+      "file": "src/director/ChartReference.ts",
+      "sourceSha256": "e6d8db4168c39acfa8a39fc23b9222e540664d35068a412f28a1eb696bb10046",
+      "chunkSha256": "8b7c2c3a943d2927b2c1215661b0aab80fe23096c85d5c96f5c3b615010988bc",
+      "localAndServedSourceMapsMatch": true,
+      "pass": true
+    },
+    {
+      "file": "src/director/CoreTransfer.ts",
+      "sourceSha256": "f8af59dc687e605fc7640ae15d8c57857e49d31708ebaead858913cce30fdcc7",
+      "chunkSha256": "8638ffec2b004efe6451460ceb131f9471c206f937e0b2b2028303038bf1ac20",
+      "localAndServedSourceMapsMatch": true,
+      "pass": true
+    },
+    {
+      "file": "src/director/CoreTransferContent.ts",
+      "sourceSha256": "790ab438725e552628497cc097196c245c13f748d2688c409cc05128613a3346",
+      "chunkSha256": "64e0cd832460f7f372ce12c309fdb2990a8782baf0e98392937073cdfc7a1e7a",
+      "localAndServedSourceMapsMatch": true,
+      "pass": true
+    },
+    {
+      "file": "src/director/IntentPort.ts",
+      "sourceSha256": "44a60728428514b25bfed380f680db2637cf13d57343b7e84ef91eadd48de09c",
+      "chunkSha256": "6d9d7685edaadee935343a2cf63d38446fec18993dd6b743ece4d0fb4204796c",
+      "localAndServedSourceMapsMatch": true,
+      "pass": true
+    },
+    {
+      "file": "src/director/LedgerHydration.ts",
+      "sourceSha256": "e8dc01ee89ab01367de4d6a5dd23a8c3eeb72ac426658ff6c0f3eba9121cdc99",
+      "chunkSha256": "98204fd4270b014a756d470cfb45693e26d661c1ed073cbfe8725db9151e4a99",
+      "localAndServedSourceMapsMatch": true,
+      "pass": true
+    },
+    {
+      "file": "src/director/PuzzleHydration.ts",
+      "sourceSha256": "8160a7a1fa2de741582423c2ecc8f6b3e7791b1dd802d2821ba29c82dd837254",
+      "chunkSha256": "e2e47e2322ccebb9baf4239c28fac96c4c26048cfa5ac7da242e221b650f87ef",
+      "localAndServedSourceMapsMatch": true,
+      "pass": true
+    },
+    {
+      "file": "src/director/RealityPauseBoundary.ts",
+      "sourceSha256": "322c77afaa6084c1cd1492bd5f69710823c1c5c32ab474cea91a5360fa117099",
+      "chunkSha256": "f6adbb1d24d423c3328de22d164ee23a164035f99eb61cfd8cf736e649c3aebe",
+      "localAndServedSourceMapsMatch": true,
+      "pass": true
+    },
+    {
+      "file": "src/director/RouteSignature.ts",
+      "sourceSha256": "e2a2e0254687b16750d999953e17e57f781fd9084f46c7c4af339a41903903b7",
+      "chunkSha256": "0a1d12c9dfa1d5ada2cfcacf93793aa84ddf8ec4e58b7e2c4c0bab4a571debd5",
+      "localAndServedSourceMapsMatch": true,
+      "pass": true
+    },
+    {
+      "file": "src/director/WorldClearSession.ts",
+      "sourceSha256": "76df27e3e4c754ebead6843159bbe152972da23dede4daf941bacd0973c4a5f5",
+      "chunkSha256": "4751a994281a8450bb5e4339bfaf3e279f511f50bf8539ca1625b4bf1e13f88b",
+      "localAndServedSourceMapsMatch": true,
+      "pass": true
+    },
+    {
+      "file": "src/director/WorldHomeRegistry.ts",
+      "sourceSha256": "5c0858c6ee83c01ca596ff5358936f6e733c886d7fa328a8ce36aff72a8f4b70",
+      "chunkSha256": "071d858139c2d60e6f03c8b27e43e866955ca1804ca0276760bae7b8b094c964",
+      "localAndServedSourceMapsMatch": true,
+      "pass": true
+    },
+    {
+      "file": "src/director/WorldMigration.ts",
+      "sourceSha256": "43006e243f11ac2589895bbd1851df5ee5f249734f787fe6b48049a7b8b836c4",
+      "chunkSha256": "f3409cc4f932e4daaa7c705c7ffe98b4286e061215b5abec346afe013d522a76",
+      "localAndServedSourceMapsMatch": true,
+      "pass": true
+    },
+    {
+      "file": "src/director/WorldStateCodec.ts",
+      "sourceSha256": "a3820627857039be22c18e90c68b79f14752ee37f1b66b5d4b0e4fa1d32ff780",
+      "chunkSha256": "f2e39f30db8b318076e3afd82d4db74a01ea36ea9aae4468c17a76be3d8b3f41",
+      "localAndServedSourceMapsMatch": true,
+      "pass": true
+    },
+    {
+      "file": "src/director/WorldStateSession.ts",
+      "sourceSha256": "6b1ceca1e7d532add1e9d232820ec77e61ff2daaa912084fe3f548c57c0e084f",
+      "chunkSha256": "49f652dc11c3f4dc206183005aabc31b0af6715ef63e94ac9e61fb2564abb85a",
+      "localAndServedSourceMapsMatch": true,
+      "pass": true
+    },
+    {
+      "file": "src/ledger/deriveLedgerPosition.ts",
+      "sourceSha256": "b0cac832326f65940c021ab036327a00e983aced51f9494747084773505fce43",
+      "chunkSha256": "8b106ed98e5c71675d11bee32bd7ebe398629181543b019166a0b973c1fdc339",
+      "localAndServedSourceMapsMatch": true,
+      "pass": true
+    },
+    {
+      "file": "src/presentation/AudioOutputClock.ts",
+      "sourceSha256": "16ea1319d3380bb82940ca85dfb06ede1f259bd509589f7b9b35a395c52c9414",
+      "chunkSha256": "2303e135b8ac843be0c1ad651483281707a89b63ca11d2d665370bb06d2d5418",
+      "localAndServedSourceMapsMatch": true,
+      "pass": true
+    },
+    {
+      "file": "src/presentation/CrossDeviceContractAdapter.ts",
+      "sourceSha256": "94804bc16bc78c175fd683611574ceb70d95a1cf1cd6a751372d81a018b02406",
+      "chunkSha256": "c131ff9c22704030fc5b1b17dc4feb81a856911b3eb7549153914e2912762c40",
+      "localAndServedSourceMapsMatch": true,
+      "pass": true
+    },
+    {
+      "file": "src/presentation/CrossDeviceImportStorage.ts",
+      "sourceSha256": "15b16c12daae586a6f7a8bdffbc6289fe42307c4a62140fb91617e2b0a94c4c2",
+      "chunkSha256": "a2f505e0ca56b798a44b3c35ad746a88cd441c0ebe80997f3b441cb3e7ee8e31",
+      "localAndServedSourceMapsMatch": true,
+      "pass": true
+    },
+    {
+      "file": "src/presentation/DeepTraceRevealSequence.ts",
+      "sourceSha256": "079d660a3a232489e388a65c428507af1d01ded900388c5f9d17da93d790281d",
+      "chunkSha256": "68fdcd3cbb7180172d66656dd3c8b095a802e255ed770c84c288aa33d15ceaf5",
+      "localAndServedSourceMapsMatch": true,
+      "pass": true
+    },
+    {
+      "file": "src/presentation/FormatTimeStorage.ts",
+      "sourceSha256": "ae88dcec14d85510b0c1ffb5b275cbcb4daee5eb8ecca958a72aba6b7bf0e4bd",
+      "chunkSha256": "01055d1e2c4b43e444a2d16315651a49688cf91e905b5967e1d255070b76bf00",
+      "localAndServedSourceMapsMatch": true,
+      "pass": true
+    },
+    {
+      "file": "src/presentation/FrameDriver.ts",
+      "sourceSha256": "e70232f3ef6f803bba02a6c2af1d40107aea95400dfd65e9845636a836faf3a6",
+      "chunkSha256": "c62fa482dcd849e6eaaefad09eb99646ef31988e959169fc135ed90c0a3b4822",
+      "localAndServedSourceMapsMatch": true,
+      "pass": true
+    },
+    {
+      "file": "src/presentation/InputCollector.ts",
+      "sourceSha256": "1cf85eb3e8de3621bc199a3e6e96cba92a1309fb6172ce1221ef692281b67420",
+      "chunkSha256": "6816e7d6fbfb17545953e5a78b235f0e2cecc916247b3709b5d851388b1bae58",
+      "localAndServedSourceMapsMatch": true,
+      "pass": true
+    },
+    {
+      "file": "src/presentation/SafePointDrainStorage.ts",
+      "sourceSha256": "76fb9391a9aabc553ade293c31bc6aba66e1e2aec986b679151a8068b5c4ea3d",
+      "chunkSha256": "d8d766d17a9cd1be27718db39a0790ae91d43caad4167f7b9d93d4c5136884b7",
+      "localAndServedSourceMapsMatch": true,
+      "pass": true
+    },
+    {
+      "file": "src/presentation/WorldChartView.ts",
+      "sourceSha256": "49f0ae5244e2e2faf07ce9f6c3b59d4703dbdecfaa963ed5811a10b4cf9c7890",
+      "chunkSha256": "5110df43c2efea91cf96aafaee47edb886f49cda4ff7ba1c3e8637d2e80cfa93",
+      "localAndServedSourceMapsMatch": true,
+      "pass": true
+    },
+    {
+      "file": "src/presentation/WorldClearView.ts",
+      "sourceSha256": "07bb64db11e03e1e750369c2abe28e857546ff0124746b2734e725a71f206cba",
+      "chunkSha256": "92223ac4d05d6a2e95923c444948606110cbda05c20cbcec83eb8b8acb27d865",
+      "localAndServedSourceMapsMatch": true,
+      "pass": true
+    },
+    {
+      "file": "src/presentation/WorldCoreStateStorage.ts",
+      "sourceSha256": "e6fe146a78accac194a4d135a8e2b2d2feb406f038d5a9c1b5d76560ab976c49",
+      "chunkSha256": "572d877791509c49a546e995db92457d8d70a95f92f1fdf5f00cd61c5e3b7146",
+      "localAndServedSourceMapsMatch": true,
+      "pass": true
+    },
+    {
+      "file": "src/presentation/WorldCoreStateView.ts",
+      "sourceSha256": "520e8223789e67dffcf6bf888b27e8a140884d982dc76dcef81dc4ddbf1d4da8",
+      "chunkSha256": "b097469107fd18baeff1b859b5aed17eda4037a93e100474560995a34d728e17",
+      "localAndServedSourceMapsMatch": true,
+      "pass": true
+    },
+    {
+      "file": "src/presentation/WorldHomeContractAdapter.ts",
+      "sourceSha256": "36c47b6649fda91d7fc16fcd7f32618c4e7dd57d1b3b044c3883fc499989662a",
+      "chunkSha256": "e4486a6864af1998543f677e4e548822bf6a67ede97e67a2cc77cac7fc6a1f15",
+      "localAndServedSourceMapsMatch": true,
+      "pass": true
+    },
+    {
+      "file": "src/presentation/WorldMigrationContractAdapter.ts",
+      "sourceSha256": "a37a069880e5eb88e1f04c426573df96ccf266bc08ecfa7a9d8b755ddaec0a47",
+      "chunkSha256": "6f03e5963de94ffe5cecc4d0deea3d9cb8e1929a12704f02034ff893eb7f5b69",
+      "localAndServedSourceMapsMatch": true,
+      "pass": true
+    },
+    {
+      "file": "src/presentation/WorldMigrationStorage.ts",
+      "sourceSha256": "bfea840ae818b6b4e443a9a77092b9cfa3f7f96a43014f7bef704ff2551d1d3f",
+      "chunkSha256": "e8845f27de9df139522c92a39c9ef84180282adf2e7c940dbd04220087f0a150",
+      "localAndServedSourceMapsMatch": true,
+      "pass": true
+    },
+    {
+      "file": "src/trace/DeepTrace.ts",
+      "sourceSha256": "00fc0694f927cae6a63055bbf60fbd407598f4d7c0c95b98e8cc254b6bdc644c",
+      "chunkSha256": "7c0d0bbdbd46c28e22766e90f27052ff2e6b7daf221d817d90cbef9d9ae6e855",
+      "localAndServedSourceMapsMatch": true,
+      "pass": true
+    },
+    {
+      "file": "src/trace/PuzzleChain.ts",
+      "sourceSha256": "875448d1fb3d91c35a49deee1973a453abeed27931537ea26ec04fb817d55f76",
+      "chunkSha256": "4c4bd3f8523094532bc800790c93624cbe3c0b43d84df9325258592d250a7923",
+      "localAndServedSourceMapsMatch": true,
+      "pass": true
+    },
+    {
+      "file": "src/trace/PuzzleProgress.ts",
+      "sourceSha256": "835fa748d0751e2f240043ccb39490a40bf847c8d562dbd0d4eaf332d0320208",
+      "chunkSha256": "b4932e23996fba1155865c8d2892eace84a8ee874dcf19c716242470e25c0058",
+      "localAndServedSourceMapsMatch": true,
+      "pass": true
+    },
+    {
+      "file": "src/world/WorldInstance.ts",
+      "sourceSha256": "9a4dfd7c33e1e889513b7800367f5dfb3ef43459b2172d6fc3393d85478e842e",
+      "chunkSha256": "b2415b0768a2cf6ee8ccf5e95d529bcba81dd04da902f3162dd9dbf7e464c638",
+      "localAndServedSourceMapsMatch": true,
+      "pass": true
+    }
+  ],
+  "limitations": [
+    "Shared ContractAdapter with two logical devices",
+    "Restricted Core prototype, not full FileCarry",
+    "Service fixture clock explicitly advanced for initial one-hour boundary, no actual elapsed-hour or real-service claim"
+  ],
+  "screenshotIdentity": {
+    "uniqueFileNames": 40,
+    "uniqueSha256": 36,
+    "repeatedShaGroups": [
+      {
+        "sha256": "bf540f3fe03d655c0b38d7487f45b66069ea609f7c9f43d61d713d2b09c9a2f2",
+        "items": [
+          {
+            "file": "1920x1080-09-b-copy-formal-complete-restored.png",
+            "runtimeNode": "world-fe22041e-4596-413f-8298-ea36c3cdbfa2"
+          },
+          {
+            "file": "1920x1080-15-b-same-id-formal-complete-restored.png",
+            "runtimeNode": "world-a6966e96-61f9-4f58-99fa-3f8729f90fc2"
+          },
+          {
+            "file": "1920x1080-16-rebuilt-client-same-id-reopened.png",
+            "runtimeNode": "world-a6966e96-61f9-4f58-99fa-3f8729f90fc2"
+          }
+        ]
+      },
+      {
+        "sha256": "a351f935eb3000834a7b5b200ad6832edbc05eb1f4c8feb8c346a10b967fd45d",
+        "items": [
+          {
+            "file": "2560x1440-09-b-copy-formal-complete-restored.png",
+            "runtimeNode": "world-12149f4a-daea-4cc5-a50b-5b982a3dbd41"
+          },
+          {
+            "file": "2560x1440-15-b-same-id-formal-complete-restored.png",
+            "runtimeNode": "world-d369b9d3-29a1-4b8a-a0d3-3b301969eb6e"
+          },
+          {
+            "file": "2560x1440-16-rebuilt-client-same-id-reopened.png",
+            "runtimeNode": "world-d369b9d3-29a1-4b8a-a0d3-3b301969eb6e"
+          }
+        ]
+      }
+    ],
+    "runtimeChecks": [
+      {
+        "resolution": "1920x1080",
+        "copyRuntimeId": "world-fe22041e-4596-413f-8298-ea36c3cdbfa2",
+        "migratedRuntimeId": "world-a6966e96-61f9-4f58-99fa-3f8729f90fc2",
+        "rebuiltRuntimeId": "world-a6966e96-61f9-4f58-99fa-3f8729f90fc2",
+        "pass": true
+      },
+      {
+        "resolution": "2560x1440",
+        "copyRuntimeId": "world-12149f4a-daea-4cc5-a50b-5b982a3dbd41",
+        "migratedRuntimeId": "world-d369b9d3-29a1-4b8a-a0d3-3b301969eb6e",
+        "rebuiltRuntimeId": "world-d369b9d3-29a1-4b8a-a0d3-3b301969eb6e",
+        "pass": true
+      }
+    ],
+    "pass": true,
+    "interpretation": "Identical inherited-content UI bytes are permitted. World identity is proven by contemporaneous runtime IDs and captured Core/Home/directory/journal metadata, not by screenshot hashes alone."
+  }
+}

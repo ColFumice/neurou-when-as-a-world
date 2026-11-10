@@ -1,0 +1,7 @@
+{
+  "SharedCommitContracts.ts": "e0682252df74a4767cdeac5a79bebb33dbdd88343af0d0f4ebb362a1e41cd291",
+  "SharedCanonicalBytes.ts": "1cd132ab68ee3a5c30989cd4e5464743c4223ba3141ae7dc16dd4e27c2fbe27c",
+  "SharedCommitCodec.ts": "ed55c2ba48857b7a75c45f2e887b541ebf2fb68fb50cd48233f64dd343ee77cd",
+  "SharedServiceProtocolContracts.ts": "e74f48e14ded771db56cb1890c24a19490e52e2a9b8d96a9c3a9a9bad33b4a80",
+  "SharedServiceProtocolCodec.ts": "22bb5e8139f8323388bcb2129d021471c48b97c0ede4a25cbea1285629400fea"
+}

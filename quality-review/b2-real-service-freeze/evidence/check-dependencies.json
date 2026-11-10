@@ -1,0 +1,18 @@
+{
+  "command": "npm run check:dependencies",
+  "executedVia": "npm.cmd run check:dependencies",
+  "workingDirectory": "D:\\Project\\A_New_Begin\\Neurou_official",
+  "startedUtc": "2026-10-11T01:51:45.3381188Z",
+  "completedUtc": "2026-10-11T01:51:45.8070171Z",
+  "durationSeconds": 0.45,
+  "exitCode": 0,
+  "passed": true,
+  "warningLineCount": 0,
+  "warningLines": [],
+  "log": "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-real-service-freeze\\evidence\\check-dependencies.log",
+  "logSha256": "d9725fbcb933a30548ceeff27ab55be9e5ccfd81bdf115db207660cbf681fe06",
+  "warningCountingMethod": "Emitted warning entries whose line begins with WARN, WARNING, npm WARN or npm WARNING; the summary line is excluded and its reported counts are stored separately.",
+  "limitation": "The existing repository gate checks existing implementation paths; it does not compile or validate the new Markdown contract draft and does not attest real service deployment or security.",
+  "reportedErrorCount": 0,
+  "reportedWarningCount": null
+}

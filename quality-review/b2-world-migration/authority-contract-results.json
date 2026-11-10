@@ -1,0 +1,182 @@
+{
+  "mode": "ContractAdapter",
+  "passed": 32,
+  "failed": 0,
+  "total": 32,
+  "results": [
+    {
+      "name": "A01 source release → 1h RealityPause → service Released → same-ID target Claim",
+      "category": "ContractAdapter",
+      "result": "PASS"
+    },
+    {
+      "name": "A02 every device and world including InitialWorld and unknown world rejects while account paused",
+      "category": "ContractAdapter",
+      "result": "PASS"
+    },
+    {
+      "name": "A03 client Date.now rollback or advance cannot end service pause",
+      "category": "ContractAdapter",
+      "result": "PASS"
+    },
+    {
+      "name": "A04 exact cutoff is server-owned; sync final-write guard never computes local expiry",
+      "category": "ContractAdapter",
+      "result": "PASS"
+    },
+    {
+      "name": "A05 RealityPause never shorter than injected OfflineGrace",
+      "category": "ContractAdapter",
+      "result": "PASS"
+    },
+    {
+      "name": "A06 device account binding covers another window, reconstructed adapter and alternate login account",
+      "category": "ContractAdapter",
+      "result": "PASS"
+    },
+    {
+      "name": "A07 unrelated account on another device remains available",
+      "category": "ContractAdapter",
+      "result": "PASS"
+    },
+    {
+      "name": "A08 serialized or self-issued SafePoint capability is rejected",
+      "category": "ContractAdapter",
+      "result": "PASS"
+    },
+    {
+      "name": "A09 revoked capability cannot Release; source must actively drain again",
+      "category": "ContractAdapter",
+      "result": "PASS"
+    },
+    {
+      "name": "A10 30-second service TTL expires exactly at cutoff",
+      "category": "ContractAdapter",
+      "result": "PASS"
+    },
+    {
+      "name": "A11 reconstructed service cannot revive an unconsumed live drain acceptance",
+      "category": "ContractAdapter",
+      "result": "PASS"
+    },
+    {
+      "name": "A12 Release checks current source Core again and never accepts a stale confirmation",
+      "category": "ContractAdapter",
+      "result": "PASS"
+    },
+    {
+      "name": "A13 migration payload must match the drain-confirmed revision and full digest",
+      "category": "ContractAdapter",
+      "result": "PASS"
+    },
+    {
+      "name": "A14 exact Release replay does not restart pause and survives service reconstruction",
+      "category": "ContractAdapter",
+      "result": "PASS"
+    },
+    {
+      "name": "A15 failed durable Release leaves home, pause and binding unchanged and acceptance unconsumed",
+      "category": "ContractAdapter",
+      "result": "PASS"
+    },
+    {
+      "name": "A16 response lost after durable Release recovers by exact replay without live capability",
+      "category": "ContractAdapter",
+      "result": "PASS"
+    },
+    {
+      "name": "A17 wrong source, cross-account payload, wrong home revision and InitialWorld fail before pause",
+      "category": "ContractAdapter",
+      "result": "PASS"
+    },
+    {
+      "name": "A18 missing migration is null; unavailable, missing Web Locks and corrupt schema are explicit refusal",
+      "category": "ContractAdapter",
+      "result": "PASS"
+    },
+    {
+      "name": "A19 service clock rollback rejects without advancing or changing any durable authority",
+      "category": "ContractAdapter",
+      "result": "PASS"
+    },
+    {
+      "name": "A20 Released ownership cannot be stolen by ordinary register or incorrect Claim revision",
+      "category": "ContractAdapter",
+      "result": "PASS"
+    },
+    {
+      "name": "A21 concurrent Claim has one winner; exact winner retries are idempotent",
+      "category": "ContractAdapter",
+      "result": "PASS"
+    },
+    {
+      "name": "A22 response lost after durable Claim retains target ownership and allows exact retry",
+      "category": "ContractAdapter",
+      "result": "PASS"
+    },
+    {
+      "name": "A23 migration back uses a fresh drain/migration and increments same-world ownership to revision 5",
+      "category": "ContractAdapter",
+      "result": "PASS"
+    },
+    {
+      "name": "A24 fresh source files, revision, FormatTime and seven-section data are preserved without copy permission",
+      "category": "ContractAdapter",
+      "result": "PASS"
+    },
+    {
+      "name": "A25 ordinary home registration shares the durable index and exact request identity across instances",
+      "category": "ContractAdapter",
+      "result": "PASS"
+    },
+    {
+      "name": "A26 shortened pause or omitted device binding is corrupt service state and cannot open",
+      "category": "ContractAdapter",
+      "result": "PASS"
+    },
+    {
+      "name": "A27 failed service expiry commit cannot locally unlock a pause",
+      "category": "ContractAdapter",
+      "result": "PASS"
+    },
+    {
+      "name": "A28 every authoritative mutation is serialized under one shared service lock",
+      "category": "ContractAdapter",
+      "result": "PASS"
+    },
+    {
+      "name": "A29 repeated drain acceptance is idempotent and cannot renew its original 30-second TTL",
+      "category": "ContractAdapter",
+      "result": "PASS"
+    },
+    {
+      "name": "A30 source cannot Claim its own migration; return requires a new migration from the new HomeDevice",
+      "category": "ContractAdapter",
+      "result": "PASS"
+    },
+    {
+      "name": "A31 consumed drain identity cannot be reaccepted after pause, Claim or authority reconstruction",
+      "category": "ContractAdapter",
+      "result": "PASS"
+    },
+    {
+      "name": "A32 an accidentally asynchronous capability verifier cannot certify a serialized assertion",
+      "category": "ContractAdapter",
+      "result": "PASS"
+    }
+  ],
+  "sources": [
+    {
+      "file": "src/presentation/WorldMigrationContractAdapter.ts",
+      "sha256": "a37a069880e5eb88e1f04c426573df96ccf266bc08ecfa7a9d8b755ddaec0a47"
+    },
+    {
+      "file": "src/director/WorldMigration.ts",
+      "sha256": "43006e243f11ac2589895bbd1851df5ee5f249734f787fe6b48049a7b8b836c4"
+    },
+    {
+      "file": "src/presentation/SafePointDrainStorage.ts",
+      "sha256": "76fb9391a9aabc553ade293c31bc6aba66e1e2aec986b679151a8068b5c4ea3d"
+    }
+  ]
+}

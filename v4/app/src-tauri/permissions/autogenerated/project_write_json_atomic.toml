@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-project-write-json-atomic"
+description = "Enables the project_write_json_atomic command without any pre-configured scope."
+commands.allow = ["project_write_json_atomic"]
+
+[[permission]]
+identifier = "deny-project-write-json-atomic"
+description = "Denies the project_write_json_atomic command without any pre-configured scope."
+commands.deny = ["project_write_json_atomic"]

@@ -1,0 +1,106 @@
+[
+  {
+    "file": "src/chart/GuidanceChart.ts",
+    "status": "modified",
+    "beforeSha256": "eed83b9009caae37378677035f0b0b6be0b1199f919aadda4b962c7582fbdfd0",
+    "afterSha256": "a4e46b00d782f393b736ed6a71282caf24961df40feb503cbadce734b0d71faa"
+  },
+  {
+    "file": "src/chart/GuidanceLineRuntime.ts",
+    "status": "modified",
+    "beforeSha256": "6914099af15ffcab0a2a0f46c826a42fd2d98da46360a851b7e3e56a3957f886",
+    "afterSha256": "2560babe86a45d207cb7ed6f2a66713b50fc43a5c2e8a9764d5fc22d1b451204"
+  },
+  {
+    "file": "src/presentation/LineEraseEffect.ts",
+    "status": "modified",
+    "beforeSha256": "a42ce3672dc4557922c7bea2233bd85b1733455639cf70dfd3e5000e4108a7c3",
+    "afterSha256": "dd236db85a35abe343477cdbfafead610ccb29ef709fc2c250e2c59a632c0697"
+  },
+  {
+    "file": "assets/scripts/SceneBuilder.ts",
+    "status": "modified",
+    "beforeSha256": "626fb47307b2526e7cddbaf9aaddbbfd32e7d26e3866bc6849e3c5fe61c9e75f",
+    "afterSha256": "6566b98d17dfbf48bd248b24ae3a11cb967664ceea515caf99c95a6d3462b37d"
+  },
+  {
+    "file": "src/chart/GuidanceTiming.ts",
+    "status": "added",
+    "afterSha256": "6c8b1a55fba9c64c7c70644b8bbd6985c3c5318086b13d1c9aab4dd4ebdbcd4a"
+  },
+  {
+    "file": "src/chart/GuidanceTiming.ts.meta",
+    "status": "added",
+    "afterSha256": "d458506fa77c85a8e012edd2c85f657f1cab1f52f57f03047ddccfdb4ff74c85"
+  },
+  {
+    "file": "src/editor.meta",
+    "status": "added",
+    "afterSha256": "38b15b50450b9188c9148f94bf96c96df054b76bac5adc7c18b8cf98993d7ca7"
+  },
+  {
+    "file": "src/editor/GuidanceEditorSession.ts",
+    "status": "added",
+    "afterSha256": "7be0662fcf921b04908ad4657b1ad066e35387fe7880d6acd9a1de9ec7e4eb8b"
+  },
+  {
+    "file": "src/editor/GuidanceEditorSession.ts.meta",
+    "status": "added",
+    "afterSha256": "1f56274b857c28bd26db6ce228346d3dda84a309c1f67dbe055244c348e99eef"
+  },
+  {
+    "file": "src/presentation/GuidanceEditorView.ts",
+    "status": "added",
+    "afterSha256": "96d85356ec9951b2a1376816c792ff8db96d5d9db1486a400de2b2a1b3806ac6"
+  },
+  {
+    "file": "src/presentation/GuidanceEditorView.ts.meta",
+    "status": "added",
+    "afterSha256": "88e23b2963762e95c3c34b9a659bb17154266b1a9b5a4044e7b8d1ade1cf31b7"
+  },
+  {
+    "file": "assets/scripts/GuidanceEditorBuilder.ts",
+    "status": "added",
+    "afterSha256": "d583d29348d70b5d94eb5bbc36ba8a4b17584a691f516a8ff114a780a61b970c"
+  },
+  {
+    "file": "assets/scripts/GuidanceEditorBuilder.ts.meta",
+    "status": "added",
+    "afterSha256": "a96d815a03c9ee3959006c67f7e063e10dbeb9093c5131fc3c17fa89251cc7d9"
+  },
+  {
+    "file": "assets/resources/editor.meta",
+    "status": "added",
+    "afterSha256": "f3d22bf85c07b9edd7b5060d7304e72ead2ccea3e093e176fc3dc3c6f4baa447"
+  },
+  {
+    "file": "assets/resources/editor/mock_midi.json",
+    "status": "added",
+    "afterSha256": "2fa3169f4f6d6af4c256ab488311f44ad7f9c5fc5cca65ec0cb08cfa4d9a9aa5"
+  },
+  {
+    "file": "assets/resources/editor/mock_midi.json.meta",
+    "status": "added",
+    "afterSha256": "92ea11c292acd5b127f661dbad7827acb07858d9d1cbc4abac5308ac277cc9c1"
+  },
+  {
+    "file": "编辑器/打开引导线编辑器.cmd",
+    "status": "added",
+    "afterSha256": "d03c626cf4a02761a7fe827672abc6f12f3f7eca6e94cb7a420b4182efa0d7c5"
+  },
+  {
+    "file": "编辑器/启动引导线编辑器.ps1",
+    "status": "added",
+    "afterSha256": "ac1d8cb40f76b9e59958c6d72d856355bed9b33d87c81ee172100a059b32fd51"
+  },
+  {
+    "file": "编辑器/使用说明.md",
+    "status": "added",
+    "afterSha256": "f26a3c86654389d26954d6975be077c5d5d8078b0da8cd05905e3a4b96ad23ec"
+  },
+  {
+    "file": "编辑器/世界编辑器/谱面编辑器/引导线编辑器/mock_midi.json",
+    "status": "added",
+    "afterSha256": "2fa3169f4f6d6af4c256ab488311f44ad7f9c5fc5cca65ec0cb08cfa4d9a9aa5"
+  }
+]

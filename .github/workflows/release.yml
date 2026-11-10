@@ -1,0 +1,49 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build static web release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: v4/app/package-lock.json
+
+      - name: Install app toolchain
+        run: npm --prefix v4/app ci
+
+      - name: Build static package
+        run: npm --prefix v4/app run build
+
+      - name: Stage release/neurou
+        run: |
+          rm -rf release/neurou
+          mkdir -p release/neurou
+          cp -R v4/app/dist/. release/neurou/
+
+      - name: Zip static package
+        run: |
+          VERSION="$(cat VERSION)"
+          cd release
+          zip -r "neurou-${VERSION}-web.zip" neurou
+
+      - name: Publish release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "neurou : when as a world · ${{ github.ref_name }}"
+          generate_release_notes: true
+          files: release/neurou-*-web.zip
+          fail_on_unmatched_files: true

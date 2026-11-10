@@ -1,0 +1,88 @@
+diff --git "a/D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\world-folder\\b-regression.cjs" "b/D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\judgement-window-2026-10-10\\b-regression.cjs"
+index 60c6a6f..507f411 100644
+--- "a/D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\world-folder\\b-regression.cjs"
++++ "b/D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\judgement-window-2026-10-10\\b-regression.cjs"
+@@ -242,7 +242,7 @@ test('Drag / Hold arrival checks are autonomous and do not consume the one Tap a
+   const p = make([tap('tap-a', 0.25), tap('tap-b', 0.25), drag(), hold()]); start(p); edge(p, 'KeyA', 3000);
+   verdict(p, 'drag', 'Perfect', 3000); verdict(p, 'tap-a', 'Perfect', 3000); verdict(p, 'tap-b', null); verdict(p, 'hold', null);
+   assert.equal(node(p, 'hold').holdActive, true); assert.equal(p.getResolvedCount(), 2); p.advance(5000);
+-  verdict(p, 'hold', 'Perfect', 5000); verdict(p, 'tap-b', 'Miss', 3120); assert.equal(p.getPerfectCount(), 3); assert.equal(p.getMissCount(), 1);
++  verdict(p, 'hold', 'Perfect', 5000); verdict(p, 'tap-b', 'Miss', 3000 + GOOD_WINDOW_MS); assert.equal(p.getPerfectCount(), 3); assert.equal(p.getMissCount(), 1);
+   return { atSingleDownMs: 3000, autonomousDrag: 'Perfect', autonomousHold: 'active', oneTapConsumed: 'tap-a', otherTap: 'Miss', finalPerfect: 3, finalMiss: 1 };
+ });
+ 
+@@ -447,7 +447,7 @@ test('Actual B resource loads independently and preserves default 47-key half-op
+   return { chartId: parsed.chartId, nodeCount: parsed.lines[0].nodes.length, kinds: [...kinds], layoutSlots: 47 };
+ });
+ 
+-const report = { task: 'Guidance B: single Polyline, mixed Tap / Drag / Hold', headWindowMs: HEAD_WINDOW_MS, generatedAt: new Date().toISOString(), command: 'node quality-review/guidance-editor/b-regression.cjs',
++const report = { task: 'Guidance B: single Polyline, mixed Tap / Drag / Hold', headWindowMs: HEAD_WINDOW_MS, generatedAt: new Date().toISOString(), command: 'node quality-review/judgement-window-2026-10-10/b-regression.cjs',
+   coverage: '公开 chart/director API；真实采集器/帧驱动使用仅事件总线 cc stub，Creator 视觉验收另行提供。旧 B 单线回归，lineID 排序层在本范围恒等。',
+   passed: checks.filter(c => c.pass).length, failed: checks.filter(c => !c.pass).length, checks };
+ fs.mkdirSync(__dirname, { recursive: true }); fs.writeFileSync(path.join(__dirname, 'b-regression-results.json'), JSON.stringify(report, null, 2) + '\n');
+
+diff --git "a/D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\world-folder\\c-regression.cjs" "b/D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\judgement-window-2026-10-10\\c-regression.cjs"
+index 28c91ed..c12abaa 100644
+--- "a/D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\world-folder\\c-regression.cjs"
++++ "b/D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\judgement-window-2026-10-10\\c-regression.cjs"
+@@ -41,9 +41,9 @@ test('03 simultaneous Tap collision consumes one; array order irrelevant; repeat
+   return {firstWinner:'a',resolvedAfterRepeat:1,totalResolved:p.getResolvedCount()};
+ });
+ test('04 Tap ordering: absolute delta -> target time -> line ID -> node ID',()=>{
+-  const q=make([line('a',[tap('a-tap',.3828125)]),line('z',[tap('z-tap',.3671875)])]);start(q);edge(q,'KeyA',4000);assert.deepEqual(tiers(q),[[null],['Good']]);
++  const q=make([line('a',[tap('a-tap',.3828125)]),line('z',[tap('z-tap',.3671875)])]);start(q);edge(q,'KeyA',4000);assert.deepEqual(tiers(q),[[null],['Perfect']]);
+   const p=make([line('a',[tap('z-node'),tap('a-node')]),line('b',[tap('b-node',.380859375)])]);start(p);edge(p,'KeyA',4049);assert.deepEqual(tiers(p),[[null,null],['Perfect']]);
+-  edge(p,'KeyA',4050,'Up');edge(p,'KeyA',4051);assert.equal(ss(p)[0].nodes.find(n=>n.node.id==='a-node').tier,'Good');
++  edge(p,'KeyA',4050,'Up');edge(p,'KeyA',4051);assert.equal(ss(p)[0].nodes.find(n=>n.node.id==='a-node').tier,'Perfect');
+   return {earlierTarget:'z',nearestTarget:'b',sameLineTie:'a-node'};
+ });
+ test('05 shared held key: two Drag plus two Hold independently succeed, while Tap consumes once',()=>{
+
+diff --git "a/D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\world-folder\\pad-regression.cjs" "b/D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\judgement-window-2026-10-10\\pad-regression.cjs"
+index ac9cd1e..b33b0d6 100644
+--- "a/D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\world-folder\\pad-regression.cjs"
++++ "b/D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\judgement-window-2026-10-10\\pad-regression.cjs"
+@@ -121,8 +121,8 @@ test('Invisible Space still exclusively starts Head within authorized 1000ms; re
+ test('Tap accepts diagonal neighbor and rejects remote or Space keys', () => {
+   const perfect = make(); start(perfect); edge(perfect, 'KeyA', 3000); verdict(perfect, 'tap', 'Perfect', 3000);
+   assert.equal(perfect.getJudgeFeedbackSince(0).items[0].keyId, 'KeyF', '反馈高亮逻辑目标而非邻键');
+-  const remote = make(); start(remote); edge(remote, 'KeyP', 3000); verdict(remote, 'tap', null); remote.advance(3121); verdict(remote, 'tap', 'Miss', 3120);
+-  const space = make(); start(space); edge(space, 'Space', 2900, 'Up'); edge(space, 'Space', 3000); verdict(space, 'tap', null); space.advance(3121); verdict(space, 'tap', 'Miss', 3120);
++  const remote = make(); start(remote); edge(remote, 'KeyP', 3000); verdict(remote, 'tap', null); remote.advance(3000 + GOOD_WINDOW_MS + 1); verdict(remote, 'tap', 'Miss', 3000 + GOOD_WINDOW_MS);
++  const space = make(); start(space); edge(space, 'Space', 2900, 'Up'); edge(space, 'Space', 3000); verdict(space, 'tap', null); space.advance(3000 + GOOD_WINDOW_MS + 1); verdict(space, 'tap', 'Miss', 3000 + GOOD_WINDOW_MS);
+   return { target: 'KeyF', diagonalKey: 'KeyA', diagonalTier: 'Perfect', feedbackKey: 'KeyF', remoteKey: 'KeyP', remoteTier: 'Miss', spaceTier: 'Miss' };
+ });
+ 
+@@ -152,7 +152,7 @@ test('Tap dynamic null in gaps/Space/overlap never gains a nearest-key fallback'
+ 
+ test('Tap temporal windows are unchanged by neighbor tolerance, including endpoints and timeout', () => {
+   const results = [];
+-  for (const [offset, expected] of [[-120, 'Good'], [-50, 'Perfect'], [0, 'Perfect'], [50, 'Perfect'], [120, 'Good'], [120.001, 'Miss']]) {
++  for (const [offset, expected] of [[-200, 'Good'], [-100, 'Perfect'], [0, 'Perfect'], [100, 'Perfect'], [200, 'Good'], [200.001, 'Miss']]) {
+     const p = make(); start(p); edge(p, 'KeyA', 3000 + offset); if (offset > GOOD_WINDOW_MS) p.advance(3300);
+     verdict(p, 'tap', expected); results.push({ offsetMs: offset, expected });
+   }
+@@ -288,7 +288,7 @@ test('47-key legacy ChartData accepts adjacent targets but rejects remote/Space;
+ 
+ test('Legacy adjacent candidate ranking retains time ordering when one key matches multiple Note targets', () => {
+   const p = new ChartPremiere({ chartId: 'LEGACY_SORT', tier: 'Regular', layoutVersion: layout.layoutVersion, notes: [{ keyId: 'KeyE', timeMs: 3000 }, { keyId: 'KeyG', timeMs: 3080 }] }, layout); p.begin(); edge(p, 'KeyF', 3070);
+-  assert.equal(p.getResolvedCount(), 1); assert.equal(p.getPerfectCount(), 1); p.advance(3121); assert.equal(p.getMissCount(), 1);
++  assert.equal(p.getResolvedCount(), 1); assert.equal(p.getPerfectCount(), 1); p.advance(3000 + GOOD_WINDOW_MS + 1); assert.equal(p.getMissCount(), 1);
+   return { sharedNeighbor: 'KeyF', targetTimesMs: [3000, 3080], selectedTargetTimeMs: 3080, consumed: 1 };
+ });
+ 
+
+diff --git "a/D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\world-folder\\editor-regression.cjs" "b/D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\judgement-window-2026-10-10\\editor-regression.cjs"
+index 71709a2..b4613fb 100644
+--- "a/D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\world-folder\\editor-regression.cjs"
++++ "b/D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\judgement-window-2026-10-10\\editor-regression.cjs"
+@@ -82,7 +82,7 @@ test('17 v3 independent Head timeout settles only its own line; all-node/media c
+  const chart=session().exportChart().chart,p=new ChartPremiere(chart,layout);p.begin();edge(p,'Space',1000);p.advance(2001);let lines=p.getGuidanceSnapshots();assert.equal(lines[0].state,'Running');assert.equal(lines[1].state,'TimedOut');assert.ok(lines[1].nodes.every(n=>n.tier==='Miss'));for(const e of mock.events.filter(e=>e.lineId==='a'&&e.id!=='a0')){const key=resolveGridKeyAt(layout,e.position);edge(p,key,e.timeMs);edge(p,key,e.timeMs,'Up');}p.advance(7200);assert.equal(p.getState(),'Playing');assert.equal(p.getResolvedCount(),8);assert.equal(p.getMissCount(),4);p.advanceMediaStatus(true,false,0);assert.equal(p.getState(),'Completed');return {timedOutLine:'line-b',unaffectedLine:'line-a',result:p.getResult()};
+ });
+ test('18 v3 Tap absolute-time inclusive Perfect/Good boundaries and final-media-end unresolved timeout',()=>{
+- const r=clone(session().exportChart().chart);r.lines=r.lines.slice(0,1);const l=r.lines[0];l.path.points=l.path.points.slice(0,2);l.nodes=l.nodes.slice(0,1);l.timing=l.timing.slice(0,1);const evidence=[];for(const [delta,tier] of [[-120,'Good'],[-50,'Perfect'],[0,'Perfect'],[50,'Perfect'],[120,'Good'],[121,'Miss']]){const p=new ChartPremiere(r,layout);p.begin();edge(p,'Space',1500);edge(p,'KeyR',2300+delta);p.advance(2500);assert.equal(p.getGuidanceSnapshots()[0].nodes[0].tier,tier);evidence.push({delta,tier});}
+- l.timing[0].targetTimeMs=12000;const p=new ChartPremiere(r,layout);p.begin();edge(p,'Space',1000);p.advance(12000);p.advanceMediaStatus(true,false,0);assert.equal(p.getState(),'Playing');p.advance(12121);assert.equal(p.getState(),'Completed');return {boundaries:evidence,mediaEndWaitsForLastTapTimeout:true};
++ const r=clone(session().exportChart().chart);r.lines=r.lines.slice(0,1);const l=r.lines[0];l.path.points=l.path.points.slice(0,2);l.nodes=l.nodes.slice(0,1);l.timing=l.timing.slice(0,1);const evidence=[];for(const [delta,tier] of [[-200,'Good'],[-100,'Perfect'],[0,'Perfect'],[100,'Perfect'],[200,'Good'],[201,'Miss']]){const p=new ChartPremiere(r,layout);p.begin();edge(p,'Space',1500);edge(p,'KeyR',2300+delta);p.advance(2500);assert.equal(p.getGuidanceSnapshots()[0].nodes[0].tier,tier);evidence.push({delta,tier});}
++ l.timing[0].targetTimeMs=12000;const p=new ChartPremiere(r,layout);p.begin();edge(p,'Space',1000);p.advance(12000);p.advanceMediaStatus(true,false,0);assert.equal(p.getState(),'Playing');p.advance(12201);assert.equal(p.getState(),'Completed');return {boundaries:evidence,mediaEndWaitsForLastTapTimeout:true};
+ });
+ const report={passed:checks.filter(c=>c.pass).length,failed:checks.filter(c=>!c.pass).length,checks};fs.writeFileSync(__dirname+'/editor-regression-results.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));process.exitCode=report.failed?1:0;

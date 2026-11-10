@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  web:
+    name: TypeScript / checks / tests / static build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            v4/app/package-lock.json
+
+      - name: Install root toolchain
+        run: npm ci --ignore-scripts
+
+      - name: Install app toolchain
+        run: npm --prefix v4/app ci
+
+      - name: Typecheck v4
+        run: npm run typecheck:v4
+
+      - name: Architecture / naming gates
+        run: npm run check:v4
+
+      - name: Unit tests
+        run: npm run test:v4
+
+      - name: Static web build
+        run: npm --prefix v4/app run build

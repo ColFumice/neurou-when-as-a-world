@@ -1,0 +1,130 @@
+{
+  "schemaVersion": 1,
+  "phase": "B2.4d observed documentation drift",
+  "generatedAt": "2026-10-10T14:51:42.340Z",
+  "fullProtectedAuditPass": false,
+  "fullProtectedAudit": "protected-final-audit.json",
+  "authoredSourceScopePass": true,
+  "authoredSourceScopeMeaning": "The fixed authorized source/composition changes and new-module allowlist pass, and all other code/settings/scenes retain baseline bytes. This scope result does not attribute any documentation change or turn the full audit into PASS.",
+  "unexpectedNonDocumentChanges": [],
+  "observations": [
+    {
+      "path": "docs/NAMEBOOK.md",
+      "observedAtUtc": "2026-10-10T14:51:42.339Z",
+      "baselineCapturedAtUtc": "2026-10-10T14:17:27.060Z",
+      "baselineBytes": 72368,
+      "baselineSha256": "da90bf96378770299fc95a94b61ccb838a074e7e584658fae1384320b1a1b9df",
+      "currentBytes": 84404,
+      "currentSha256": "27b6ae1dac6daca720382a9bc86a160034708477af61b0314836a01ea24f8bed",
+      "finalManifestSha256": "27b6ae1dac6daca720382a9bc86a160034708477af61b0314836a01ea24f8bed",
+      "matchesFinalManifest": true,
+      "differsFromBaseline": true,
+      "lastWriteTimeUtc": "2026-10-10T14:18:07.552Z",
+      "creationTimeUtc": "2026-10-07T07:04:10.213Z",
+      "versionAndStageEvidence": [
+        {
+          "line": 1186,
+          "text": "## 名库 v3.13 附录 · VERDICT-311~325 B2.4c CrossDeviceDuplicate 受限 Core 原型"
+        }
+      ],
+      "restrictedScopeEvidence": [
+        {
+          "line": 1200,
+          "text": "- WorldMigration / MigrationRelease / MigrationClaim / Migrated / RealityPause / OfflineGrace / SafePoint：历史语义和 P1~P4 裁定继续有效；本轮不实现迁移或暂停，d 数据结构、执行端口、journal phase、协调锁与时间协议尚未在 c 冻结"
+        },
+        {
+          "line": 1260,
+          "text": "- B2.4d：SafePoint 主动排空确认载体、MigrationRelease/Claim 请求与 receipt、WorldMigrationJournal 完整结构/phase、RealityPauseRecord/设备绑定/账号切换执行端口、恢复与协调锁具体协议仍须在 d 入场冻结；不从本轮 import journal 推断或冒充迁移契约；历史同 ID 迁移与全账号暂停语义、P1~P4、RealityPause≥OfflineGrace 约束保持"
+        }
+      ],
+      "originalTextSnapshotAvailable": false
+    },
+    {
+      "path": "docs/spec/stage-1.md",
+      "observedAtUtc": "2026-10-10T14:51:42.340Z",
+      "baselineCapturedAtUtc": "2026-10-10T14:17:27.060Z",
+      "baselineBytes": 49833,
+      "baselineSha256": "b8420ec8735ec8dcec51bdffd82af4c7d485c2a982a4acf755d9242ca96d3aa6",
+      "currentBytes": 53741,
+      "currentSha256": "19fb77c3d9ee971d4bf2978636b2171d5de367ecf4ab3d0099b69ed1e8a2d0a9",
+      "finalManifestSha256": "19fb77c3d9ee971d4bf2978636b2171d5de367ecf4ab3d0099b69ed1e8a2d0a9",
+      "matchesFinalManifest": true,
+      "differsFromBaseline": true,
+      "lastWriteTimeUtc": "2026-10-10T14:18:08.029Z",
+      "creationTimeUtc": "2026-10-07T15:01:17.152Z",
+      "versionAndStageEvidence": [
+        {
+          "line": 27,
+          "text": "> 本文件最近更新：B2.4c CrossDeviceDuplicate 受限 Core 原型，纳入 VERDICT-311 ~ 325。"
+        },
+        {
+          "line": 197,
+          "text": "**v3.13 / VERDICT-311 ~ 325 纳入的有限范围（B2.4c CrossDeviceDuplicate 受限 Core 原型）**"
+        },
+        {
+          "line": 695,
+          "text": "### B2.4c-01 受限载荷与品牌不传输"
+        },
+        {
+          "line": 698,
+          "text": "### B2.4c-02 六路分流"
+        },
+        {
+          "line": 701,
+          "text": "### B2.4c-03 权限门槛与账号事实隔离"
+        },
+        {
+          "line": 704,
+          "text": "### B2.4c-04 新 UUID 重键与继承"
+        },
+        {
+          "line": 707,
+          "text": "### B2.4c-05 服务先登记与归属不变"
+        },
+        {
+          "line": 710,
+          "text": "### B2.4c-06 两域提交与锁顺序"
+        },
+        {
+          "line": 713,
+          "text": "### B2.4c-07 崩溃恢复与幂等"
+        },
+        {
+          "line": 716,
+          "text": "### B2.4c-08 恢复与打开门控"
+        },
+        {
+          "line": 719,
+          "text": "### B2.4c-09 组合原型与身份边界"
+        },
+        {
+          "line": 722,
+          "text": "### B2.4c-10 三门禁、契约与保护"
+        }
+      ],
+      "restrictedScopeEvidence": [
+        {
+          "line": 195,
+          "text": "- 明确排除：c（CrossDeviceDuplicate 受限 Core 原型）/ d（WorldMigration + RealityPause）/ e（端到端与双档 Cocos）；完整 FileCarry 留 B2.5"
+        },
+        {
+          "line": 200,
+          "text": "- 明确排除：d（WorldMigration + RealityPause）/ e（端到端与双档 Cocos）；完整 FileCarry 留 B2.5；真实外部服务"
+        }
+      ],
+      "originalTextSnapshotAvailable": false
+    }
+  ],
+  "verified": [
+    "Both document hashes differ from the immutable baseline.",
+    "Filesystem timestamps place their current writes after the baseline capture; timestamps do not identify the writer.",
+    "The current NAMEBOOK has a v3.13 / VERDICT-311~325 B2.4c appendix, and stage-1 lists restricted c acceptance.",
+    "The current documents describe d as excluded or awaiting its own freezing; the observed content is consistent with c synchronization."
+  ],
+  "unverified": [
+    "Writer/process identity and whether Trae performed these writes.",
+    "Whether every textual change was only the c landing, because .md original bytes were not captured.",
+    "Filesystem timestamps as tamper-resistant provenance."
+  ],
+  "disposition": "Retain full protected FAIL and fixed allowlist. Preserve current documentation; do not revert third-party edits. Treat source scope PASS separately, with provenance unresolved."
+}

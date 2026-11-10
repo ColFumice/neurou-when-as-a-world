@@ -1,0 +1,245 @@
+{
+  "method": "AST declaration/import diff against exact reverse-restored pre-edit baseline; presentation and new logic files have separate full inventories",
+  "items": [
+    {
+      "name": "HEAD_WINDOW_MS",
+      "kind": "VariableDeclaration",
+      "file": "constants/index.ts",
+      "line": 235,
+      "status": "frozen_reuse"
+    },
+    {
+      "name": "rightU",
+      "kind": "VariableDeclaration",
+      "file": "src/chart/KeyboardPadLayout.ts",
+      "line": 171,
+      "status": "pending_protocol"
+    },
+    {
+      "name": "resolveGridKeyAt",
+      "kind": "FunctionDeclaration",
+      "file": "src/chart/KeyboardPadLayout.ts",
+      "line": 231,
+      "status": "frozen_reuse"
+    },
+    {
+      "name": "position",
+      "kind": "Parameter",
+      "file": "src/chart/KeyboardPadLayout.ts",
+      "line": 233,
+      "status": "pending_protocol"
+    },
+    {
+      "name": "matches",
+      "kind": "VariableDeclaration",
+      "file": "src/chart/KeyboardPadLayout.ts",
+      "line": 239,
+      "status": "pending_protocol"
+    },
+    {
+      "name": "parseGuidanceChart",
+      "kind": "ImportSpecifier",
+      "file": "src/chart/ChartPremiere.ts",
+      "line": 25,
+      "status": "pending_protocol"
+    },
+    {
+      "name": "GuidanceChart",
+      "kind": "ImportSpecifier",
+      "file": "src/chart/ChartPremiere.ts",
+      "line": 26,
+      "status": "frozen_reuse"
+    },
+    {
+      "name": "GuidanceLineRuntime",
+      "kind": "ImportSpecifier",
+      "file": "src/chart/ChartPremiere.ts",
+      "line": 27,
+      "status": "pending_protocol"
+    },
+    {
+      "name": "GuidanceLineSnapshot",
+      "kind": "ImportSpecifier",
+      "file": "src/chart/ChartPremiere.ts",
+      "line": 28,
+      "status": "pending_protocol"
+    },
+    {
+      "name": "GuidanceJudgement",
+      "kind": "ImportSpecifier",
+      "file": "src/chart/ChartPremiere.ts",
+      "line": 28,
+      "status": "pending_protocol"
+    },
+    {
+      "name": "getGuidanceSnapshot",
+      "kind": "MethodSignature",
+      "file": "src/chart/ChartPremiere.ts",
+      "line": 111,
+      "status": "pending_protocol"
+    },
+    {
+      "name": "guidance",
+      "kind": "PropertyDeclaration",
+      "file": "src/chart/ChartPremiere.ts",
+      "line": 122,
+      "status": "pending_protocol"
+    },
+    {
+      "name": "getGuidanceSnapshot",
+      "kind": "MethodDeclaration",
+      "file": "src/chart/ChartPremiere.ts",
+      "line": 240,
+      "status": "pending_protocol"
+    },
+    {
+      "name": "applyGuidanceJudgements",
+      "kind": "MethodDeclaration",
+      "file": "src/chart/ChartPremiere.ts",
+      "line": 413,
+      "status": "pending_protocol"
+    },
+    {
+      "name": "allJudgementsSettled",
+      "kind": "MethodDeclaration",
+      "file": "src/chart/ChartPremiere.ts",
+      "line": 423,
+      "status": "pending_protocol"
+    },
+    {
+      "name": "phase",
+      "kind": "PropertySignature",
+      "file": "src/chart/Strike.ts",
+      "line": 24,
+      "status": "pending_protocol"
+    },
+    {
+      "name": "phase",
+      "kind": "PropertySignature",
+      "file": "src/director/PlayerIntent.ts",
+      "line": 81,
+      "status": "pending_protocol"
+    },
+    {
+      "name": "chartMediaProbe",
+      "kind": "PropertyDeclaration",
+      "file": "src/director/IntentPort.ts",
+      "line": 320,
+      "status": "pending_protocol"
+    },
+    {
+      "name": "ended",
+      "kind": "PropertySignature",
+      "file": "src/director/IntentPort.ts",
+      "line": 320,
+      "status": "existing_media_vocabulary_reuse"
+    },
+    {
+      "name": "unavailable",
+      "kind": "PropertySignature",
+      "file": "src/director/IntentPort.ts",
+      "line": 320,
+      "status": "existing_media_vocabulary_reuse"
+    },
+    {
+      "name": "bindChartMediaProbe",
+      "kind": "MethodDeclaration",
+      "file": "src/director/IntentPort.ts",
+      "line": 392,
+      "status": "pending_protocol"
+    },
+    {
+      "name": "ended",
+      "kind": "PropertySignature",
+      "file": "src/director/IntentPort.ts",
+      "line": 392,
+      "status": "existing_media_vocabulary_reuse"
+    },
+    {
+      "name": "unavailable",
+      "kind": "PropertySignature",
+      "file": "src/director/IntentPort.ts",
+      "line": 392,
+      "status": "existing_media_vocabulary_reuse"
+    },
+    {
+      "name": "media",
+      "kind": "VariableDeclaration",
+      "file": "src/director/IntentPort.ts",
+      "line": 637,
+      "status": "pending_protocol"
+    },
+    {
+      "name": "releaseKeys",
+      "kind": "VariableDeclaration",
+      "file": "src/presentation/InputCollector.ts",
+      "line": 144,
+      "status": "pending_protocol"
+    },
+    {
+      "name": "SpriteFrame",
+      "kind": "ImportSpecifier",
+      "file": "assets/scripts/SceneBuilder.ts",
+      "line": 114,
+      "status": "cocos_api_reuse"
+    },
+    {
+      "name": "parseGuidanceChart",
+      "kind": "ImportSpecifier",
+      "file": "assets/scripts/SceneBuilder.ts",
+      "line": 142,
+      "status": "pending_protocol"
+    },
+    {
+      "name": "GuidanceChart",
+      "kind": "ImportSpecifier",
+      "file": "assets/scripts/SceneBuilder.ts",
+      "line": 143,
+      "status": "frozen_reuse"
+    },
+    {
+      "name": "UseGuidanceChart",
+      "kind": "PropertyDeclaration",
+      "file": "assets/scripts/SceneBuilder.ts",
+      "line": 254,
+      "status": "pending_protocol"
+    },
+    {
+      "name": "chartFallbackTimeMs",
+      "kind": "PropertyDeclaration",
+      "file": "assets/scripts/SceneBuilder.ts",
+      "line": 322,
+      "status": "pending_protocol"
+    },
+    {
+      "name": "logo",
+      "kind": "Parameter",
+      "file": "assets/scripts/SceneBuilder.ts",
+      "line": 828,
+      "status": "pending_protocol"
+    },
+    {
+      "name": "errorNode",
+      "kind": "VariableDeclaration",
+      "file": "assets/scripts/SceneBuilder.ts",
+      "line": 881,
+      "status": "pending_protocol"
+    },
+    {
+      "name": "errorLabel",
+      "kind": "VariableDeclaration",
+      "file": "assets/scripts/SceneBuilder.ts",
+      "line": 885,
+      "status": "pending_protocol"
+    }
+  ],
+  "literalNames": [
+    "Down",
+    "Up",
+    "GuidanceLoadError",
+    "guidance-a-1",
+    "line-a-1",
+    "head-a-1",
+    "tap-a-1"
+  ]
+}

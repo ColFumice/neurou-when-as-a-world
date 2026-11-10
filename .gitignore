@@ -1,0 +1,78 @@
+# Node / TypeScript
+node_modules/
+*.log
+
+# Cocos Creator 3.8.x 编辑器生成目录与文件
+temp/
+tmp/
+library/
+local/
+build/
+profiles/
+*.meta.bak
+
+# assets/scripts 下的目录联接（junction，本机生成，
+# 指向工程根 src / constants；勿提交联接点本身）
+assets/scripts/src
+assets/scripts/constants
+
+# Cocos 经目录联接会在逻辑源码目录内生成 .meta 文件
+src/**/*.meta
+constants/**/*.meta
+
+# 系统杂项
+.DS_Store
+Thumbs.db
+
+# V4 源码测试构建产物（R2+）
+v4/.dist/
+
+v4/app/node_modules/
+v4/app/dist/
+v4/app/src-tauri/target/
+v4/app/src-tauri/gen/
+
+# R5b.1 本地示例资产（DSH 生成，不进仓库）
+v4/.stereo-demo/project/media/theme/
+v4/.stereo-demo/project/media/images/
+v4/.stereo-demo/project/media/audio/
+v4/.stereo-demo/project/media/subtitles/
+v4/.stereo-demo/project/charts/chart-w1.beats.json
+v4/.stereo-demo/project/worlds/w1/world.json
+v4/app/tools/assets/.tmp/
+
+# 本地验收运行时/大文件（Postgres、录屏、安装包等）
+quality-review/**/runtime/
+quality-review/**/*.mp4
+quality-review/**/*.webm
+quality-review/**/*.zip
+quality-review/**/*.7z
+quality-review/**/*.exe
+quality-review/**/*.dll
+quality-review/**/*.pdb
+quality-review/**/*.wav
+quality-review/**/*.bin
+release/*.zip
+
+# 会话日志
+*.jsonl
+
+# Electron / Chromium 浏览器 profile 缓存（验收过程中生成）
+quality-review/**/electron-profile/
+quality-review/**/*-profile/
+quality-review/**/Cache/
+quality-review/**/Code Cache/
+quality-review/**/GPUCache/
+quality-review/**/ShaderCache/
+quality-review/**/DawnCache/
+quality-review/**/GrShaderCache/
+quality-review/**/blob_storage/
+quality-review/**/Service Worker/
+quality-review/**/Local Storage/
+quality-review/**/Session Storage/
+
+# 验收临时签名/证书
+quality-review/**/*.pem
+quality-review/**/*.key
+quality-review/**/*.p12
+quality-review/**/*.pfx

@@ -1,0 +1,233 @@
+{
+  "passed": 18,
+  "failed": 0,
+  "checks": [
+    {
+      "name": "01 source contract copies/deep-freezes and rejects invalid MIDI/RGB/layout/time/IDs",
+      "pass": true,
+      "evidence": {
+        "rejected": 9,
+        "deepFrozen": true
+      }
+    },
+    {
+      "name": "02 v3 export: variable time slopes; node positions/absolute times exact; no color or speed in gameplay",
+      "pass": true,
+      "evidence": {
+        "schema": 3,
+        "nonuniformTargets": [
+          2300,
+          3100,
+          5000,
+          6800
+        ],
+        "visualNodes": 8
+      }
+    },
+    {
+      "name": "03 undo/redo branch truncation, draft persistence and bounded strict history",
+      "pass": true,
+      "evidence": {
+        "persistedHistory": 3,
+        "bounded": 100,
+        "failedLoadTransactional": true
+      }
+    },
+    {
+      "name": "04 Drag/Hold key from source position; Hold tail mandatory; no key/position/time editing",
+      "pass": true,
+      "evidence": {
+        "dragKey": "KeyR",
+        "holdKey": "KeyU",
+        "tailTime": 5000
+      }
+    },
+    {
+      "name": "05 colors optional and strictly paired; do not alter timing or score",
+      "pass": true,
+      "evidence": {
+        "optionalSidecar": true,
+        "noGameplayColor": true
+      }
+    },
+    {
+      "name": "06 v3 strict validation: missing/duplicate timing, speed field, tail, reversed distances, same-time teleport",
+      "pass": true,
+      "evidence": {
+        "rejected": 8
+      }
+    },
+    {
+      "name": "07 late Head seeks absolute position; expired Tap/Drag cannot retroactively succeed",
+      "pass": true,
+      "evidence": {
+        "lateStartedAt": 1500,
+        "absolutePosition": 0.9018181818181819,
+        "retroactiveDrag": "Miss"
+      }
+    },
+    {
+      "name": "08 v3 rehearsal completion gated by media; isolated real ChartPremiere preview",
+      "pass": true,
+      "evidence": {
+        "chartId": "editor-mock-1-chart",
+        "tier": "Regular",
+        "perfectCount": 6,
+        "goodCount": 2,
+        "missCount": 0,
+        "totalScore": 800,
+        "finishedAtMs": 12000,
+        "completed": true
+      }
+    },
+    {
+      "name": "09 repeated MIDI position creates dwell, not duplicate adjacent path points; timing has separate node IDs",
+      "pass": true,
+      "evidence": {
+        "stationaryInterval": [
+          2300,
+          3100
+        ],
+        "twoDistinctTapObjects": true
+      }
+    },
+    {
+      "name": "10 invalid turn Drag blocks export; user choice and source survive error; old v1/v2 resources still load",
+      "pass": true,
+      "evidence": {
+        "legacyResources": 3,
+        "choiceNotSilentlyChanged": true
+      }
+    },
+    {
+      "name": "11 pause/release freezes time, seek rebuilds with timestamped inputs and drops future branch",
+      "pass": true,
+      "evidence": {
+        "pausedFrozen": true,
+        "seekBackwardRebuilds": true
+      }
+    },
+    {
+      "name": "12 v3 exact Drag arrival Down succeeds / Up fails; Hold exact-tail Up succeeds; pause-release locks Miss",
+      "pass": true,
+      "evidence": {
+        "dragDown": "Perfect",
+        "dragUp": "Miss",
+        "holdTailUp": "Perfect",
+        "pauseRelease": "Miss"
+      }
+    },
+    {
+      "name": "13 late Head cannot repair an already passed Hold start even if its key was held",
+      "pass": true,
+      "evidence": {
+        "startedAt": 1500,
+        "holdStart": 1200,
+        "holdTail": 5000,
+        "tier": "Miss"
+      }
+    },
+    {
+      "name": "14 exported JSON reload uses fresh runtime; optional colors do not change outcomes; invalid import transactional",
+      "pass": true,
+      "evidence": {
+        "reloadedFromJson": true,
+        "identicalWithWithoutColors": true,
+        "invalidPairPreservesPreview": true
+      }
+    },
+    {
+      "name": "15 v3 two identical lines share held Drag/Hold keys while Tap still consumes once; resolution-independent input replay",
+      "pass": true,
+      "evidence": {
+        "resolutions": [
+          "1920x1080",
+          "2560x1440"
+        ],
+        "sameNormalizedChartAndStrikes": true,
+        "result": {
+          "chartId": "editor-mock-1-chart",
+          "tier": "Regular",
+          "perfectCount": 8,
+          "goodCount": 0,
+          "missCount": 0,
+          "totalScore": 800,
+          "finishedAtMs": 12000,
+          "completed": true
+        }
+      }
+    },
+    {
+      "name": "16 legacy v1/v2 JSON remains loadable and can run in isolated editor rehearsal",
+      "pass": true,
+      "evidence": [
+        {
+          "chartId": "guidance-a-1",
+          "schemaVersion": 1,
+          "state": "Completed"
+        },
+        {
+          "chartId": "guidance-b-1",
+          "schemaVersion": 1,
+          "state": "Completed"
+        },
+        {
+          "chartId": "guidance-c-1",
+          "schemaVersion": 2,
+          "state": "Completed"
+        }
+      ]
+    },
+    {
+      "name": "17 v3 independent Head timeout settles only its own line; all-node/media completion condition",
+      "pass": true,
+      "evidence": {
+        "timedOutLine": "line-b",
+        "unaffectedLine": "line-a",
+        "result": {
+          "chartId": "editor-mock-1-chart",
+          "tier": "Regular",
+          "perfectCount": 4,
+          "goodCount": 0,
+          "missCount": 4,
+          "totalScore": 400,
+          "finishedAtMs": 7200,
+          "completed": true
+        }
+      }
+    },
+    {
+      "name": "18 v3 Tap absolute-time inclusive Perfect/Good boundaries and final-media-end unresolved timeout",
+      "pass": true,
+      "evidence": {
+        "boundaries": [
+          {
+            "delta": -120,
+            "tier": "Good"
+          },
+          {
+            "delta": -50,
+            "tier": "Perfect"
+          },
+          {
+            "delta": 0,
+            "tier": "Perfect"
+          },
+          {
+            "delta": 50,
+            "tier": "Perfect"
+          },
+          {
+            "delta": 120,
+            "tier": "Good"
+          },
+          {
+            "delta": 121,
+            "tier": "Miss"
+          }
+        ],
+        "mediaEndWaitsForLastTapTimeout": true
+      }
+    }
+  ]
+}

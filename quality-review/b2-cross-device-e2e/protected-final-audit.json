@@ -1,0 +1,112 @@
+{
+  "schemaVersion": 1,
+  "phase": "B2.4e",
+  "generatedAtUtc": "2026-10-10T16:25:47.380Z",
+  "algorithm": "sha256",
+  "pass": true,
+  "rawHashEquality": false,
+  "sourceProtectionPass": true,
+  "productionFileCount": 0,
+  "productionFiles": [],
+  "baselinePathCount": 643,
+  "finalPathCount": 643,
+  "originalSourceCopyCount": 369,
+  "expectedProductionMutationCount": 0,
+  "authorizedOfficialDocumentPaths": [
+    "docs/NAMEBOOK.md",
+    "docs/spec/stage-1.md",
+    "docs/spec/stage-1-acceptance.md"
+  ],
+  "authorizedDocumentChanges": [
+    {
+      "path": "docs/NAMEBOOK.md",
+      "kind": "Changed",
+      "attribution": "TraeAuthorized",
+      "protocolAttributionAccepted": true,
+      "baselineSha256": "27b6ae1dac6daca720382a9bc86a160034708477af61b0314836a01ea24f8bed",
+      "baselineBytes": 84404,
+      "finalSha256": "7bb54b1885ba2d342afc01069f6c404ce5faab9a738c71dacfa1f489dc86641c",
+      "finalBytes": 91494,
+      "lastWriteTimeUtc": "2026-10-10T16:05:53.889Z",
+      "rawHashEquality": false,
+      "authorization": "User explicitly authorized attribution of subsequent concurrent official-documents synchronization to Trae. The implementer did not write these official files."
+    },
+    {
+      "path": "docs/spec/stage-1.md",
+      "kind": "Changed",
+      "attribution": "TraeAuthorized",
+      "protocolAttributionAccepted": true,
+      "baselineSha256": "19fb77c3d9ee971d4bf2978636b2171d5de367ecf4ab3d0099b69ed1e8a2d0a9",
+      "baselineBytes": 53741,
+      "finalSha256": "435196137d80fbc7dc9b68c3fb1587ad1e9b92e8cc62ca698aca205632c93496",
+      "finalBytes": 60206,
+      "lastWriteTimeUtc": "2026-10-10T16:07:19.190Z",
+      "rawHashEquality": false,
+      "authorization": "User explicitly authorized attribution of subsequent concurrent official-documents synchronization to Trae. The implementer did not write these official files."
+    }
+  ],
+  "changed": [
+    "docs/NAMEBOOK.md",
+    "docs/spec/stage-1.md"
+  ],
+  "added": [],
+  "removed": [],
+  "unexpectedChanged": [],
+  "unexpectedAdded": [],
+  "unexpectedRemoved": [],
+  "linksUnchanged": true,
+  "originalCopyFailures": [],
+  "protectedGroups": {
+    "coreAndComposition": {
+      "pathCount": 516,
+      "failures": [],
+      "pass": true
+    },
+    "settingsAndScenes": {
+      "pathCount": 19,
+      "failures": [],
+      "pass": true
+    },
+    "otherReferences": {
+      "pathCount": 34,
+      "failures": [],
+      "pass": true
+    }
+  },
+  "unreadableBefore": [],
+  "unreadableAfter": [],
+  "scope": {
+    "directories": [
+      "src",
+      "constants",
+      "assets",
+      "scripts",
+      "types",
+      "docs",
+      "settings",
+      "profiles",
+      ".trae",
+      ".creator",
+      "archive",
+      "编辑器"
+    ],
+    "rootFiles": [
+      "package.json",
+      "package-lock.json",
+      "tsconfig.json",
+      "雨若_Neurou_main_describe.docx",
+      "雨若_Neurou_core_gameplay.docx",
+      "big logo.png",
+      "small logo.png",
+      "641f3d33-4bab-4769-8f46-62a03315d1b1.jsonl"
+    ],
+    "excludedDirectoryNames": [
+      "node_modules",
+      ".git",
+      "library",
+      "temp",
+      "tmp"
+    ]
+  },
+  "policy": "No production/source/config/reference changes are allowed in this acceptance batch. Explicitly enumerated official .md document synchronization is separately attributed as TraeAuthorized under the latest user PROTOCOL. Byte drift remains visible; other references, removals and additions are never generally exempted."
+}

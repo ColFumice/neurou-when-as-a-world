@@ -1,0 +1,47 @@
+--- a/docs/spec/stage-1.md
++++ b/docs/spec/stage-1.md
+@@ -585,6 +585,30 @@
+ - B2.2d-1-04：无副作用 hydration
+ - B2.2d-1-05：跨账号跨世界拒绝
+ 
++### B2.2d-2-01 RecallCount 正式载体与合法行为
++RecallCountSession 以同一权威 Ledger 校验来源；RecallEvent 只能选择当前主角已有事件；计数为非负安全整数；回忆不追加向量、不执行 SphereCrossing、不写账号事实。
++
++### B2.2d-2-02 痕回放共享来源事件计数
++真实痕绑定限定为 T6_MAIN_DEEP_TRACE → 当前主角的原 T6_ENDPOINT_PLACEHOLDER；ReplayTrace 与直接回忆共用计数；ReplayChart 返回 ChartReplayIgnored，不增加 RecallCount。
++
++### B2.2d-2-03 他人事件第一次经历
++experienceForeignEvent 只接受同一账号/世界权威账本中的已知其他角色与正式 Regular 叙事 Entry；第一次经历走现有同源追加，返回 Experienced / count=0；不单独制造穿越或通关事实。
++
++### B2.2d-2-04 WorldLink 判别联合与孤立语义
++WorldLinkSnapshot 为严格判别联合；Primary / FinalShore 显式 NotApplicable；BugShore 必须 Linked，携带单层 sourceWorldId + Bound/Orphaned + 完整 AIProfileSnapshot；Unknown 明确拒绝；孤立永久保留最后合法快照。
++
++### B2.2d-2-05 AIProfileSnapshot 完整配置
++AIProfile schemaVersion=1 保存 profileId / revision / providers / taskRoutes；提供方严格 CloudProvider / LocalProvider / TemplateProvider；降级链以 TemplateProvider 结束；RealityHint 与 OutputValidation 不得走 CloudProvider。
++
++### B2.2d-2-06 ChartSnapshot 首演实际内容冻结
++首演只关联同次合法 PremiereCompleted 账本事件与真实 ChartPlaybackResult.completed=true；ChartSnapshotRecord 保存实际播放谱面、完整布局、视觉节点 RGB、稳定媒体身份、透明度、完成事件 ID、冻结时间、归属与 contentDigest。
++
++### B2.2d-2-07 ChartScore 持久化更新语义
++ChartScoreRecord schemaVersion=1、scoringVersion=1；首演真实结果成为 best / latest，completedPlayCount=1；每场完整重演仅追加一个唯一 playId，次数严格 +1；仅严格高分替换 best，同分保留原最佳。
++
++### B2.2d-2-08 七项完整认证与 Complete/Restored 产出
++WorldStateCodec.parseComplete 只有在七项全非空、权威身份/版本/归属/结构/跨项引用全部通过并由内容绑定 Complete 验证器认证后才产生 WorldStateSnapshot；WorldStatePreparedRestore.publish() 成功才返回 Restored；活动演奏/揭示/七秒仍 UnsupportedBoundary。
++
+ 
+ 
+ \## 9. 20 维向量顺序（已冻结）
+--- a/scripts/check-naming.js
++++ b/scripts/check-naming.js
+@@ -91,6 +91,11 @@
+   // ID，禁止 ledger → trace）；已经 PROTOCOL 验收轮第一部分
+   // 第 1 条正式追认
+   'traceid',
++  // 依据 PROTOCOL v3.10 裁定：痕（Trace）来源事件绑定记录，
++  // 与既有 DeepTrace / Trace 词族一致
++  'tracebindings',
++  't6traceid',
++  'bindt6trace',
+ ]);
+ 
+ /**

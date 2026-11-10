@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "phase": "B2.4e protocol closure for historical B2.4d audit",
+  "generatedAtUtc": "2026-10-10T16:05:47.692Z",
+  "rawHashEquality": false,
+  "protocolAttributionAccepted": true,
+  "violationResolved": true,
+  "attribution": "TraeAuthorized",
+  "authorization": {
+    "source": "User PROTOCOL confirmation and subsequent concurrent-documents attribution authorization, relayed by the root implementer in this team task.",
+    "confirmation": "用户确认 d 两份 docs 变化来自 Trae PROTOCOL授权，并声明后续并发docs均可按Trae授权同步归因。",
+    "acceptedMeaning": "User confirmation resolves attribution and the alleged unauthorized-documents violation. It does not restore byte equality or alter the historical raw hash result."
+  },
+  "historicalRawAuditPass": false,
+  "baselineCapturedAtUtc": "2026-10-10T14:17:27.060Z",
+  "historicalFinalCapturedAtUtc": "2026-10-10T15:32:32.197Z",
+  "paths": [
+    {
+      "path": "docs/NAMEBOOK.md",
+      "baselineSha256": "da90bf96378770299fc95a94b61ccb838a074e7e584658fae1384320b1a1b9df",
+      "baselineBytes": 72368,
+      "finalSha256": "27b6ae1dac6daca720382a9bc86a160034708477af61b0314836a01ea24f8bed",
+      "finalBytes": 84404,
+      "rawHashEquality": false,
+      "attribution": "TraeAuthorized",
+      "protocolAttributionAccepted": true
+    },
+    {
+      "path": "docs/spec/stage-1.md",
+      "baselineSha256": "b8420ec8735ec8dcec51bdffd82af4c7d485c2a982a4acf755d9242ca96d3aa6",
+      "baselineBytes": 49833,
+      "finalSha256": "19fb77c3d9ee971d4bf2978636b2171d5de367ecf4ab3d0099b69ed1e8a2d0a9",
+      "finalBytes": 53741,
+      "rawHashEquality": false,
+      "attribution": "TraeAuthorized",
+      "protocolAttributionAccepted": true
+    }
+  ],
+  "immutableHistoricalArtifacts": [
+    {
+      "path": "../b2-world-migration/baseline-before.json",
+      "sha256": "1dd57c6ee517f3dbdb4b4bc661eace8360c22e634d236f55adb2af81c610895d"
+    },
+    {
+      "path": "../b2-world-migration/baseline-after.json",
+      "sha256": "78b6e0ea2eaf51bae6e0e0e859646eabf994626e4960cb3a9388f4c8656397db"
+    },
+    {
+      "path": "../b2-world-migration/protected-final-audit.json",
+      "sha256": "e5159ba068674a05bc048790d19d07349fb960985ccb1cf5075158cb73bcee91"
+    }
+  ],
+  "historicalArtifactsRewritten": false,
+  "limits": "This closure records explicit user authorization, not filesystem/process forensics. Historical protected-final-audit.json remains FAIL and original SHA manifests remain unchanged."
+}

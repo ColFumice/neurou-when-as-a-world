@@ -1,0 +1,87 @@
+{
+  "generatedAt": "2026-10-10T09:45:39.928Z",
+  "scope": "Static source preflight and arithmetic witness; not B2.2c contract or production acceptance",
+  "producers": [
+    {
+      "file": "src/director/IntentPort.ts",
+      "method": "buildCompletionNarrativeEvent",
+      "line": 668,
+      "eventId": "T7_COMPLETION_PLACEHOLDER",
+      "dimensions": 20,
+      "allZero": true,
+      "containsChartRef": true,
+      "explicitChartRefState": false
+    },
+    {
+      "file": "src/director/IntentPort.ts",
+      "method": "buildEndpointNarrativeEvent",
+      "line": 928,
+      "eventId": "T6_ENDPOINT_PLACEHOLDER",
+      "dimensions": 20,
+      "allZero": true,
+      "containsChartRef": true,
+      "explicitChartRefState": false
+    }
+  ],
+  "appendCalls": [
+    {
+      "file": "src/director/IntentPort.ts",
+      "line": 655,
+      "expression": "this.ledgerAppend.append"
+    },
+    {
+      "file": "src/director/IntentPort.ts",
+      "line": 911,
+      "expression": "this.ledgerAppend.append"
+    }
+  ],
+  "charts": [
+    {
+      "file": "assets/resources/chart/chart_placeholder.json",
+      "chartId": "chart-placeholder-1",
+      "schemaVersion": null,
+      "tier": "Regular"
+    },
+    {
+      "file": "assets/resources/chart/guidance_a.json",
+      "chartId": "guidance-a-1",
+      "schemaVersion": 1,
+      "tier": "Regular"
+    },
+    {
+      "file": "assets/resources/chart/guidance_b.json",
+      "chartId": "guidance-b-1",
+      "schemaVersion": 1,
+      "tier": "Regular"
+    },
+    {
+      "file": "assets/resources/chart/guidance_c.json",
+      "chartId": "guidance-c-1",
+      "schemaVersion": 2,
+      "tier": "Regular"
+    },
+    {
+      "file": "assets/resources/chart/music-project-1-chart.json",
+      "chartId": "music-project-1-chart",
+      "schemaVersion": 3,
+      "tier": "Regular"
+    }
+  ],
+  "arithmeticWitness": {
+    "fixtureOnly": true,
+    "center": "zero coordinate",
+    "samplePositiveRadius": 1,
+    "radiusIsNotProductionConfiguration": true,
+    "coordinateDimensionCount": 20,
+    "distanceAfterAnyNumberOfExistingZeroEvents": 0,
+    "reachesSphere": false,
+    "rationale": "Summing zero vectors leaves the coordinate at zero for every finite sequence. For every positive radius and zero center it remains strictly inside."
+  },
+  "assertions": {
+    "bothExistingProducersAreZero": true,
+    "onlyTwoExistingAppendCalls": true,
+    "noBundledWorldTierChart": true,
+    "legacyChartRefIsUnclassified": true
+  },
+  "pass": true
+}

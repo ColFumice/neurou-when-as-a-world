@@ -1,0 +1,104 @@
+{
+  "node": "v24.19.0",
+  "sourceTarget": "ES2015",
+  "status": "PASS",
+  "count": 24,
+  "records": [
+    {
+      "name": "contract: signed login, device proof, verify, refresh, time, facts, logout",
+      "result": "PASS"
+    },
+    {
+      "name": "contract rejects unknown receipt fields",
+      "result": "PASS"
+    },
+    {
+      "name": "contract rejects wrong receipt purpose",
+      "result": "PASS"
+    },
+    {
+      "name": "contract rejects wrong service instance",
+      "result": "PASS"
+    },
+    {
+      "name": "contract rejects nonce replay",
+      "result": "PASS"
+    },
+    {
+      "name": "contract rejects unknown schema version",
+      "result": "PASS"
+    },
+    {
+      "name": "contract rejects untrusted server time",
+      "result": "PASS"
+    },
+    {
+      "name": "contract rejects server time disagreement",
+      "result": "PASS"
+    },
+    {
+      "name": "contract rejects negative clock generation",
+      "result": "PASS"
+    },
+    {
+      "name": "contract rejects unsafe time integer",
+      "result": "PASS"
+    },
+    {
+      "name": "contract rejects modified P1363 signature",
+      "result": "PASS"
+    },
+    {
+      "name": "contract rejects duplicate JSON keys before parsing overwrite",
+      "result": "PASS"
+    },
+    {
+      "name": "contract rejects deadline crossed during genuine ES256 verification",
+      "result": "PASS"
+    },
+    {
+      "name": "contract rejects physical-device assertion",
+      "result": "PASS"
+    },
+    {
+      "name": "contract rejects offline grant injection",
+      "result": "PASS"
+    },
+    {
+      "name": "contract rejects zero device generation",
+      "result": "PASS"
+    },
+    {
+      "name": "contract rejects world state through account facts",
+      "result": "PASS"
+    },
+    {
+      "name": "contract rejects current device revoked in facts",
+      "result": "PASS"
+    },
+    {
+      "name": "network failure has no ContractAdapter fallback",
+      "result": "PASS"
+    },
+    {
+      "name": "failed logout closes local context",
+      "result": "PASS"
+    },
+    {
+      "name": "concurrent authentication is explicitly rejected",
+      "result": "PASS"
+    },
+    {
+      "name": "trusted pin mismatch rejects login",
+      "result": "PASS"
+    },
+    {
+      "name": "plain HTTP nonloopback and ContractAdapter configuration rejected",
+      "result": "PASS"
+    },
+    {
+      "name": "fresh adapter cannot restore cookie session without memory CSRF or device key",
+      "result": "PASS"
+    }
+  ]
+}

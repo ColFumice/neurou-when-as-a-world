@@ -1,0 +1,15 @@
+{
+  "observedUtc": "2026-10-11T03:02:16.7829932Z",
+  "sourceManifestCount": 23,
+  "sourceManifestHashMismatches": [],
+  "gatesPass": true,
+  "clientStatus": "PASS",
+  "clientChecks": 30,
+  "clientRecords": 30,
+  "serverPass": true,
+  "protectionPass": true,
+  "secretShareablePass": true,
+  "runtimeFinalState": "StoppedAfterFinalAcceptance",
+  "codeDiffSha256": "d22e4f49265c5a0f06784d186b75c8a2df1195edd25e6befcacee48f555b4a1b",
+  "verdictCount": 15
+}

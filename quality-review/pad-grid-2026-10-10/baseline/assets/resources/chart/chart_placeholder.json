@@ -1,0 +1,27 @@
+﻿{
+  "chartId": "chart-placeholder-1",
+  "tier": "Regular",
+  "layoutVersion": "pad-layout-1",
+  "notes": [
+    { "timeMs": 1000, "keyId": "KeyD" },
+    { "timeMs": 1500, "keyId": "KeyF" },
+    { "timeMs": 2000, "keyId": "KeyJ" },
+    { "timeMs": 2500, "keyId": "KeyK" },
+    { "timeMs": 3000, "keyId": "Digit1" },
+    { "timeMs": 3500, "keyId": "Space" },
+    { "timeMs": 4000, "keyId": "Comma" },
+    { "timeMs": 4500, "keyId": "Period" },
+    { "timeMs": 5000, "keyId": "KeyS" },
+    { "timeMs": 5500, "keyId": "KeyL" },
+    { "timeMs": 6000, "keyId": "KeyD" },
+    { "timeMs": 6000, "keyId": "Digit2" },
+    { "timeMs": 6500, "keyId": "KeyA" },
+    { "timeMs": 7000, "keyId": "Semicolon" },
+    { "timeMs": 7500, "keyId": "Slash" },
+    { "timeMs": 8000, "keyId": "KeyD" },
+    { "timeMs": 8500, "keyId": "KeyF" },
+    { "timeMs": 9000, "keyId": "Space" },
+    { "timeMs": 9500, "keyId": "Digit3" },
+    { "timeMs": 10000, "keyId": "KeyK" }
+  ]
+}

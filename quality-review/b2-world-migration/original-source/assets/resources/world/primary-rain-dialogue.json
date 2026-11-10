@@ -1,0 +1,129 @@
+{
+  "schemaVersion": 1,
+  "contentId": "primary-rain-memory",
+  "contentRevision": "1.0.0",
+  "worldKind": "Primary",
+  "protagonistCharacterId": "protagonist-1",
+  "EventSpaceCenter": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "EventDistance": 3,
+  "source": {
+    "author": "雨若制作方 / B2.2c 原创内容",
+    "version": "1.0.0",
+    "description": "2026-10-10 原创《雨中遗失的名字》；每个分支来自主角在真实世界内的一次玩家回应。向量是该已发布片段的制作方手工叙事标注，不是运行时自动感绪计算。"
+  },
+  "interaction": {
+    "title": "雨中遗失的名字",
+    "prompt": "雨停前，你在旧站台遇见一位同伴。她攥着一张被雨浸湿的车票：“我记得要等一个人，却忘了他的名字。你愿意陪我想一想吗？”",
+    "choices": [
+      {
+        "choiceId": "share-shelter",
+        "label": "把伞移向她，陪她听一会儿雨",
+        "meaning": "用陪伴回应恐惧：以绿维的关怀为主要叙事标注，蓝维保留安静悲伤；信任、亲近和玩家共情来自共同避雨。",
+        "vector": [
+          0.4,
+          3.2,
+          0.8,
+          0,
+          0.4,
+          0.2,
+          0.2,
+          0.5,
+          0.3,
+          0.2,
+          0,
+          0.4,
+          1,
+          1,
+          0.5,
+          0,
+          0.2,
+          1,
+          0.2,
+          1
+        ]
+      },
+      {
+        "choiceId": "read-ticket",
+        "label": "和她读车票背面的字，找回约定",
+        "meaning": "共同回望丢失的记忆：以蓝维的追忆为主要叙事标注；痕、理解和真实性来自读出车票上的约定，绿维是耐心帮助。",
+        "vector": [
+          0.3,
+          0.6,
+          3.2,
+          0,
+          0.4,
+          0.4,
+          0.2,
+          0.5,
+          1,
+          0.4,
+          0.2,
+          0.3,
+          0.7,
+          0.5,
+          1.2,
+          0,
+          0.8,
+          1,
+          0.2,
+          0.7
+        ]
+      },
+      {
+        "choiceId": "keep-promise",
+        "label": "答应陪她等到雨停，再一起出发",
+        "meaning": "以新的约定接住尚未找回的名字：白维标注克制而明亮的希望，红维标注主动承诺；信任与亲近来自一起等候。",
+        "vector": [
+          0.8,
+          0.8,
+          0.4,
+          0,
+          3.2,
+          0.2,
+          0.3,
+          0.5,
+          0.3,
+          0.5,
+          0.1,
+          0.3,
+          1,
+          1,
+          0.6,
+          0,
+          0.4,
+          1,
+          0.3,
+          0.8
+        ]
+      }
+    ]
+  },
+  "worldBossChartSource": {
+    "chartId": "primary-rain-world-1",
+    "contentRevision": "1.0.0",
+    "chartResourcePath": "chart/primary-rain-world-1",
+    "visualResourcePath": "chart/primary-rain-world-1.visual",
+    "mediaResourcePath": "audio/primary-rain-world-1"
+  }
+}

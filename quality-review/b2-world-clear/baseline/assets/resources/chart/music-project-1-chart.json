@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 3,
+  "chartId": "music-project-1-chart",
+  "tier": "Regular",
+  "layoutVersion": "pad-layout-2",
+  "aspectRatio": 1.7777777777777777,
+  "lines": [
+    {
+      "id": "line-music-line-1",
+      "head": {
+        "id": "head-music-note-1",
+        "spawnTimeMs": 750,
+        "targetTimeMs": 750
+      },
+      "path": {
+        "kind": "Polyline",
+        "points": [
+          {
+            "u": 0.045454545454545456,
+            "v": 0.375
+          },
+          {
+            "u": 0.3181818181818182,
+            "v": 0.375
+          },
+          {
+            "u": 0.5909090909090908,
+            "v": 0.375
+          }
+        ]
+      },
+      "nodes": [
+        {
+          "id": "node-music-note-2",
+          "kind": "Hold",
+          "pathDistance": 0.4848484848484848,
+          "endPathDistance": 0.9696969696969695,
+          "keyId": "KeyF"
+        },
+        {
+          "id": "node-music-note-3",
+          "kind": "Tap",
+          "pathDistance": 0.9696969696969695
+        }
+      ],
+      "timing": [
+        {
+          "nodeId": "node-music-note-2",
+          "targetTimeMs": 1500,
+          "endTargetTimeMs": 2250
+        },
+        {
+          "nodeId": "node-music-note-3",
+          "targetTimeMs": 2250
+        }
+      ]
+    },
+    {
+      "id": "line-music-line-2",
+      "head": {
+        "id": "head-music-note-4",
+        "spawnTimeMs": 937.5,
+        "targetTimeMs": 937.5
+      },
+      "path": {
+        "kind": "Polyline",
+        "points": [
+          {
+            "u": 0.038461538461538464,
+            "v": 0.625
+          },
+          {
+            "u": 0.34615384615384615,
+            "v": 0.625
+          },
+          {
+            "u": 0.7307692307692308,
+            "v": 0.625
+          }
+        ]
+      },
+      "nodes": [
+        {
+          "id": "node-music-note-5",
+          "kind": "Drag",
+          "pathDistance": 0.5470085470085471,
+          "keyId": "KeyT"
+        },
+        {
+          "id": "node-music-note-6",
+          "kind": "Tap",
+          "pathDistance": 1.2307692307692308
+        }
+      ],
+      "timing": [
+        {
+          "nodeId": "node-music-note-5",
+          "targetTimeMs": 1687.5
+        },
+        {
+          "nodeId": "node-music-note-6",
+          "targetTimeMs": 2437.5
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "baselineMethod": "Exact reversal of recorded edits; no Git repository available",
+  "changed": [
+    "constants/index.ts",
+    "src/chart/KeyboardPadLayout.ts",
+    "src/chart/ChartPremiere.ts",
+    "src/chart/Strike.ts",
+    "src/director/PlayerIntent.ts",
+    "src/director/IntentPort.ts",
+    "src/presentation/InputCollector.ts",
+    "src/presentation/ChartPadView.ts",
+    "assets/scripts/SceneBuilder.ts"
+  ],
+  "added": [
+    "src/chart/GuidanceChart.ts",
+    "src/chart/GuidanceChart.ts.meta",
+    "src/chart/GuidanceLineRuntime.ts",
+    "src/chart/GuidanceLineRuntime.ts.meta",
+    "src/presentation/LineEraseEffect.ts",
+    "src/presentation/LineEraseEffect.ts.meta",
+    "assets/resources/chart/guidance_a.json",
+    "assets/resources/chart/guidance_a.json.meta",
+    "assets/resources/guidance.meta",
+    "assets/resources/guidance/head-logo.png",
+    "assets/resources/guidance/head-logo.png.meta"
+  ]
+}

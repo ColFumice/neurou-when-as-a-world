@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+	<testcase name="native-HMAC RFC5869 vector and native AES-GCM backend are independent cryptographic evidence" time="0.017689" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="installed Genesis trust succeeds and serialized/runtime brands confer no trust" time="0.004793" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="real registered author proof and epoch accept developer" time="0.008462" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="real registered author proof and epoch accept coDeveloper" time="0.007731" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="real registered author proof and epoch accept observer" time="0.007155" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="real registered author proof and epoch accept observerDevice2" time="0.008114" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="old admitted permit stays valid by signed acceptance time; no current wall clock exists in validator" time="0.006352" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="repeated historical receipt validates without reconstructing a physical identity" time="0.012172" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="wrong installed service public key never bootstraps from receipt" time="0.001904" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="wrong installed developer pin fails before trusting membership publisher" time="0.001633" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="tampered authenticated service receipt is Gap, never a technical-invalid body capability" time="0.004122" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="wrong receipt purpose cannot reuse a service signature from another protocol purpose" time="0.002929" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="signed admission request nonce must match author-signed admission claim nonce" time="0.004401" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="author claim signature cannot be replaced by service assertion" time="0.003075" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="claim/admission final digest disagreement is missing provenance" time="0.002546" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="tampered exact envelope bytes do not turn into trustworthy InvalidChange" time="0.006836" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="valid signed claim + admission binds exact malformed envelope bytes as technical InvalidChange" time="0.005145" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="duplicate JSON keys in exact admitted envelope are technical-invalid rather than silently parsed" time="0.005547" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="bad envelope ES256 signature with valid independent claim is technical-invalid" time="0.007389" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="wrong wrapping AAD cannot yield a body or shared change" time="0.005932" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="wrong body AAD cannot yield a body or shared change" time="0.006157" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="authenticated body duplicate keys fail strict decoding" time="0.005767" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="authenticated inner appended time must equal signed public header" time="0.005929" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="authenticated body cannot change content manifest context" time="0.005517" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="map entity content approval is required even for an authenticated developer body" time="0.006315" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="missing epoch key stays Gap even if exact bytes are admitted" time="0.005240" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="missing key plus exact bad bytes cannot advance settlement as InvalidChange" time="0.004618" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="key capability returning wrong committed group key is Gap" time="0.005642" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="membership activated after logical append cannot authorize it" time="0.002743" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="forged author credential absent from signed epoch is Gap" time="0.002445" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="every signed epoch member agreement fingerprint binds its actual ECDH key" time="0.005221" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="signed epoch rejects ECDH reuse of registered signing key even for a non-author member" time="0.004494" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs" failure="Expected values to be strictly equal:&#10;+ actual - expected&#10;&#10;+ 'No exact union alternative'&#10;- 'MemberKeyPurposeConflict'&#10;">
+		<failure type="testCodeFailure" message="Expected values to be strictly equal:&#10;+ actual - expected&#10;&#10;+ 'No exact union alternative'&#10;- 'MemberKeyPurposeConflict'">
+[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:
++ actual - expected
+
++ 'No exact union alternative'
+- 'MemberKeyPurposeConflict'
+] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'No exact union alternative'
+  - 'MemberKeyPurposeConflict'
+  
+      at TestContext.&lt;anonymous> (D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs:173:25)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'No exact union alternative',
+    expected: 'MemberKeyPurposeConflict',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+}
+		</failure>
+	</testcase>
+	<testcase name="signed epoch rejects ECDH reuse of developer root key even for a non-author member" time="0.005024" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="signed epoch rejects ECDH reuse of service root key even for a non-author member" time="0.005300" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="non-root signed epoch member must retain Observer admission provenance" time="0.006033" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="permit acceptance at exact expiry endpoint is rejected" time="0.002535" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="unknown future clock generation is Gap; signed historical generation remains accepted" time="0.004253" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="untrusted signed clock status does not become trusted because signature verifies" time="0.002812" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="AddCoDeveloper requires signed active Observer fact at AppendedAt" time="0.012847" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="RemoveCoDeveloper accepts old valid admission source without requiring target still active" time="0.006174" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="roster cannot use another observer admission fact as target provenance" time="0.003110" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="missing observer fact is Gap, not author narrative evidence" time="0.002548" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="injected crypto outage and producer outage are HostFailure, never technical InvalidChange" time="0.006756" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="bad cryptography return shape cannot be mistaken for trustworthy digest or key" time="0.005580" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="signed seal must satisfy S-H and policy fingerprint" time="0.003793" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="seal chain needs runtime-trusted prior receipt and increasing boundary" time="0.003045" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="developer closure and rejection proofs stay separate from shared change/body" time="0.003833" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="canonical decode rejects duplicate and escaped duplicate JSON keys" time="0.001519" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="canonical decode rejects alternate JSON spellings and trailing input" time="0.000535" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="strict UTF8 rejects BOM, truncation, overlong, surrogate and out of range encodings" time="0.000146" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="UTF8 agrees with independent Node encoding across scalar ranges" time="0.000523" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="object descriptor validation never invokes accessors" time="0.000158" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="canonical objects reject symbols, hidden properties and foreign prototypes" time="0.000157" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="canonical arrays reject holes, properties, symbols and custom prototypes" time="0.000118" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="canonical data rejects cycles, invalid Unicode and unsupported number types" time="0.000163" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="canonical nesting safety rejects unbounded hostile data" time="0.001183" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="JCS UTF16 key order and integer subset known vector" time="0.000406" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="canonical base64url matches independent byte oracle and rejects alternate tails" time="0.003036" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="domain bytes retain NUL separator and byte comparison is exact" time="0.000144" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="schema roundtrip and immutable copy: WorldCommitIdentity" time="0.000756" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="schema roundtrip and immutable copy: SharedPosition" time="0.000160" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="schema roundtrip and immutable copy: SharedContentReference" time="0.000494" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="schema roundtrip and immutable copy: WorldSharedGenesis" time="0.003502" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="schema roundtrip and immutable copy: AuthorSequenceSegment" time="0.000675" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="schema roundtrip and immutable copy: SharedAppendedAt" time="0.000293" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="schema roundtrip and immutable copy: WorldAppendPermit" time="0.000539" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="schema roundtrip and immutable copy: WorldCommitAdmission" time="0.000357" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="schema roundtrip and immutable copy: WorldCommitAdmissionClaim" time="0.000751" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="schema roundtrip and immutable copy: SignedWorldCommitAdmissionClaim" time="0.001186" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="schema roundtrip and immutable copy: WorldDeveloperClosureFact" time="0.000189" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="schema roundtrip and immutable copy: WorldCommitRejection" time="0.000317" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="schema roundtrip and immutable copy: WorldAuthorKeyBinding" time="0.000859" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="schema roundtrip and immutable copy: WorldChangeClass" time="0.000062" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="schema roundtrip and immutable copy: SharedCommitClass" time="0.000037" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="schema roundtrip and immutable copy: MonotonicRevealChange" time="0.000143" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="schema roundtrip and immutable copy: TraceTouchChange" time="0.000159" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="schema roundtrip and immutable copy: EditTarget" time="0.000108" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="schema roundtrip and immutable copy: SharedMapEntityDefinition" time="0.000515" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="schema roundtrip and immutable copy: SharedTriggerDefinition" time="0.000195" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="schema roundtrip and immutable copy: MapEditOperation" time="0.000264" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="schema roundtrip and immutable copy: MapEditCommitChange" time="0.000711" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="schema roundtrip and immutable copy: DeveloperRosterChange" time="0.000233" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="schema roundtrip and immutable copy: WorldChange" time="0.000132" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="schema roundtrip and immutable copy: WorldCommit" time="0.000602" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="schema roundtrip and immutable copy: RestrictedWriteHeader" time="0.000374" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="schema roundtrip and immutable copy: RelayCommitHeader" time="0.000503" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="schema roundtrip and immutable copy: WrappedRelayDataKey" time="0.000523" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="schema roundtrip and immutable copy: RelayCommitEnvelope" time="0.001723" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="schema roundtrip and immutable copy: AdmittedWorldCommit" time="0.006250" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="schema roundtrip and immutable copy: SharedEntityRecord" time="0.000381" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="schema roundtrip and immutable copy: SharedTriggerRecord" time="0.000257" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="schema roundtrip and immutable copy: TraceTouchAggregate" time="0.000239" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="schema roundtrip and immutable copy: DeveloperRosterState" time="0.000121" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="schema roundtrip and immutable copy: SharedWorldState" time="0.001429" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="schema roundtrip and immutable copy: WorldChangeLogWire" time="0.008178" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="schema roundtrip and immutable copy: RelaySettlementSeal" time="0.000341" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="schema roundtrip and immutable copy: CheckpointCoverageEntry" time="0.000239" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="schema roundtrip and immutable copy: WorldCheckpointWire" time="0.002898" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="schema roundtrip and immutable copy: SharedSettlementPolicy" time="0.000240" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="schema roundtrip and immutable copy: RelayCursor" time="0.000086" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="schema roundtrip and immutable copy: RelayPullReply" time="0.007543" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="schema roundtrip and immutable copy: SharedAuthorityReceipt" time="0.000565" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="schema roundtrip and immutable copy: WorldKeyAgreementPublicKey" time="0.000133" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="schema roundtrip and immutable copy: WorldDeveloperTrustAnchor" time="0.000643" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="schema roundtrip and immutable copy: WorldObserverAdmissionFact" time="0.000553" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="schema roundtrip and immutable copy: WorldMemberCredential" time="0.000273" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="schema roundtrip and immutable copy: WorldRelayKeyDescriptor" time="0.000150" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="schema roundtrip and immutable copy: WorldMembershipEpoch" time="0.001337" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="schema roundtrip and immutable copy: WorldMembershipEpochProposal" time="0.001646" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="schema roundtrip and immutable copy: WorldMembershipChange" time="0.001309" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="schema roundtrip and immutable copy: WorldRelayKeyPackageContext" time="0.000567" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="schema roundtrip and immutable copy: WorldRelayKeyPackage" time="0.000972" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="schema roundtrip and immutable copy: WorldRelayKeyAcceptance" time="0.000568" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="exact schema rejects extra and missing fields without broad compatibility" time="0.000260" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="sequence, permit and settlement exact boundaries reject incoherent facts" time="0.000432" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="touch count uses exact uint128 and independently saturates rendering" time="0.000215" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="sorted state and coverage preserve exact identities rather than max sequence" time="0.001788" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="single-object map operations reject old atomic edit arrays and target mismatch" time="0.001196" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="receipt purpose, identity, accepted-time and key bindings remain distinct" time="0.003670" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="codec preserves admitted raw bytes for cryptographic invalid-body classification" time="0.001778" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="stable definition IDs share one domain while references may recur" time="0.001808" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="Genesis and state reject every cross-kind stable ID collision including tombstones" time="0.007122" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="created records require edit attribution without excluding edited Genesis records" time="0.000495" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\codec-tests.cjs"/>
+	<testcase name="R01 deterministic three-class replay, unique touch and canonical checkpoint hashes" time="0.070950" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\replay-tests.cjs"/>
+	<testcase name="R02 same-millisecond order is account ASCII then sequence, independent of receipt order" time="0.019804" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\replay-tests.cjs"/>
+	<testcase name="R03 two devices share an account with nonoverlapping segments; holes stay absent from coverage" time="0.018401" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\replay-tests.cjs"/>
+	<testcase name="R04 signed overlapping segments from different devices are refused" time="0.015408" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\replay-tests.cjs"/>
+	<testcase name="R05 same identity with two authored envelope digests is an IdentityConflict" time="0.015383" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\replay-tests.cjs"/>
+	<testcase name="R06 different objects remain independent when one target is deleted" time="0.025104" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\replay-tests.cjs"/>
+	<testcase name="R07 tombstones prevent Replace/Create resurrection, repeated Delete is NoEffect without new diagnostic" time="0.029436" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\replay-tests.cjs"/>
+	<testcase name="R08 CoDeveloper permission is evaluated at total-order position, not receipt or pull order" time="0.024897" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\replay-tests.cjs"/>
+	<testcase name="R09 observer cannot edit map, developer can grant observer then editing works" time="0.024906" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\replay-tests.cjs"/>
+	<testcase name="R10 unsealed tail emits provisional coverage only and reorders on earlier revocation" time="0.025068" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\replay-tests.cjs"/>
+	<testcase name="R11 seal includes only complete prefix, tail cannot add terminal coverage or diagnostics" time="0.017811" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\replay-tests.cjs"/>
+	<testcase name="R12 missing admitted prefix is Gap even with valid seal signature" time="0.010026" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\replay-tests.cjs"/>
+	<testcase name="R13 seal beyond S-H is rejected; H and retention inequalities are enforced" time="0.005372" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\replay-tests.cjs"/>
+	<testcase name="R14 exact admitted bad body is covered as technical InvalidChange without state side effects" time="0.009932" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\replay-tests.cjs"/>
+	<testcase name="R15 missing key and missing exact byte source prevent advancement, not InvalidChange" time="0.013710" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\replay-tests.cjs"/>
+	<testcase name="R16 host failure never becomes InvalidChange or stores a trusted checkpoint" time="0.008123" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\replay-tests.cjs"/>
+	<testcase name="R17 checkpoint parent is runtime trusted, not serialized brand or self-consistent hashes" time="0.014392" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\replay-tests.cjs"/>
+	<testcase name="R18 trusted parent can advance without old log; null diagnostic becomes sealed MergeConflict" time="0.021482" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\replay-tests.cjs"/>
+	<testcase name="R19 same seal retry returns original checkpoint rather than inventing a new parent chain" time="0.013767" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\replay-tests.cjs"/>
+	<testcase name="R20 signed new identity below a sealed boundary is Gap, while exact covered duplicate adds nothing" time="0.025820" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\replay-tests.cjs"/>
+	<testcase name="R21 account closure at the same timestamp freezes root roster but preserves existing CoDeveloper edits" time="0.020587" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\replay-tests.cjs"/>
+	<testcase name="R22 closure not bound by seal and newly backdated closure cannot change trusted parent" time="0.019591" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\replay-tests.cjs"/>
+	<testcase name="R23 trigger dangling creation is invalid; deleting anchor preserves existing trigger definition" time="0.016619" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\replay-tests.cjs"/>
+	<testcase name="R24 explicit Create records attribution, equal Replace is NoEffect and deletion is permanent" time="0.023464" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\replay-tests.cjs"/>
+	<testcase name="R25 bound failure or pending candidates prevents a checkpoint; input is immutable across awaits" time="0.010364" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\replay-tests.cjs"/>
+	<testcase name="R26 same-account device conflicts have no exemption and exact aggregate survives display saturation" time="0.027796" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\replay-tests.cjs"/>
+	<testcase name="R27 uint128 overflow and deleted trace target do not add touch or narrative facts" time="0.026193" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\replay-tests.cjs"/>
+	<testcase name="R28 exact covered re-delivery inherits local trust after old epoch key removal; new input remains Gap" time="0.029535" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\replay-tests.cjs"/>
+	<testcase name="R29 stable IDs remain globally reserved across entity, trigger, trace touch and map, including tombstones" time="0.033087" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\replay-tests.cjs" failure="The expression evaluated to a falsy value:&#10;&#10;  assert(out.coverage.every(entry => entry.applyResult === 'NoEffect' &amp;&amp; entry.finalDiagnostic === 'MergeConflict'))&#10;">
+		<failure type="testCodeFailure" message="The expression evaluated to a falsy value:&#10;&#10;  assert(out.coverage.every(entry => entry.applyResult === 'NoEffect' &amp;&amp; entry.finalDiagnostic === 'MergeConflict'))">
+[Error [ERR_TEST_FAILURE]: The expression evaluated to a falsy value:
+
+  assert(out.coverage.every(entry => entry.applyResult === 'NoEffect' &amp;&amp; entry.finalDiagnostic === 'MergeConflict'))
+] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert(out.coverage.every(entry => entry.applyResult === 'NoEffect' &amp;&amp; entry.finalDiagnostic === 'MergeConflict'))
+  
+      at TestContext.&lt;anonymous> (D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\replay-tests.cjs:338:3)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+}
+		</failure>
+	</testcase>
+	<testcase name="R30 independent closure projects in an empty tail without backdating an earlier checkpoint" time="0.011938" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\replay-tests.cjs"/>
+	<testcase name="R31 locally observed signed allocation conflicts remain detectable across trusted checkpoint advances" time="0.031696" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\tests\replay-tests.cjs"/>
+	<!-- tests 154 -->
+	<!-- suites 0 -->
+	<!-- pass 152 -->
+	<!-- fail 2 -->
+	<!-- cancelled 0 -->
+	<!-- skipped 0 -->
+	<!-- todo 0 -->
+	<!-- duration_ms 751.3715 -->
+</testsuites>

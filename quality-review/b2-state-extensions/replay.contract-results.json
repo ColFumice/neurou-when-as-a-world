@@ -1,0 +1,123 @@
+{
+  "category": "ContractTest",
+  "note": "Real ChartReplaySession around WorldClearSession, real formal World ChartPremiere results and controlled media probes. Frozen content, score-only writes, legacy T7 compatibility, exit/pause/failure semantics. No Cocos acceptance claim.",
+  "passed": 23,
+  "failed": 0,
+  "results": [
+    {
+      "name": "idle wrapper delegates existing intents and reader state without any chart or Recall write",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "own completion VectorEntry prepares the exact frozen chart layout visual media and actual transparency",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "unknown event and Entry narrative choice cannot be treated as legal premiere completion",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "other character-only completion cannot be selected through current protagonist VectorEntry",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "legal completion without actual historical snapshot rejects without reading current resources",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "completion chart identity must match frozen snapshot before media preparation",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "media preparation failure never gates world publishes reader or consumes replay sequence",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "early chart exit preserves entry archive score ledger account and RecallCount",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "fully settled notes alone wait for actual media completion and publish no score",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "real full replay stores completed zero-score result exactly once without Ledger Recall or account fact",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "actual timed player strikes improve score while frozen premiere content remains immutable",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "repeated full replay uses unique play IDs at same clock and never creates another premiere reference",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "score durable failure keeps archive and Completed replay active; retry reuses identical playId exactly once",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "entry gates entire input batch including prior movement RecallEvent and ReplayTrace",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "exit batch remains gated for later movement and Recall inputs after replay becomes inactive",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "idle own Recall and trace Replay share count while ChartReplay keeps that count unchanged",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "existing world motion gate blocks ReplayChart RecallEvent and ReplayTrace without changing state",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "pause freezes media timeout and score until resumed and actual end is observed",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "early media end advances remaining judgments via independent frame clock before complete score",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "unavailable media with stalled native clock completes only after explicit timeout fallback",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "invalid replay timestamp rejects before media setup gate and score write",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "legacy T7 no-state completion replays only its actual frozen Regular snapshot without changing old record",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "legacy Entry T6 cannot masquerade as a completed VectorEntry even with a matching offered record ID",
+      "result": "PASS",
+      "category": "ContractTest"
+    }
+  ]
+}

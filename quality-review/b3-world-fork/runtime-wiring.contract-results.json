@@ -1,0 +1,78 @@
+{
+  "category": "ContractTest",
+  "note": "Actual WorldFolderBuilder forkStorage property initializer extracted from current TypeScript AST; full domain and storage fixtures. No Cocos production claim.",
+  "passed": 14,
+  "failed": 0,
+  "results": [
+    {
+      "name": "actual root validateSource accepts current exact seven-item inheritance and rereads permission",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "legal target with invented RecallCount is rejected by actual root exact-inheritance boundary",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "legal target with a real additional replay score is rejected by actual root inheritance boundary",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "legal target with added ordinary ledger event is rejected by actual root inheritance boundary",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "legally shaped target title tampering rejects at actual root current-source metadata check",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "legally shaped target description tampering rejects at actual root current-source metadata check",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "actual root source validator rejects changed persisted revision even with valid source content",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "actual root source validator rejects changed persisted complete content digest at same revision",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "actual root rereads denied CopyPermission rather than trusting plan-time reader",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "actual root rejects corrupted account projection and source lease absence",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "actual root target reservation exists only during durable writer and is removed on failure",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "actual root callbacks combined with actual fork storage reject legal counter fabrication before any journal write",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "Core with fork origin and absent Ledger rejects even when every other section is null",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "WorldStateSession default availability remains NotImplemented and explicit composition availability is Implemented",
+      "category": "ContractTest",
+      "result": "PASS"
+    }
+  ]
+}

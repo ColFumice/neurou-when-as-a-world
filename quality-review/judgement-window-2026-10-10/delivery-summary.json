@@ -1,0 +1,186 @@
+{
+  "pass": true,
+  "generatedAt": "2026-10-10T06:01:55.662Z",
+  "values": {
+    "rhythmStrikeWindowMs": 100,
+    "perfectWindowMs": 100,
+    "goodWindowMs": 200,
+    "syncToleranceMs": 30
+  },
+  "headWindowMs": 1000,
+  "gates": [
+    {
+      "gate": "naming",
+      "command": "npm run check:naming",
+      "pass": true,
+      "exitCode": 0
+    },
+    {
+      "gate": "dependencies",
+      "command": "npm run check:dependencies",
+      "pass": true,
+      "exitCode": 0
+    },
+    {
+      "gate": "typecheck",
+      "command": "npm run typecheck",
+      "pass": true,
+      "exitCode": 0
+    }
+  ],
+  "logicTests": {
+    "passed": 103,
+    "failed": 0
+  },
+  "ac18": [
+    {
+      "transparencyPercent": 0,
+      "score": 400,
+      "counts": {
+        "perfect": 3,
+        "good": 1,
+        "miss": 1,
+        "resolved": 5
+      }
+    },
+    {
+      "transparencyPercent": 10,
+      "score": 440,
+      "counts": {
+        "perfect": 3,
+        "good": 1,
+        "miss": 1,
+        "resolved": 5
+      }
+    },
+    {
+      "transparencyPercent": 25,
+      "score": 500,
+      "counts": {
+        "perfect": 3,
+        "good": 1,
+        "miss": 1,
+        "resolved": 5
+      }
+    },
+    {
+      "transparencyPercent": 50,
+      "score": 600,
+      "counts": {
+        "perfect": 3,
+        "good": 1,
+        "miss": 1,
+        "resolved": 5
+      }
+    },
+    {
+      "transparencyPercent": 75,
+      "score": 700,
+      "counts": {
+        "perfect": 3,
+        "good": 1,
+        "miss": 1,
+        "resolved": 5
+      }
+    },
+    {
+      "transparencyPercent": 100,
+      "score": 800,
+      "counts": {
+        "perfect": 3,
+        "good": 1,
+        "miss": 1,
+        "resolved": 5
+      }
+    }
+  ],
+  "creator": {
+    "version": "3.8.8",
+    "screenshotCount": 30,
+    "checkedModules": 23,
+    "runtimeErrors": [],
+    "rendererErrors": [],
+    "resolutions": [
+      {
+        "resolution": "1920x1080",
+        "pass": true,
+        "result": {
+          "chartId": "guidance-c-1",
+          "tier": "Regular",
+          "perfectCount": 8,
+          "goodCount": 2,
+          "missCount": 0,
+          "totalScore": 1000,
+          "finishedAtMs": 12000,
+          "completed": true
+        },
+        "beats": 8,
+        "ledgerCount": 2,
+        "sync": {
+          "sampleCount": 358,
+          "maxRawPresentedErrorMs": 17.229999999999563
+        },
+        "intentionalMissTrial": {
+          "result": {
+            "chartId": "guidance-c-1",
+            "tier": "Regular",
+            "perfectCount": 8,
+            "goodCount": 1,
+            "missCount": 1,
+            "totalScore": 900,
+            "finishedAtMs": 12000,
+            "completed": true
+          },
+          "ledgerCount": 2,
+          "sync": {
+            "sampleCount": 357,
+            "maxRawPresentedErrorMs": 23.965000000001965
+          }
+        }
+      },
+      {
+        "resolution": "2560x1440",
+        "pass": true,
+        "result": {
+          "chartId": "guidance-c-1",
+          "tier": "Regular",
+          "perfectCount": 8,
+          "goodCount": 2,
+          "missCount": 0,
+          "totalScore": 1000,
+          "finishedAtMs": 12000,
+          "completed": true
+        },
+        "beats": 8,
+        "ledgerCount": 2,
+        "sync": {
+          "sampleCount": 354,
+          "maxRawPresentedErrorMs": 16.397999999999527
+        },
+        "intentionalMissTrial": {
+          "result": {
+            "chartId": "guidance-c-1",
+            "tier": "Regular",
+            "perfectCount": 8,
+            "goodCount": 1,
+            "missCount": 1,
+            "totalScore": 900,
+            "finishedAtMs": 12000,
+            "completed": true
+          },
+          "ledgerCount": 2,
+          "sync": {
+            "sampleCount": 347,
+            "maxRawPresentedErrorMs": 27.98400000000038
+          }
+        }
+      }
+    ]
+  },
+  "protectedFiles": 29,
+  "changedProductionFiles": 5,
+  "judgementLogicUnchanged": true,
+  "finalSourceHashVerification": true,
+  "currentSharedDocsAlreadyUseNewValues": true,
+  "noKnownProductRuntimeFailures": true
+}

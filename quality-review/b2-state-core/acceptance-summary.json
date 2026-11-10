@@ -1,0 +1,128 @@
+{
+  "generatedAt": "2026-10-10T11:13:59.559Z",
+  "pass": true,
+  "contractTests": {
+    "evidenceKind": "ContractTests",
+    "total": 292,
+    "new": 119,
+    "regression": 173,
+    "suites": [
+      {
+        "name": "Ledger",
+        "file": "ledger.contract-results.json",
+        "category": "New",
+        "count": 44,
+        "pass": true
+      },
+      {
+        "name": "Puzzle",
+        "file": "puzzle.contract-results.json",
+        "category": "New",
+        "count": 14,
+        "pass": true
+      },
+      {
+        "name": "CoreStorage",
+        "file": "storage.contract-results.json",
+        "category": "New",
+        "count": 40,
+        "pass": true
+      },
+      {
+        "name": "Aggregation",
+        "file": "aggregation.contract-results.json",
+        "category": "New",
+        "count": 12,
+        "pass": true
+      },
+      {
+        "name": "RuntimeWiring",
+        "file": "runtime-wiring.contract-results.json",
+        "category": "New",
+        "count": 9,
+        "pass": true
+      },
+      {
+        "name": "B2aAccount",
+        "file": "b2a-account-regression-results.json",
+        "category": "Regression",
+        "count": 26,
+        "pass": true
+      },
+      {
+        "name": "B2bWorldState",
+        "file": "b2b-world-state-regression-results.json",
+        "category": "Regression",
+        "count": 42,
+        "pass": true
+      },
+      {
+        "name": "B2cDomain",
+        "file": "b2c-domain-regression-results.json",
+        "category": "Regression",
+        "count": 49,
+        "pass": true
+      },
+      {
+        "name": "B2cStorage",
+        "file": "b2c-storage-regression-results.json",
+        "category": "Regression",
+        "count": 56,
+        "pass": true
+      }
+    ],
+    "note": "B2b regression changes only three ownership codec expectations to Implemented; all original 42 checks remain. Controlled fixtures and inert component imports are not production evidence."
+  },
+  "productionAcceptance": {
+    "evidenceKind": "ProductionAcceptance",
+    "pass": true,
+    "resolutions": [
+      {
+        "resolution": "1920x1080",
+        "checks": 14,
+        "screenshots": 13,
+        "cumulativeLedger": 4,
+        "revision": 8,
+        "formatTime": {
+          "epochMs": 1791630358719
+        },
+        "account": "b22d1-production-1920-1791630357351",
+        "pass": true
+      },
+      {
+        "resolution": "2560x1440",
+        "checks": 14,
+        "screenshots": 13,
+        "cumulativeLedger": 4,
+        "revision": 8,
+        "formatTime": {
+          "epochMs": 1791630395920
+        },
+        "account": "b22d1-production-2560-1791630357351",
+        "pass": true
+      }
+    ],
+    "sourceMaps": 27,
+    "rawScreenshotCount": 26,
+    "sourceAndHarnessHashesMatchCurrent": true,
+    "rendererErrorCount": 0,
+    "runtimeErrorCount": 0,
+    "externalRequestCount": 0,
+    "exitCode": 0,
+    "note": "Actual localhost Creator compiled game and native media; product controls and GameCanvas keyboard edges only. Same persistent isolated profile, fresh BrowserWindow; no fixture gameplay/storage writes. No active timer/media resume or full world restore claim."
+  },
+  "gates": {
+    "pass": true,
+    "namingErrors": 0,
+    "namingWarnings": 22,
+    "dependenciesErrors": 0,
+    "typecheckExitCode": 0
+  },
+  "protection": {
+    "pass": true,
+    "baseline": 285,
+    "unchanged": 274,
+    "productionChanges": 23,
+    "docsNamebookReferenceArchiveUnchanged": true
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "generatedUtc": "2026-10-11T04:54:30.964Z",
+  "typescriptVersion": "5.5.4",
+  "baselineCapturedUtc": "2026-10-11T04:05:40.542Z",
+  "beforeSourceBytes": 47617,
+  "beforeSourceSha256": "d82b84c6d6c5f82d36fcdcd23e53698dea20cb7f0719c666836fa28db44b6475",
+  "afterSourceBytes": 49042,
+  "afterSourceSha256": "bac79e9b627a75b6ff911a4cdf1950a3da5df7ec908439119e092fb45269d0e5",
+  "tailBytes": 1425,
+  "prefixPreserved": true,
+  "typeOnlyAppend": true,
+  "typeOnlyExportCount": 1,
+  "compilerOptions": {
+    "target": "ES2015",
+    "module": "ES2015",
+    "isolatedModules": true,
+    "experimentalDecorators": true,
+    "removeComments": true
+  },
+  "beforeEmittedSha256": "a056a6f909f6eed6ff6bbe844eb55b678871fd3c0c705b1cc1f0ef09bd57e734",
+  "afterEmittedSha256": "a056a6f909f6eed6ff6bbe844eb55b678871fd3c0c705b1cc1f0ef09bd57e734",
+  "emittedBytes": 17548,
+  "runtimeBytesEqual": true,
+  "noSharedRuntimeDependency": true,
+  "diagnostics": [],
+  "pass": true,
+  "scope": "Original source byte prefix plus AST-only type export append; comment-free TypeScript ES2015 emission is byte identical before/after. This transpile comparison proves runtime erasure, not full type checking; the original repository tsc gate separately passed."
+}

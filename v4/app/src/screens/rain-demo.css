@@ -1,0 +1,224 @@
+.rain-demo {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background: #02070b;
+  color: #e8f8ff;
+  font-family: "Segoe UI", "Microsoft YaHei", system-ui, sans-serif;
+  isolation: isolate;
+}
+
+.rain-demo__stage {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 50% 12%, rgba(80, 150, 180, 0.22), transparent 55%),
+    linear-gradient(180deg, #07121a 0%, #020609 72%);
+}
+
+.rain-demo__stage::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: var(--rain-demo-tint);
+  mix-blend-mode: soft-light;
+  opacity: var(--rain-demo-tint-opacity);
+  pointer-events: none;
+}
+
+.rain-demo__horizon {
+  position: absolute;
+  left: -20%;
+  right: -20%;
+  top: 49%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(180, 234, 250, 0.45), transparent);
+  box-shadow: 0 0 28px rgba(140, 230, 255, 0.2);
+}
+
+.rain-demo__grid {
+  position: absolute;
+  inset: 0;
+  opacity: 0.14;
+  background-image:
+    linear-gradient(rgba(150, 220, 240, 0.48) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(150, 220, 240, 0.48) 1px, transparent 1px);
+  background-size: 4rem 4rem;
+  mask-image: linear-gradient(180deg, transparent 0%, #000 28%, #000 72%, transparent 100%);
+}
+
+.rain-demo__logo {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 3;
+  transform: translate(-50%, -50%);
+  color: rgba(224, 250, 255, 0.88);
+  font: 300 clamp(6rem, 18vw, 16rem)/1 "Cascadia Code", "Consolas", monospace;
+  letter-spacing: 0.08em;
+  text-shadow: 0 0 12px rgba(170, 240, 255, 0.16);
+  filter: var(--rain-logo-glow);
+  transition: filter 260ms ease;
+  pointer-events: none;
+}
+
+.rain-demo__logo.game-note-logo--rain {
+  filter: var(--rain-logo-glow);
+}
+
+.rain-demo__copy {
+  position: absolute;
+  left: clamp(1.2rem, 4vw, 3rem);
+  bottom: clamp(1.4rem, 4vw, 3rem);
+  z-index: 4;
+  display: grid;
+  gap: 0.25rem;
+  color: rgba(185, 235, 248, 0.58);
+  font: 500 0.58rem/1.3 "Cascadia Code", "Consolas", monospace;
+  letter-spacing: 0.12em;
+  pointer-events: none;
+}
+
+.rain-demo__copy strong {
+  color: rgba(230, 252, 255, 0.86);
+  font-size: 0.78rem;
+  font-weight: 400;
+}
+
+.rain-demo__copy small {
+  color: rgba(160, 210, 228, 0.4);
+  font-size: 0.5rem;
+}
+
+.rain-demo__back {
+  position: absolute;
+  z-index: 30;
+  top: 1.1rem;
+  left: 1.1rem;
+  padding: 0.4rem 0.7rem;
+  border: 1px solid rgba(172, 230, 245, 0.22);
+  border-radius: 0.28rem;
+  background: rgba(6, 18, 26, 0.55);
+  color: rgba(228, 251, 255, 0.82);
+  font: 500 0.62rem/1 "Cascadia Code", "Consolas", monospace;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.rain-demo__back:hover {
+  border-color: rgba(180, 244, 255, 0.66);
+}
+
+.rain-demo__panel {
+  position: absolute;
+  z-index: 20;
+  top: 1.1rem;
+  right: 1.1rem;
+  width: min(23rem, 36vw);
+  padding: 0.85rem;
+  border: 1px solid rgba(172, 230, 245, 0.24);
+  border-radius: 0.35rem;
+  background: rgba(5, 15, 22, 0.74);
+  box-shadow:
+    0 18px 54px rgba(0, 0, 0, 0.44),
+    inset 0 0 30px rgba(120, 220, 245, 0.035);
+  backdrop-filter: blur(18px) saturate(1.2);
+  -webkit-backdrop-filter: blur(18px) saturate(1.2);
+}
+
+.rain-demo__eyebrow {
+  margin: 0 0 0.3rem;
+  color: rgba(155, 219, 237, 0.56);
+  font: 500 0.5rem/1 "Cascadia Code", "Consolas", monospace;
+  letter-spacing: 0.14em;
+}
+
+.rain-demo__panel h1 {
+  margin: 0;
+  color: rgba(235, 253, 255, 0.9);
+  font-size: 1.05rem;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+}
+
+.rain-demo__hint {
+  margin: 0.4rem 0 0.7rem;
+  color: rgba(160, 210, 226, 0.46);
+  font-size: 0.58rem;
+  line-height: 1.5;
+}
+
+.rain-demo__levels {
+  display: flex;
+  gap: 0.28rem;
+  flex-wrap: wrap;
+}
+
+.rain-demo__levels button {
+  padding: 0.34rem 0.56rem;
+  border: 1px solid rgba(160, 224, 240, 0.2);
+  border-radius: 0.22rem;
+  background: rgba(70, 150, 175, 0.07);
+  color: rgba(210, 245, 252, 0.7);
+  font: 500 0.54rem/1 "Cascadia Code", "Consolas", monospace;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+}
+
+.rain-demo__levels button:hover,
+.rain-demo__levels button.is-active {
+  border-color: rgba(190, 248, 255, 0.74);
+  background: rgba(105, 218, 245, 0.16);
+  color: rgba(240, 255, 255, 0.96);
+}
+
+.rain-demo__status {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin: 0.7rem 0;
+  padding: 0.4rem 0;
+  border-top: 1px solid rgba(160, 224, 240, 0.12);
+  border-bottom: 1px solid rgba(160, 224, 240, 0.12);
+  color: rgba(150, 210, 228, 0.58);
+  font: 500 0.52rem/1 "Cascadia Code", "Consolas", monospace;
+  letter-spacing: 0.1em;
+}
+
+.rain-demo__status strong {
+  color: rgba(220, 252, 255, 0.9);
+  font-weight: 500;
+}
+
+.rain-demo__meta {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.2rem 0.55rem;
+  color: rgba(140, 200, 218, 0.48);
+  font: 500 0.48rem/1.45 "Cascadia Code", "Consolas", monospace;
+  letter-spacing: 0.05em;
+}
+
+.rain-demo__meta b {
+  color: rgba(200, 240, 248, 0.72);
+  font-weight: 400;
+}
+
+@media (max-width: 760px) {
+  .rain-demo__panel {
+    top: auto;
+    right: 0.7rem;
+    bottom: 0.7rem;
+    left: 0.7rem;
+    width: auto;
+  }
+
+  .rain-demo__copy {
+    display: none;
+  }
+}

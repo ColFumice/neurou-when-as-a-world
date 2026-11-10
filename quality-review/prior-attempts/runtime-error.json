@@ -1,0 +1,47 @@
+{
+  "error": "Error: Script failed to execute, this normally means an error was thrown. Check the renderer console for the error.\n    at node:electron/js2c/sandbox_bundle:2:130545\n    at IpcRendererInternal.<anonymous> (node:electron/js2c/sandbox_bundle:2:124813)\n    at IpcRendererInternal.emit (node:electron/js2c/sandbox_bundle:2:45997)\n    at Object.onMessage (node:electron/js2c/sandbox_bundle:2:123872)",
+  "state": null,
+  "logs": [
+    {
+      "level": 2,
+      "message": "%cElectron Security Warning (Insecure Content-Security-Policy) font-weight: bold; This renderer process has either no Content Security\n  Policy set or a policy with \"unsafe-eval\" enabled. This exposes users of\n  this app to unnecessary security risks.\n\nFor more information and help, consult\nhttps://electronjs.org/docs/tutorial/security.\nThis warning will not show up\nonce the app is packaged."
+    },
+    {
+      "level": 0,
+      "message": "Init Base: 0.22802734375 ms"
+    },
+    {
+      "level": 0,
+      "message": "Init Infrastructure: 25.107177734375 ms"
+    },
+    {
+      "level": 0,
+      "message": "Init SubSystem: 1263.220947265625 ms"
+    },
+    {
+      "level": 3,
+      "message": "[object PromiseRejectionEvent]"
+    },
+    {
+      "level": 3,
+      "message": "Uncaught (in promise) Error: Unable to resolve bare specifier '__unresolved_0' from http://localhost:7456/scripting/x/chunks/38/38320ea5776724d81fc754092141371b04f1d183.js (SystemJS Error#8 https://git.io/JvFET#8)"
+    },
+    {
+      "level": 3,
+      "message": "Error: Unable to resolve bare specifier '__unresolved_0' from http://localhost:7456/scripting/x/chunks/38/38320ea5776724d81fc754092141371b04f1d183.js (SystemJS Error#8 https://git.io/JvFET#8)"
+    },
+    {
+      "level": 2,
+      "message": "%cElectron Security Warning (Insecure Content-Security-Policy) font-weight: bold; This renderer process has either no Content Security\n  Policy set or a policy with \"unsafe-eval\" enabled. This exposes users of\n  this app to unnecessary security risks.\n\nFor more information and help, consult\nhttps://electronjs.org/docs/tutorial/security.\nThis warning will not show up\nonce the app is packaged."
+    },
+    {
+      "level": 3,
+      "message": "[object ErrorEvent]"
+    },
+    {
+      "level": 3,
+      "message": "Uncaught ReferenceError: cc is not defined"
+    }
+  ],
+  "checks": []
+}

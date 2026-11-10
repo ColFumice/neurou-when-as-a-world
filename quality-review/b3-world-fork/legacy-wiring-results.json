@@ -1,0 +1,63 @@
+{
+  "category": "ContractTest",
+  "note": "Actual SceneBuilder and WorldFolderBuilder method bodies extracted from TypeScript AST; platform/cc lifecycle is not mocked as production acceptance.",
+  "passed": 11,
+  "failed": 0,
+  "results": [
+    {
+      "name": "actual Scene persistence commits nonzero maker choice and all four extension sections in one leased key",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "actual World completion writes Ledger, actual played snapshot and result atomically before account commit",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "completion quota failure publishes neither complete Ledger nor artifacts nor account success",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "unverified actual media prevents completion before durable write or account success",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "reading and stable no-op of legacy3 does not silently migrate four fields or write storage",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "new gameplay append may explicitly establish extension mechanism on old three-section carrier",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "actual capturePuzzle blocks World play and replay despite valid stored stable checkpoint",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "actual capturePuzzle blocks active reveal and entry gate without resetting them",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "current live boundary source prevents Complete from being reported from older durable state",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "actual directory renderer retains active worlds on tombstone GC quota failure and retries real leased cleanup",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "actual directory renderer still rejects genuine directory loading failure",
+      "category": "ContractTest",
+      "result": "PASS"
+    }
+  ]
+}

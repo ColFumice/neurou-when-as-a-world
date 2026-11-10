@@ -1,0 +1,780 @@
+{
+  "creator": "3.8.8",
+  "url": "http://localhost:7457/",
+  "fixturePolicy": "Startup/navigation use real DOM controls. The full T6 chain has no endpoint fixture. A separately labelled lifecycle check grants the already verified endpoint. Storage rejection and delayed genuine resource callbacks only inject failures at external boundaries. Forwarding method wrappers count calls without changing arguments or results.",
+  "resolutions": [
+    {
+      "resolution": "1920x1080",
+      "evidence": [
+        {
+          "name": "01-login",
+          "file": "1920x1080-01-login.png",
+          "imageSize": {
+            "width": 1920,
+            "height": 1080
+          },
+          "snapshot": {
+            "startup": {
+              "accountId": null,
+              "phase": "Login",
+              "PrologueCompleted": false
+            },
+            "mode": "Login",
+            "worldCount": 0,
+            "frameDrivers": 0,
+            "inputCollectors": 0,
+            "editorBuilders": 0,
+            "cameras": [],
+            "world": null,
+            "editor": null,
+            "entries": [],
+            "details": [],
+            "status": "",
+            "worldLabels": [],
+            "runtimeNode": null,
+            "media": [],
+            "dimensions": {
+              "inner": [
+                1920,
+                1080
+              ],
+              "canvas": [
+                1920,
+                1080
+              ],
+              "css": [
+                1920,
+                1080
+              ],
+              "dpr": 1
+            },
+            "horizontalOverflow": false,
+            "errors": []
+          }
+        },
+        {
+          "name": "02-first-prologue",
+          "file": "1920x1080-02-first-prologue.png",
+          "imageSize": {
+            "width": 1920,
+            "height": 1080
+          },
+          "snapshot": {
+            "startup": {
+              "accountId": "dev-local",
+              "PrologueCompleted": false,
+              "phase": "Prologue"
+            },
+            "mode": "Prologue",
+            "worldCount": 0,
+            "frameDrivers": 0,
+            "inputCollectors": 0,
+            "editorBuilders": 0,
+            "cameras": [],
+            "world": null,
+            "editor": null,
+            "entries": [],
+            "details": [],
+            "status": "",
+            "worldLabels": [],
+            "runtimeNode": null,
+            "media": [],
+            "dimensions": {
+              "inner": [
+                1920,
+                1080
+              ],
+              "canvas": [
+                1920,
+                1080
+              ],
+              "css": [
+                1920,
+                1080
+              ],
+              "dpr": 1
+            },
+            "horizontalOverflow": false,
+            "errors": []
+          }
+        },
+        {
+          "name": "03-world-folder",
+          "file": "1920x1080-03-world-folder.png",
+          "imageSize": {
+            "width": 1920,
+            "height": 1080
+          },
+          "snapshot": {
+            "startup": {
+              "accountId": "dev-local",
+              "PrologueCompleted": true,
+              "phase": "WorldFolder"
+            },
+            "mode": "WorldFolder",
+            "worldCount": 0,
+            "frameDrivers": 0,
+            "inputCollectors": 0,
+            "editorBuilders": 0,
+            "cameras": [],
+            "world": null,
+            "editor": null,
+            "entries": [],
+            "details": [],
+            "status": "",
+            "worldLabels": [
+              {
+                "id": "InitialWorld",
+                "title": "初始世界"
+              }
+            ],
+            "runtimeNode": null,
+            "media": [],
+            "dimensions": {
+              "inner": [
+                1920,
+                1080
+              ],
+              "canvas": [
+                1920,
+                1080
+              ],
+              "css": [
+                1920,
+                1080
+              ],
+              "dpr": 1
+            },
+            "horizontalOverflow": false,
+            "errors": []
+          }
+        },
+        {
+          "name": "03b-other-account-prologue",
+          "file": "1920x1080-03b-other-account-prologue.png",
+          "imageSize": {
+            "width": 1920,
+            "height": 1080
+          },
+          "snapshot": {
+            "startup": {
+              "accountId": "another-account",
+              "PrologueCompleted": false,
+              "phase": "Prologue"
+            },
+            "mode": "Prologue",
+            "worldCount": 0,
+            "frameDrivers": 0,
+            "inputCollectors": 0,
+            "editorBuilders": 0,
+            "cameras": [],
+            "world": null,
+            "editor": null,
+            "entries": [],
+            "details": [],
+            "status": "",
+            "worldLabels": [],
+            "runtimeNode": null,
+            "media": [],
+            "dimensions": {
+              "inner": [
+                1920,
+                1080
+              ],
+              "canvas": [
+                1920,
+                1080
+              ],
+              "css": [
+                1920,
+                1080
+              ],
+              "dpr": 1
+            },
+            "horizontalOverflow": false,
+            "errors": []
+          }
+        },
+        {
+          "name": "03c-storage-failure-remains-prologue",
+          "file": "1920x1080-03c-storage-failure-remains-prologue.png",
+          "imageSize": {
+            "width": 1920,
+            "height": 1080
+          },
+          "snapshot": {
+            "startup": {
+              "accountId": "storage-failure",
+              "PrologueCompleted": false,
+              "phase": "Prologue"
+            },
+            "mode": "Prologue",
+            "worldCount": 0,
+            "frameDrivers": 0,
+            "inputCollectors": 0,
+            "editorBuilders": 0,
+            "cameras": [],
+            "world": null,
+            "editor": null,
+            "entries": [],
+            "details": [],
+            "status": "序章完成状态未能保存：Error: EVIDENCE: storage write denied",
+            "worldLabels": [],
+            "runtimeNode": null,
+            "media": [],
+            "dimensions": {
+              "inner": [
+                1920,
+                1080
+              ],
+              "canvas": [
+                1920,
+                1080
+              ],
+              "css": [
+                1920,
+                1080
+              ],
+              "dpr": 1
+            },
+            "horizontalOverflow": false,
+            "errors": []
+          }
+        }
+      ],
+      "checks": [],
+      "worldFolderFingerprint": [
+        {
+          "text": "世界文件夹",
+          "tag": "H1",
+          "style": {
+            "fontFamily": "system-ui, sans-serif",
+            "fontSize": "26px",
+            "lineHeight": "33.8px",
+            "color": "rgb(238, 238, 238)",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "borderTopColor": "rgb(238, 238, 238)",
+            "paddingTop": "0px",
+            "paddingLeft": "0px"
+          }
+        },
+        {
+          "text": "我的世界",
+          "tag": "H2",
+          "style": {
+            "fontFamily": "system-ui, sans-serif",
+            "fontSize": "18px",
+            "lineHeight": "27px",
+            "color": "rgb(238, 238, 238)",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "borderTopColor": "rgb(238, 238, 238)",
+            "paddingTop": "0px",
+            "paddingLeft": "0px"
+          }
+        },
+        {
+          "text": "初始世界箱庭 · 深痕 · 解谜链 · 引导线演奏",
+          "tag": "BUTTON",
+          "style": {
+            "fontFamily": "system-ui, sans-serif",
+            "fontSize": "16px",
+            "lineHeight": "24px",
+            "color": "rgb(238, 238, 238)",
+            "backgroundColor": "rgb(41, 41, 41)",
+            "borderTopColor": "rgb(102, 102, 102)",
+            "paddingTop": "24px",
+            "paddingLeft": "24px"
+          }
+        },
+        {
+          "text": "创作",
+          "tag": "H2",
+          "style": {
+            "fontFamily": "system-ui, sans-serif",
+            "fontSize": "18px",
+            "lineHeight": "27px",
+            "color": "rgb(238, 238, 238)",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "borderTopColor": "rgb(238, 238, 238)",
+            "paddingTop": "0px",
+            "paddingLeft": "0px"
+          }
+        },
+        {
+          "text": "世界编辑器文件夹打开编辑器目录",
+          "tag": "BUTTON",
+          "style": {
+            "fontFamily": "system-ui, sans-serif",
+            "fontSize": "16px",
+            "lineHeight": "24px",
+            "color": "rgb(238, 238, 238)",
+            "backgroundColor": "rgb(41, 41, 41)",
+            "borderTopColor": "rgb(102, 102, 102)",
+            "paddingTop": "24px",
+            "paddingLeft": "24px"
+          }
+        }
+      ],
+      "sameAccountOnce": {
+        "pass": true,
+        "startup": {
+          "accountId": "dev-local",
+          "PrologueCompleted": true,
+          "phase": "WorldFolder"
+        }
+      },
+      "accountIsolation": {
+        "pass": true,
+        "startup": {
+          "accountId": "another-account",
+          "PrologueCompleted": true,
+          "phase": "WorldFolder"
+        }
+      },
+      "storageFailures": {
+        "pass": true,
+        "fixture": "Forwarded Storage methods reject only account milestone reads/writes.",
+        "readFailure": {
+          "startup": {
+            "accountId": null,
+            "phase": "Login",
+            "PrologueCompleted": false
+          },
+          "mode": "Login",
+          "worldCount": 0,
+          "frameDrivers": 0,
+          "inputCollectors": 0,
+          "editorBuilders": 0,
+          "cameras": [],
+          "world": null,
+          "editor": null,
+          "entries": [],
+          "details": [],
+          "status": "无法登录本地账号：Error: EVIDENCE: storage read denied",
+          "worldLabels": [],
+          "runtimeNode": null,
+          "media": [],
+          "dimensions": {
+            "inner": [
+              1920,
+              1080
+            ],
+            "canvas": [
+              1920,
+              1080
+            ],
+            "css": [
+              1920,
+              1080
+            ],
+            "dpr": 1
+          },
+          "horizontalOverflow": false,
+          "errors": []
+        },
+        "writeFailure": {
+          "startup": {
+            "accountId": "storage-failure",
+            "PrologueCompleted": false,
+            "phase": "Prologue"
+          },
+          "mode": "Prologue",
+          "worldCount": 0,
+          "frameDrivers": 0,
+          "inputCollectors": 0,
+          "editorBuilders": 0,
+          "cameras": [],
+          "world": null,
+          "editor": null,
+          "entries": [],
+          "details": [],
+          "status": "序章完成状态未能保存：Error: EVIDENCE: storage write denied",
+          "worldLabels": [],
+          "runtimeNode": null,
+          "media": [],
+          "dimensions": {
+            "inner": [
+              1920,
+              1080
+            ],
+            "canvas": [
+              1920,
+              1080
+            ],
+            "css": [
+              1920,
+              1080
+            ],
+            "dpr": 1
+          },
+          "horizontalOverflow": false,
+          "errors": []
+        },
+        "successfulRetry": {
+          "accountId": "storage-failure",
+          "PrologueCompleted": true,
+          "phase": "WorldFolder"
+        }
+      }
+    }
+  ],
+  "rendererErrors": [],
+  "runtimeErrors": [],
+  "compilation": {
+    "creator": "3.8.8",
+    "entries": [
+      {
+        "name": "SceneBuilder.ts",
+        "source": "assets/scripts/SceneBuilder.ts",
+        "chunk": "./chunks/8b/8b7eae5ef325431fd5924802b2c0ea4b14e61744.js",
+        "sourceSha256": "4ac85f840b769eac218f9a91cf29958b772a4b5074d68aa04022fa396440d8d8",
+        "chunkSha256": "734d73eb4d63c728ce43c19dcb666d03660771befe40b6e58ed3cc677dc4340d",
+        "servedEqualsCompilerOutput": true,
+        "sourceMapMatchesFinalSource": true
+      },
+      {
+        "name": "WorldFolderBuilder.ts",
+        "source": "assets/scripts/WorldFolderBuilder.ts",
+        "chunk": "./chunks/c8/c89cca6e27a0e04da4c658b697e7bc59e71b096a.js",
+        "sourceSha256": "626dcc370f624b715c8ed3a853b72955af1916dc7d51149cdbf839f9609552be",
+        "chunkSha256": "3372666d2fd5c4debdbfe114e8572c86c54158f9970424e3ca1fbea2afb08f78",
+        "servedEqualsCompilerOutput": true,
+        "sourceMapMatchesFinalSource": true
+      },
+      {
+        "name": "GuidanceEditorBuilder.ts",
+        "source": "assets/scripts/GuidanceEditorBuilder.ts",
+        "chunk": "./chunks/20/20cffb6810c18c411679af610e581e17729dd61e.js",
+        "sourceSha256": "6786f014e5ba5288180156b2bd1f2351e9e82670accdeb1904a91229ee0154f9",
+        "chunkSha256": "0114b4e0f452344082c1c7490eff2ba9d8a1140b959e6adb2f589f000186fce7",
+        "servedEqualsCompilerOutput": true,
+        "sourceMapMatchesFinalSource": true
+      },
+      {
+        "name": "AccountStartupSession.ts",
+        "source": "src/director/AccountStartupSession.ts",
+        "chunk": "./chunks/0d/0d72978f95e3b1351889a247aff58a0cf1c3ada0.js",
+        "sourceSha256": "f376a9d618bbf3a4cdfebd57f615a855825d7149c1f33cae4f5b8ab5941684bb",
+        "chunkSha256": "c5995b3f278d6af2696e6605c3ff0ccf289c8601375ee7f97a57ea25cc283605",
+        "servedEqualsCompilerOutput": true,
+        "sourceMapMatchesFinalSource": true
+      },
+      {
+        "name": "IntentPort.ts",
+        "source": "src/director/IntentPort.ts",
+        "chunk": "./chunks/49/498a6617b96cfa47405016084b673d49f11a12d0.js",
+        "sourceSha256": "f82126332e3caf1dafb640306d2d3d2fe3ad196ed18af1f0313b7a5e9dc095e2",
+        "chunkSha256": "b44b76379295172deb8d47da8b8e22275f02a3ce18e18bb8140721cca0855175",
+        "servedEqualsCompilerOutput": true,
+        "sourceMapMatchesFinalSource": true
+      },
+      {
+        "name": "FolderStartupView.ts",
+        "source": "src/presentation/FolderStartupView.ts",
+        "chunk": "./chunks/71/71feaa4c2021f182b17818d17e6bffb6762728cf.js",
+        "sourceSha256": "50fa7afb3f2be26a78715a8916b8677ee6862dbe66e0dc14cab878ca78083988",
+        "chunkSha256": "c6da0d67553dd96ed5dea9641ac0aa073150718bc1a47a3da2ed646b113e201c",
+        "servedEqualsCompilerOutput": true,
+        "sourceMapMatchesFinalSource": true
+      },
+      {
+        "name": "FolderCatalog.ts",
+        "source": "src/presentation/FolderCatalog.ts",
+        "chunk": "./chunks/8c/8c3cfae05cf8500736a1f9a4214bc6917d8baa93.js",
+        "sourceSha256": "bdb513808e6971c55296941676008f8ff3af0c3d0447117a9337ddacc8d14a6e",
+        "chunkSha256": "50cdd506073a563cf13503e519f902b7e58ed3fb0a80898c272142255ae930fb",
+        "servedEqualsCompilerOutput": true,
+        "sourceMapMatchesFinalSource": true
+      },
+      {
+        "name": "FolderTheme.ts",
+        "source": "src/presentation/FolderTheme.ts",
+        "chunk": "./chunks/e8/e8524a2a8943ce3e852cba788a6bf323d7708e6c.js",
+        "sourceSha256": "3d40411374946e9014a5f558837cfdaf0240c3074e627583061391244015f033",
+        "chunkSha256": "8751f89ea45b0c06db4da03b1ecb491e42c6556a9f942d83004ae7a54964c7c2",
+        "servedEqualsCompilerOutput": true,
+        "sourceMapMatchesFinalSource": true
+      },
+      {
+        "name": "WorldFolderView.ts",
+        "source": "src/presentation/WorldFolderView.ts",
+        "chunk": "./chunks/d2/d2d6e6d95a20b4190042fb0999b7f1bc153afac7.js",
+        "sourceSha256": "8e8d3b6a40e7e0b714ec004ed4177dfc258b40b64f7cf090f5773af4561471bc",
+        "chunkSha256": "7f9bc6648b2ae644478fa8b96ccd089c837c9dc8cb689ba2a396c7d0a8cc8806",
+        "servedEqualsCompilerOutput": true,
+        "sourceMapMatchesFinalSource": true
+      },
+      {
+        "name": "EditorFolderView.ts",
+        "source": "src/presentation/EditorFolderView.ts",
+        "chunk": "./chunks/03/0338eae4705f4ce378870ad1b40016e775fd81af.js",
+        "sourceSha256": "68a69bdd8259f9444a99ad788dc4b181193ccbde37e132e9aceee932024127e2",
+        "chunkSha256": "5e915dfcb24240eb9c39c590ab430475acabae044cb2d87e8d5bfd25af24d06d",
+        "servedEqualsCompilerOutput": true,
+        "sourceMapMatchesFinalSource": true
+      },
+      {
+        "name": "GuidanceEditorView.ts",
+        "source": "src/presentation/GuidanceEditorView.ts",
+        "chunk": "./chunks/1d/1d45d95d307a8efeb57a54ab2ee6a665d72c20d6.js",
+        "sourceSha256": "96d85356ec9951b2a1376816c792ff8db96d5d9db1486a400de2b2a1b3806ac6",
+        "chunkSha256": "da682deff93d8029c8102bc24a7c1abbeb781ff5b11006888dfed83b6008d387",
+        "servedEqualsCompilerOutput": true,
+        "sourceMapMatchesFinalSource": true
+      },
+      {
+        "name": "GuidanceEditorSession.ts",
+        "source": "src/editor/GuidanceEditorSession.ts",
+        "chunk": "./chunks/6b/6b0e686b2149de9b44817212eb72309d605056b8.js",
+        "sourceSha256": "7be0662fcf921b04908ad4657b1ad066e35387fe7880d6acd9a1de9ec7e4eb8b",
+        "chunkSha256": "e6523e5d73310b21b3da6ff5c4b2faf76db43e2aded8ab64fcedccfef3a6167e",
+        "servedEqualsCompilerOutput": true,
+        "sourceMapMatchesFinalSource": true
+      },
+      {
+        "name": "GuidanceChart.ts",
+        "source": "src/chart/GuidanceChart.ts",
+        "chunk": "./chunks/2a/2afd45e8bed9e5259eefe439197fb98067934fc2.js",
+        "sourceSha256": "a4e46b00d782f393b736ed6a71282caf24961df40feb503cbadce734b0d71faa",
+        "chunkSha256": "4ac03fb9199f63c49c8b1832245c111d59fd24baa9cd4a6b5369c4700375068f",
+        "servedEqualsCompilerOutput": true,
+        "sourceMapMatchesFinalSource": true
+      },
+      {
+        "name": "GuidanceLineRuntime.ts",
+        "source": "src/chart/GuidanceLineRuntime.ts",
+        "chunk": "./chunks/63/63f427a813d2ae759b12cf6d47faef24c479d84a.js",
+        "sourceSha256": "2560babe86a45d207cb7ed6f2a66713b50fc43a5c2e8a9764d5fc22d1b451204",
+        "chunkSha256": "7e1648d1eae3b9d0f28f30446fb2f5a9346f8c8836eaa56f0513eabe9ad669d9",
+        "servedEqualsCompilerOutput": true,
+        "sourceMapMatchesFinalSource": true
+      },
+      {
+        "name": "GuidanceChartRuntime.ts",
+        "source": "src/chart/GuidanceChartRuntime.ts",
+        "chunk": "./chunks/37/37b7d6cb2f4d1a944155651f5fc42b81c8f2d71f.js",
+        "sourceSha256": "b9b9f293760711aa30dc997d61ccf156c63ba7dbfcc2c7a1b71cf078781929f8",
+        "chunkSha256": "0ca931825efb4e59398c7e131d8b75966131b381bd01740192400a6a0faa8e78",
+        "servedEqualsCompilerOutput": true,
+        "sourceMapMatchesFinalSource": true
+      },
+      {
+        "name": "ChartPremiere.ts",
+        "source": "src/chart/ChartPremiere.ts",
+        "chunk": "./chunks/f6/f60b6933309c58f221e1afef92454f4692cbf7a6.js",
+        "sourceSha256": "50617d366ae7c5b8dd6b402389f1ef9e43822bf24e03f0687476e1558853eb6d",
+        "chunkSha256": "2ecf6adbf09c1f6fe227be17ce790a7c8ecf0cbd978e31dd035ff172a519b532",
+        "servedEqualsCompilerOutput": true,
+        "sourceMapMatchesFinalSource": true
+      },
+      {
+        "name": "InputCollector.ts",
+        "source": "src/presentation/InputCollector.ts",
+        "chunk": "./chunks/80/80b5318e658fb283a27d22d0af4d9a8d28eaaca0.js",
+        "sourceSha256": "1cf85eb3e8de3621bc199a3e6e96cba92a1309fb6172ce1221ef692281b67420",
+        "chunkSha256": "6816e7d6fbfb17545953e5a78b235f0e2cecc916247b3709b5d851388b1bae58",
+        "servedEqualsCompilerOutput": true,
+        "sourceMapMatchesFinalSource": true
+      },
+      {
+        "name": "FrameDriver.ts",
+        "source": "src/presentation/FrameDriver.ts",
+        "chunk": "./chunks/fa/faf4ead6ab2aff43422b70a8edd6e2755751b585.js",
+        "sourceSha256": "e70232f3ef6f803bba02a6c2af1d40107aea95400dfd65e9845636a836faf3a6",
+        "chunkSha256": "c62fa482dcd849e6eaaefad09eb99646ef31988e959169fc135ed90c0a3b4822",
+        "servedEqualsCompilerOutput": true,
+        "sourceMapMatchesFinalSource": true
+      },
+      {
+        "name": "AudioOutputClock.ts",
+        "source": "src/presentation/AudioOutputClock.ts",
+        "chunk": "./chunks/b3/b3dde3c9abfdfa294db7fe9612812dec4e076cf6.js",
+        "sourceSha256": "16ea1319d3380bb82940ca85dfb06ede1f259bd509589f7b9b35a395c52c9414",
+        "chunkSha256": "2303e135b8ac843be0c1ad651483281707a89b63ca11d2d665370bb06d2d5418",
+        "servedEqualsCompilerOutput": true,
+        "sourceMapMatchesFinalSource": true
+      }
+    ],
+    "expectedInitialChart": {
+      "schemaVersion": 2,
+      "chartId": "guidance-c-1",
+      "tier": "Regular",
+      "layoutVersion": "pad-layout-2",
+      "aspectRatio": 1.7777777777777777,
+      "lines": [
+        {
+          "id": "line-c-a",
+          "head": {
+            "id": "head-c-a",
+            "spawnTimeMs": 2000
+          },
+          "path": {
+            "kind": "Polyline",
+            "points": [
+              {
+                "u": 0.18,
+                "v": 0.5
+              },
+              {
+                "u": 0.34,
+                "v": 0.5
+              },
+              {
+                "u": 0.5,
+                "v": 0.7
+              },
+              {
+                "u": 0.82,
+                "v": 0.7
+              }
+            ]
+          },
+          "speed": 0.17777777777777778,
+          "nodes": [
+            {
+              "id": "line-c-a-conflict",
+              "kind": "Tap",
+              "pathDistance": 0.07
+            },
+            {
+              "id": "drag-c-a-1",
+              "kind": "Drag",
+              "pathDistance": 0.14222222222222225,
+              "keyId": "KeyS"
+            },
+            {
+              "id": "hold-c-a-1",
+              "kind": "Hold",
+              "pathDistance": 0.2844444444444445,
+              "endPathDistance": 0.8988303110056648,
+              "keyId": "KeyF"
+            },
+            {
+              "id": "tap-c-a-corner",
+              "kind": "Tap",
+              "pathDistance": 0.6321636443389982
+            },
+            {
+              "id": "tap-c-a-end",
+              "kind": "Tap",
+              "pathDistance": 1.0943858665612205
+            }
+          ]
+        },
+        {
+          "id": "line-c-b",
+          "head": {
+            "id": "head-c-b",
+            "spawnTimeMs": 2020
+          },
+          "path": {
+            "kind": "Polyline",
+            "points": [
+              {
+                "u": 0.18,
+                "v": 0.5
+              },
+              {
+                "u": 0.34,
+                "v": 0.5
+              },
+              {
+                "u": 0.5,
+                "v": 0.30000000000000004
+              },
+              {
+                "u": 0.82,
+                "v": 0.8
+              }
+            ]
+          },
+          "speed": 0.17777777777777778,
+          "nodes": [
+            {
+              "id": "line-c-b-conflict",
+              "kind": "Tap",
+              "pathDistance": 0.07
+            },
+            {
+              "id": "drag-c-b-1",
+              "kind": "Drag",
+              "pathDistance": 0.14222222222222225,
+              "keyId": "KeyS"
+            },
+            {
+              "id": "hold-c-b-1",
+              "kind": "Hold",
+              "pathDistance": 0.2844444444444445,
+              "endPathDistance": 0.8988303110056648,
+              "keyId": "KeyF"
+            },
+            {
+              "id": "tap-c-b-corner",
+              "kind": "Tap",
+              "pathDistance": 0.6321636443389982
+            },
+            {
+              "id": "tap-c-b-end",
+              "kind": "Tap",
+              "pathDistance": 1.3895503143439796
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "pass": false,
+  "failure": {
+    "message": "evaluate is not defined",
+    "stack": "Error: evaluate is not defined",
+    "snapshot": {
+      "startup": {
+        "accountId": "dev-local",
+        "PrologueCompleted": true,
+        "phase": "WorldFolder"
+      },
+      "mode": "InitialWorld",
+      "worldCount": 1,
+      "frameDrivers": 1,
+      "inputCollectors": 1,
+      "editorBuilders": 0,
+      "cameras": [],
+      "world": {
+        "position": {
+          "lateral": 0,
+          "depth": 0,
+          "vertical": 0
+        },
+        "ledger": [],
+        "puzzle": "Step1",
+        "entered": false,
+        "active": true,
+        "counts": null
+      },
+      "editor": null,
+      "entries": [],
+      "details": [],
+      "status": "",
+      "worldLabels": [],
+      "runtimeNode": "InitialWorld",
+      "media": [],
+      "dimensions": {
+        "inner": [
+          1920,
+          1080
+        ],
+        "canvas": [
+          1920,
+          1080
+        ],
+        "css": [
+          1920,
+          1080
+        ],
+        "dpr": 1
+      },
+      "horizontalOverflow": false,
+      "errors": []
+    }
+  }
+}

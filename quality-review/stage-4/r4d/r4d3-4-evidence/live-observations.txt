@@ -1,0 +1,8 @@
+R4d live acceptance observations (Tauri debug + WebView2 CDP)
+1. Midway exit: project/worlds absent; ledger files=0.
+2. Complete run (all Miss, 6/6 decided): result CHART COMPLETE; ledger HUD = 首演已写入账本; ledger.ndjson lines=1; head eventCount=1.
+3. Re-enter w1: START overlay and HUD = 首演已记录.
+4. Replay complete: HUD = 首演已记录; ledger/head SHA256 unchanged; lines=1.
+5. Corrupt head: START overlay/HUD = 账本只读：ledger checksum mismatch; complete run still CHART COMPLETE; ledger SHA256 unchanged; no append.
+6. Fallback chart (editor.json temporarily removed): complete run HUD = fallback 谱面不写首演; no worlds/w1 ledger files.
+7. Demo project restored after evidence capture; worlds/w1 removed.

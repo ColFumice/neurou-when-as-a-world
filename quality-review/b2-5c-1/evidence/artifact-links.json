@@ -1,0 +1,364 @@
+{
+  "generatedUtc": "2026-10-11T05:04:37.546Z",
+  "markdownFileCount": 11,
+  "localLinkCount": 44,
+  "pass": true,
+  "missingLinks": [],
+  "links": [
+    {
+      "source": "quality-review/b2-5c-1/contracts-and-acceptance.md",
+      "target": "evidence/acceptance-index.md",
+      "resolved": "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-1\\evidence\\acceptance-index.md",
+      "exists": true,
+      "sourceLine": 5
+    },
+    {
+      "source": "quality-review/b2-5c-1/contracts-and-acceptance.md",
+      "target": "evidence/acceptance-index.json",
+      "resolved": "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-1\\evidence\\acceptance-index.json",
+      "exists": true,
+      "sourceLine": 5
+    },
+    {
+      "source": "quality-review/b2-5c-1/delivery-report.md",
+      "target": "verdicts-411-425.md",
+      "resolved": "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-1\\verdicts-411-425.md",
+      "exists": true,
+      "sourceLine": 9
+    },
+    {
+      "source": "quality-review/b2-5c-1/delivery-report.md",
+      "target": "namebook-v3.18-appendix-proposal.md",
+      "resolved": "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-1\\namebook-v3.18-appendix-proposal.md",
+      "exists": true,
+      "sourceLine": 10
+    },
+    {
+      "source": "quality-review/b2-5c-1/delivery-report.md",
+      "target": "evidence/changed-files.json",
+      "resolved": "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-1\\evidence\\changed-files.json",
+      "exists": true,
+      "sourceLine": 11
+    },
+    {
+      "source": "quality-review/b2-5c-1/delivery-report.md",
+      "target": "evidence/code.diff",
+      "resolved": "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-1\\evidence\\code.diff",
+      "exists": true,
+      "sourceLine": 11
+    },
+    {
+      "source": "quality-review/b2-5c-1/delivery-report.md",
+      "target": "evidence/evidence-summary.md",
+      "resolved": "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-1\\evidence\\evidence-summary.md",
+      "exists": true,
+      "sourceLine": 12
+    },
+    {
+      "source": "quality-review/b2-5c-1/delivery-report.md",
+      "target": "evidence/final-gates/results.json",
+      "resolved": "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-1\\evidence\\final-gates\\results.json",
+      "exists": true,
+      "sourceLine": 12
+    },
+    {
+      "source": "quality-review/b2-5c-1/delivery-report.md",
+      "target": "evidence/test-runs/final-verified/results.json",
+      "resolved": "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-1\\evidence\\test-runs\\final-verified\\results.json",
+      "exists": true,
+      "sourceLine": 13
+    },
+    {
+      "source": "quality-review/b2-5c-1/delivery-report.md",
+      "target": "evidence/test-runs/final-verified/contract-tests.log",
+      "resolved": "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-1\\evidence\\test-runs\\final-verified\\contract-tests.log",
+      "exists": true,
+      "sourceLine": 13
+    },
+    {
+      "source": "quality-review/b2-5c-1/delivery-report.md",
+      "target": "evidence/test-runs/final-verified/junit.xml",
+      "resolved": "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-1\\evidence\\test-runs\\final-verified\\junit.xml",
+      "exists": true,
+      "sourceLine": 13
+    },
+    {
+      "source": "quality-review/b2-5c-1/delivery-report.md",
+      "target": "contracts-and-acceptance.md",
+      "resolved": "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-1\\contracts-and-acceptance.md",
+      "exists": true,
+      "sourceLine": 14
+    },
+    {
+      "source": "quality-review/b2-5c-1/delivery-report.md",
+      "target": "evidence/acceptance-index.md",
+      "resolved": "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-1\\evidence\\acceptance-index.md",
+      "exists": true,
+      "sourceLine": 14
+    },
+    {
+      "source": "quality-review/b2-5c-1/delivery-report.md",
+      "target": "evidence/new-names.json",
+      "resolved": "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-1\\evidence\\new-names.json",
+      "exists": true,
+      "sourceLine": 15
+    },
+    {
+      "source": "quality-review/b2-5c-1/delivery-report.md",
+      "target": "stages-and-open-items.md",
+      "resolved": "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-1\\stages-and-open-items.md",
+      "exists": true,
+      "sourceLine": 16
+    },
+    {
+      "source": "quality-review/b2-5c-1/delivery-report.md",
+      "target": "independent-review.md",
+      "resolved": "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-1\\independent-review.md",
+      "exists": true,
+      "sourceLine": 16
+    },
+    {
+      "source": "quality-review/b2-5c-1/delivery-report.md",
+      "target": "evidence/intent-type-erasure.json",
+      "resolved": "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-1\\evidence\\intent-type-erasure.json",
+      "exists": true,
+      "sourceLine": 41
+    },
+    {
+      "source": "quality-review/b2-5c-1/delivery-report.md",
+      "target": "evidence/contract-test-history.md",
+      "resolved": "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-1\\evidence\\contract-test-history.md",
+      "exists": true,
+      "sourceLine": 58
+    },
+    {
+      "source": "quality-review/b2-5c-1/delivery-report.md",
+      "target": "evidence/source-attribution-closure.md",
+      "resolved": "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-1\\evidence\\source-attribution-closure.md",
+      "exists": true,
+      "sourceLine": 66
+    },
+    {
+      "source": "quality-review/b2-5c-1/delivery-report.md",
+      "target": "evidence/source-attribution-closure.json",
+      "resolved": "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-1\\evidence\\source-attribution-closure.json",
+      "exists": true,
+      "sourceLine": 66
+    },
+    {
+      "source": "quality-review/b2-5c-1/delivery-report.md",
+      "target": "evidence/protected-first-failure.json",
+      "resolved": "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-1\\evidence\\protected-first-failure.json",
+      "exists": true,
+      "sourceLine": 68
+    },
+    {
+      "source": "quality-review/b2-5c-1/delivery-report.md",
+      "target": "evidence/protected-comparison.json",
+      "resolved": "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-1\\evidence\\protected-comparison.json",
+      "exists": true,
+      "sourceLine": 68
+    },
+    {
+      "source": "quality-review/b2-5c-1/delivery-report.md",
+      "target": "evidence/protected-closure-recheck.json",
+      "resolved": "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-1\\evidence\\protected-closure-recheck.json",
+      "exists": true,
+      "sourceLine": 68
+    },
+    {
+      "source": "quality-review/b2-5c-1/evidence/contract-test-history.md",
+      "target": "test-runs/final-verified/results.json",
+      "resolved": "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-1\\evidence\\test-runs\\final-verified\\results.json",
+      "exists": true,
+      "sourceLine": 3
+    },
+    {
+      "source": "quality-review/b2-5c-1/evidence/contract-test-history.md",
+      "target": "initial-test-failure-note.md",
+      "resolved": "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-1\\evidence\\initial-test-failure-note.md",
+      "exists": true,
+      "sourceLine": 18
+    },
+    {
+      "source": "quality-review/b2-5c-1/evidence/contract-test-history.md",
+      "target": "source-attribution-closure.md",
+      "resolved": "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-1\\evidence\\source-attribution-closure.md",
+      "exists": true,
+      "sourceLine": 20
+    },
+    {
+      "source": "quality-review/b2-5c-1/evidence/evidence-summary.md",
+      "target": "baseline-gates/results.json",
+      "resolved": "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-1\\evidence\\baseline-gates\\results.json",
+      "exists": true,
+      "sourceLine": 9
+    },
+    {
+      "source": "quality-review/b2-5c-1/evidence/evidence-summary.md",
+      "target": "final-gates/results.json",
+      "resolved": "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-1\\evidence\\final-gates\\results.json",
+      "exists": true,
+      "sourceLine": 9
+    },
+    {
+      "source": "quality-review/b2-5c-1/evidence/evidence-summary.md",
+      "target": "evidence-summary.json",
+      "resolved": "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-1\\evidence\\evidence-summary.json",
+      "exists": true,
+      "sourceLine": 9
+    },
+    {
+      "source": "quality-review/b2-5c-1/evidence/evidence-summary.md",
+      "target": "source-attribution-closure.md",
+      "resolved": "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-1\\evidence\\source-attribution-closure.md",
+      "exists": true,
+      "sourceLine": 13
+    },
+    {
+      "source": "quality-review/b2-5c-1/evidence/evidence-summary.md",
+      "target": "protected-baseline.json",
+      "resolved": "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-1\\evidence\\protected-baseline.json",
+      "exists": true,
+      "sourceLine": 17
+    },
+    {
+      "source": "quality-review/b2-5c-1/evidence/evidence-summary.md",
+      "target": "protected-comparison.json",
+      "resolved": "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-1\\evidence\\protected-comparison.json",
+      "exists": true,
+      "sourceLine": 17
+    },
+    {
+      "source": "quality-review/b2-5c-1/evidence/evidence-summary.md",
+      "target": "changed-files.json",
+      "resolved": "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-1\\evidence\\changed-files.json",
+      "exists": true,
+      "sourceLine": 17
+    },
+    {
+      "source": "quality-review/b2-5c-1/evidence/evidence-summary.md",
+      "target": "code.diff",
+      "resolved": "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-1\\evidence\\code.diff",
+      "exists": true,
+      "sourceLine": 17
+    },
+    {
+      "source": "quality-review/b2-5c-1/evidence/evidence-summary.md",
+      "target": "test-runs/final-verified/results.json",
+      "resolved": "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-1\\evidence\\test-runs\\final-verified\\results.json",
+      "exists": true,
+      "sourceLine": 19
+    },
+    {
+      "source": "quality-review/b2-5c-1/evidence/evidence-summary.md",
+      "target": "intent-type-erasure.json",
+      "resolved": "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-1\\evidence\\intent-type-erasure.json",
+      "exists": true,
+      "sourceLine": 21
+    },
+    {
+      "source": "quality-review/b2-5c-1/evidence/evidence-summary.md",
+      "target": "new-names.json",
+      "resolved": "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-1\\evidence\\new-names.json",
+      "exists": true,
+      "sourceLine": 25
+    },
+    {
+      "source": "quality-review/b2-5c-1/evidence/evidence-summary.md",
+      "target": "../namebook-v3.18-appendix-proposal.md",
+      "resolved": "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-1\\namebook-v3.18-appendix-proposal.md",
+      "exists": true,
+      "sourceLine": 25
+    },
+    {
+      "source": "quality-review/b2-5c-1/evidence/evidence-summary.md",
+      "target": "acceptance-index.md",
+      "resolved": "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-1\\evidence\\acceptance-index.md",
+      "exists": true,
+      "sourceLine": 27
+    },
+    {
+      "source": "quality-review/b2-5c-1/evidence/evidence-summary.md",
+      "target": "acceptance-index.json",
+      "resolved": "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-1\\evidence\\acceptance-index.json",
+      "exists": true,
+      "sourceLine": 27
+    },
+    {
+      "source": "quality-review/b2-5c-1/evidence/evidence-summary.md",
+      "target": "artifact-links.json",
+      "resolved": "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-1\\evidence\\artifact-links.json",
+      "exists": true,
+      "sourceLine": 27
+    },
+    {
+      "source": "quality-review/b2-5c-1/evidence/source-attribution-closure.md",
+      "target": "protected-first-failure.json",
+      "resolved": "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-1\\evidence\\protected-first-failure.json",
+      "exists": true,
+      "sourceLine": 14
+    },
+    {
+      "source": "quality-review/b2-5c-1/evidence/source-attribution-closure.md",
+      "target": "protected-comparison.json",
+      "resolved": "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-1\\evidence\\protected-comparison.json",
+      "exists": true,
+      "sourceLine": 14
+    },
+    {
+      "source": "quality-review/b2-5c-1/evidence/source-attribution-closure.md",
+      "target": "protected-closure-recheck.json",
+      "resolved": "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-1\\evidence\\protected-closure-recheck.json",
+      "exists": true,
+      "sourceLine": 14
+    }
+  ],
+  "markdownFiles": [
+    {
+      "path": "quality-review/b2-5c-1/contracts-and-acceptance.md",
+      "sha256": "da30fbbc66136c67d513f9d3a5ede8e089b1245e1dd2f8f03c44fc859b0a0bb6"
+    },
+    {
+      "path": "quality-review/b2-5c-1/delivery-report.md",
+      "sha256": "33806f1c31270f7f428b6e11c5bc9f51e0a662cf49d89e40fc7fb4383faa2871"
+    },
+    {
+      "path": "quality-review/b2-5c-1/evidence/acceptance-index.md",
+      "sha256": "743ba7d2afbfcfc775b2fa80369c408d0edf797e44e0d2d8a6cd33a0795895a9"
+    },
+    {
+      "path": "quality-review/b2-5c-1/evidence/contract-test-history.md",
+      "sha256": "6c3a27c0a59d75bc3d7fc9fb48784802474b7f4741786a96556b17f990747c22"
+    },
+    {
+      "path": "quality-review/b2-5c-1/evidence/evidence-summary.md",
+      "sha256": "1ee3fc1e596b2d79e24056b674b626135e7029b4dd28c0118adc6e1990cf67d0"
+    },
+    {
+      "path": "quality-review/b2-5c-1/evidence/initial-test-failure-note.md",
+      "sha256": "2400c10a717895145efc2dab33b18a2f20d482a6fc66d0ba4b77aa220894b25f"
+    },
+    {
+      "path": "quality-review/b2-5c-1/evidence/source-attribution-closure.md",
+      "sha256": "f0405f9d26b187a06f5217c49b5574133b45743d1201a9329e603706c883e6a6"
+    },
+    {
+      "path": "quality-review/b2-5c-1/independent-review.md",
+      "sha256": "174549aa58fc80d8546adbf7dd5ac41c71ac167f4114f730e9ab33e31b52e820"
+    },
+    {
+      "path": "quality-review/b2-5c-1/namebook-v3.18-appendix-proposal.md",
+      "sha256": "15878e4ac15709facc6e29ff63267294079508307469e2ec4967a6c6d562f071"
+    },
+    {
+      "path": "quality-review/b2-5c-1/stages-and-open-items.md",
+      "sha256": "c12e0e0f6591a4404a548173df3f03bf0ffc943d411be18821509533f83d25f4"
+    },
+    {
+      "path": "quality-review/b2-5c-1/verdicts-411-425.md",
+      "sha256": "d08263830cdc61c816880bfddd14ed3b59dc5c9726542b9e46baebc73f643bad"
+    }
+  ],
+  "scope": "Local Markdown link targets in the new c-1 delivery only; fragments and network/application URLs are not verified. Target contents are not read. No production files or old docs are modified."
+}

@@ -1,0 +1,122 @@
+{
+  "generatedAt": "2026-10-10T09:27:19.404Z",
+  "category": "ContractTest",
+  "scope": "Actual new view and director classes in isolated Chromium. The true milestone is a declared adapter fixture; this is not production clear/unlock or Cocos gameplay evidence. No screenshots are produced.",
+  "sourceHashes": {
+    "src/presentation/WorldFolderView.ts": "6d728d3fc775065b46921864f013d9575c964004f60918508f352d2f3e4d9a7d",
+    "src/presentation/FolderTheme.ts": "3d40411374946e9014a5f558837cfdaf0240c3074e627583061391244015f033",
+    "src/director/WorldFolderSession.ts": "59777e43dccd7ad6d2d0767b28daf83e525a176ae391b1f60a9500d739ea0420",
+    "src/presentation/FolderCatalog.ts": "930c65d034781192f8d7570ac6d4660ae348a5858469e1e15a4c02a5a41d101a",
+    "src/director/AccountMilestone.ts": "ea937e6676b97cafd8a726d051db54d16077a9fe82438cce8374a4635d1b846e",
+    "src/presentation/AccountMilestoneStorage.ts": "ec36e1490443d5ca59c983119e56f5273a0d62e8522f9171fb21be7b05c0ac19",
+    "src/director/WorldStateSession.ts": "dee799181f9216ce6244c0087ba5dba830ea481cd8140591ec0f7ad099ecfecb"
+  },
+  "passed": 8,
+  "failed": 0,
+  "checks": [
+    {
+      "name": "D01 absent projection displays permission not acquired without persisting defaults",
+      "category": "ContractTest",
+      "pass": true,
+      "evidence": {
+        "FirstWorldCleared": false,
+        "CopyPermission": false,
+        "writes": 0,
+        "worldForkAvailability": "NotImplemented"
+      }
+    },
+    {
+      "name": "D02 CONTRACT true adapter input derives acquired permission while fork remains unimplemented",
+      "category": "ContractTest",
+      "pass": true,
+      "evidence": {
+        "fixture": "ContractTest only; no actual world clear",
+        "text": "复制权限：已取得",
+        "CopyPermissionPersisted": false,
+        "startupPreserved": true
+      }
+    },
+    {
+      "name": "D03 failed reader clears stale true attributes and reports error, never false fallback",
+      "category": "ContractTest",
+      "pass": true,
+      "evidence": {
+        "explicitError": true,
+        "staleTrueRemoved": true,
+        "persistedFactPreserved": true
+      }
+    },
+    {
+      "name": "D04 actual capture renders all seven missing sections and no fabricated payload",
+      "category": "ContractTest",
+      "pass": true,
+      "evidence": {
+        "sections": [
+          "Ledger",
+          "PuzzleProgress",
+          "RecallCount",
+          "FormatTime",
+          "WorldLink",
+          "ChartSnapshot",
+          "ChartScore",
+          "RuntimeBoundary"
+        ],
+        "capturedParts": {},
+        "candidate": {
+          "schemaVersion": 1,
+          "accountId": "contract-only-account",
+          "worldId": "InitialWorld",
+          "worldKind": "Unavailable",
+          "shoreOrigin": "Unavailable",
+          "revision": "Unavailable",
+          "capturedAt": 200
+        },
+        "writes": 0
+      }
+    },
+    {
+      "name": "D05 header-shaped restore input is explicitly rejected and causes no writes",
+      "category": "ContractTest",
+      "pass": true,
+      "evidence": {
+        "kind": "Rejected",
+        "writes": 0,
+        "restoreRequests": [
+          "InitialWorld"
+        ]
+      }
+    },
+    {
+      "name": "D06 fork still refuses with acquired contract permission; original open route retained",
+      "category": "ContractTest",
+      "pass": true,
+      "evidence": {
+        "forkExecuted": false,
+        "metadataUnchanged": true,
+        "opened": [
+          "InitialWorld"
+        ]
+      }
+    },
+    {
+      "name": "D07 directory tombstone preserves account projection and clears stale diagnostic panel",
+      "category": "ContractTest",
+      "pass": true,
+      "evidence": {
+        "tombstone": true,
+        "accountFactPreserved": true,
+        "diagnosticHidden": true
+      }
+    },
+    {
+      "name": "D08 failure during new capture removes old completeness marker and displays explicit error",
+      "category": "ContractTest",
+      "pass": true,
+      "evidence": {
+        "staleKindRemoved": true,
+        "emptyPreviousDiagnostics": true,
+        "explicitError": true
+      }
+    }
+  ]
+}

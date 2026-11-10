@@ -1,0 +1,1592 @@
+diff --git a/constants/index.ts b/constants/index.ts
+index a7312d5..43b649a 100644
+--- a/constants/index.ts
++++ b/constants/index.ts
+@@ -231,6 +231,9 @@ export const PERFECT_WINDOW_MS = 50;
+  */
+ export const GOOD_WINDOW_MS = 120;
+ 
++/** Head 独立启动窗口，含两个端点；2026-10-09 用户调整为 1000ms。 */
++export const HEAD_WINDOW_MS = 1000;
++
+ /**
+  * 音画同步容差（毫秒）：T0 技术验证合格线口径。
+  * 名库 v1.8 硬约束：SYNC_TOLERANCE_MS 必须严格小于
+diff --git a/src/chart/KeyboardPadLayout.ts b/src/chart/KeyboardPadLayout.ts
+index 8ed7028..b948a5d 100644
+--- a/src/chart/KeyboardPadLayout.ts
++++ b/src/chart/KeyboardPadLayout.ts
+@@ -166,14 +166,12 @@ function buildRow(
+ ): KeyPadSlot[] {
+   const span = RIGHT_EDGE - leftU;
+   const slotWidth = span / keys.length;
+-  return keys.map((keyId, index) => ({
+-    keyId,
+-    padKind: kindOf(keyId),
+-    u: leftU + index * slotWidth,
+-    v: vBottom,
+-    width: slotWidth,
+-    height: ROW_HEIGHT,
+-  }));
++  return keys.map((keyId, index) => {
++    const u = leftU + index * slotWidth;
++    const rightU = index + 1 === keys.length ? RIGHT_EDGE : leftU + (index + 1) * slotWidth;
++    return { keyId, padKind: kindOf(keyId), u, v: vBottom,
++      width: rightU - u, height: ROW_HEIGHT };
++  });
+ }
+ 
+ /** 校验归一化坐标有限且落在 [0,1]，槽位尺寸为正。 */
+@@ -228,3 +226,20 @@ export function getSlot(
+ ): KeyPadSlot | undefined {
+   return layout.slots.find((slot) => slot.keyId === keyId);
+ }
++
++/** 半开网格归属；间隙、布局外及 Space 区域无判定键。零最近键兜底。 */
++export function resolveGridKeyAt(
++  layout: KeyboardPadLayout,
++  position: { readonly u: number; readonly v: number },
++): Exclude<ChartKeyId, 'Space'> | null {
++  if (!Number.isFinite(position.u) || !Number.isFinite(position.v) ||
++      position.u < 0 || position.u >= 1 || position.v < 0 || position.v >= 1) {
++    return null;
++  }
++  const matches = layout.slots.filter(slot =>
++    position.u >= slot.u && position.u < slot.u + slot.width &&
++    position.v >= slot.v && position.v < slot.v + slot.height);
++  // 重叠布局也不能凭数组顺序挑键。共享边界遵循 [左,右)×[下,上)。
++  if (matches.length !== 1 || matches[0].keyId === 'Space') { return null; }
++  return matches[0].keyId;
++}
+diff --git a/src/chart/ChartPremiere.ts b/src/chart/ChartPremiere.ts
+index 4691951..f5a1be9 100644
+--- a/src/chart/ChartPremiere.ts
++++ b/src/chart/ChartPremiere.ts
+@@ -22,6 +22,10 @@ import { getSlot } from './KeyboardPadLayout';
+ import type { Note, ChartData } from './Note';
+ import type { Strike } from './Strike';
+ import type { ChartPlaybackState } from './ChartPlaybackState';
++import { parseGuidanceChart } from './GuidanceChart';
++import type { GuidanceChart } from './GuidanceChart';
++import { GuidanceLineRuntime } from './GuidanceLineRuntime';
++import type { GuidanceLineSnapshot, GuidanceJudgement } from './GuidanceLineRuntime';
+ import {
+   ChartScore,
+   judgeTimeWindow,
+@@ -103,6 +107,8 @@ export interface ChartPremiereReader {
+     readonly items: readonly ChartJudgeFeedback[];
+   };
+   getResult(): ChartPlaybackResult | null;
++  /** 引导线只读逻辑快照；兼容旧 ChartData 时返回 null。 */
++  getGuidanceSnapshot(): GuidanceLineSnapshot | null;
+ }
+ 
+ /**
+@@ -113,6 +119,7 @@ export class ChartPremiere implements ChartPremiereReader {
+   private readonly tier: ChartTier;
+   private readonly layout: KeyboardPadLayout;
+   private readonly noteStatuses: NoteStatus[] = [];
++  private readonly guidance: GuidanceLineRuntime | null;
+ 
+   private state: ChartPlaybackState = 'Ready';
+   private score = new ChartScore();
+@@ -131,7 +138,7 @@ export class ChartPremiere implements ChartPremiereReader {
+    * @param data 独立谱面数据（AC-16）
+    * @param layout 与谱面 layoutVersion 一致的布局
+    */
+-  constructor(data: ChartData, layout: KeyboardPadLayout) {
++  constructor(data: ChartData | GuidanceChart, layout: KeyboardPadLayout) {
+     this.chartId = data.chartId;
+     this.tier = data.tier;
+     this.layout = layout;
+@@ -144,6 +151,9 @@ export class ChartPremiere implements ChartPremiereReader {
+     if (data.chartId.length === 0) {
+       throw new Error('ChartPremiere: chartId 不能为空');
+     }
++    this.guidance = 'lines' in data
++      ? new GuidanceLineRuntime(parseGuidanceChart(data, layout), layout) : null;
++    if ('lines' in data) { return; }
+     const ordered = data.notes
+       .slice()
+       .sort((a, b) => a.timeMs - b.timeMs);
+@@ -181,10 +191,11 @@ export class ChartPremiere implements ChartPremiereReader {
+   }
+ 
+   getTotalNoteCount(): number {
+-    return this.noteStatuses.length;
++    return this.guidance !== null ? 1 : this.noteStatuses.length;
+   }
+ 
+   getResolvedCount(): number {
++    if (this.guidance !== null) { return this.guidance.getResolvedCount(); }
+     return this.noteStatuses.reduce(
+       (sum, status) => sum + (status.resolved ? 1 : 0),
+       0,
+@@ -192,10 +203,10 @@ export class ChartPremiere implements ChartPremiereReader {
+   }
+ 
+   getProgress(): number {
+-    if (this.noteStatuses.length === 0) {
++    if (this.getTotalNoteCount() === 0) {
+       return 1;
+     }
+-    return this.getResolvedCount() / this.noteStatuses.length;
++    return this.getResolvedCount() / this.getTotalNoteCount();
+   }
+ 
+   getPerfectCount(): number {
+@@ -226,6 +237,10 @@ export class ChartPremiere implements ChartPremiereReader {
+     return this.result;
+   }
+ 
++  getGuidanceSnapshot(): GuidanceLineSnapshot | null {
++    return this.guidance?.getSnapshot() ?? null;
++  }
++
+   // —— 状态迁移 ——
+ 
+   /**
+@@ -240,6 +255,7 @@ export class ChartPremiere implements ChartPremiereReader {
+   begin(): void {
+     if (this.state === 'Ready') {
+       this.state = 'Playing';
++      if (this.guidance !== null) { this.applyGuidanceJudgements(this.guidance.advance(0)); }
+     }
+   }
+ 
+@@ -247,7 +263,7 @@ export class ChartPremiere implements ChartPremiereReader {
+   advanceMediaStatus(ended: boolean, unavailable: boolean, elapsedMs: number): void {
+     if (this.state !== 'Playing' || !Number.isFinite(elapsedMs) || elapsedMs < 0) { return; }
+     this.mediaEnded = this.mediaEnded || ended;
+-    if (this.noteStatuses.every(status => status.resolved) && unavailable && !this.mediaEnded) {
++    if (this.allJudgementsSettled() && unavailable && !this.mediaEnded) {
+       this.mediaUnavailableElapsedMs += elapsedMs;
+     } else {
+       this.mediaUnavailableElapsedMs = 0;
+@@ -261,6 +277,11 @@ export class ChartPremiere implements ChartPremiereReader {
+    * 仅 Playing 生效；其余状态一律丢弃（暂停 / 完成 / 退出 / 待播）。
+    */
+   submitStrike(strike: Strike): void {
++    // Paused 期间只释放已按住键，不启动、不判定、不移动。
++    if (this.state === 'Paused' && strike.phase === 'Up' && this.guidance !== null) {
++      this.guidance.submitStrike(strike);
++      return;
++    }
+     if (this.state !== 'Playing' || !Number.isFinite(strike.videoTimeMs) || strike.videoTimeMs < 0) {
+       return;
+     }
+@@ -271,6 +292,15 @@ export class ChartPremiere implements ChartPremiereReader {
+     if (getSlot(this.layout, keyId) === undefined) {
+       return;
+     }
++    if (this.guidance !== null) {
++      this.applyGuidanceJudgements(this.guidance.submitStrike(strike));
++      if (strike.phase !== 'Up') {
++        this.currentTimeMsValue = Math.max(this.currentTimeMsValue, strike.videoTimeMs);
++      }
++      this.checkCompleted(this.currentTimeMsValue);
++      return;
++    }
++    if (strike.phase === 'Up') { return; }
+ 
+     const bestIndex = this.findBestCandidateIndex(keyId, strike.videoTimeMs);
+     if (bestIndex >= 0) {
+@@ -321,6 +351,11 @@ export class ChartPremiere implements ChartPremiereReader {
+     }
+     if (!Number.isFinite(videoTimeMs) || videoTimeMs < this.currentTimeMsValue) { return; }
+     this.currentTimeMsValue = videoTimeMs;
++    if (this.guidance !== null) {
++      this.applyGuidanceJudgements(this.guidance.advance(videoTimeMs));
++      this.checkCompleted(videoTimeMs);
++      return;
++    }
+     for (const status of this.noteStatuses) {
+       if (status.resolved) {
+         continue;
+@@ -343,6 +378,7 @@ export class ChartPremiere implements ChartPremiereReader {
+   requestExit(finishedAtMs: number): ChartPlaybackResult {
+     const completed = this.state === 'Completed' || this.result?.completed === true;
+     this.state = 'Exited';
++    this.guidance?.exit();
+     if (!completed || this.result === null) {
+       this.result = this.buildResult(finishedAtMs, completed);
+     }
+@@ -362,6 +398,7 @@ export class ChartPremiere implements ChartPremiereReader {
+       status.tier = null;
+     }
+     this.score = new ChartScore();
++    this.guidance?.reset();
+     this.feedback.length = 0;
+     this.feedbackSeq = 0;
+     this.result = null;
+@@ -373,6 +410,21 @@ export class ChartPremiere implements ChartPremiereReader {
+ 
+   // —— 内部 ——
+ 
++  private applyGuidanceJudgements(items: readonly GuidanceJudgement[]): void {
++    for (const item of items) {
++      this.score.applyJudgement(item.tier, this.guideTransparencyValue);
++      // 无有效网格键的漏判只由节点动画反馈，不伪造默认打击垫键。
++      if (item.keyId !== null) {
++        this.pushFeedback(item.videoTimeMs, item.keyId, item.tier, true);
++      }
++    }
++  }
++
++  private allJudgementsSettled(): boolean {
++    return this.guidance !== null ? this.guidance.isSettled()
++      : this.noteStatuses.every(status => status.resolved);
++  }
++
+   /** 同槽候选：返回窗内时间最近的未决 Note 下标；无则 -1。 */
+   private findBestCandidateIndex(
+     keyId: ChartKeyId,
+@@ -423,7 +475,7 @@ export class ChartPremiere implements ChartPremiereReader {
+     if (this.state !== 'Playing') {
+       return;
+     }
+-    if (this.noteStatuses.every((status) => status.resolved) &&
++    if (this.allJudgementsSettled() &&
+         (this.mediaEnded || this.mediaUnavailableElapsedMs >= CHART_MEDIA_END_TIMEOUT_MS)) {
+       this.state = 'Completed';
+       this.result = this.buildResult(videoTimeMs, true);
+diff --git a/src/chart/Strike.ts b/src/chart/Strike.ts
+index c562b09..d99894e 100644
+--- a/src/chart/Strike.ts
++++ b/src/chart/Strike.ts
+@@ -20,4 +20,6 @@ export interface Strike {
+   readonly videoTimeMs: number;
+   /** 槽位标识；世界敲击可省略，谱面消费时必需。 */
+   readonly keyId?: ChartKeyId;
++  /** 带媒体时间的物理按下/松开边沿；旧调用省略时为 Down。 */
++  readonly phase?: 'Down' | 'Up';
+ }
+diff --git a/src/director/PlayerIntent.ts b/src/director/PlayerIntent.ts
+index 2bfa922..02075f9 100644
+--- a/src/director/PlayerIntent.ts
++++ b/src/director/PlayerIntent.ts
+@@ -77,6 +77,8 @@ export type PlayerIntent =
+        * 世界敲击省略；谱面消费时必需。
+        */
+       readonly keyId?: ChartKeyId;
++      /** 引导线边沿采集；世界及既有 T7 省略时保持按下语义。 */
++      readonly phase?: 'Down' | 'Up';
+     }
+   | {
+       /** 切换感知模式意图 */
+diff --git a/src/director/IntentPort.ts b/src/director/IntentPort.ts
+index 94ae987..f2672db 100644
+--- a/src/director/IntentPort.ts
++++ b/src/director/IntentPort.ts
+@@ -316,6 +316,8 @@ export class DirectorSession implements IntentPort {
+    * 媒体未就绪 / 未播放时返回 -1。director 据此推进首演。
+    */
+   private chartClockProbe: (() => number) | null = null;
++  /** 媒体结束/异常只读探针；在本帧输入消费后执行 R26 B。 */
++  private chartMediaProbe: (() => { ended: boolean; unavailable: boolean }) | null = null;
+ 
+   /** T7 完成账本是否已记录（恰好一条带 ChartRef 事件，幂等闸）。 */
+   private chartCompletionRecorded = false;
+@@ -387,6 +389,10 @@ export class DirectorSession implements IntentPort {
+     this.chartPremiere = premiere;
+   }
+ 
++  bindChartMediaProbe(probe: () => { ended: boolean; unavailable: boolean }): void {
++    this.chartMediaProbe = probe;
++  }
++
+   /**
+    * 接线谱面媒体时钟探针（T7；方法名直译，待追认）。
+    *
+@@ -521,6 +527,7 @@ export class DirectorSession implements IntentPort {
+             this.chartPremiere?.submitStrike({
+               videoTimeMs: intent.videoTimeMs,
+               keyId: intent.keyId,
++              phase: intent.phase,
+             });
+           } else if (intent.keyId === undefined && !this.isChartContext()) {
+             // T6（VERDICT-113 / 117）：解谜链第二步——世界节奏敲击。
+@@ -556,7 +563,7 @@ export class DirectorSession implements IntentPort {
+     //      自本帧起跳过第 2~6 步世界运动（不推进、不补算）；
+     //      但 FrameDriver / 谱面 / 表现刷新继续——此帧驱动谱面。
+     if (this.worldMotionGated || frameBeganGated) {
+-      this.driveChartPlayback();
++      this.driveChartPlayback(frameDurationSeconds);
+       return;
+     }
+ 
+@@ -616,7 +623,7 @@ export class DirectorSession implements IntentPort {
+    * 进入 Completed 且尚未记账 → 恰好记录一条完成事件。
+    * 方法名为直译，待追认。
+    */
+-  private driveChartPlayback(): void {
++  private driveChartPlayback(frameDurationSeconds: number): void {
+     if (this.chartPremiere === null || this.chartClockProbe === null) {
+       return;
+     }
+@@ -627,6 +634,10 @@ export class DirectorSession implements IntentPort {
+     if (this.chartPremiere.getState() === 'Playing' && mediaTimeMs >= 0) {
+       this.chartPremiere.advance(mediaTimeMs);
+     }
++    const media = this.chartMediaProbe?.();
++    if (media !== undefined) {
++      this.chartPremiere.advanceMediaStatus(media.ended, media.unavailable, frameDurationSeconds * 1000);
++    }
+     if (this.chartPremiere.getState() === 'Completed') {
+       if (!this.chartCompletionRecorded) { this.recordChartCompletion(mediaTimeMs); }
+       // Completion and world return belong to the same director frame.
+diff --git a/src/presentation/InputCollector.ts b/src/presentation/InputCollector.ts
+index eeeba8f..7da0437 100644
+--- a/src/presentation/InputCollector.ts
++++ b/src/presentation/InputCollector.ts
+@@ -139,11 +139,22 @@ export class InputCollector extends Component {
+   private isWorldMotionGated(): boolean { return this.worldMotionProvider?.() ?? false; }
+ 
+   private clearHeldInput = (): void => {
++    const state = this.readChartState();
++    const mediaTime = this.chartTimeProbe?.() ?? -1;
++    const releaseKeys = [...this.physicalKeysDown].map(resolveChartKeyId);
+     this.physicalKeysDown.clear();
+     this.pressedMoveKeys.clear();
+     this.spacePressed = false;
+     this.setMoveAxis(0, 0);
+     this.discreteIntents.length = 0;
++    // 焦点丢失可能没有原生 keyup；清采集状态也必须释放逻辑边沿守卫。
++    if ((state === 'Playing' || state === 'Paused') && Number.isFinite(mediaTime) && mediaTime >= 0) {
++      for (const keyId of releaseKeys) {
++        if (keyId !== null) {
++          this.discreteIntents.push({ kind: 'Strike', videoTimeMs: mediaTime, keyId, phase: 'Up' });
++        }
++      }
++    }
+     this.worldStrikeResetter?.();
+   };
+ 
+@@ -211,6 +222,14 @@ export class InputCollector extends Component {
+   private onKeyUp(event: EventKeyboard): void {
+     const code = event.keyCode as unknown as number;
+     this.physicalKeysDown.delete(code);
++    const state = this.readChartState();
++    if (state === 'Playing' || state === 'Paused') {
++      const keyId = resolveChartKeyId(code);
++      const mediaTime = this.chartTimeProbe?.() ?? -1;
++      if (keyId !== null && Number.isFinite(mediaTime) && mediaTime >= 0) {
++        this.discreteIntents.push({ kind: 'Strike', videoTimeMs: mediaTime, keyId, phase: 'Up' });
++      }
++    }
+     if (code === CODE_SPACE) {
+       this.spacePressed = false;
+     }
+@@ -247,6 +266,7 @@ export class InputCollector extends Component {
+       kind: 'Strike',
+       videoTimeMs: mediaTime,
+       keyId,
++      phase: 'Down',
+     });
+   }
+ 
+diff --git a/src/presentation/ChartPadView.ts b/src/presentation/ChartPadView.ts
+index 44ffece..0a4c937 100644
+--- a/src/presentation/ChartPadView.ts
++++ b/src/presentation/ChartPadView.ts
+@@ -20,10 +20,12 @@
+ // 不写账本；视频 / 音频媒体由组合根创建并经回调触发击音。
+ // ============================================================
+ 
+-import { _decorator, Component, Node, UITransform, Graphics, Label, Color } from 'cc';
++import { _decorator, Component, Node, UITransform, Graphics, Label, Color, SpriteFrame } from 'cc';
+ import type { FrameRefreshable } from './FrameDriver';
++import { LineEraseEffect } from './LineEraseEffect';
+ import type { ChartPremiereReader } from '../chart/ChartPremiere';
+ import type { ChartData } from '../chart/Note';
++import type { GuidanceChart } from '../chart/GuidanceChart';
+ import type {
+   ChartKeyId,
+   ChartPadKind,
+@@ -50,8 +52,10 @@ const GUIDE_FALL_RATIO = 0.12;
+ @ccclass('ChartPadView')
+ export class ChartPadView extends Component implements FrameRefreshable {
+   private premiere: ChartPremiereReader | null = null;
+-  private data: ChartData | null = null;
++  private data: ChartData | GuidanceChart | null = null;
+   private layout: KeyboardPadLayout | null = null;
++  private lineEraseEffect: LineEraseEffect | null = null;
++  private headLogo: SpriteFrame | null = null;
+ 
+   private graphics: Graphics | null = null;
+   private infoLabel: Label | null = null;
+@@ -72,11 +76,24 @@ export class ChartPadView extends Component implements FrameRefreshable {
+   /** 接线首演只读接口。 */
+   bindPremiere(reader: ChartPremiereReader): void {
+     this.premiere = reader;
++    this.lineEraseEffect?.bindPremiere(reader);
++    this.lastFeedbackSeq = 0;
++    this.flashes.length = 0;
+   }
+ 
+   /** 接线谱面数据与布局（引导显示坐标从布局派生）。 */
+-  bindChart(data: ChartData, layout: KeyboardPadLayout): void {
++  bindChart(data: ChartData | GuidanceChart, layout: KeyboardPadLayout): void {
+     this.data = data;
++    this.lastContainerW = 0;
++    this.lastContainerH = 0;
++    this.lineEraseEffect?.clearVisuals();
++    if ('lines' in data) {
++      // 引导线动态取键依赖原始网格；显示与逻辑使用同一布局。
++      this.layout = { ...layout, slots: layout.slots.map(slot => ({ ...slot })) };
++      this.lineEraseEffect?.bindHeadPosition(data.lines[0]?.path.points[0] ?? null);
++      return;
++    }
++    this.lineEraseEffect?.bindHeadPosition(null);
+     // Display geometry is a copy; physical key identity and logic layout stay fixed.
+     const rows = [...new Set(layout.slots.filter(slot => slot.keyId !== 'Space').map(slot => slot.v))]
+       .sort((a, b) => a - b);
+@@ -90,6 +107,19 @@ export class ChartPadView extends Component implements FrameRefreshable {
+     }) };
+   }
+ 
++  /** 可替换 Head LOGO 资源入口，由组合根提供 SpriteFrame。 */
++  bindHeadLogo(logo: SpriteFrame): void {
++    this.headLogo = logo;
++    this.lineEraseEffect?.bindHeadLogo(logo);
++  }
++
++  onDisable(): void {
++    this.graphics?.clear();
++    this.lineEraseEffect?.clearVisuals();
++    this.lastFeedbackSeq = 0;
++    this.flashes.length = 0;
++  }
++
+   /** 接线击音播放器（可替换单击；鼓音由资源配置引用）。 */
+   bindHitSoundPlayer(
+     player: (tier: ChartJudgeTier, kind: ChartPadKind) => void,
+@@ -133,6 +163,21 @@ export class ChartPadView extends Component implements FrameRefreshable {
+         this.slotLabels.push(label);
+       }
+     }
++
++    const lineNode = new Node('GuidanceLineVisuals');
++    lineNode.layer = this.node.layer;
++    this.node.addChild(lineNode);
++    lineNode.addComponent(UITransform);
++    this.lineEraseEffect = lineNode.addComponent(LineEraseEffect);
++    if (this.premiere !== null) {
++      this.lineEraseEffect.bindPremiere(this.premiere);
++    }
++    if (this.headLogo !== null) {
++      this.lineEraseEffect.bindHeadLogo(this.headLogo);
++    }
++    if (this.data !== null && 'lines' in this.data) {
++      this.lineEraseEffect.bindHeadPosition(this.data.lines[0]?.path.points[0] ?? null);
++    }
+   }
+ 
+   /** 帧刷新：依据首演状态绘制（FrameDriver 不停）。 */
+@@ -152,11 +197,13 @@ export class ChartPadView extends Component implements FrameRefreshable {
+     }
+     if (state === 'Ready' || state === 'Exited') {
+       this.graphics.clear();
++      this.lineEraseEffect?.clearVisuals();
+       return;
+     }
+ 
+     this.consumeFeedback();
+     this.drawAll(state);
++    this.lineEraseEffect?.onFrameRefresh();
+   }
+ 
+   /** 增量拉取判定反馈：登记高亮并触发击音（表现回调不直接写账本）。 */
+@@ -211,7 +258,9 @@ export class ChartPadView extends Component implements FrameRefreshable {
+     if (width <= 0 || height <= 0) {
+       return;
+     }
+-    const rect = resolveContentRect(width, height);
++    const aspectRatio = this.data !== null && 'lines' in this.data ? this.data.aspectRatio : null;
++    const rect = resolveContentRect(width, height, aspectRatio);
++    this.lineEraseEffect?.bindContentSize(rect.cw, rect.ch);
+     const mapX = (u: number): number => rect.cx - rect.cw / 2 + u * rect.cw;
+     const mapY = (v: number): number => rect.cy - rect.ch / 2 + v * rect.ch;
+ 
+@@ -262,7 +311,7 @@ export class ChartPadView extends Component implements FrameRefreshable {
+     mapY: (v: number) => number,
+     rect: ContentRect,
+   ): void {
+-    if (this.premiere === null || this.data === null) {
++    if (this.premiere === null || this.data === null || !('notes' in this.data)) {
+       return;
+     }
+     const current = this.premiere.getCurrentTimeMs();
+@@ -391,7 +440,12 @@ interface ContentRect {
+ function resolveContentRect(
+   containerW: number,
+   containerH: number,
++  aspectRatio: number | null,
+ ): ContentRect {
++  if (aspectRatio !== null) {
++    const contentW = Math.min(containerW, containerH * aspectRatio);
++    return { cx: 0, cy: 0, cw: contentW, ch: contentW / aspectRatio };
++  }
+   return { cx: 0, cy: 0, cw: containerW, ch: containerH };
+ }
+ 
+diff --git a/assets/scripts/SceneBuilder.ts b/assets/scripts/SceneBuilder.ts
+index 59c9a69..4f0db8b 100644
+--- a/assets/scripts/SceneBuilder.ts
++++ b/assets/scripts/SceneBuilder.ts
+@@ -111,6 +111,7 @@ import {
+   VideoPlayer,
+   VideoClip,
+   JsonAsset,
++  SpriteFrame,
+   input, Input,
+   resources,
+   screen, isValid,
+@@ -138,6 +139,8 @@ import { PuzzleChain } from './src/trace/PuzzleChain';
+ import { TraceProximityVolume } from './src/trace/TraceProximityVolume';
+ import { createDefaultKeyboardPadLayout, CHART_KEY_IDS } from './src/chart/KeyboardPadLayout';
+ import { ChartPremiere, CHART_MEDIA_END_TIMEOUT_MS } from './src/chart/ChartPremiere';
++import { parseGuidanceChart } from './src/chart/GuidanceChart';
++import type { GuidanceChart } from './src/chart/GuidanceChart';
+ import type { RhythmStrike } from './src/trace/RhythmStrike';
+ import type { ChartData, Note } from './src/chart/Note';
+ import type {
+@@ -246,6 +249,9 @@ export class SceneBuilder extends Component {
+   /** AC-18：演奏开始前在 Creator 属性面板调整，保持演奏中不变。 */
+   @property({ min: 0, max: 100, step: 1, slide: true, tooltip: '引导透明度（百分比），演奏开始前配置' })
+   GuideTransparency = 0;
++  /** 保留旧 T7 资源入口；A 步默认加载独立引导线谱面。 */
++  @property({ tooltip: '使用 A 步 Head + Tap 谱面；关闭可运行原 T7' })
++  UseGuidanceChart = true;
+   private readonly createdVisualAssets: Array<Mesh | Material> = [];
+   /** 组合根组装出的运行时对象图（start 后置非空） */
+   private graph: RuntimeGraph | null = null;
+@@ -307,12 +313,13 @@ export class SceneBuilder extends Component {
+   private readonly keyboardLayout: KeyboardPadLayout =
+     createDefaultKeyboardPadLayout();
+   /** 已解析谱面数据（JSON 成功或回退占位）。 */
+-  private chartData: ChartData | null = null;
++  private chartData: ChartData | GuidanceChart | null = null;
+   /** 谱面数据是否已解析（加载回调完成，含失败回退）。 */
+   private chartDataResolved = false;
+   /** 谱面首演状态机（解析后创建并绑定）。 */
+   private chartPremiere: ChartPremiere | null = null;
+   private chartMediaUnavailableElapsedMs = 0;
++  private chartFallbackTimeMs = -1;
+   /** 谱面全屏 UI 层（视频 + 打击垫 + 暂停面板）。 */
+   private chartLayerNode: Node | null = null;
+   /** 视频播放器（谱面媒体）。 */
+@@ -818,6 +825,11 @@ export class SceneBuilder extends Component {
+       (tier, kind) => this.playHit(tier, kind),
+     );
+     this.chartPadView = chartPadView;
++    resources.load('guidance/head-logo/spriteFrame', SpriteFrame, (err, logo) => {
++      if (!isValid(this, true)) { return; }
++      if (err || !logo) { console.error('[SceneBuilder] Head LOGO 加载失败', err); return; }
++      chartPadView.bindHeadLogo(logo);
++    });
+ 
+     // 暂停面板
+     const pauseNode = new Node('ChartPause');
+@@ -853,12 +865,30 @@ export class SceneBuilder extends Component {
+     this.loadHitClip('audio/hit_drum', 'drum');
+     this.loadHitClip('audio/hit_heavy', 'heavy');
+ 
+-    // —— 谱面 JSON：解析失败 / 缺失 → 回退确定性谱面 ——
++    // —— 独立谱面 JSON：引导线严格拒绝非法/超范围数据；旧 T7 保留 ——
+     resources.load(
+-      'chart/chart_placeholder',
++      this.UseGuidanceChart ? 'chart/guidance_a' : 'chart/chart_placeholder',
+       JsonAsset,
+       (err: Error | null, asset: JsonAsset | null) => {
+         if (!isValid(this, true)) { return; }
++        if (this.UseGuidanceChart) {
++          try {
++            if (err || !asset) { throw err ?? new Error('GuidanceChart 资源缺失'); }
++            this.chartData = parseGuidanceChart(asset.json, this.keyboardLayout);
++            this.chartDataResolved = true;
++          } catch (error) {
++            console.error('[SceneBuilder] A 步谱面拒绝加载', error);
++            const errorNode = new Node('GuidanceLoadError');
++            errorNode.layer = chartLayerNode.layer;
++            chartLayerNode.addChild(errorNode);
++            errorNode.addComponent(UITransform).setContentSize(800, 120);
++            const errorLabel = errorNode.addComponent(Label);
++            errorLabel.fontSize = 22;
++            errorLabel.color = new Color(255, 100, 100);
++            errorLabel.string = `谱面拒绝加载：${String(error)}\n按 Esc 返回世界`;
++          }
++          return;
++        }
+         if (err == null && asset != null && asset.json != null) {
+           const parsed = parseChartData(
+             asset.json,
+@@ -960,16 +990,12 @@ export class SceneBuilder extends Component {
+         this.chartMediaUnavailableElapsedMs = unavailable && !ended
+           ? this.chartMediaUnavailableElapsedMs + dt * 1000 : 0;
+       }
+-      // Failed loading / stalled media still resolves Notes on an independent clock.
+-      // Paused premieres ignore both advance calls, so neither timeout nor Notes move.
++      // 这里只提供媒体时间；判定推进归 director，先消费本帧时间戳输入。
+       if (unavailable && !ended && this.chartMediaUnavailableElapsedMs >= CHART_MEDIA_END_TIMEOUT_MS) {
+-        this.chartPremiere.begin();
+-        this.chartPremiere.advance(this.chartPremiere.getCurrentTimeMs() + dt * 1000);
+-      } else {
+-        const timeMs = this.audioOutputClock.readChartTimeMs();
+-        if (timeMs >= 0) { this.chartPremiere.advance(timeMs); }
++        if (state === 'Ready' || state === 'Playing') {
++          this.chartFallbackTimeMs = this.chartPremiere.getCurrentTimeMs() + dt * 1000;
++        }
+       }
+-      this.chartPremiere.advanceMediaStatus(ended, unavailable, dt * 1000);
+     }
+ 
+     // AC-03：视距映射 fov（ViewDistance=10 → fov=45°）
+@@ -1089,6 +1115,11 @@ export class SceneBuilder extends Component {
+       if (chartState === 'Paused' && this.lastChartState !== 'Paused') {
+         // 冻结媒体位置（与判定窗口 / 进度一同停住）。
+         this.videoPlayer?.pause();
++        if (this.videoPlayer && this.chartPremiere) {
++          this.videoPlayer.currentTime = this.chartPremiere.getCurrentTimeMs() / 1000;
++          this.audioOutputClock.resetChart();
++          if (this.chartFallbackTimeMs >= 0) { this.chartFallbackTimeMs = this.chartPremiere.getCurrentTimeMs(); }
++        }
+       } else if (chartState === 'Playing' && this.lastChartState === 'Paused') {
+         // 恢复后重建视频时钟读数（探针每帧读 currentTime），
+         // 若视频仍暂停则续播。
+@@ -1186,7 +1217,8 @@ export class SceneBuilder extends Component {
+     if (this.videoPlayer === null || !this.chartEntered) {
+       return -1;
+     }
+-    return Math.max(this.audioOutputClock.readChartTimeMs(), this.chartPremiere?.getCurrentTimeMs() ?? -1);
++    if (this.chartPremiere?.getState() === 'Paused') { return this.chartPremiere.getCurrentTimeMs(); }
++    return Math.max(this.audioOutputClock.readChartTimeMs(), this.chartFallbackTimeMs);
+   }
+ 
+   /**
+@@ -1239,6 +1271,10 @@ export class SceneBuilder extends Component {
+     this.chartPremiere = premiere;
+     this.graph.session.bindChartPremiere(premiere);
+     this.graph.session.bindChartClockProbe(() => this.readVideoTimeMs());
++    this.graph.session.bindChartMediaProbe(() => ({
++      ended: this.audioOutputClock.hasChartMediaEnded(),
++      unavailable: this.audioOutputClock.isChartMediaUnavailable(),
++    }));
+     if (this.chartPadView !== null) {
+       this.chartPadView.bindPremiere(premiere);
+       this.chartPadView.bindChart(this.chartData, this.keyboardLayout);
+@@ -1256,6 +1292,7 @@ export class SceneBuilder extends Component {
+     this.audioOutputClock.resetChart();
+     this.chartMediaStarted = false;
+     this.chartMediaUnavailableElapsedMs = 0;
++    this.chartFallbackTimeMs = -1;
+     if (this.chartLayerNode !== null) {
+       this.chartLayerNode.active = false;
+     }
+diff --git a/src/chart/GuidanceChart.ts b/src/chart/GuidanceChart.ts
+new file mode 100644
+index 0000000..fcaa2ce
+--- /dev/null
++++ b/src/chart/GuidanceChart.ts
+@@ -0,0 +1,238 @@
++// A 步独立引导线谱面数据；冻结名依据名库 v2.6 / VERDICT-127~135。
++// 纯数据与路径数学，零 cc。技术版本 schemaVersion = 1。
++import type { ChartTier } from '../../constants';
++import { HEAD_WINDOW_MS } from '../../constants';
++import type { ChartKeyId, KeyboardPadLayout } from './KeyboardPadLayout';
++
++export interface GuidancePosition {
++  readonly u: number;
++  readonly v: number;
++}
++
++export interface NodePath {
++  readonly kind: 'Polyline';
++  readonly points: readonly GuidancePosition[];
++}
++
++export interface HeadNode {
++  readonly id: string;
++  readonly spawnTimeMs: number;
++}
++
++export interface TapNode {
++  readonly id: string;
++  readonly kind: 'Tap';
++  readonly pathDistance: number;
++}
++
++export interface DragNode {
++  readonly id: string;
++  readonly kind: 'Drag';
++  readonly pathDistance: number;
++  readonly keyId: Exclude<ChartKeyId, 'Space'>;
++}
++
++export interface HoldNode {
++  readonly id: string;
++  readonly kind: 'Hold';
++  readonly pathDistance: number;
++  readonly endPathDistance: number;
++  readonly keyId: Exclude<ChartKeyId, 'Space'>;
++}
++
++/** 冻结联合完整保留；A 步解析器明确拒绝 Drag / Hold。 */
++export type GuidanceNode = TapNode | DragNode | HoldNode;
++export type ChartNodeKind = 'Tap' | 'Drag' | 'Hold';
++
++export interface GuidanceLine {
++  readonly id: string;
++  readonly head: HeadNode;
++  readonly path: NodePath;
++  /** 每秒前进的路径弧长；横向距离已按 aspectRatio 加权。 */
++  readonly speed: number;
++  readonly nodes: readonly GuidanceNode[];
++}
++
++export interface GuidanceChart {
++  readonly schemaVersion: 1;
++  readonly chartId: string;
++  readonly tier: ChartTier;
++  readonly layoutVersion: string;
++  readonly aspectRatio: number;
++  readonly lines: readonly GuidanceLine[];
++}
++
++export interface JudgmentPoint {
++  readonly position: GuidancePosition;
++  readonly pathDistance: number;
++}
++
++function requireRecord(value: unknown, label: string): Record<string, unknown> {
++  if (value === null || typeof value !== 'object' || Array.isArray(value)) {
++    throw new Error(`GuidanceChart: ${label} 必须为对象`);
++  }
++  return value as Record<string, unknown>;
++}
++
++function requireFields(value: Record<string, unknown>, allowed: readonly string[], label: string): void {
++  for (const field of Object.keys(value)) {
++    if (!allowed.includes(field)) {
++      throw new Error(`GuidanceChart: ${label} 不支持字段 ${field}`);
++    }
++  }
++}
++
++function requireFinite(value: unknown, label: string): number {
++  if (typeof value !== 'number' || !Number.isFinite(value)) {
++    throw new Error(`GuidanceChart: ${label} 必须为有限数值`);
++  }
++  return value;
++}
++
++function requireId(value: unknown, label: string, identities: Set<string>): string {
++  if (typeof value !== 'string' || value.trim().length === 0) {
++    throw new Error(`GuidanceChart: ${label} 必须为非空 ID`);
++  }
++  if (identities.has(value)) {
++    throw new Error(`GuidanceChart: 重复 ID ${value}`);
++  }
++  identities.add(value);
++  return value;
++}
++
++function parsePosition(value: unknown, index: number): GuidancePosition {
++  const source = requireRecord(value, `points[${index}]`);
++  requireFields(source, ['u', 'v'], `points[${index}]`);
++  const u = requireFinite(source.u, `points[${index}].u`);
++  const v = requireFinite(source.v, `points[${index}].v`);
++  if (u < 0 || u > 1 || v < 0 || v > 1) {
++    throw new Error(`GuidanceChart: points[${index}] 越出归一化区域 [0,1]`);
++  }
++  return Object.freeze({ u, v });
++}
++
++/** aspectRatio 修正后的弧长；与渲染分辨率无关。 */
++export function measurePathLength(path: NodePath, aspectRatio: number): number {
++  let length = 0;
++  for (let index = 1; index < path.points.length; index += 1) {
++    const previous = path.points[index - 1];
++    const next = path.points[index];
++    length += Math.hypot((next.u - previous.u) * aspectRatio, next.v - previous.v);
++  }
++  return length;
++}
++
++/** 沿弧长查询位置；到达末端后停留末端，保留末节点仍开放的判定窗口。 */
++export function positionAtPathDistance(
++  path: NodePath,
++  aspectRatio: number,
++  pathDistance: number,
++): GuidancePosition {
++  const distance = Math.max(0, Math.min(pathDistance, measurePathLength(path, aspectRatio)));
++  let remaining = distance;
++  for (let index = 1; index < path.points.length; index += 1) {
++    const previous = path.points[index - 1];
++    const next = path.points[index];
++    const length = Math.hypot((next.u - previous.u) * aspectRatio, next.v - previous.v);
++    if (length > 0 && remaining <= length) {
++      const fraction = remaining / length;
++      return Object.freeze({
++        u: previous.u + (next.u - previous.u) * fraction,
++        v: previous.v + (next.v - previous.v) * fraction,
++      });
++    }
++    remaining -= length;
++  }
++  return path.points[path.points.length - 1];
++}
++
++/**
++ * 严格加载 A 步谱面：一线、两路径点、一 Tap。
++ * 复制并深度冻结，原始 JSON 后续修改不能改变运行中的谱面。
++ */
++export function parseGuidanceChart(raw: unknown, layout: KeyboardPadLayout): GuidanceChart {
++  const source = requireRecord(raw, '谱面');
++  requireFields(source, ['schemaVersion', 'chartId', 'tier', 'layoutVersion', 'aspectRatio', 'lines'], '谱面');
++  if (source.schemaVersion !== 1) {
++    throw new Error('GuidanceChart: A 步仅支持 schemaVersion=1');
++  }
++  if (source.layoutVersion !== layout.layoutVersion) {
++    throw new Error(`GuidanceChart: 布局版本不匹配，拒绝加载 (${String(source.layoutVersion)} / ${layout.layoutVersion})`);
++  }
++  const chartId = requireId(source.chartId, 'chartId', new Set<string>());
++  const tier = source.tier;
++  if (tier !== 'Regular' && tier !== 'Character' && tier !== 'World' && tier !== 'Final') {
++    throw new Error('GuidanceChart: tier 非法');
++  }
++  const aspectRatio = requireFinite(source.aspectRatio, 'aspectRatio');
++  if (aspectRatio <= 0) {
++    throw new Error('GuidanceChart: aspectRatio 必须为正');
++  }
++  if (!Array.isArray(source.lines) || source.lines.length !== 1) {
++    throw new Error('GuidanceChart: A 步仅接收一条引导线，拒绝多线或空谱面');
++  }
++  const identities = new Set<string>();
++  const lineSource = requireRecord(source.lines[0], '引导线');
++  requireFields(lineSource, ['id', 'head', 'path', 'speed', 'nodes'], '引导线');
++  const id = requireId(lineSource.id, 'line.id', identities);
++  const headSource = requireRecord(lineSource.head, 'Head');
++  requireFields(headSource, ['id', 'spawnTimeMs'], 'Head');
++  const headId = requireId(headSource.id, 'head.id', identities);
++  const spawnTimeMs = requireFinite(headSource.spawnTimeMs, 'spawnTimeMs');
++  if (spawnTimeMs < 0) {
++    throw new Error('GuidanceChart: spawnTimeMs 不得为负');
++  }
++  const pathSource = requireRecord(lineSource.path, 'path');
++  requireFields(pathSource, ['kind', 'points'], 'path');
++  if (pathSource.kind !== 'Polyline') {
++    throw new Error('GuidanceChart: A 步仅支持 Polyline');
++  }
++  if (!Array.isArray(pathSource.points) || pathSource.points.length !== 2) {
++    throw new Error('GuidanceChart: A 步仅接收两点直线');
++  }
++  const path: NodePath = Object.freeze({
++    kind: 'Polyline',
++    points: Object.freeze(pathSource.points.map(parsePosition)),
++  });
++  const length = measurePathLength(path, aspectRatio);
++  if (!Number.isFinite(length) || length <= 0) {
++    throw new Error('GuidanceChart: 路径必须包含两个不同点且弧长有限');
++  }
++  const speed = requireFinite(lineSource.speed, 'speed');
++  if (speed <= 0) {
++    throw new Error('GuidanceChart: speed 必须为正');
++  }
++  if (!Array.isArray(lineSource.nodes) || lineSource.nodes.length !== 1) {
++    throw new Error('GuidanceChart: A 步仅接收一个 Tap');
++  }
++  const nodeSource = requireRecord(lineSource.nodes[0], '节点');
++  if (nodeSource.kind !== 'Tap') {
++    throw new Error(`GuidanceChart: A 步拒绝 ${String(nodeSource.kind)}，仅接收 Head + Tap`);
++  }
++  if ('keyId' in nodeSource) {
++    throw new Error('GuidanceChart: Tap 禁止包含 keyId，不允许默认键或备用键');
++  }
++  requireFields(nodeSource, ['id', 'kind', 'pathDistance'], 'Tap');
++  const nodeId = requireId(nodeSource.id, 'Tap.id', identities);
++  const pathDistance = requireFinite(nodeSource.pathDistance, 'pathDistance');
++  if (pathDistance < 0 || pathDistance > length) {
++    throw new Error('GuidanceChart: Tap 距离必须在路径范围内');
++  }
++  if (!Number.isFinite((length / speed) * 1000) ||
++      !Number.isFinite(spawnTimeMs + HEAD_WINDOW_MS + (length / speed) * 1000)) {
++    throw new Error('GuidanceChart: 路径运行时间超出有限数值范围');
++  }
++  const head: HeadNode = Object.freeze({ id: headId, spawnTimeMs });
++  const node: TapNode = Object.freeze({ id: nodeId, kind: 'Tap', pathDistance });
++  const line: GuidanceLine = Object.freeze({
++    id, head, path, speed, nodes: Object.freeze([node]),
++  });
++  return Object.freeze({
++    schemaVersion: 1,
++    chartId,
++    tier,
++    layoutVersion: layout.layoutVersion,
++    aspectRatio,
++    lines: Object.freeze([line]),
++  });
++}
+diff --git a/src/chart/GuidanceChart.ts.meta b/src/chart/GuidanceChart.ts.meta
+new file mode 100644
+index 0000000..19d98d5
+--- /dev/null
++++ b/src/chart/GuidanceChart.ts.meta
+@@ -0,0 +1,9 @@
++{
++  "ver": "4.0.24",
++  "importer": "typescript",
++  "imported": true,
++  "uuid": "8f789b15-9d07-4b04-8f4a-7395a1c44e31",
++  "files": [],
++  "subMetas": {},
++  "userData": {}
++}
+diff --git a/src/chart/GuidanceLineRuntime.ts b/src/chart/GuidanceLineRuntime.ts
+new file mode 100644
+index 0000000..a2bbdc8
+--- /dev/null
++++ b/src/chart/GuidanceLineRuntime.ts
+@@ -0,0 +1,223 @@
++// A 步单线状态与最终节点判定；逻辑层零 cc，表现只读取快照。
++import { GOOD_WINDOW_MS, HEAD_WINDOW_MS } from '../../constants';
++import type { ChartKeyId, KeyboardPadLayout } from './KeyboardPadLayout';
++import { getSlot, resolveGridKeyAt } from './KeyboardPadLayout';
++import type { Strike } from './Strike';
++import type { ChartJudgeTier } from './ChartScore';
++import { judgeTimeWindow } from './ChartScore';
++import type {
++  GuidanceChart, GuidanceLine, GuidancePosition, HeadNode, TapNode, JudgmentPoint,
++} from './GuidanceChart';
++import { measurePathLength, parseGuidanceChart, positionAtPathDistance } from './GuidanceChart';
++
++export interface GuidanceJudgement {
++  readonly nodeId: string;
++  readonly videoTimeMs: number;
++  readonly keyId: ChartKeyId | null;
++  readonly tier: ChartJudgeTier;
++  readonly consumed: true;
++}
++
++export type GuidanceLineState = 'Pending' | 'Waiting' | 'Running' | 'TimedOut' | 'Finished' | 'Exited';
++
++export interface GuidanceNodeSnapshot {
++  readonly node: TapNode;
++  readonly position: GuidancePosition;
++  readonly tier: ChartJudgeTier | null;
++  readonly resolvedAtMs: number | null;
++}
++
++export interface GuidanceLineSnapshot {
++  readonly id: string;
++  readonly state: GuidanceLineState;
++  readonly head: HeadNode;
++  readonly startedAtMs: number | null;
++  readonly judgmentPoint: JudgmentPoint | null;
++  readonly remainingPoints: readonly GuidancePosition[];
++  readonly nodes: readonly GuidanceNodeSnapshot[];
++}
++
++/** 一条直线、一 Head、一 Tap；生命周期与暂停闸门由 ChartPremiere 负责。 */
++export class GuidanceLineRuntime {
++  private readonly line: GuidanceLine;
++  private readonly node: TapNode;
++  private readonly aspectRatio: number;
++  private readonly pathLength: number;
++  private state: GuidanceLineState = 'Pending';
++  private currentTimeMs = 0;
++  private startedAtMs: number | null = null;
++  private judgmentPoint: JudgmentPoint | null = null;
++  private nodeTier: ChartJudgeTier | null = null;
++  private nodeResolvedAtMs: number | null = null;
++  private readonly keysDown = new Set<ChartKeyId>();
++
++  constructor(data: GuidanceChart, private readonly layout: KeyboardPadLayout) {
++    const chart = parseGuidanceChart(data, layout);
++    this.line = chart.lines[0];
++    const node = this.line.nodes[0];
++    if (node.kind !== 'Tap') {
++      throw new Error(`GuidanceLineRuntime: A 步拒绝 ${node.kind}，仅接收 Tap`);
++    }
++    this.node = node;
++    this.aspectRatio = chart.aspectRatio;
++    this.pathLength = measurePathLength(this.line.path, this.aspectRatio);
++  }
++
++  advance(timeMs: number): readonly GuidanceJudgement[] {
++    if (!Number.isFinite(timeMs) || timeMs < this.currentTimeMs || this.state === 'Exited') {
++      return [];
++    }
++    this.currentTimeMs = timeMs;
++    if (this.state === 'Pending' && timeMs >= this.line.head.spawnTimeMs) {
++      this.state = 'Waiting';
++    }
++    if (this.state === 'Waiting' && timeMs > this.line.head.spawnTimeMs + HEAD_WINDOW_MS) {
++      this.state = 'TimedOut';
++      return this.resolveNode('Miss', timeMs, null);
++    }
++    if (this.state !== 'Running' || this.startedAtMs === null) {
++      return [];
++    }
++    this.updateJudgmentPoint(timeMs);
++    const targetTimeMs = this.getTargetTimeMs();
++    const judgements = this.nodeTier === null && timeMs > targetTimeMs + GOOD_WINDOW_MS
++      ? this.resolveNode('Miss', timeMs, null) : [];
++    this.finishIfReady();
++    return judgements;
++  }
++
++  submitStrike(strike: Strike): readonly GuidanceJudgement[] {
++    const timeMs = strike.videoTimeMs;
++    const keyId = strike.keyId;
++    if (!Number.isFinite(timeMs) || timeMs < 0 || keyId === undefined ||
++        getSlot(this.layout, keyId) === undefined || this.state === 'Exited') {
++      return [];
++    }
++    if (strike.phase === 'Up') {
++      this.keysDown.delete(keyId);
++      return [];
++    }
++    // 输入先按自己的媒体时间处理；不会用下一渲染帧的位置替代输入位置。
++    const judgements = this.advance(timeMs);
++    if (this.keysDown.has(keyId)) {
++      return judgements;
++    }
++    this.keysDown.add(keyId);
++    if (keyId === 'Space') {
++      if ((this.state === 'Pending' || this.state === 'Waiting') &&
++          timeMs >= this.line.head.spawnTimeMs &&
++          timeMs <= this.line.head.spawnTimeMs + HEAD_WINDOW_MS) {
++        this.startedAtMs = timeMs;
++        this.state = 'Running';
++        this.updateJudgmentPoint(this.currentTimeMs);
++      }
++      return judgements;
++    }
++    if (this.state !== 'Running' || this.startedAtMs === null || this.nodeTier !== null) {
++      return judgements;
++    }
++    const targetTimeMs = this.getTargetTimeMs();
++    if (timeMs < this.startedAtMs || Math.abs(timeMs - targetTimeMs) > GOOD_WINDOW_MS) {
++      return judgements;
++    }
++    const inputDistance = this.line.speed * (timeMs - this.startedAtMs) / 1000;
++    const position = positionAtPathDistance(this.line.path, this.aspectRatio, inputDistance);
++    const requiredKeyId = resolveGridKeyAt(this.layout, position);
++    if (requiredKeyId === null || keyId !== requiredKeyId) {
++      return judgements;
++    }
++    const finalJudgements = this.resolveNode(judgeTimeWindow(timeMs, targetTimeMs), timeMs, requiredKeyId);
++    this.finishIfReady();
++    return [...judgements, ...finalJudgements];
++  }
++
++  reset(): void {
++    this.state = 'Pending';
++    this.currentTimeMs = 0;
++    this.startedAtMs = null;
++    this.judgmentPoint = null;
++    this.nodeTier = null;
++    this.nodeResolvedAtMs = null;
++    this.keysDown.clear();
++  }
++
++  exit(): void {
++    this.state = 'Exited';
++    this.keysDown.clear();
++    this.judgmentPoint = null;
++  }
++
++  getResolvedCount(): number {
++    return this.nodeTier === null ? 0 : 1;
++  }
++
++  isSettled(): boolean {
++    return this.nodeTier !== null;
++  }
++
++  getSnapshot(): GuidanceLineSnapshot {
++    const node = this.node;
++    const nodes: readonly GuidanceNodeSnapshot[] = Object.freeze([Object.freeze({
++      node,
++      position: positionAtPathDistance(this.line.path, this.aspectRatio, node.pathDistance),
++      tier: this.nodeTier,
++      resolvedAtMs: this.nodeResolvedAtMs,
++    })]);
++    let remainingPoints: readonly GuidancePosition[] = this.line.path.points;
++    if (this.state === 'Exited' || this.state === 'TimedOut' || this.state === 'Finished') {
++      remainingPoints = Object.freeze([]);
++    } else if (this.judgmentPoint !== null) {
++      remainingPoints = this.judgmentPoint.pathDistance >= this.pathLength
++        ? Object.freeze([])
++        : Object.freeze([this.judgmentPoint.position, this.line.path.points[1]]);
++    }
++    return Object.freeze({
++      id: this.line.id,
++      state: this.state,
++      head: this.line.head,
++      startedAtMs: this.startedAtMs,
++      judgmentPoint: this.judgmentPoint,
++      remainingPoints,
++      nodes,
++    });
++  }
++
++  private getTargetTimeMs(): number {
++    return this.startedAtMs! + this.node.pathDistance / this.line.speed * 1000;
++  }
++
++  private updateJudgmentPoint(timeMs: number): void {
++    const pathDistance = Math.max(0, Math.min(this.pathLength,
++      this.line.speed * (timeMs - this.startedAtMs!) / 1000));
++    this.judgmentPoint = Object.freeze({
++      position: positionAtPathDistance(this.line.path, this.aspectRatio, pathDistance),
++      pathDistance,
++    });
++  }
++
++  private finishIfReady(): void {
++    if (this.state === 'Running' && this.nodeTier !== null &&
++        this.judgmentPoint !== null && this.judgmentPoint.pathDistance >= this.pathLength) {
++      this.state = 'Finished';
++    }
++  }
++
++  private resolveNode(
++    tier: ChartJudgeTier,
++    videoTimeMs: number,
++    keyId: ChartKeyId | null,
++  ): readonly GuidanceJudgement[] {
++    if (this.nodeTier !== null) {
++      return [];
++    }
++    this.nodeTier = tier;
++    this.nodeResolvedAtMs = videoTimeMs;
++    return Object.freeze([Object.freeze({
++      nodeId: this.node.id,
++      videoTimeMs,
++      keyId,
++      tier,
++      consumed: true,
++    })]);
++  }
++}
+diff --git a/src/chart/GuidanceLineRuntime.ts.meta b/src/chart/GuidanceLineRuntime.ts.meta
+new file mode 100644
+index 0000000..1fd8b5b
+--- /dev/null
++++ b/src/chart/GuidanceLineRuntime.ts.meta
+@@ -0,0 +1,9 @@
++{
++  "ver": "4.0.24",
++  "importer": "typescript",
++  "imported": true,
++  "uuid": "28f91de5-867e-4e54-a2a2-b16e947d0683",
++  "files": [],
++  "subMetas": {},
++  "userData": {}
++}
+diff --git a/src/presentation/LineEraseEffect.ts b/src/presentation/LineEraseEffect.ts
+new file mode 100644
+index 0000000..fc88c3d
+--- /dev/null
++++ b/src/presentation/LineEraseEffect.ts
+@@ -0,0 +1,185 @@
++// P 表现层 · 引导线擦除与节点表现（VERDICT-128 / 133 / 134）。
++// 只读取逻辑快照；不计算路径进度、网格键或判定，不写账本。
++import {
++  _decorator, Component, Node, UITransform, Graphics, Color, Sprite, SpriteFrame,
++} from 'cc';
++import type { FrameRefreshable } from './FrameDriver';
++import type { ChartPremiereReader } from '../chart/ChartPremiere';
++import type { GuidanceLineSnapshot } from '../chart/GuidanceLineRuntime';
++
++const { ccclass } = _decorator;
++
++/** 表现侧占位：放大淡出时长，使用谱面媒体时间，暂停不推进。 */
++const NODE_FADE_MS = 240;
++const NODE_SIZE_RATIO = 0.032;
++const POINT_RADIUS_RATIO = 0.008;
++const HEAD_SIZE_RATIO = 0.075;
++const NODE_EXPAND_RATIO = 0.65;
++
++@ccclass('LineEraseEffect')
++export class LineEraseEffect extends Component implements FrameRefreshable {
++  private premiere: ChartPremiereReader | null = null;
++  private graphics: Graphics | null = null;
++  private headSprite: Sprite | null = null;
++  private headLogo: SpriteFrame | null = null;
++  private headPosition: { readonly u: number; readonly v: number } | null = null;
++
++  bindPremiere(reader: ChartPremiereReader): void {
++    this.premiere = reader;
++    this.clearVisuals();
++  }
++
++  /** LOGO 由组合根提供；组件不拥有或销毁该共享资源。 */
++  bindHeadLogo(logo: SpriteFrame): void {
++    this.headLogo = logo;
++    if (this.headSprite !== null) {
++      this.headSprite.spriteFrame = logo;
++    }
++  }
++
++  /** 读取谱面首点用于 Head 原位动画，不从移动后的剩余线倒推起点。 */
++  bindHeadPosition(position: { readonly u: number; readonly v: number } | null): void {
++    this.headPosition = position === null ? null : { ...position };
++    this.clearVisuals();
++  }
++
++  /** 与打击垫使用同一有效区域大小，仅做归一化坐标到 UI 的映射。 */
++  bindContentSize(width: number, height: number): void {
++    this.node.getComponent(UITransform)?.setContentSize(width, height);
++  }
++
++  private ensureBuilt(): void {
++    if (this.graphics !== null) {
++      return;
++    }
++    this.graphics = this.node.addComponent(Graphics);
++    const headNode = new Node('GuidanceHeadLogo');
++    headNode.layer = this.node.layer;
++    this.node.addChild(headNode);
++    headNode.addComponent(UITransform);
++    this.headSprite = headNode.addComponent(Sprite);
++    this.headSprite.sizeMode = Sprite.SizeMode.CUSTOM;
++    this.headSprite.spriteFrame = this.headLogo;
++    headNode.active = false;
++  }
++
++  clearVisuals(): void {
++    this.graphics?.clear();
++    if (this.headSprite !== null) {
++      this.headSprite.node.active = false;
++      this.headSprite.node.setScale(1, 1, 1);
++    }
++  }
++
++  onDisable(): void {
++    this.clearVisuals();
++  }
++
++  onDestroy(): void {
++    this.premiere = null;
++    this.graphics = null;
++    this.headSprite = null;
++    this.headLogo = null;
++    this.headPosition = null;
++  }
++
++  onFrameRefresh(): void {
++    if (this.premiere === null) {
++      this.clearVisuals();
++      return;
++    }
++    const state = this.premiere.getState();
++    const snapshot = this.premiere.getGuidanceSnapshot();
++    if (state === 'Ready' || state === 'Exited' || snapshot === null ||
++        snapshot.state === 'Pending' || snapshot.state === 'TimedOut' || snapshot.state === 'Exited') {
++      this.clearVisuals();
++      return;
++    }
++    this.ensureBuilt();
++    this.clearVisuals();
++    this.drawSnapshot(snapshot);
++  }
++
++  private drawSnapshot(snapshot: GuidanceLineSnapshot): void {
++    const transform = this.node.getComponent(UITransform);
++    const graphics = this.graphics;
++    const premiere = this.premiere;
++    if (transform === null || graphics === null || premiere === null ||
++        transform.width <= 0 || transform.height <= 0) {
++      return;
++    }
++    const width = transform.width;
++    const height = transform.height;
++    const mapX = (u: number): number => (u - 0.5) * width;
++    const mapY = (v: number): number => (v - 0.5) * height;
++    const alpha = Math.round((1 - premiere.getGuideTransparency() / 100) * 255);
++    if (alpha <= 0) {
++      return;
++    }
++    const nowMs = premiere.getCurrentTimeMs();
++    this.drawHead(snapshot, nowMs, alpha, height, mapX, mapY);
++    if (snapshot.state === 'Waiting') {
++      return;
++    }
++
++    // remainingPoints 已由 chart 按当前逻辑进度裁剪，本层逐帧直接绘制。
++    if (snapshot.remainingPoints.length >= 2) {
++      graphics.strokeColor = new Color(255, 255, 255, alpha);
++      graphics.lineWidth = Math.max(2, height * 0.003);
++      graphics.moveTo(mapX(snapshot.remainingPoints[0].u), mapY(snapshot.remainingPoints[0].v));
++      for (let i = 1; i < snapshot.remainingPoints.length; i++) {
++        const point = snapshot.remainingPoints[i];
++        graphics.lineTo(mapX(point.u), mapY(point.v));
++      }
++      graphics.stroke();
++    }
++
++    for (const item of snapshot.nodes) {
++      const ageMs = item.resolvedAtMs === null ? 0 : Math.max(0, nowMs - item.resolvedAtMs);
++      if (item.tier !== null && ageMs >= NODE_FADE_MS) {
++        continue;
++      }
++      const fadeProgress = item.tier === null ? 0 : ageMs / NODE_FADE_MS;
++      const size = height * NODE_SIZE_RATIO * (1 + fadeProgress * NODE_EXPAND_RATIO);
++      const nodeAlpha = Math.round(alpha * (1 - fadeProgress));
++      graphics.strokeColor = new Color(255, 255, 255, nodeAlpha);
++      graphics.lineWidth = Math.max(2, height * 0.003);
++      graphics.rect(mapX(item.position.u) - size / 2, mapY(item.position.v) - size / 2, size, size);
++      graphics.stroke();
++    }
++
++    if (snapshot.judgmentPoint !== null && snapshot.state === 'Running') {
++      const position = snapshot.judgmentPoint.position;
++      graphics.fillColor = new Color(255, 255, 255, alpha);
++      graphics.circle(mapX(position.u), mapY(position.v), height * POINT_RADIUS_RATIO);
++      graphics.fill();
++    }
++  }
++
++  private drawHead(
++    snapshot: GuidanceLineSnapshot,
++    nowMs: number,
++    alpha: number,
++    height: number,
++    mapX: (u: number) => number,
++    mapY: (v: number) => number,
++  ): void {
++    const sprite = this.headSprite;
++    const position = this.headPosition;
++    if (sprite === null || this.headLogo === null || position === null) {
++      return;
++    }
++    const ageMs = snapshot.startedAtMs === null ? 0 : Math.max(0, nowMs - snapshot.startedAtMs);
++    if (snapshot.startedAtMs !== null && ageMs >= NODE_FADE_MS) {
++      return;
++    }
++    const progress = snapshot.startedAtMs === null ? 0 : ageMs / NODE_FADE_MS;
++    const size = height * HEAD_SIZE_RATIO;
++    sprite.node.getComponent(UITransform)?.setContentSize(size, size);
++    sprite.node.setPosition(mapX(position.u), mapY(position.v), 0);
++    const scale = 1 + progress * NODE_EXPAND_RATIO;
++    sprite.node.setScale(scale, scale, 1);
++    sprite.color = new Color(255, 255, 255, Math.round(alpha * (1 - progress)));
++    sprite.node.active = true;
++  }
++}
+diff --git a/src/presentation/LineEraseEffect.ts.meta b/src/presentation/LineEraseEffect.ts.meta
+new file mode 100644
+index 0000000..af2dbea
+--- /dev/null
++++ b/src/presentation/LineEraseEffect.ts.meta
+@@ -0,0 +1,9 @@
++{
++  "ver": "4.0.24",
++  "importer": "typescript",
++  "imported": true,
++  "uuid": "3b1ff215-5d14-42d5-b735-6659287438a2",
++  "files": [],
++  "subMetas": {},
++  "userData": {}
++}
+diff --git a/assets/resources/chart/guidance_a.json b/assets/resources/chart/guidance_a.json
+new file mode 100644
+index 0000000..5ac9e4c
+--- /dev/null
++++ b/assets/resources/chart/guidance_a.json
+@@ -0,0 +1,16 @@
++{
++  "schemaVersion": 1,
++  "chartId": "guidance-a-1",
++  "tier": "Regular",
++  "layoutVersion": "pad-layout-1",
++  "aspectRatio": 1.7777777777777777,
++  "lines": [
++    {
++      "id": "line-a-1",
++      "head": { "id": "head-a-1", "spawnTimeMs": 2000 },
++      "path": { "kind": "Polyline", "points": [ { "u": 0.18, "v": 0.5 }, { "u": 0.82, "v": 0.5 } ] },
++      "speed": 0.28444444444444444,
++      "nodes": [ { "id": "tap-a-1", "kind": "Tap", "pathDistance": 0.5688888888888889 } ]
++    }
++  ]
++}
+diff --git a/assets/resources/chart/guidance_a.json.meta b/assets/resources/chart/guidance_a.json.meta
+new file mode 100644
+index 0000000..60c1b7b
+--- /dev/null
++++ b/assets/resources/chart/guidance_a.json.meta
+@@ -0,0 +1,11 @@
++{
++  "ver": "2.0.1",
++  "importer": "json",
++  "imported": true,
++  "uuid": "2ae4337d-f408-40fb-bbd3-6da6359af2ba",
++  "files": [
++    ".json"
++  ],
++  "subMetas": {},
++  "userData": {}
++}
+diff --git a/assets/resources/guidance.meta b/assets/resources/guidance.meta
+new file mode 100644
+index 0000000..6c6149a
+--- /dev/null
++++ b/assets/resources/guidance.meta
+@@ -0,0 +1,9 @@
++{
++  "ver": "1.2.0",
++  "importer": "directory",
++  "imported": true,
++  "uuid": "84720474-9d08-4748-8ad6-e6f69ddbc583",
++  "files": [],
++  "subMetas": {},
++  "userData": {}
++}
+diff --git a/assets/resources/guidance/head-logo.png b/assets/resources/guidance/head-logo.png
+new file mode 100644
+index 0000000..67453ba
+Binary files /dev/null and b/assets/resources/guidance/head-logo.png differ
+diff --git a/assets/resources/guidance/head-logo.png.meta b/assets/resources/guidance/head-logo.png.meta
+new file mode 100644
+index 0000000..5f302dc
+--- /dev/null
++++ b/assets/resources/guidance/head-logo.png.meta
+@@ -0,0 +1,134 @@
++{
++  "ver": "1.0.27",
++  "importer": "image",
++  "imported": true,
++  "uuid": "3b3f11cc-0b05-4bd3-ba73-4522e91ead79",
++  "files": [
++    ".json",
++    ".png"
++  ],
++  "subMetas": {
++    "6c48a": {
++      "importer": "texture",
++      "uuid": "3b3f11cc-0b05-4bd3-ba73-4522e91ead79@6c48a",
++      "displayName": "head-logo",
++      "id": "6c48a",
++      "name": "texture",
++      "userData": {
++        "wrapModeS": "repeat",
++        "wrapModeT": "repeat",
++        "minfilter": "linear",
++        "magfilter": "linear",
++        "mipfilter": "none",
++        "anisotropy": 0,
++        "isUuid": true,
++        "imageUuidOrDatabaseUri": "3b3f11cc-0b05-4bd3-ba73-4522e91ead79",
++        "visible": false
++      },
++      "ver": "1.0.22",
++      "imported": true,
++      "files": [
++        ".json"
++      ],
++      "subMetas": {}
++    },
++    "f9941": {
++      "importer": "sprite-frame",
++      "uuid": "3b3f11cc-0b05-4bd3-ba73-4522e91ead79@f9941",
++      "displayName": "head-logo",
++      "id": "f9941",
++      "name": "spriteFrame",
++      "userData": {
++        "trimThreshold": 1,
++        "rotated": false,
++        "offsetX": 0.5,
++        "offsetY": 2,
++        "trimX": 10,
++        "trimY": 5,
++        "width": 153,
++        "height": 154,
++        "rawWidth": 172,
++        "rawHeight": 168,
++        "borderTop": 0,
++        "borderBottom": 0,
++        "borderLeft": 0,
++        "borderRight": 0,
++        "packable": true,
++        "pixelsToUnit": 100,
++        "pivotX": 0.5,
++        "pivotY": 0.5,
++        "meshType": 0,
++        "vertices": {
++          "rawPosition": [
++            -76.5,
++            -77,
++            0,
++            76.5,
++            -77,
++            0,
++            -76.5,
++            77,
++            0,
++            76.5,
++            77,
++            0
++          ],
++          "indexes": [
++            0,
++            1,
++            2,
++            2,
++            1,
++            3
++          ],
++          "uv": [
++            10,
++            163,
++            163,
++            163,
++            10,
++            9,
++            163,
++            9
++          ],
++          "nuv": [
++            0.05813953488372093,
++            0.05357142857142857,
++            0.9476744186046512,
++            0.05357142857142857,
++            0.05813953488372093,
++            0.9702380952380952,
++            0.9476744186046512,
++            0.9702380952380952
++          ],
++          "minPos": [
++            -76.5,
++            -77,
++            0
++          ],
++          "maxPos": [
++            76.5,
++            77,
++            0
++          ]
++        },
++        "isUuid": true,
++        "imageUuidOrDatabaseUri": "3b3f11cc-0b05-4bd3-ba73-4522e91ead79@6c48a",
++        "atlasUuid": "",
++        "trimType": "auto"
++      },
++      "ver": "1.0.12",
++      "imported": true,
++      "files": [
++        ".json"
++      ],
++      "subMetas": {}
++    }
++  },
++  "userData": {
++    "type": "sprite-frame",
++    "fixAlphaTransparencyArtifacts": false,
++    "hasAlpha": true,
++    "redirect": "3b3f11cc-0b05-4bd3-ba73-4522e91ead79@6c48a"
++  }
++}

@@ -1,0 +1,36 @@
+{
+  "verifiedAt": "2026-10-09",
+  "headWindowMs": 1000,
+  "gates": [
+    {
+      "name": "check:naming",
+      "result": {
+        "chunk_id": "1540c3",
+        "wall_time_seconds": 0.6246046,
+        "exit_code": 0,
+        "original_token_count": 866,
+        "output": "\n> neurou_official@1.0.0 check:naming\n> node scripts/check-naming.js\n\n== INV-8 命名合规检查 ==\n扫描目录: src, constants, assets/scripts（61 个 .ts 文件）\nWARN  src\\chart\\ChartPremiere.ts:31 [R7] 含 Window 的命名疑似用作界面窗口（界面窗口必须用 Panel / View） —— 命中: judgeTimeWindow（请人工复核语义）\nWARN  src\\chart\\ChartPremiere.ts:320 [R7] 含 Window 的命名疑似用作界面窗口（界面窗口必须用 Panel / View） —— 命中: hasAnyCandidateInWindow（请人工复核语义）\nWARN  src\\chart\\ChartScore.ts:62 [R7] 含 Window 的命名疑似用作界面窗口（界面窗口必须用 Panel / View） —— 命中: judgeTimeWindow（请人工复核语义）\nWARN  src\\chart\\GuidanceLineRuntime.ts:7 [R7] 含 Window 的命名疑似用作界面窗口（界面窗口必须用 Panel / View） —— 命中: judgeTimeWindow（请人工复核语义）\nWARN  src\\director\\IntentPort.ts:339 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: bindDeepTrace（请人工复核语义）\nWARN  src\\director\\IntentPort.ts:881 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: tracePosition（请人工复核语义）\nWARN  src\\presentation\\DeepTraceRevealSequence.ts:14 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: DeepTraceRevealSequence（请人工复核语义）\nWARN  src\\trace\\TraceProximityVolume.ts:27 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: TraceProximityVolume（请人工复核语义）\nWARN  assets\\scripts\\SceneBuilder.ts:130 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: DeepTraceRevealSequence（请人工复核语义）\nWARN  assets\\scripts\\SceneBuilder.ts:139 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: TraceProximityVolume（请人工复核语义）\nWARN  assets\\scripts\\SceneBuilder.ts:189 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: DEEP_TRACE_LATERAL（请人工复核语义）\nWARN  assets\\scripts\\SceneBuilder.ts:190 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: DEEP_TRACE_DEPTH（请人工复核语义）\nWARN  assets\\scripts\\SceneBuilder.ts:535 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: concealedTraceEntity（请人工复核语义）\nWARN  assets\\scripts\\SceneBuilder.ts:621 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: deepTraceNode（请人工复核语义）\nWARN  assets\\scripts\\SceneBuilder.ts:638 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: bindDeepTrace（请人工复核语义）\nWARN  assets\\scripts\\SceneBuilder.ts:1037 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: tracePos（请人工复核语义）\n------------------------------------------------------------\n汇总: 0 ERROR / 16 WARN\n结论: 无阻断项，但有 16 条需人工复核的语义告警。\n"
+      }
+    },
+    {
+      "name": "check:dependencies",
+      "result": {
+        "chunk_id": "e01e6a",
+        "wall_time_seconds": 0.5542656,
+        "exit_code": 0,
+        "original_token_count": 109,
+        "output": "\n> neurou_official@1.0.0 check:dependencies\n> node scripts/check-dependencies.js\n\n== 阶段 1 依赖方向矩阵检查（stage-1.md §6 / VERDICT-086）==\n模块: constants / ledger / world / character / trace / chart / director / presentation\n------------------------------------------------------------\n扫描: 59 个 .ts 文件，约 160 条静态依赖子句\n汇总: 0 ERROR\n结论: 全部依赖边符合 stage-1.md §6 矩阵。\n"
+      }
+    },
+    {
+      "name": "typecheck",
+      "result": {
+        "chunk_id": "90776e",
+        "wall_time_seconds": 1.3685949,
+        "exit_code": 0,
+        "original_token_count": 13,
+        "output": "\n> neurou_official@1.0.0 typecheck\n> tsc --noEmit\n\n"
+      }
+    }
+  ]
+}

@@ -1,0 +1,190 @@
+{
+  "phase": "B2.5c-2b final delivery artifact consistency",
+  "checkedUtc": "2026-10-11T08:14:10.976Z",
+  "pass": true,
+  "checks": [
+    {
+      "name": "final protection and original IntentPort byte/type-only prefix",
+      "pass": true
+    },
+    {
+      "name": "23 implementation files and complete diff exact bytes/hash",
+      "pass": true
+    },
+    {
+      "name": "final source unchanged: assets/scripts/SharedRelayPrototypeBuilder.ts",
+      "pass": true
+    },
+    {
+      "name": "final source unchanged: server/SharedBuild.mjs",
+      "pass": true
+    },
+    {
+      "name": "final source unchanged: server/sql/002_shared_authority.sql",
+      "pass": true
+    },
+    {
+      "name": "final source unchanged: server/src/AuthorityRoute.ts",
+      "pass": true
+    },
+    {
+      "name": "final source unchanged: server/src/RealAuthorityClock.ts",
+      "pass": true
+    },
+    {
+      "name": "final source unchanged: server/src/SharedCryptoProof.ts",
+      "pass": true
+    },
+    {
+      "name": "final source unchanged: server/src/SharedMigrationRunner.ts",
+      "pass": true
+    },
+    {
+      "name": "final source unchanged: server/src/SharedReceiptSigner.ts",
+      "pass": true
+    },
+    {
+      "name": "final source unchanged: server/src/SharedServerConfig.ts",
+      "pass": true
+    },
+    {
+      "name": "final source unchanged: server/src/SharedSessionVerifier.ts",
+      "pass": true
+    },
+    {
+      "name": "final source unchanged: server/src/WorldAuthorityService.ts",
+      "pass": true
+    },
+    {
+      "name": "final source unchanged: server/src/WorldAuthorityStorage.ts",
+      "pass": true
+    },
+    {
+      "name": "final source unchanged: server/src/buildSharedServer.ts",
+      "pass": true
+    },
+    {
+      "name": "final source unchanged: server/src/shared-cli.ts",
+      "pass": true
+    },
+    {
+      "name": "final source unchanged: server/src/shared-main.ts",
+      "pass": true
+    },
+    {
+      "name": "final source unchanged: server/test/shared-clock-migration.test.ts",
+      "pass": true
+    },
+    {
+      "name": "final source unchanged: server/test/shared-http.test.ts",
+      "pass": true
+    },
+    {
+      "name": "final source unchanged: server/tsconfig.shared.json",
+      "pass": true
+    },
+    {
+      "name": "final source unchanged: src/director/IntentPort.ts",
+      "pass": true
+    },
+    {
+      "name": "final source unchanged: src/director/SharedServiceProtocolCodec.ts",
+      "pass": true
+    },
+    {
+      "name": "final source unchanged: src/director/SharedServiceProtocolContracts.ts",
+      "pass": true
+    },
+    {
+      "name": "final source unchanged: src/presentation/RealSharedServiceSessionAdapter.ts",
+      "pass": true
+    },
+    {
+      "name": "final source unchanged: src/presentation/RealWorldAuthorityAdapter.ts",
+      "pass": true
+    },
+    {
+      "name": "three original gates pass; 45 warning lines unchanged",
+      "pass": true
+    },
+    {
+      "name": "IntentPort emitted runtime identical",
+      "pass": true
+    },
+    {
+      "name": "pure ES2020 no-platform compile",
+      "pass": true
+    },
+    {
+      "name": "protocol compiled source output still matches",
+      "pass": true
+    },
+    {
+      "name": "32 pure contract checks",
+      "pass": true
+    },
+    {
+      "name": "18 client oracle checks",
+      "pass": true
+    },
+    {
+      "name": "11 real production client checks; 16 port methods",
+      "pass": true
+    },
+    {
+      "name": "earlier positive client evidence accurately scoped",
+      "pass": true
+    },
+    {
+      "name": "20 server checks and clock classifications recorded",
+      "pass": true
+    },
+    {
+      "name": "historical B2.4 pass",
+      "pass": true
+    },
+    {
+      "name": "historical c-1 pass",
+      "pass": true
+    },
+    {
+      "name": "historical b auth pass",
+      "pass": true
+    },
+    {
+      "name": "temporary PG listener cleanly stopped; data retained",
+      "pass": true
+    },
+    {
+      "name": "final public scoped credential scan",
+      "pass": true
+    },
+    {
+      "name": "document evidence references exist",
+      "pass": true
+    },
+    {
+      "name": "delivered document: delivery-report.md",
+      "pass": true
+    },
+    {
+      "name": "delivered document: verdicts-441-447.md",
+      "pass": true
+    },
+    {
+      "name": "delivered document: namebook-v3.20-appendix-proposal.md",
+      "pass": true
+    },
+    {
+      "name": "delivered document: implementation-plan.md",
+      "pass": true
+    },
+    {
+      "name": "delivered document: client-and-server-independent-review.md",
+      "pass": true
+    }
+  ],
+  "sourceFileCount": 23,
+  "codeDiffSha256": "59f422eee4b2ea3a9984e0fbe6e0426b21ee539b9cf372ae6032490b1aafff9d",
+  "scope": "Public completed source/evidence/document consistency only; does not add mechanism tests or certify Relay, key packages, dual-client replay, LAN TLS or elapsed production H. Public inventory is a timestamped snapshot that predates this final QA artifact; no private runtime paths were read."
+}

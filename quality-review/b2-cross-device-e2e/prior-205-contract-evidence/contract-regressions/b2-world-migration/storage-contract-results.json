@@ -1,0 +1,148 @@
+{
+  "schemaVersion": 1,
+  "phase": "B2.4d storage",
+  "mode": "ContractAdapter",
+  "generatedAt": "2026-10-10T16:06:22.559Z",
+  "passed": 34,
+  "total": 34,
+  "pass": true,
+  "results": [
+    {
+      "name": "MS01 same-ID source drain→Release→hour pause→Claim→directory publication preserves arbitrary revision and all seven",
+      "pass": true
+    },
+    {
+      "name": "MS02 coordination→target lease→directory ordering uses no remote source lease",
+      "pass": true
+    },
+    {
+      "name": "MS03 missing coordinator, missing real target lease or unprepared journal makes no Claim",
+      "pass": true
+    },
+    {
+      "name": "MS04 unavailable Web Locks explicitly refuses both source and target with zero writes",
+      "pass": true
+    },
+    {
+      "name": "MS05 source Prepared journal failure does not Release and preserves original Core/directory",
+      "pass": true
+    },
+    {
+      "name": "MS06 Prepared source restart cannot substitute serialized confirmation for a fresh live drain",
+      "pass": true
+    },
+    {
+      "name": "MS07 source service unavailable keeps Prepared; revoked drain refuses; fresh capability recovers",
+      "pass": true
+    },
+    {
+      "name": "MS08 Release accepted response lost retains Prepared; readMigration recovery does not require a dead drain",
+      "pass": true
+    },
+    {
+      "name": "MS09 PauseActive journal quota retains Prepared; Released and Claimed source observations never touch source files",
+      "pass": true
+    },
+    {
+      "name": "MS10 atomic Prepared write throwing afterward is recognized as durable before Release",
+      "pass": true
+    },
+    {
+      "name": "MS11 target missing authoritative transfer or tampered service payload never Claim",
+      "pass": true
+    },
+    {
+      "name": "MS12 target Prepared journal failure leaves global Released and zero Claim/Core writes",
+      "pass": true
+    },
+    {
+      "name": "MS13 Claim accepted response lost persists Released and retries without changing claimant or revision",
+      "pass": true
+    },
+    {
+      "name": "MS14 global Claim success then Claimed journal quota retains Released and recovers service-first",
+      "pass": true
+    },
+    {
+      "name": "MS15 target original-revision Core write quota keeps Claimed; retry writes the same value once",
+      "pass": true
+    },
+    {
+      "name": "MS16 atomic Core write throwing afterward is read back exactly and safely publishes",
+      "pass": true
+    },
+    {
+      "name": "MS17 service Claim succeeds/local directory fails: retain staged Core and Claimed journal, never delete",
+      "pass": true
+    },
+    {
+      "name": "MS18 atomic directory append throwing afterward recognizes the sole local publication point",
+      "pass": true
+    },
+    {
+      "name": "MS19 directory published/LocalPublished journal quota refuses opening until reconciliation; source and target kept",
+      "pass": true
+    },
+    {
+      "name": "MS20 atomic LocalPublished journal write throwing afterward returns committed result",
+      "pass": true
+    },
+    {
+      "name": "MS21 every durable target write prefix recovers with a fresh storage object and same service Claim",
+      "pass": true
+    },
+    {
+      "name": "MS22 fully identical existing directory/Core admits exact return without any local Core or directory rewrite",
+      "pass": true
+    },
+    {
+      "name": "MS23 divergent Core, divergent directory or tombstone conflicts before Claim and preserves all local bytes",
+      "pass": true
+    },
+    {
+      "name": "MS24 staged orphan Core exact value resumes while a different orphan never gets overwritten",
+      "pass": true
+    },
+    {
+      "name": "MS25 another claimant wins: no target publication, unchanged Core/files and retained target journal",
+      "pass": true
+    },
+    {
+      "name": "MS26 local already published/service unavailable denies opening and recovery, no rollback deletion",
+      "pass": true
+    },
+    {
+      "name": "MS27 historical Claim receipt cannot reopen or republish after migration back to A",
+      "pass": true
+    },
+    {
+      "name": "MS28 malformed journal, cross-account/device, duplicate migration or changed payload never overwrite original logs",
+      "pass": true
+    },
+    {
+      "name": "MS29 final synchronous authority guard closes async-observation→Core-write service unavailability gap",
+      "pass": true
+    },
+    {
+      "name": "MS30 published progression may open, while immutable FormatTime/forkOrigin mutation remains rejected",
+      "pass": true
+    },
+    {
+      "name": "MS31 no pending recovery is diagnostic only; account isolation and reentrant coordinator refuse",
+      "pass": true
+    },
+    {
+      "name": "MS32 inherited fork origin survives unchanged through same-ID migration and no account facts are transferred",
+      "pass": true
+    },
+    {
+      "name": "MS33 local publication survives a missing service domain; never invent registration or delete the target",
+      "pass": true
+    },
+    {
+      "name": "MS34 source Prepared/PauseActive/Released/Claimed durable phases survive new storage instances without source mutation",
+      "pass": true
+    }
+  ],
+  "limitation": "Controlled service fixture advances serviceNow; not a real one-hour wait, external service, FileCarry, or Creator production injection."
+}

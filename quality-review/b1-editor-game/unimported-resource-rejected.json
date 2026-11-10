@@ -1,0 +1,1224 @@
+{
+  "creator": "3.8.8",
+  "url": "http://localhost:7457/",
+  "harnessSha256": "bb4c094d510992a7f7016a9ec52d041b0fb328fd53414f946fccce15774f4931",
+  "fixturePolicy": "No endpoint, judgement, ledger or clock fixture. UI clicks and change events edit project; browser download handler saves exact exported bytes and copies the pair to resources/chart. Fresh browser profile per resolution. Root SceneBuilder.ChartResourcePath assigned before world factory activation, equivalent to pre-run Inspector configuration; no .scene mutation. GameCanvas DOM keyboard edges enter actual Cocos input, InputCollector, FrameDriver and director. Read-only private component/state observation. Actual native video and AudioOutputClock/BGM, no media substitution. Hidden offscreen Electron BrowserWindow, native CDP screenshots, no image compositing.",
+  "resolutions": [
+    {
+      "resolution": "1920x1080",
+      "screenshots": [
+        {
+          "name": "00-music-source-export",
+          "file": "1920x1080-00-music-source-export.png",
+          "sha256": "bccc26e831135853d337b00606bbbe9dcb0e5473126775816a6ff04e5ea6b553",
+          "snapshot": {
+            "viewport": [
+              1920,
+              1080
+            ],
+            "canvas": [
+              1920,
+              1080
+            ],
+            "dpr": 1,
+            "musicDom": true,
+            "guidanceDom": false,
+            "folder": false,
+            "frameDrivers": 0,
+            "inputCollectors": 0,
+            "worldCount": 0,
+            "editor": null,
+            "world": null,
+            "errors": []
+          }
+        },
+        {
+          "name": "01-editor-export-v3",
+          "file": "1920x1080-01-editor-export-v3.png",
+          "sha256": "3e682c41da81a62778babb9d64b205389f28ec6e4caa6ef75928b51cf7bd348a",
+          "snapshot": {
+            "viewport": [
+              1920,
+              1080
+            ],
+            "canvas": [
+              1920,
+              1080
+            ],
+            "dpr": 1,
+            "musicDom": false,
+            "guidanceDom": true,
+            "folder": false,
+            "frameDrivers": 0,
+            "inputCollectors": 0,
+            "worldCount": 0,
+            "editor": {
+              "document": {
+                "schemaVersion": 1,
+                "documentId": "music-project-1",
+                "chartId": "music-project-1-chart",
+                "tier": "Regular",
+                "source": {
+                  "schemaVersion": 1,
+                  "sourceId": "music-project-1",
+                  "sourceRevision": "revision-1-d8681e80c9e6cf50",
+                  "provenance": "Midi",
+                  "layoutVersion": "pad-layout-2",
+                  "aspectRatio": 1.7777777777777777,
+                  "mappingVersion": "music-mapping-1",
+                  "mediaDurationMs": 12000,
+                  "events": [
+                    {
+                      "id": "music-note-1",
+                      "trackId": "track-1",
+                      "lineId": "music-line-1",
+                      "timeMs": 750,
+                      "position": {
+                        "u": 0.045454545454545456,
+                        "v": 0.375
+                      },
+                      "color": {
+                        "r": 110,
+                        "g": 190,
+                        "b": 255
+                      },
+                      "pitch": 60,
+                      "drumType": null,
+                      "velocity": 90,
+                      "endTimeMs": 937.5,
+                      "emphasis": false
+                    },
+                    {
+                      "id": "music-note-4",
+                      "trackId": "track-2",
+                      "lineId": "music-line-2",
+                      "timeMs": 937.5,
+                      "position": {
+                        "u": 0.038461538461538464,
+                        "v": 0.625
+                      },
+                      "color": {
+                        "r": 230,
+                        "g": 166,
+                        "b": 96
+                      },
+                      "pitch": 72,
+                      "drumType": null,
+                      "velocity": 90,
+                      "endTimeMs": 1125,
+                      "emphasis": false
+                    },
+                    {
+                      "id": "music-note-2",
+                      "trackId": "track-1",
+                      "lineId": "music-line-1",
+                      "timeMs": 1500,
+                      "position": {
+                        "u": 0.3181818181818182,
+                        "v": 0.375
+                      },
+                      "color": {
+                        "r": 110,
+                        "g": 190,
+                        "b": 255
+                      },
+                      "pitch": 64,
+                      "drumType": null,
+                      "velocity": 90,
+                      "endTimeMs": 1687.5,
+                      "emphasis": true
+                    },
+                    {
+                      "id": "music-note-5",
+                      "trackId": "track-2",
+                      "lineId": "music-line-2",
+                      "timeMs": 1687.5,
+                      "position": {
+                        "u": 0.34615384615384615,
+                        "v": 0.625
+                      },
+                      "color": {
+                        "r": 230,
+                        "g": 166,
+                        "b": 96
+                      },
+                      "pitch": 76,
+                      "drumType": null,
+                      "velocity": 90,
+                      "endTimeMs": 1875,
+                      "emphasis": false
+                    },
+                    {
+                      "id": "music-note-3",
+                      "trackId": "track-1",
+                      "lineId": "music-line-1",
+                      "timeMs": 2250,
+                      "position": {
+                        "u": 0.5909090909090908,
+                        "v": 0.375
+                      },
+                      "color": {
+                        "r": 110,
+                        "g": 190,
+                        "b": 255
+                      },
+                      "pitch": 68,
+                      "drumType": null,
+                      "velocity": 90,
+                      "endTimeMs": 2437.5,
+                      "emphasis": false
+                    },
+                    {
+                      "id": "music-note-6",
+                      "trackId": "track-2",
+                      "lineId": "music-line-2",
+                      "timeMs": 2437.5,
+                      "position": {
+                        "u": 0.7307692307692308,
+                        "v": 0.625
+                      },
+                      "color": {
+                        "r": 230,
+                        "g": 166,
+                        "b": 96
+                      },
+                      "pitch": 80,
+                      "drumType": null,
+                      "velocity": 90,
+                      "endTimeMs": 2625,
+                      "emphasis": false
+                    }
+                  ]
+                },
+                "selection": {
+                  "heads": {
+                    "music-line-1": "music-note-1",
+                    "music-line-2": "music-note-4"
+                  },
+                  "nodes": {
+                    "music-note-1": {
+                      "kind": "Tap",
+                      "holdEndEventId": null
+                    },
+                    "music-note-4": {
+                      "kind": "Tap",
+                      "holdEndEventId": null
+                    },
+                    "music-note-2": {
+                      "kind": "Hold",
+                      "holdEndEventId": "music-note-3"
+                    },
+                    "music-note-5": {
+                      "kind": "Drag",
+                      "holdEndEventId": null
+                    },
+                    "music-note-3": {
+                      "kind": "Tap",
+                      "holdEndEventId": null
+                    },
+                    "music-note-6": {
+                      "kind": "Tap",
+                      "holdEndEventId": null
+                    }
+                  }
+                },
+                "history": {
+                  "entries": [
+                    {
+                      "label": "SetKind",
+                      "before": {
+                        "heads": {
+                          "music-line-1": "music-note-1",
+                          "music-line-2": "music-note-4"
+                        },
+                        "nodes": {
+                          "music-note-1": {
+                            "kind": "Tap",
+                            "holdEndEventId": null
+                          },
+                          "music-note-4": {
+                            "kind": "Tap",
+                            "holdEndEventId": null
+                          },
+                          "music-note-2": {
+                            "kind": "Tap",
+                            "holdEndEventId": null
+                          },
+                          "music-note-5": {
+                            "kind": "Tap",
+                            "holdEndEventId": null
+                          },
+                          "music-note-3": {
+                            "kind": "Tap",
+                            "holdEndEventId": null
+                          },
+                          "music-note-6": {
+                            "kind": "Tap",
+                            "holdEndEventId": null
+                          }
+                        }
+                      },
+                      "after": {
+                        "heads": {
+                          "music-line-1": "music-note-1",
+                          "music-line-2": "music-note-4"
+                        },
+                        "nodes": {
+                          "music-note-1": {
+                            "kind": "Tap",
+                            "holdEndEventId": null
+                          },
+                          "music-note-4": {
+                            "kind": "Tap",
+                            "holdEndEventId": null
+                          },
+                          "music-note-2": {
+                            "kind": "Hold",
+                            "holdEndEventId": null
+                          },
+                          "music-note-5": {
+                            "kind": "Tap",
+                            "holdEndEventId": null
+                          },
+                          "music-note-3": {
+                            "kind": "Tap",
+                            "holdEndEventId": null
+                          },
+                          "music-note-6": {
+                            "kind": "Tap",
+                            "holdEndEventId": null
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "label": "SetHoldEnd",
+                      "before": {
+                        "heads": {
+                          "music-line-1": "music-note-1",
+                          "music-line-2": "music-note-4"
+                        },
+                        "nodes": {
+                          "music-note-1": {
+                            "kind": "Tap",
+                            "holdEndEventId": null
+                          },
+                          "music-note-4": {
+                            "kind": "Tap",
+                            "holdEndEventId": null
+                          },
+                          "music-note-2": {
+                            "kind": "Hold",
+                            "holdEndEventId": null
+                          },
+                          "music-note-5": {
+                            "kind": "Tap",
+                            "holdEndEventId": null
+                          },
+                          "music-note-3": {
+                            "kind": "Tap",
+                            "holdEndEventId": null
+                          },
+                          "music-note-6": {
+                            "kind": "Tap",
+                            "holdEndEventId": null
+                          }
+                        }
+                      },
+                      "after": {
+                        "heads": {
+                          "music-line-1": "music-note-1",
+                          "music-line-2": "music-note-4"
+                        },
+                        "nodes": {
+                          "music-note-1": {
+                            "kind": "Tap",
+                            "holdEndEventId": null
+                          },
+                          "music-note-4": {
+                            "kind": "Tap",
+                            "holdEndEventId": null
+                          },
+                          "music-note-2": {
+                            "kind": "Hold",
+                            "holdEndEventId": "music-note-3"
+                          },
+                          "music-note-5": {
+                            "kind": "Tap",
+                            "holdEndEventId": null
+                          },
+                          "music-note-3": {
+                            "kind": "Tap",
+                            "holdEndEventId": null
+                          },
+                          "music-note-6": {
+                            "kind": "Tap",
+                            "holdEndEventId": null
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "label": "SetKind",
+                      "before": {
+                        "heads": {
+                          "music-line-1": "music-note-1",
+                          "music-line-2": "music-note-4"
+                        },
+                        "nodes": {
+                          "music-note-1": {
+                            "kind": "Tap",
+                            "holdEndEventId": null
+                          },
+                          "music-note-4": {
+                            "kind": "Tap",
+                            "holdEndEventId": null
+                          },
+                          "music-note-2": {
+                            "kind": "Hold",
+                            "holdEndEventId": "music-note-3"
+                          },
+                          "music-note-5": {
+                            "kind": "Tap",
+                            "holdEndEventId": null
+                          },
+                          "music-note-3": {
+                            "kind": "Tap",
+                            "holdEndEventId": null
+                          },
+                          "music-note-6": {
+                            "kind": "Tap",
+                            "holdEndEventId": null
+                          }
+                        }
+                      },
+                      "after": {
+                        "heads": {
+                          "music-line-1": "music-note-1",
+                          "music-line-2": "music-note-4"
+                        },
+                        "nodes": {
+                          "music-note-1": {
+                            "kind": "Tap",
+                            "holdEndEventId": null
+                          },
+                          "music-note-4": {
+                            "kind": "Tap",
+                            "holdEndEventId": null
+                          },
+                          "music-note-2": {
+                            "kind": "Hold",
+                            "holdEndEventId": "music-note-3"
+                          },
+                          "music-note-5": {
+                            "kind": "Drag",
+                            "holdEndEventId": null
+                          },
+                          "music-note-3": {
+                            "kind": "Tap",
+                            "holdEndEventId": null
+                          },
+                          "music-note-6": {
+                            "kind": "Tap",
+                            "holdEndEventId": null
+                          }
+                        }
+                      }
+                    }
+                  ],
+                  "cursor": 3
+                },
+                "media": {
+                  "videoPath": null,
+                  "audioPath": null
+                }
+              },
+              "colors": 0,
+              "status": "已请求下载两个 JSON；浏览器若提示多个下载，请允许。",
+              "video": {
+                "src": "http://localhost:7457/assets/resources/native/96/96162c33-4ecf-492c-b933-6852e6166148.mp4",
+                "duration": 12,
+                "time": 0,
+                "paused": true,
+                "ended": false
+              }
+            },
+            "world": null,
+            "errors": []
+          }
+        },
+        {
+          "name": "02-editor-preview-zero-gameplay",
+          "file": "1920x1080-02-editor-preview-zero-gameplay.png",
+          "sha256": "6baf3a37eee071fa6940194e7ae2b26f1c7db708b12eb026dfd9d41fb6062278",
+          "snapshot": {
+            "viewport": [
+              1920,
+              1080
+            ],
+            "canvas": [
+              1920,
+              1080
+            ],
+            "dpr": 1,
+            "musicDom": false,
+            "guidanceDom": true,
+            "folder": false,
+            "frameDrivers": 0,
+            "inputCollectors": 0,
+            "worldCount": 0,
+            "editor": {
+              "document": {
+                "schemaVersion": 1,
+                "documentId": "music-project-1",
+                "chartId": "music-project-1-chart",
+                "tier": "Regular",
+                "source": {
+                  "schemaVersion": 1,
+                  "sourceId": "music-project-1",
+                  "sourceRevision": "revision-1-d8681e80c9e6cf50",
+                  "provenance": "Midi",
+                  "layoutVersion": "pad-layout-2",
+                  "aspectRatio": 1.7777777777777777,
+                  "mappingVersion": "music-mapping-1",
+                  "mediaDurationMs": 12000,
+                  "events": [
+                    {
+                      "id": "music-note-1",
+                      "trackId": "track-1",
+                      "lineId": "music-line-1",
+                      "timeMs": 750,
+                      "position": {
+                        "u": 0.045454545454545456,
+                        "v": 0.375
+                      },
+                      "color": {
+                        "r": 110,
+                        "g": 190,
+                        "b": 255
+                      },
+                      "pitch": 60,
+                      "drumType": null,
+                      "velocity": 90,
+                      "endTimeMs": 937.5,
+                      "emphasis": false
+                    },
+                    {
+                      "id": "music-note-4",
+                      "trackId": "track-2",
+                      "lineId": "music-line-2",
+                      "timeMs": 937.5,
+                      "position": {
+                        "u": 0.038461538461538464,
+                        "v": 0.625
+                      },
+                      "color": {
+                        "r": 230,
+                        "g": 166,
+                        "b": 96
+                      },
+                      "pitch": 72,
+                      "drumType": null,
+                      "velocity": 90,
+                      "endTimeMs": 1125,
+                      "emphasis": false
+                    },
+                    {
+                      "id": "music-note-2",
+                      "trackId": "track-1",
+                      "lineId": "music-line-1",
+                      "timeMs": 1500,
+                      "position": {
+                        "u": 0.3181818181818182,
+                        "v": 0.375
+                      },
+                      "color": {
+                        "r": 110,
+                        "g": 190,
+                        "b": 255
+                      },
+                      "pitch": 64,
+                      "drumType": null,
+                      "velocity": 90,
+                      "endTimeMs": 1687.5,
+                      "emphasis": true
+                    },
+                    {
+                      "id": "music-note-5",
+                      "trackId": "track-2",
+                      "lineId": "music-line-2",
+                      "timeMs": 1687.5,
+                      "position": {
+                        "u": 0.34615384615384615,
+                        "v": 0.625
+                      },
+                      "color": {
+                        "r": 230,
+                        "g": 166,
+                        "b": 96
+                      },
+                      "pitch": 76,
+                      "drumType": null,
+                      "velocity": 90,
+                      "endTimeMs": 1875,
+                      "emphasis": false
+                    },
+                    {
+                      "id": "music-note-3",
+                      "trackId": "track-1",
+                      "lineId": "music-line-1",
+                      "timeMs": 2250,
+                      "position": {
+                        "u": 0.5909090909090908,
+                        "v": 0.375
+                      },
+                      "color": {
+                        "r": 110,
+                        "g": 190,
+                        "b": 255
+                      },
+                      "pitch": 68,
+                      "drumType": null,
+                      "velocity": 90,
+                      "endTimeMs": 2437.5,
+                      "emphasis": false
+                    },
+                    {
+                      "id": "music-note-6",
+                      "trackId": "track-2",
+                      "lineId": "music-line-2",
+                      "timeMs": 2437.5,
+                      "position": {
+                        "u": 0.7307692307692308,
+                        "v": 0.625
+                      },
+                      "color": {
+                        "r": 230,
+                        "g": 166,
+                        "b": 96
+                      },
+                      "pitch": 80,
+                      "drumType": null,
+                      "velocity": 90,
+                      "endTimeMs": 2625,
+                      "emphasis": false
+                    }
+                  ]
+                },
+                "selection": {
+                  "heads": {
+                    "music-line-1": "music-note-1",
+                    "music-line-2": "music-note-4"
+                  },
+                  "nodes": {
+                    "music-note-1": {
+                      "kind": "Tap",
+                      "holdEndEventId": null
+                    },
+                    "music-note-4": {
+                      "kind": "Tap",
+                      "holdEndEventId": null
+                    },
+                    "music-note-2": {
+                      "kind": "Hold",
+                      "holdEndEventId": "music-note-3"
+                    },
+                    "music-note-5": {
+                      "kind": "Drag",
+                      "holdEndEventId": null
+                    },
+                    "music-note-3": {
+                      "kind": "Tap",
+                      "holdEndEventId": null
+                    },
+                    "music-note-6": {
+                      "kind": "Tap",
+                      "holdEndEventId": null
+                    }
+                  }
+                },
+                "history": {
+                  "entries": [
+                    {
+                      "label": "SetKind",
+                      "before": {
+                        "heads": {
+                          "music-line-1": "music-note-1",
+                          "music-line-2": "music-note-4"
+                        },
+                        "nodes": {
+                          "music-note-1": {
+                            "kind": "Tap",
+                            "holdEndEventId": null
+                          },
+                          "music-note-4": {
+                            "kind": "Tap",
+                            "holdEndEventId": null
+                          },
+                          "music-note-2": {
+                            "kind": "Tap",
+                            "holdEndEventId": null
+                          },
+                          "music-note-5": {
+                            "kind": "Tap",
+                            "holdEndEventId": null
+                          },
+                          "music-note-3": {
+                            "kind": "Tap",
+                            "holdEndEventId": null
+                          },
+                          "music-note-6": {
+                            "kind": "Tap",
+                            "holdEndEventId": null
+                          }
+                        }
+                      },
+                      "after": {
+                        "heads": {
+                          "music-line-1": "music-note-1",
+                          "music-line-2": "music-note-4"
+                        },
+                        "nodes": {
+                          "music-note-1": {
+                            "kind": "Tap",
+                            "holdEndEventId": null
+                          },
+                          "music-note-4": {
+                            "kind": "Tap",
+                            "holdEndEventId": null
+                          },
+                          "music-note-2": {
+                            "kind": "Hold",
+                            "holdEndEventId": null
+                          },
+                          "music-note-5": {
+                            "kind": "Tap",
+                            "holdEndEventId": null
+                          },
+                          "music-note-3": {
+                            "kind": "Tap",
+                            "holdEndEventId": null
+                          },
+                          "music-note-6": {
+                            "kind": "Tap",
+                            "holdEndEventId": null
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "label": "SetHoldEnd",
+                      "before": {
+                        "heads": {
+                          "music-line-1": "music-note-1",
+                          "music-line-2": "music-note-4"
+                        },
+                        "nodes": {
+                          "music-note-1": {
+                            "kind": "Tap",
+                            "holdEndEventId": null
+                          },
+                          "music-note-4": {
+                            "kind": "Tap",
+                            "holdEndEventId": null
+                          },
+                          "music-note-2": {
+                            "kind": "Hold",
+                            "holdEndEventId": null
+                          },
+                          "music-note-5": {
+                            "kind": "Tap",
+                            "holdEndEventId": null
+                          },
+                          "music-note-3": {
+                            "kind": "Tap",
+                            "holdEndEventId": null
+                          },
+                          "music-note-6": {
+                            "kind": "Tap",
+                            "holdEndEventId": null
+                          }
+                        }
+                      },
+                      "after": {
+                        "heads": {
+                          "music-line-1": "music-note-1",
+                          "music-line-2": "music-note-4"
+                        },
+                        "nodes": {
+                          "music-note-1": {
+                            "kind": "Tap",
+                            "holdEndEventId": null
+                          },
+                          "music-note-4": {
+                            "kind": "Tap",
+                            "holdEndEventId": null
+                          },
+                          "music-note-2": {
+                            "kind": "Hold",
+                            "holdEndEventId": "music-note-3"
+                          },
+                          "music-note-5": {
+                            "kind": "Tap",
+                            "holdEndEventId": null
+                          },
+                          "music-note-3": {
+                            "kind": "Tap",
+                            "holdEndEventId": null
+                          },
+                          "music-note-6": {
+                            "kind": "Tap",
+                            "holdEndEventId": null
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "label": "SetKind",
+                      "before": {
+                        "heads": {
+                          "music-line-1": "music-note-1",
+                          "music-line-2": "music-note-4"
+                        },
+                        "nodes": {
+                          "music-note-1": {
+                            "kind": "Tap",
+                            "holdEndEventId": null
+                          },
+                          "music-note-4": {
+                            "kind": "Tap",
+                            "holdEndEventId": null
+                          },
+                          "music-note-2": {
+                            "kind": "Hold",
+                            "holdEndEventId": "music-note-3"
+                          },
+                          "music-note-5": {
+                            "kind": "Tap",
+                            "holdEndEventId": null
+                          },
+                          "music-note-3": {
+                            "kind": "Tap",
+                            "holdEndEventId": null
+                          },
+                          "music-note-6": {
+                            "kind": "Tap",
+                            "holdEndEventId": null
+                          }
+                        }
+                      },
+                      "after": {
+                        "heads": {
+                          "music-line-1": "music-note-1",
+                          "music-line-2": "music-note-4"
+                        },
+                        "nodes": {
+                          "music-note-1": {
+                            "kind": "Tap",
+                            "holdEndEventId": null
+                          },
+                          "music-note-4": {
+                            "kind": "Tap",
+                            "holdEndEventId": null
+                          },
+                          "music-note-2": {
+                            "kind": "Hold",
+                            "holdEndEventId": "music-note-3"
+                          },
+                          "music-note-5": {
+                            "kind": "Drag",
+                            "holdEndEventId": null
+                          },
+                          "music-note-3": {
+                            "kind": "Tap",
+                            "holdEndEventId": null
+                          },
+                          "music-note-6": {
+                            "kind": "Tap",
+                            "holdEndEventId": null
+                          }
+                        }
+                      }
+                    }
+                  ],
+                  "cursor": 3
+                },
+                "media": {
+                  "videoPath": null,
+                  "audioPath": null
+                }
+              },
+              "preview": "Completed",
+              "result": {
+                "chartId": "music-project-1-chart",
+                "tier": "Regular",
+                "perfectCount": 4,
+                "goodCount": 0,
+                "missCount": 0,
+                "totalScore": 400,
+                "finishedAtMs": 12016.09999999404,
+                "completed": true
+              },
+              "colors": 4,
+              "status": "预览完成 · 不写游戏账本",
+              "video": {
+                "src": "http://localhost:7457/assets/resources/native/96/96162c33-4ecf-492c-b933-6852e6166148.mp4",
+                "duration": 12,
+                "time": 12,
+                "paused": true,
+                "ended": true
+              }
+            },
+            "world": null,
+            "errors": []
+          }
+        }
+      ],
+      "checks": [],
+      "export": {
+        "chartFile": "1920x1080-music-project-1-chart.json",
+        "visualFile": "1920x1080-music-project-1-chart.visual.json",
+        "chartSha256": "74e30f25507b8939cd6a6cd2ffda3ccf7bae92ec590c4e5bd293e28975c8935c",
+        "visualSha256": "664bb750567353b13d1d9fdaa6e5da11e6458be1b232dbe27339754eeefdc6ac",
+        "chart": {
+          "schemaVersion": 3,
+          "chartId": "music-project-1-chart",
+          "tier": "Regular",
+          "layoutVersion": "pad-layout-2",
+          "aspectRatio": 1.7777777777777777,
+          "lines": [
+            {
+              "id": "line-music-line-1",
+              "head": {
+                "id": "head-music-note-1",
+                "spawnTimeMs": 750,
+                "targetTimeMs": 750
+              },
+              "path": {
+                "kind": "Polyline",
+                "points": [
+                  {
+                    "u": 0.045454545454545456,
+                    "v": 0.375
+                  },
+                  {
+                    "u": 0.3181818181818182,
+                    "v": 0.375
+                  },
+                  {
+                    "u": 0.5909090909090908,
+                    "v": 0.375
+                  }
+                ]
+              },
+              "nodes": [
+                {
+                  "id": "node-music-note-2",
+                  "kind": "Hold",
+                  "pathDistance": 0.4848484848484848,
+                  "endPathDistance": 0.9696969696969695,
+                  "keyId": "KeyF"
+                },
+                {
+                  "id": "node-music-note-3",
+                  "kind": "Tap",
+                  "pathDistance": 0.9696969696969695
+                }
+              ],
+              "timing": [
+                {
+                  "nodeId": "node-music-note-2",
+                  "targetTimeMs": 1500,
+                  "endTargetTimeMs": 2250
+                },
+                {
+                  "nodeId": "node-music-note-3",
+                  "targetTimeMs": 2250
+                }
+              ]
+            },
+            {
+              "id": "line-music-line-2",
+              "head": {
+                "id": "head-music-note-4",
+                "spawnTimeMs": 937.5,
+                "targetTimeMs": 937.5
+              },
+              "path": {
+                "kind": "Polyline",
+                "points": [
+                  {
+                    "u": 0.038461538461538464,
+                    "v": 0.625
+                  },
+                  {
+                    "u": 0.34615384615384615,
+                    "v": 0.625
+                  },
+                  {
+                    "u": 0.7307692307692308,
+                    "v": 0.625
+                  }
+                ]
+              },
+              "nodes": [
+                {
+                  "id": "node-music-note-5",
+                  "kind": "Drag",
+                  "pathDistance": 0.5470085470085471,
+                  "keyId": "KeyT"
+                },
+                {
+                  "id": "node-music-note-6",
+                  "kind": "Tap",
+                  "pathDistance": 1.2307692307692308
+                }
+              ],
+              "timing": [
+                {
+                  "nodeId": "node-music-note-5",
+                  "targetTimeMs": 1687.5
+                },
+                {
+                  "nodeId": "node-music-note-6",
+                  "targetTimeMs": 2437.5
+                }
+              ]
+            }
+          ]
+        },
+        "visual": {
+          "schemaVersion": 1,
+          "chartId": "music-project-1-chart",
+          "nodes": [
+            {
+              "nodeId": "node-music-note-2",
+              "color": {
+                "r": 110,
+                "g": 190,
+                "b": 255
+              }
+            },
+            {
+              "nodeId": "node-music-note-3",
+              "color": {
+                "r": 110,
+                "g": 190,
+                "b": 255
+              }
+            },
+            {
+              "nodeId": "node-music-note-5",
+              "color": {
+                "r": 230,
+                "g": 166,
+                "b": 96
+              }
+            },
+            {
+              "nodeId": "node-music-note-6",
+              "color": {
+                "r": 230,
+                "g": 166,
+                "b": 96
+              }
+            }
+          ]
+        }
+      },
+      "resourceCopies": [
+        {
+          "source": "1920x1080-music-project-1-chart.json",
+          "destination": "assets/resources/chart/music-project-1-chart.json",
+          "exactBytes": true,
+          "sha256": "74e30f25507b8939cd6a6cd2ffda3ccf7bae92ec590c4e5bd293e28975c8935c"
+        },
+        {
+          "source": "1920x1080-music-project-1-chart.visual.json",
+          "destination": "assets/resources/chart/music-project-1-chart.visual.json",
+          "exactBytes": true,
+          "sha256": "664bb750567353b13d1d9fdaa6e5da11e6458be1b232dbe27339754eeefdc6ac"
+        }
+      ],
+      "configuration": {
+        "rootField": "chart/music-project-1-chart",
+        "when": "Before open-initial-world invokes world factory"
+      }
+    }
+  ],
+  "rendererErrors": [
+    {
+      "res": "1920x1080",
+      "message": "[SceneBuilder] 引导线谱面拒绝加载： chart/music-project-1-chart Error: Bundle resources doesn't contain chart/music-project-1-chart"
+    }
+  ],
+  "downloads": [
+    {
+      "res": "1920x1080",
+      "original": "music-project-1.chart-source.json",
+      "file": "1920x1080-music-project-1.chart-source.json",
+      "state": "completed",
+      "sha256": "8bf88ba625ae0317dbdd1278a266cb290b575a400c72ff073e859a17bd58119e"
+    },
+    {
+      "res": "1920x1080",
+      "original": "music-project-1-chart.json",
+      "file": "1920x1080-music-project-1-chart.json",
+      "state": "completed",
+      "sha256": "74e30f25507b8939cd6a6cd2ffda3ccf7bae92ec590c4e5bd293e28975c8935c"
+    },
+    {
+      "res": "1920x1080",
+      "original": "music-project-1-chart.visual.json",
+      "file": "1920x1080-music-project-1-chart.visual.json",
+      "state": "completed",
+      "sha256": "664bb750567353b13d1d9fdaa6e5da11e6458be1b232dbe27339754eeefdc6ac"
+    }
+  ],
+  "compilation": [
+    {
+      "file": "assets/scripts/SceneBuilder.ts",
+      "chunk": "./chunks/8b/8b7eae5ef325431fd5924802b2c0ea4b14e61744.js",
+      "sourceSha256": "10371fdc3d2a1d66f63d87d019d8777d0bb8e80191788e65bf8eb2b6002c09c9",
+      "chunkSha256": "eafa2d6b2c8422b916bea3fc55eb17300fd7578bb631d65860310c511b6d67e3",
+      "sourceMapMatches": true,
+      "servedEqualsCompilerOutput": true
+    },
+    {
+      "file": "assets/scripts/WorldFolderBuilder.ts",
+      "chunk": "./chunks/c8/c89cca6e27a0e04da4c658b697e7bc59e71b096a.js",
+      "sourceSha256": "c0b7214d85a9eee4a244d870a369e366909734ea1ab5b0f0f6c5743d8430962b",
+      "chunkSha256": "f7dc92dc8c83fba8d5d1756aba24094e7e56e640a37cfc2f9caa012d96bfe7f8",
+      "sourceMapMatches": true,
+      "servedEqualsCompilerOutput": true
+    },
+    {
+      "file": "assets/scripts/MusicEditorBuilder.ts",
+      "chunk": "./chunks/7c/7ce5d66542c7511d6804e0a5750c012e5efd4a90.js",
+      "sourceSha256": "ee326b12bd4dcdac03779502d1fd39ba04d0e78bd21af943071a8fbc9851c124",
+      "chunkSha256": "5c777389cb049d5930d8969f04a9d343c140ebc20b94bc19141d103bda6720ba",
+      "sourceMapMatches": true,
+      "servedEqualsCompilerOutput": true
+    },
+    {
+      "file": "src/presentation/ChartPadView.ts",
+      "chunk": "./chunks/71/71f207c3b1aa9851200fbcd518cfb45a40b58131.js",
+      "sourceSha256": "9f7286486c4672ad4359c7a2fb531e2f120af4ca0ffe507507761f07fa8e2818",
+      "chunkSha256": "7717141c04b426a42b19f2a8ac147dcbf5b9c72251265908db4a318749594008",
+      "sourceMapMatches": true,
+      "servedEqualsCompilerOutput": true
+    },
+    {
+      "file": "src/presentation/LineEraseEffect.ts",
+      "chunk": "./chunks/33/33602cd2fe563b12ea97df8f9eb23f02908ad871.js",
+      "sourceSha256": "dd236db85a35abe343477cdbfafead610ccb29ef709fc2c250e2c59a632c0697",
+      "chunkSha256": "3311bac4d91f111ff4cf92d1e34f385e8f549323a55724a5d7a4f49a2c2f6378",
+      "sourceMapMatches": true,
+      "servedEqualsCompilerOutput": true
+    },
+    {
+      "file": "src/presentation/InputCollector.ts",
+      "chunk": "./chunks/80/80b5318e658fb283a27d22d0af4d9a8d28eaaca0.js",
+      "sourceSha256": "1cf85eb3e8de3621bc199a3e6e96cba92a1309fb6172ce1221ef692281b67420",
+      "chunkSha256": "6816e7d6fbfb17545953e5a78b235f0e2cecc916247b3709b5d851388b1bae58",
+      "sourceMapMatches": true,
+      "servedEqualsCompilerOutput": true
+    },
+    {
+      "file": "src/presentation/FrameDriver.ts",
+      "chunk": "./chunks/fa/faf4ead6ab2aff43422b70a8edd6e2755751b585.js",
+      "sourceSha256": "e70232f3ef6f803bba02a6c2af1d40107aea95400dfd65e9845636a836faf3a6",
+      "chunkSha256": "c62fa482dcd849e6eaaefad09eb99646ef31988e959169fc135ed90c0a3b4822",
+      "sourceMapMatches": true,
+      "servedEqualsCompilerOutput": true
+    },
+    {
+      "file": "src/presentation/MusicEditorView.ts",
+      "chunk": "./chunks/c1/c199d36bc0851b207ab0edbde9b81cfc52bbf432.js",
+      "sourceSha256": "fc5a6d4c774d841177b264d67fdac2658226f2df976cb5f95cef3d7fb50e425d",
+      "chunkSha256": "153edab47a229a39add9148e05d5958bc6d5e41254fa8790d91d06d8bc1eec2f",
+      "sourceMapMatches": true,
+      "servedEqualsCompilerOutput": true
+    },
+    {
+      "file": "src/presentation/GuidanceEditorView.ts",
+      "chunk": "./chunks/1d/1d45d95d307a8efeb57a54ab2ee6a665d72c20d6.js",
+      "sourceSha256": "894e7dcccc9b071b016b7c8233952cdb6b9d19593868ccf80580154466738175",
+      "chunkSha256": "6b19238bfa25689ffcdf04128155530d8f61d80235d2c8a09c0f7f1a4f102f9b",
+      "sourceMapMatches": true,
+      "servedEqualsCompilerOutput": true
+    },
+    {
+      "file": "src/editor/GuidanceEditorSession.ts",
+      "chunk": "./chunks/6b/6b0e686b2149de9b44817212eb72309d605056b8.js",
+      "sourceSha256": "7be0662fcf921b04908ad4657b1ad066e35387fe7880d6acd9a1de9ec7e4eb8b",
+      "chunkSha256": "e6523e5d73310b21b3da6ff5c4b2faf76db43e2aded8ab64fcedccfef3a6167e",
+      "sourceMapMatches": true,
+      "servedEqualsCompilerOutput": true
+    },
+    {
+      "file": "src/chart/ChartPremiere.ts",
+      "chunk": "./chunks/f6/f60b6933309c58f221e1afef92454f4692cbf7a6.js",
+      "sourceSha256": "50617d366ae7c5b8dd6b402389f1ef9e43822bf24e03f0687476e1558853eb6d",
+      "chunkSha256": "2ecf6adbf09c1f6fe227be17ce790a7c8ecf0cbd978e31dd035ff172a519b532",
+      "sourceMapMatches": true,
+      "servedEqualsCompilerOutput": true
+    },
+    {
+      "file": "src/chart/GuidanceChart.ts",
+      "chunk": "./chunks/2a/2afd45e8bed9e5259eefe439197fb98067934fc2.js",
+      "sourceSha256": "a4e46b00d782f393b736ed6a71282caf24961df40feb503cbadce734b0d71faa",
+      "chunkSha256": "4ac03fb9199f63c49c8b1832245c111d59fd24baa9cd4a6b5369c4700375068f",
+      "sourceMapMatches": true,
+      "servedEqualsCompilerOutput": true
+    },
+    {
+      "file": "src/chart/GuidanceTiming.ts",
+      "chunk": "./chunks/38/38f4422350f87053cbb288ed7b5f7451d49da311.js",
+      "sourceSha256": "6c8b1a55fba9c64c7c70644b8bbd6985c3c5318086b13d1c9aab4dd4ebdbcd4a",
+      "chunkSha256": "67290f731af62d20224f4c462c07c1ecbe5965c0f3f9362b83d684194a407da7",
+      "sourceMapMatches": true,
+      "servedEqualsCompilerOutput": true
+    }
+  ],
+  "pass": false,
+  "error": "Error: Timeout ()=>window.__b1.all(window.__b1.cc.director.getScene(),'SceneBuilder').find(b=>!!b.graph)?.chartPremiere\n    at until (D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b1-editor-game\\creator-preview.cjs:17:152)\n    at async configureWorld (D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b1-editor-game\\creator-preview.cjs:26:463)\n    at async gameChain (D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b1-editor-game\\creator-preview.cjs:27:31)\n    at async resolution (D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b1-editor-game\\creator-preview.cjs:28:2075)\n    at async D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b1-editor-game\\creator-preview.cjs:29:162",
+  "failureSnapshot": {
+    "viewport": [
+      1920,
+      1080
+    ],
+    "canvas": [
+      1920,
+      1080
+    ],
+    "dpr": 1,
+    "musicDom": false,
+    "guidanceDom": false,
+    "folder": false,
+    "frameDrivers": 1,
+    "inputCollectors": 1,
+    "worldCount": 1,
+    "editor": null,
+    "world": {
+      "resourcePath": "chart/music-project-1-chart",
+      "chart": null,
+      "entered": false,
+      "active": true,
+      "puzzle": "Step1",
+      "sustainedMs": 0,
+      "position": {
+        "lateral": 0,
+        "depth": 0,
+        "vertical": 0
+      },
+      "endpoint": false,
+      "ledger": [],
+      "counts": null,
+      "colors": [],
+      "video": {},
+      "loadError": null
+    },
+    "errors": []
+  }
+}

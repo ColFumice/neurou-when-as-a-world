@@ -1,0 +1,61 @@
+{
+  "phase": "B2.5c-2c read-only prerequisite protection audit; implementation not started",
+  "comparedUtc": "2026-10-11T08:45:24.366Z",
+  "baselineCapturedUtc": "2026-10-11T08:39:43.896Z",
+  "baselineSha256": "93271a26ec10bc0b5cd2e82ed436d80e8c6db98d62c59e6e1e71ebc7d3e3b354",
+  "beforeCount": 7435,
+  "afterCount": 7435,
+  "changed": [],
+  "removed": [],
+  "added": [],
+  "unauthorizedChanged": [],
+  "unauthorizedAdded": [],
+  "unauthorizedRemoved": [],
+  "pass": true,
+  "protectedKernelTrees": [
+    {
+      "prefix": "server/.shared-kernel",
+      "beforeCount": 14,
+      "afterCount": 14,
+      "changed": [],
+      "removed": [],
+      "added": []
+    },
+    {
+      "prefix": "server/shared-dist/.shared-kernel",
+      "beforeCount": 14,
+      "afterCount": 14,
+      "changed": [],
+      "removed": [],
+      "added": []
+    }
+  ],
+  "policy": {
+    "excludedDirectoryNames": [
+      "node_modules",
+      "library",
+      "temp",
+      "tmp",
+      "dist",
+      ".git",
+      ".local",
+      ".secret",
+      "secrets"
+    ],
+    "excludedPrefixes": [
+      "quality-review/b2-5c-2c",
+      "quality-review/b2-real-auth/evidence/runtime/pgsql"
+    ],
+    "excludedFilePatterns": [
+      ".env",
+      ".env.*",
+      "*.(pem|key|p12|pfx)",
+      "*.(zip|exe|dll|pdb|lib|o|obj|tar|gz|bz2|7z)"
+    ],
+    "allowedChangedPaths": [],
+    "allowedNewPaths": [],
+    "allowedNewPatterns": [],
+    "allowedRemovedPaths": []
+  },
+  "limits": "Read-only c-2c prerequisite audit: every existing non-excluded file is protected; no source addition, edit, removal, or IntentPort suffix is allowed. Both pre-existing server/.shared-kernel and server/shared-dist/.shared-kernel trees are hashed and protected rather than allowlisted as new caches. Only the new c-2c delivery/evidence tree is excluded. The former c-2b delivery/evidence exclusion is removed; its non-private non-excluded files are now protected. Inherited dependency/editor/runtime/private exclusions are listed explicitly; binary distributions, private credentials, dependency directories, editor caches and junction targets are not traversed. This audit proves unchanged scoped bytes and is not a full-machine, secret, dependency, or database audit. No PG process or Relay test is started."
+}

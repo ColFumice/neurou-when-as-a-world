@@ -1,0 +1,62 @@
+{
+  "samples": [
+    {
+      "timeMs": 10006.239000000001,
+      "duration": 12,
+      "ended": false,
+      "state": "Playing",
+      "resolved": 20,
+      "result": null,
+      "ledger": 0,
+      "entered": true
+    },
+    {
+      "timeMs": 11912.148000000001,
+      "duration": 12,
+      "ended": false,
+      "state": "Playing",
+      "resolved": 20,
+      "result": null,
+      "ledger": 0,
+      "entered": true
+    },
+    {
+      "timeMs": -1,
+      "duration": 12,
+      "ended": false,
+      "state": "Exited",
+      "resolved": 20,
+      "result": {
+        "chartId": "chart-placeholder-1",
+        "tier": "Regular",
+        "perfectCount": 20,
+        "goodCount": 0,
+        "missCount": 0,
+        "totalScore": 2000,
+        "finishedAtMs": 12000.000000000002,
+        "completed": true
+      },
+      "ledger": 1,
+      "entered": false
+    }
+  ],
+  "current": {
+    "timeMs": -1,
+    "duration": 12,
+    "ended": false,
+    "state": "Exited",
+    "resolved": 20,
+    "result": {
+      "chartId": "chart-placeholder-1",
+      "tier": "Regular",
+      "perfectCount": 20,
+      "goodCount": 0,
+      "missCount": 0,
+      "totalScore": 2000,
+      "finishedAtMs": 12000.000000000002,
+      "completed": true
+    },
+    "ledger": 1,
+    "entered": false
+  }
+}

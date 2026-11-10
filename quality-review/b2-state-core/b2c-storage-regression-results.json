@@ -1,0 +1,288 @@
+{
+  "category": "ContractTest",
+  "note": "In-memory strict adapter/lock fixtures only; no fixture constitutes a production world clear or preview acceptance.",
+  "passed": 56,
+  "failed": 0,
+  "results": [
+    {
+      "name": "missing collection stays empty without writing default or projection",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "record persists before milestone; existing B2.2a reader derives CopyPermission",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "encoded account key isolates records from other accounts and world-state/folder keys",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "actual directory DeleteWorld persists tombstone while account clear record and milestone bytes survive",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "record write failure never reads or saves the milestone and retains prior bytes",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "projection failure preserves record and next locked reconciliation retries false to true",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "same record retry preserves exact record bytes and skips repeated true projection writes",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "same account/world conflict rejects with original route and milestone bytes untouched",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "two adapters sharing account lock retain both worlds without lost-update record overwrite",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "concurrent identical completion inserts once; concurrent conflict cannot overwrite winner",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "no lock support and public synchronous insertion reject before either key is written",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "existing true projection is retained even without records and is never saved again",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "existing false projection updates only after actual locked record persistence",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "corrupt milestone fails without overwriting it; durable record remains for repair/retry",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "stale projection expected fails without overwriting newer current and can reconcile afterwards",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "reject invalid schema in both domain and storage before writes",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "reject invalid world kind in both domain and storage before writes",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "reject invalid Entry reference in both domain and storage before writes",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "reject invalid missing state in both domain and storage before writes",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "reject invalid unknown state in both domain and storage before writes",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "reject invalid extra chart field in both domain and storage before writes",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "reject invalid vector version in both domain and storage before writes",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "reject invalid classification version in both domain and storage before writes",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "reject invalid wrong axis in both domain and storage before writes",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "reject invalid wrong narrative time in both domain and storage before writes",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "reject invalid short vector in both domain and storage before writes",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "reject invalid negative vector in both domain and storage before writes",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "reject invalid nonfinite vector in both domain and storage before writes",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "reject invalid NaN vector in both domain and storage before writes",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "reject invalid all zero vector in both domain and storage before writes",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "reject invalid negative timestamp in both domain and storage before writes",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "reject invalid fractional timestamp in both domain and storage before writes",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "reject invalid extra record field in both domain and storage before writes",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "reject invalid missing record field in both domain and storage before writes",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "reject invalid unencodable account in both domain and storage before writes",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "reject invalid oversized account in both domain and storage before writes",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "reject invalid oversized world in both domain and storage before writes",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "reject invalid whitespace identity in both domain and storage before writes",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "reject invalid empty chart identity in both domain and storage before writes",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "reject invalid unbound chart identity in both domain and storage before writes",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "reject invalid symbol property in both domain and storage before writes",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "reject invalid vector extra property in both domain and storage before writes",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "reject invalid sparse vector in both domain and storage before writes",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "reject invalid record prototype in both domain and storage before writes",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "reject invalid vector prototype in both domain and storage before writes",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "positive exact tie selects first emotion and no emotion preserves null without default",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "damaged persisted malformed JSON is quarantined and exact bytes retained",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "damaged persisted JSON null is quarantined and exact bytes retained",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "damaged persisted array is quarantined and exact bytes retained",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "damaged persisted unknown version is quarantined and exact bytes retained",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "damaged persisted mismatched account is quarantined and exact bytes retained",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "damaged persisted duplicate worlds is quarantined and exact bytes retained",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "damaged persisted foreign record is quarantined and exact bytes retained",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "damaged persisted extra projection field is quarantined and exact bytes retained",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "nested field and vector accessors never execute; revoked Proxy fails safely",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "proxy get traps and caller mutation cannot alter validated immutable stored record",
+      "result": "PASS",
+      "category": "ContractTest"
+    }
+  ]
+}

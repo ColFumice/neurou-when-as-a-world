@@ -1,0 +1,22 @@
+[
+  {
+    "name": "dependencies",
+    "exitCode": 0
+  },
+  {
+    "name": "naming",
+    "exitCode": 0
+  },
+  {
+    "name": "tsc",
+    "exitCode": 0
+  },
+  {
+    "name": "unused",
+    "exitCode": 0
+  },
+  {
+    "name": "regression",
+    "exitCode": 0
+  }
+]

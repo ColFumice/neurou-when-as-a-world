@@ -1,0 +1,99 @@
+{
+  "mode": "ContractAdapter",
+  "pass": true,
+  "total": 22,
+  "passed": 22,
+  "failures": [],
+  "cases": [
+    {
+      "name": "A export is verified by B through the same ContractAdapter and does not transfer a runtime brand",
+      "pass": true
+    },
+    {
+      "name": "unpublished payload is rejected even when the source already owns its world",
+      "pass": true
+    },
+    {
+      "name": "same transfer identity replays the exact proof and changes no home registry revision",
+      "pass": true
+    },
+    {
+      "name": "different data under a published transfer identity is refused and the original remains verifiable",
+      "pass": true
+    },
+    {
+      "name": "concurrent conflicting publications retain exactly one payload",
+      "pass": true
+    },
+    {
+      "name": "B cannot publish a payload claiming A as its source",
+      "pass": true
+    },
+    {
+      "name": "a device cannot self-identify as the source unless it is the current HomeDevice",
+      "pass": true
+    },
+    {
+      "name": "other accounts cannot publish or verify an account export",
+      "pass": true
+    },
+    {
+      "name": "unknown source ownership refuses export and never creates its home record",
+      "pass": true
+    },
+    {
+      "name": "unavailable home service refuses export and current-home detection; historic proof alone cannot authorize import",
+      "pass": true
+    },
+    {
+      "name": "historic export proof survives Released and the director returns Released without claiming or copying",
+      "pass": true
+    },
+    {
+      "name": "historic export proof survives revision-two ownership and c refuses to guess Migrated",
+      "pass": true
+    },
+    {
+      "name": "InitialWorld is refused before authority reads",
+      "pass": true
+    },
+    {
+      "name": "invalid digest or output proof failure publishes no transfer entry",
+      "pass": true
+    },
+    {
+      "name": "source world identity cannot be substituted under an existing transfer proof",
+      "pass": true
+    },
+    {
+      "name": "actual published seven-section Complete content passes the additional manifest boundary",
+      "pass": true
+    },
+    {
+      "name": "plain JSON clone does not pass the receiving-process Complete requirement",
+      "pass": true
+    },
+    {
+      "name": "self-consistent modified chart content passes graph decoding but fails published identity",
+      "pass": true
+    },
+    {
+      "name": "self-consistent modified visual content fails the official visual digest",
+      "pass": true
+    },
+    {
+      "name": "self-consistent modified media descriptor fails the official media identity",
+      "pass": true
+    },
+    {
+      "name": "missing or malformed publication index is refused rather than reconstructing historic content",
+      "pass": true
+    },
+    {
+      "name": "unfinished lawful Complete with empty premiere archives preserves its empty history",
+      "pass": true
+    }
+  ],
+  "generatedAt": "2026-10-11T07:46:32.523Z",
+  "note": "Actual CoreTransfer/Primary/home codecs and publication index with shared in-memory ContractAdapter; fixtures are not Creator or physical-device evidence."
+}

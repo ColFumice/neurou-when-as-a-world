@@ -1,0 +1,40 @@
+{
+  "auditedUtc": "2026-10-11T02:56:21.1766416Z",
+  "shareableKnownCredentialPass": true,
+  "checks": [
+    {
+      "file": "code.diff",
+      "knownCredentialValueFound": false,
+      "privateKeyBlockFound": false
+    },
+    {
+      "file": "changed-files.json",
+      "knownCredentialValueFound": false,
+      "privateKeyBlockFound": false
+    },
+    {
+      "file": "protected-comparison.json",
+      "knownCredentialValueFound": false,
+      "privateKeyBlockFound": false
+    },
+    {
+      "file": "server-build.log",
+      "knownCredentialValueFound": false,
+      "privateKeyBlockFound": false
+    },
+    {
+      "file": "server-contract-and-http.log",
+      "knownCredentialValueFound": false,
+      "privateKeyBlockFound": false
+    },
+    {
+      "file": "server-test-results.json",
+      "knownCredentialValueFound": false,
+      "privateKeyBlockFound": false
+    }
+  ],
+  "namingWarningsBefore": 22,
+  "namingWarningsAfter": 22,
+  "warningTextDeltaCount": 0,
+  "warningDelta": []
+}

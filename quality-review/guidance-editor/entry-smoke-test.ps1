@@ -1,0 +1,2 @@
+﻿function Start-Process { param([string]$FilePath) if ($FilePath -notmatch "^http://localhost:745[678]/\?guidanceEditor=1$") { throw "Unexpected editor URL" }; Write-Output ("ENTRY_PASS " + $FilePath) }
+& (Join-Path $PSScriptRoot "..\..\编辑器\启动引导线编辑器.ps1")

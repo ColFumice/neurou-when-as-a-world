@@ -1,0 +1,2874 @@
+{
+  "scope": [
+    "src/chart/GuidanceChart.ts",
+    "src/chart/GuidanceLineRuntime.ts"
+  ],
+  "method": "TypeScript AST 完整采集类型、函数、类、方法、成员、参数、局部、import 绑定与对象字段；同名逐项列出出处。标准 JS/TS 内建 API 与 constructor 关键字不属新增项目命名。",
+  "classification": "复用冻结按当前名库逐字名及冻结成员名归类；相同字段名用于新只读快照仅复用词形，新类型及接口整体仍待追认。待追认项包含所引用的既有待追认 helper（getSlot / judgeTimeWindow / ChartJudgeTier）；import occurrence 不是新增实现。",
+  "summary": {
+    "identifierNames": 109,
+    "frozenReused": 38,
+    "pending": 71
+  },
+  "identifiers": [
+    {
+      "name": "advance",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "MethodDeclaration"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 66,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineRuntime",
+          "kind": "MethodDeclaration",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "allowed",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "Parameter"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 77,
+          "scope": "src/chart/GuidanceChart.ts.requireFields",
+          "kind": "Parameter",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "aspectRatio",
+      "status": "复用冻结",
+      "basis": "docsNAMEBOOK.md:428",
+      "kinds": [
+        "PropertySignature",
+        "Parameter",
+        "VariableDeclaration",
+        "ObjectField",
+        "PropertyDeclaration"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 61,
+          "scope": "src/chart/GuidanceChart.ts.GuidanceChart",
+          "kind": "PropertySignature",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 115,
+          "scope": "src/chart/GuidanceChart.ts.measurePathLength",
+          "kind": "Parameter",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 128,
+          "scope": "src/chart/GuidanceChart.ts.positionAtPathDistance",
+          "kind": "Parameter",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 167,
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceChart",
+          "kind": "VariableDeclaration",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 235,
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceChart",
+          "kind": "ObjectField",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 44,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineRuntime",
+          "kind": "PropertyDeclaration",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "chart",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "VariableDeclaration"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 55,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineRuntime.constructor",
+          "kind": "VariableDeclaration",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "chartId",
+      "status": "复用冻结",
+      "basis": "docsNAMEBOOK.md:428",
+      "kinds": [
+        "PropertySignature",
+        "VariableDeclaration",
+        "ObjectField"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 58,
+          "scope": "src/chart/GuidanceChart.ts.GuidanceChart",
+          "kind": "PropertySignature",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 162,
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceChart",
+          "kind": "VariableDeclaration",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 232,
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceChart",
+          "kind": "ObjectField",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "ChartJudgeTier",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "ImportSpecifier"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 6,
+          "scope": "src/chart/GuidanceLineRuntime.ts",
+          "kind": "ImportSpecifier",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "ChartKeyId",
+      "status": "复用冻结",
+      "basis": "docsNAMEBOOK.md:408",
+      "kinds": [
+        "ImportSpecifier"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 5,
+          "scope": "src/chart/GuidanceChart.ts",
+          "kind": "ImportSpecifier",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 3,
+          "scope": "src/chart/GuidanceLineRuntime.ts",
+          "kind": "ImportSpecifier",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "ChartNodeKind",
+      "status": "复用冻结",
+      "basis": "docsNAMEBOOK.md:435",
+      "kinds": [
+        "TypeAliasDeclaration"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 45,
+          "scope": "src/chart/GuidanceChart.ts",
+          "kind": "TypeAliasDeclaration",
+          "exported": true
+        }
+      ]
+    },
+    {
+      "name": "ChartTier",
+      "status": "复用冻结",
+      "basis": "docsNAMEBOOK.md:405",
+      "kinds": [
+        "ImportSpecifier"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 3,
+          "scope": "src/chart/GuidanceChart.ts",
+          "kind": "ImportSpecifier",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "consumed",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "PropertySignature",
+        "ObjectField"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 18,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceJudgement",
+          "kind": "PropertySignature",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 220,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineRuntime.resolveNode",
+          "kind": "ObjectField",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "currentTimeMs",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "PropertyDeclaration"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 47,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineRuntime",
+          "kind": "PropertyDeclaration",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "data",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "Parameter"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 54,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineRuntime.constructor",
+          "kind": "Parameter",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "distance",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "VariableDeclaration"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 131,
+          "scope": "src/chart/GuidanceChart.ts.positionAtPathDistance",
+          "kind": "VariableDeclaration",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "DragNode",
+      "status": "复用冻结",
+      "basis": "docsNAMEBOOK.md:433",
+      "kinds": [
+        "InterfaceDeclaration"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 28,
+          "scope": "src/chart/GuidanceChart.ts",
+          "kind": "InterfaceDeclaration",
+          "exported": true
+        }
+      ]
+    },
+    {
+      "name": "endPathDistance",
+      "status": "复用冻结",
+      "basis": "docsNAMEBOOK.md:434",
+      "kinds": [
+        "PropertySignature"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 39,
+          "scope": "src/chart/GuidanceChart.ts.HoldNode",
+          "kind": "PropertySignature",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "exit",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "MethodDeclaration"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 144,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineRuntime",
+          "kind": "MethodDeclaration",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "field",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "VariableDeclaration"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 78,
+          "scope": "src/chart/GuidanceChart.ts.requireFields",
+          "kind": "VariableDeclaration",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "finalJudgements",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "VariableDeclaration"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 129,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineRuntime.submitStrike",
+          "kind": "VariableDeclaration",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "finishIfReady",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "MethodDeclaration"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 198,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineRuntime",
+          "kind": "MethodDeclaration",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "fraction",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "VariableDeclaration"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 138,
+          "scope": "src/chart/GuidanceChart.ts.positionAtPathDistance",
+          "kind": "VariableDeclaration",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "getResolvedCount",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "MethodDeclaration"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 150,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineRuntime",
+          "kind": "MethodDeclaration",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "getSlot",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "ImportSpecifier"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 4,
+          "scope": "src/chart/GuidanceLineRuntime.ts",
+          "kind": "ImportSpecifier",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "getSnapshot",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "MethodDeclaration"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 158,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineRuntime",
+          "kind": "MethodDeclaration",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "getTargetTimeMs",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "MethodDeclaration"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 185,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineRuntime",
+          "kind": "MethodDeclaration",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "GOOD_WINDOW_MS",
+      "status": "复用冻结",
+      "basis": "docsNAMEBOOK.md:378",
+      "kinds": [
+        "ImportSpecifier"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 2,
+          "scope": "src/chart/GuidanceLineRuntime.ts",
+          "kind": "ImportSpecifier",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "GuidanceChart",
+      "status": "复用冻结",
+      "basis": "docsNAMEBOOK.md:428",
+      "kinds": [
+        "InterfaceDeclaration",
+        "ImportSpecifier"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 56,
+          "scope": "src/chart/GuidanceChart.ts",
+          "kind": "InterfaceDeclaration",
+          "exported": true
+        },
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 9,
+          "scope": "src/chart/GuidanceLineRuntime.ts",
+          "kind": "ImportSpecifier",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "GuidanceJudgement",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "InterfaceDeclaration"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 13,
+          "scope": "src/chart/GuidanceLineRuntime.ts",
+          "kind": "InterfaceDeclaration",
+          "exported": true
+        }
+      ]
+    },
+    {
+      "name": "GuidanceLine",
+      "status": "复用冻结",
+      "basis": "docsNAMEBOOK.md:429",
+      "kinds": [
+        "InterfaceDeclaration",
+        "ImportSpecifier"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 47,
+          "scope": "src/chart/GuidanceChart.ts",
+          "kind": "InterfaceDeclaration",
+          "exported": true
+        },
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 9,
+          "scope": "src/chart/GuidanceLineRuntime.ts",
+          "kind": "ImportSpecifier",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "GuidanceLineRuntime",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "ClassDeclaration"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 41,
+          "scope": "src/chart/GuidanceLineRuntime.ts",
+          "kind": "ClassDeclaration",
+          "exported": true
+        }
+      ]
+    },
+    {
+      "name": "GuidanceLineSnapshot",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "InterfaceDeclaration"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 30,
+          "scope": "src/chart/GuidanceLineRuntime.ts",
+          "kind": "InterfaceDeclaration",
+          "exported": true
+        }
+      ]
+    },
+    {
+      "name": "GuidanceLineState",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "TypeAliasDeclaration"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 21,
+          "scope": "src/chart/GuidanceLineRuntime.ts",
+          "kind": "TypeAliasDeclaration",
+          "exported": true
+        }
+      ]
+    },
+    {
+      "name": "GuidanceNode",
+      "status": "复用冻结",
+      "basis": "docsNAMEBOOK.md:430",
+      "kinds": [
+        "TypeAliasDeclaration"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 44,
+          "scope": "src/chart/GuidanceChart.ts",
+          "kind": "TypeAliasDeclaration",
+          "exported": true
+        }
+      ]
+    },
+    {
+      "name": "GuidanceNodeSnapshot",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "InterfaceDeclaration"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 23,
+          "scope": "src/chart/GuidanceLineRuntime.ts",
+          "kind": "InterfaceDeclaration",
+          "exported": true
+        }
+      ]
+    },
+    {
+      "name": "GuidancePosition",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "InterfaceDeclaration",
+        "ImportSpecifier"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 7,
+          "scope": "src/chart/GuidanceChart.ts",
+          "kind": "InterfaceDeclaration",
+          "exported": true
+        },
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 9,
+          "scope": "src/chart/GuidanceLineRuntime.ts",
+          "kind": "ImportSpecifier",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "head",
+      "status": "复用冻结",
+      "basis": "docsNAMEBOOK.md:429",
+      "kinds": [
+        "PropertySignature",
+        "VariableDeclaration",
+        "ObjectField"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 49,
+          "scope": "src/chart/GuidanceChart.ts.GuidanceLine",
+          "kind": "PropertySignature",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 225,
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceChart",
+          "kind": "VariableDeclaration",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 228,
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceChart",
+          "kind": "ObjectField",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 33,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineSnapshot",
+          "kind": "PropertySignature",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 177,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineRuntime.getSnapshot",
+          "kind": "ObjectField",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "HEAD_WINDOW_MS",
+      "status": "复用冻结",
+      "basis": "docsNAMEBOOK.md:440",
+      "kinds": [
+        "ImportSpecifier"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 4,
+          "scope": "src/chart/GuidanceChart.ts",
+          "kind": "ImportSpecifier",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 2,
+          "scope": "src/chart/GuidanceLineRuntime.ts",
+          "kind": "ImportSpecifier",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "headId",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "VariableDeclaration"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 180,
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceChart",
+          "kind": "VariableDeclaration",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "HeadNode",
+      "status": "复用冻结",
+      "basis": "docsNAMEBOOK.md:431",
+      "kinds": [
+        "InterfaceDeclaration",
+        "ImportSpecifier"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 17,
+          "scope": "src/chart/GuidanceChart.ts",
+          "kind": "InterfaceDeclaration",
+          "exported": true
+        },
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 9,
+          "scope": "src/chart/GuidanceLineRuntime.ts",
+          "kind": "ImportSpecifier",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "headSource",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "VariableDeclaration"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 178,
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceChart",
+          "kind": "VariableDeclaration",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "HoldNode",
+      "status": "复用冻结",
+      "basis": "docsNAMEBOOK.md:434",
+      "kinds": [
+        "InterfaceDeclaration"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 35,
+          "scope": "src/chart/GuidanceChart.ts",
+          "kind": "InterfaceDeclaration",
+          "exported": true
+        }
+      ]
+    },
+    {
+      "name": "id",
+      "status": "复用冻结",
+      "basis": "docsNAMEBOOK.md:429-434",
+      "kinds": [
+        "PropertySignature",
+        "VariableDeclaration",
+        "ObjectField"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 18,
+          "scope": "src/chart/GuidanceChart.ts.HeadNode",
+          "kind": "PropertySignature",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 23,
+          "scope": "src/chart/GuidanceChart.ts.TapNode",
+          "kind": "PropertySignature",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 29,
+          "scope": "src/chart/GuidanceChart.ts.DragNode",
+          "kind": "PropertySignature",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 36,
+          "scope": "src/chart/GuidanceChart.ts.HoldNode",
+          "kind": "PropertySignature",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 48,
+          "scope": "src/chart/GuidanceChart.ts.GuidanceLine",
+          "kind": "PropertySignature",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 177,
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceChart",
+          "kind": "VariableDeclaration",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 225,
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceChart",
+          "kind": "ObjectField",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 226,
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceChart",
+          "kind": "ObjectField",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 228,
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceChart",
+          "kind": "ObjectField",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 31,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineSnapshot",
+          "kind": "PropertySignature",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 175,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineRuntime.getSnapshot",
+          "kind": "ObjectField",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "identities",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "Parameter",
+        "VariableDeclaration"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 92,
+          "scope": "src/chart/GuidanceChart.ts.requireId",
+          "kind": "Parameter",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 174,
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceChart",
+          "kind": "VariableDeclaration",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "index",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "Parameter",
+        "VariableDeclaration"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 103,
+          "scope": "src/chart/GuidanceChart.ts.parsePosition",
+          "kind": "Parameter",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 117,
+          "scope": "src/chart/GuidanceChart.ts.measurePathLength",
+          "kind": "VariableDeclaration",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 133,
+          "scope": "src/chart/GuidanceChart.ts.positionAtPathDistance",
+          "kind": "VariableDeclaration",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "inputDistance",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "VariableDeclaration"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 123,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineRuntime.submitStrike",
+          "kind": "VariableDeclaration",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "isSettled",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "MethodDeclaration"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 154,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineRuntime",
+          "kind": "MethodDeclaration",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "judgements",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "VariableDeclaration"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 83,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineRuntime.advance",
+          "kind": "VariableDeclaration",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 101,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineRuntime.submitStrike",
+          "kind": "VariableDeclaration",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "judgeTimeWindow",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "ImportSpecifier"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 7,
+          "scope": "src/chart/GuidanceLineRuntime.ts",
+          "kind": "ImportSpecifier",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "judgmentPoint",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "PropertySignature",
+        "PropertyDeclaration",
+        "ObjectField"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 35,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineSnapshot",
+          "kind": "PropertySignature",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 49,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineRuntime",
+          "kind": "PropertyDeclaration",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 179,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineRuntime.getSnapshot",
+          "kind": "ObjectField",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "JudgmentPoint",
+      "status": "复用冻结",
+      "basis": "docsNAMEBOOK.md:437",
+      "kinds": [
+        "InterfaceDeclaration",
+        "ImportSpecifier"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 65,
+          "scope": "src/chart/GuidanceChart.ts",
+          "kind": "InterfaceDeclaration",
+          "exported": true
+        },
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 9,
+          "scope": "src/chart/GuidanceLineRuntime.ts",
+          "kind": "ImportSpecifier",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "KeyboardPadLayout",
+      "status": "复用冻结",
+      "basis": "docsNAMEBOOK.md:357",
+      "kinds": [
+        "ImportSpecifier"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 5,
+          "scope": "src/chart/GuidanceChart.ts",
+          "kind": "ImportSpecifier",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 3,
+          "scope": "src/chart/GuidanceLineRuntime.ts",
+          "kind": "ImportSpecifier",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "keyId",
+      "status": "复用冻结",
+      "basis": "docsNAMEBOOK.md:358 / 433-434",
+      "kinds": [
+        "PropertySignature",
+        "VariableDeclaration",
+        "Parameter",
+        "ObjectField"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 32,
+          "scope": "src/chart/GuidanceChart.ts.DragNode",
+          "kind": "PropertySignature",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 40,
+          "scope": "src/chart/GuidanceChart.ts.HoldNode",
+          "kind": "PropertySignature",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 16,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceJudgement",
+          "kind": "PropertySignature",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 91,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineRuntime.submitStrike",
+          "kind": "VariableDeclaration",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 208,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineRuntime.resolveNode",
+          "kind": "Parameter",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 218,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineRuntime.resolveNode",
+          "kind": "ObjectField",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "keysDown",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "PropertyDeclaration"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 52,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineRuntime",
+          "kind": "PropertyDeclaration",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "kind",
+      "status": "复用冻结",
+      "basis": "docsNAMEBOOK.md:432-436",
+      "kinds": [
+        "PropertySignature",
+        "ObjectField"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 13,
+          "scope": "src/chart/GuidanceChart.ts.NodePath",
+          "kind": "PropertySignature",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 24,
+          "scope": "src/chart/GuidanceChart.ts.TapNode",
+          "kind": "PropertySignature",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 30,
+          "scope": "src/chart/GuidanceChart.ts.DragNode",
+          "kind": "PropertySignature",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 37,
+          "scope": "src/chart/GuidanceChart.ts.HoldNode",
+          "kind": "PropertySignature",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 194,
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceChart",
+          "kind": "ObjectField",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 226,
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceChart",
+          "kind": "ObjectField",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "label",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "Parameter"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 70,
+          "scope": "src/chart/GuidanceChart.ts.requireRecord",
+          "kind": "Parameter",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 77,
+          "scope": "src/chart/GuidanceChart.ts.requireFields",
+          "kind": "Parameter",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 85,
+          "scope": "src/chart/GuidanceChart.ts.requireFinite",
+          "kind": "Parameter",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 92,
+          "scope": "src/chart/GuidanceChart.ts.requireId",
+          "kind": "Parameter",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "layout",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "Parameter"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 153,
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceChart",
+          "kind": "Parameter",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 54,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineRuntime.constructor",
+          "kind": "Parameter",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "layoutVersion",
+      "status": "复用冻结",
+      "basis": "docsNAMEBOOK.md:428",
+      "kinds": [
+        "PropertySignature",
+        "ObjectField"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 60,
+          "scope": "src/chart/GuidanceChart.ts.GuidanceChart",
+          "kind": "PropertySignature",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 234,
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceChart",
+          "kind": "ObjectField",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "length",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "VariableDeclaration"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 116,
+          "scope": "src/chart/GuidanceChart.ts.measurePathLength",
+          "kind": "VariableDeclaration",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 136,
+          "scope": "src/chart/GuidanceChart.ts.positionAtPathDistance",
+          "kind": "VariableDeclaration",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 197,
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceChart",
+          "kind": "VariableDeclaration",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "line",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "VariableDeclaration",
+        "PropertyDeclaration"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 227,
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceChart",
+          "kind": "VariableDeclaration",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 42,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineRuntime",
+          "kind": "PropertyDeclaration",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "lines",
+      "status": "复用冻结",
+      "basis": "docsNAMEBOOK.md:428",
+      "kinds": [
+        "PropertySignature",
+        "ObjectField"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 62,
+          "scope": "src/chart/GuidanceChart.ts.GuidanceChart",
+          "kind": "PropertySignature",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 236,
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceChart",
+          "kind": "ObjectField",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "lineSource",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "VariableDeclaration"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 175,
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceChart",
+          "kind": "VariableDeclaration",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "measurePathLength",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "FunctionDeclaration",
+        "ImportSpecifier"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 115,
+          "scope": "src/chart/GuidanceChart.ts",
+          "kind": "FunctionDeclaration",
+          "exported": true
+        },
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 11,
+          "scope": "src/chart/GuidanceLineRuntime.ts",
+          "kind": "ImportSpecifier",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "next",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "VariableDeclaration"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 119,
+          "scope": "src/chart/GuidanceChart.ts.measurePathLength",
+          "kind": "VariableDeclaration",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 135,
+          "scope": "src/chart/GuidanceChart.ts.positionAtPathDistance",
+          "kind": "VariableDeclaration",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "node",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "VariableDeclaration",
+        "PropertySignature",
+        "PropertyDeclaration",
+        "ObjectField"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 226,
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceChart",
+          "kind": "VariableDeclaration",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 24,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceNodeSnapshot",
+          "kind": "PropertySignature",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 43,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineRuntime",
+          "kind": "PropertyDeclaration",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 57,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineRuntime.constructor",
+          "kind": "VariableDeclaration",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 159,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineRuntime.getSnapshot",
+          "kind": "VariableDeclaration",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 161,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineRuntime.getSnapshot",
+          "kind": "ObjectField",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "nodeId",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "VariableDeclaration",
+        "PropertySignature",
+        "ObjectField"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 216,
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceChart",
+          "kind": "VariableDeclaration",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 14,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceJudgement",
+          "kind": "PropertySignature",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 216,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineRuntime.resolveNode",
+          "kind": "ObjectField",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "NodePath",
+      "status": "复用冻结",
+      "basis": "docsNAMEBOOK.md:436",
+      "kinds": [
+        "InterfaceDeclaration"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 12,
+          "scope": "src/chart/GuidanceChart.ts",
+          "kind": "InterfaceDeclaration",
+          "exported": true
+        }
+      ]
+    },
+    {
+      "name": "nodeResolvedAtMs",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "PropertyDeclaration"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 51,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineRuntime",
+          "kind": "PropertyDeclaration",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "nodes",
+      "status": "复用冻结",
+      "basis": "docsNAMEBOOK.md:429",
+      "kinds": [
+        "PropertySignature",
+        "ObjectField",
+        "VariableDeclaration"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 53,
+          "scope": "src/chart/GuidanceChart.ts.GuidanceLine",
+          "kind": "PropertySignature",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 228,
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceChart",
+          "kind": "ObjectField",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 37,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineSnapshot",
+          "kind": "PropertySignature",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 160,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineRuntime.getSnapshot",
+          "kind": "VariableDeclaration",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 181,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineRuntime.getSnapshot",
+          "kind": "ObjectField",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "nodeSource",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "VariableDeclaration"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 208,
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceChart",
+          "kind": "VariableDeclaration",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "nodeTier",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "PropertyDeclaration"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 50,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineRuntime",
+          "kind": "PropertyDeclaration",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "parseGuidanceChart",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "FunctionDeclaration",
+        "ImportSpecifier"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 153,
+          "scope": "src/chart/GuidanceChart.ts",
+          "kind": "FunctionDeclaration",
+          "exported": true
+        },
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 11,
+          "scope": "src/chart/GuidanceLineRuntime.ts",
+          "kind": "ImportSpecifier",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "parsePosition",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "FunctionDeclaration"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 103,
+          "scope": "src/chart/GuidanceChart.ts",
+          "kind": "FunctionDeclaration",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "path",
+      "status": "复用冻结",
+      "basis": "docsNAMEBOOK.md:429",
+      "kinds": [
+        "PropertySignature",
+        "Parameter",
+        "VariableDeclaration",
+        "ObjectField"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 50,
+          "scope": "src/chart/GuidanceChart.ts.GuidanceLine",
+          "kind": "PropertySignature",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 115,
+          "scope": "src/chart/GuidanceChart.ts.measurePathLength",
+          "kind": "Parameter",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 127,
+          "scope": "src/chart/GuidanceChart.ts.positionAtPathDistance",
+          "kind": "Parameter",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 193,
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceChart",
+          "kind": "VariableDeclaration",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 228,
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceChart",
+          "kind": "ObjectField",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "pathDistance",
+      "status": "复用冻结",
+      "basis": "docsNAMEBOOK.md:432",
+      "kinds": [
+        "PropertySignature",
+        "Parameter",
+        "VariableDeclaration",
+        "ObjectField"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 25,
+          "scope": "src/chart/GuidanceChart.ts.TapNode",
+          "kind": "PropertySignature",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 31,
+          "scope": "src/chart/GuidanceChart.ts.DragNode",
+          "kind": "PropertySignature",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 38,
+          "scope": "src/chart/GuidanceChart.ts.HoldNode",
+          "kind": "PropertySignature",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 67,
+          "scope": "src/chart/GuidanceChart.ts.JudgmentPoint",
+          "kind": "PropertySignature",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 129,
+          "scope": "src/chart/GuidanceChart.ts.positionAtPathDistance",
+          "kind": "Parameter",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 217,
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceChart",
+          "kind": "VariableDeclaration",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 226,
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceChart",
+          "kind": "ObjectField",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 190,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineRuntime.updateJudgmentPoint",
+          "kind": "VariableDeclaration",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 194,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineRuntime.updateJudgmentPoint",
+          "kind": "ObjectField",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "pathLength",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "PropertyDeclaration"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 45,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineRuntime",
+          "kind": "PropertyDeclaration",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "pathSource",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "VariableDeclaration"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 185,
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceChart",
+          "kind": "VariableDeclaration",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "points",
+      "status": "复用冻结",
+      "basis": "docsNAMEBOOK.md:436",
+      "kinds": [
+        "PropertySignature",
+        "ObjectField"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 14,
+          "scope": "src/chart/GuidanceChart.ts.NodePath",
+          "kind": "PropertySignature",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 195,
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceChart",
+          "kind": "ObjectField",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "position",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "PropertySignature",
+        "VariableDeclaration",
+        "ObjectField"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 66,
+          "scope": "src/chart/GuidanceChart.ts.JudgmentPoint",
+          "kind": "PropertySignature",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 25,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceNodeSnapshot",
+          "kind": "PropertySignature",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 124,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineRuntime.submitStrike",
+          "kind": "VariableDeclaration",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 162,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineRuntime.getSnapshot",
+          "kind": "ObjectField",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 193,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineRuntime.updateJudgmentPoint",
+          "kind": "ObjectField",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "positionAtPathDistance",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "FunctionDeclaration",
+        "ImportSpecifier"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 126,
+          "scope": "src/chart/GuidanceChart.ts",
+          "kind": "FunctionDeclaration",
+          "exported": true
+        },
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 11,
+          "scope": "src/chart/GuidanceLineRuntime.ts",
+          "kind": "ImportSpecifier",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "previous",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "VariableDeclaration"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 118,
+          "scope": "src/chart/GuidanceChart.ts.measurePathLength",
+          "kind": "VariableDeclaration",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 134,
+          "scope": "src/chart/GuidanceChart.ts.positionAtPathDistance",
+          "kind": "VariableDeclaration",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "raw",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "Parameter"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 153,
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceChart",
+          "kind": "Parameter",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "remaining",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "VariableDeclaration"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 132,
+          "scope": "src/chart/GuidanceChart.ts.positionAtPathDistance",
+          "kind": "VariableDeclaration",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "remainingPoints",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "PropertySignature",
+        "VariableDeclaration",
+        "ObjectField"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 36,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineSnapshot",
+          "kind": "PropertySignature",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 166,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineRuntime.getSnapshot",
+          "kind": "VariableDeclaration",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 180,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineRuntime.getSnapshot",
+          "kind": "ObjectField",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "requiredKeyId",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "VariableDeclaration"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 125,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineRuntime.submitStrike",
+          "kind": "VariableDeclaration",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "requireFields",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "FunctionDeclaration"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 77,
+          "scope": "src/chart/GuidanceChart.ts",
+          "kind": "FunctionDeclaration",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "requireFinite",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "FunctionDeclaration"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 85,
+          "scope": "src/chart/GuidanceChart.ts",
+          "kind": "FunctionDeclaration",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "requireId",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "FunctionDeclaration"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 92,
+          "scope": "src/chart/GuidanceChart.ts",
+          "kind": "FunctionDeclaration",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "requireRecord",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "FunctionDeclaration"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 70,
+          "scope": "src/chart/GuidanceChart.ts",
+          "kind": "FunctionDeclaration",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "reset",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "MethodDeclaration"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 134,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineRuntime",
+          "kind": "MethodDeclaration",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "resolvedAtMs",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "PropertySignature",
+        "ObjectField"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 27,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceNodeSnapshot",
+          "kind": "PropertySignature",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 164,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineRuntime.getSnapshot",
+          "kind": "ObjectField",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "resolveGridKeyAt",
+      "status": "复用冻结",
+      "basis": "docsNAMEBOOK.md:439",
+      "kinds": [
+        "ImportSpecifier"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 4,
+          "scope": "src/chart/GuidanceLineRuntime.ts",
+          "kind": "ImportSpecifier",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "resolveNode",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "MethodDeclaration"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 205,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineRuntime",
+          "kind": "MethodDeclaration",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "schemaVersion",
+      "status": "复用冻结",
+      "basis": "docsNAMEBOOK.md:428",
+      "kinds": [
+        "PropertySignature",
+        "ObjectField"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 57,
+          "scope": "src/chart/GuidanceChart.ts.GuidanceChart",
+          "kind": "PropertySignature",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 231,
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceChart",
+          "kind": "ObjectField",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "source",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "VariableDeclaration"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 104,
+          "scope": "src/chart/GuidanceChart.ts.parsePosition",
+          "kind": "VariableDeclaration",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 154,
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceChart",
+          "kind": "VariableDeclaration",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "spawnTimeMs",
+      "status": "复用冻结",
+      "basis": "docsNAMEBOOK.md:431",
+      "kinds": [
+        "PropertySignature",
+        "VariableDeclaration",
+        "ObjectField"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 19,
+          "scope": "src/chart/GuidanceChart.ts.HeadNode",
+          "kind": "PropertySignature",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 181,
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceChart",
+          "kind": "VariableDeclaration",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 225,
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceChart",
+          "kind": "ObjectField",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "speed",
+      "status": "复用冻结",
+      "basis": "docsNAMEBOOK.md:429",
+      "kinds": [
+        "PropertySignature",
+        "VariableDeclaration",
+        "ObjectField"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 52,
+          "scope": "src/chart/GuidanceChart.ts.GuidanceLine",
+          "kind": "PropertySignature",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 201,
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceChart",
+          "kind": "VariableDeclaration",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 228,
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceChart",
+          "kind": "ObjectField",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "startedAtMs",
+      "status": "复用冻结",
+      "basis": "docsNAMEBOOK.md:451（冻结公式使用名）",
+      "kinds": [
+        "PropertySignature",
+        "PropertyDeclaration",
+        "ObjectField"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 34,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineSnapshot",
+          "kind": "PropertySignature",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 48,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineRuntime",
+          "kind": "PropertyDeclaration",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 178,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineRuntime.getSnapshot",
+          "kind": "ObjectField",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "state",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "PropertySignature",
+        "PropertyDeclaration",
+        "ObjectField"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 32,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineSnapshot",
+          "kind": "PropertySignature",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 46,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineRuntime",
+          "kind": "PropertyDeclaration",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 176,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineRuntime.getSnapshot",
+          "kind": "ObjectField",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "strike",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "Parameter"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 89,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineRuntime.submitStrike",
+          "kind": "Parameter",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "Strike",
+      "status": "复用冻结",
+      "basis": "docsNAMEBOOK.md:370",
+      "kinds": [
+        "ImportSpecifier"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 5,
+          "scope": "src/chart/GuidanceLineRuntime.ts",
+          "kind": "ImportSpecifier",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "submitStrike",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "MethodDeclaration"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 89,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineRuntime",
+          "kind": "MethodDeclaration",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "TapNode",
+      "status": "复用冻结",
+      "basis": "docsNAMEBOOK.md:432",
+      "kinds": [
+        "InterfaceDeclaration",
+        "ImportSpecifier"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 22,
+          "scope": "src/chart/GuidanceChart.ts",
+          "kind": "InterfaceDeclaration",
+          "exported": true
+        },
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 9,
+          "scope": "src/chart/GuidanceLineRuntime.ts",
+          "kind": "ImportSpecifier",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "targetTimeMs",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "VariableDeclaration"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 82,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineRuntime.advance",
+          "kind": "VariableDeclaration",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 119,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineRuntime.submitStrike",
+          "kind": "VariableDeclaration",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "tier",
+      "status": "复用冻结",
+      "basis": "docsNAMEBOOK.md:428",
+      "kinds": [
+        "PropertySignature",
+        "VariableDeclaration",
+        "ObjectField",
+        "Parameter"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 59,
+          "scope": "src/chart/GuidanceChart.ts.GuidanceChart",
+          "kind": "PropertySignature",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 163,
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceChart",
+          "kind": "VariableDeclaration",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 233,
+          "scope": "src/chart/GuidanceChart.ts.parseGuidanceChart",
+          "kind": "ObjectField",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 17,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceJudgement",
+          "kind": "PropertySignature",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 26,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceNodeSnapshot",
+          "kind": "PropertySignature",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 163,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineRuntime.getSnapshot",
+          "kind": "ObjectField",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 206,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineRuntime.resolveNode",
+          "kind": "Parameter",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 219,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineRuntime.resolveNode",
+          "kind": "ObjectField",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "timeMs",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "Parameter",
+        "VariableDeclaration"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 66,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineRuntime.advance",
+          "kind": "Parameter",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 90,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineRuntime.submitStrike",
+          "kind": "VariableDeclaration",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 189,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineRuntime.updateJudgmentPoint",
+          "kind": "Parameter",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "u",
+      "status": "复用冻结",
+      "basis": "docsNAMEBOOK.md:358",
+      "kinds": [
+        "PropertySignature",
+        "VariableDeclaration",
+        "ObjectField"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 8,
+          "scope": "src/chart/GuidanceChart.ts.GuidancePosition",
+          "kind": "PropertySignature",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 106,
+          "scope": "src/chart/GuidanceChart.ts.parsePosition",
+          "kind": "VariableDeclaration",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 111,
+          "scope": "src/chart/GuidanceChart.ts.parsePosition",
+          "kind": "ObjectField",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 140,
+          "scope": "src/chart/GuidanceChart.ts.positionAtPathDistance",
+          "kind": "ObjectField",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "updateJudgmentPoint",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "MethodDeclaration"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 189,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineRuntime",
+          "kind": "MethodDeclaration",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "v",
+      "status": "复用冻结",
+      "basis": "docsNAMEBOOK.md:358",
+      "kinds": [
+        "PropertySignature",
+        "VariableDeclaration",
+        "ObjectField"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 9,
+          "scope": "src/chart/GuidanceChart.ts.GuidancePosition",
+          "kind": "PropertySignature",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 107,
+          "scope": "src/chart/GuidanceChart.ts.parsePosition",
+          "kind": "VariableDeclaration",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 111,
+          "scope": "src/chart/GuidanceChart.ts.parsePosition",
+          "kind": "ObjectField",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 141,
+          "scope": "src/chart/GuidanceChart.ts.positionAtPathDistance",
+          "kind": "ObjectField",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "value",
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步新增实现名；不修改名库。",
+      "kinds": [
+        "Parameter"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 70,
+          "scope": "src/chart/GuidanceChart.ts.requireRecord",
+          "kind": "Parameter",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 77,
+          "scope": "src/chart/GuidanceChart.ts.requireFields",
+          "kind": "Parameter",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 85,
+          "scope": "src/chart/GuidanceChart.ts.requireFinite",
+          "kind": "Parameter",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 92,
+          "scope": "src/chart/GuidanceChart.ts.requireId",
+          "kind": "Parameter",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceChart.ts",
+          "line": 103,
+          "scope": "src/chart/GuidanceChart.ts.parsePosition",
+          "kind": "Parameter",
+          "exported": false
+        }
+      ]
+    },
+    {
+      "name": "videoTimeMs",
+      "status": "复用冻结",
+      "basis": "docsNAMEBOOK.md:370",
+      "kinds": [
+        "PropertySignature",
+        "Parameter",
+        "ObjectField"
+      ],
+      "occurrences": [
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 15,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceJudgement",
+          "kind": "PropertySignature",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 207,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineRuntime.resolveNode",
+          "kind": "Parameter",
+          "exported": false
+        },
+        {
+          "file": "src/chart/GuidanceLineRuntime.ts",
+          "line": 217,
+          "scope": "src/chart/GuidanceLineRuntime.ts.GuidanceLineRuntime.resolveNode",
+          "kind": "ObjectField",
+          "exported": false
+        }
+      ]
+    }
+  ],
+  "literalValues": [
+    {
+      "name": "Polyline",
+      "status": "复用冻结",
+      "basis": "docsNAMEBOOK.md:436"
+    },
+    {
+      "name": "Tap",
+      "status": "复用冻结",
+      "basis": "docsNAMEBOOK.md:432"
+    },
+    {
+      "name": "Drag",
+      "status": "复用冻结",
+      "basis": "docsNAMEBOOK.md:433"
+    },
+    {
+      "name": "Hold",
+      "status": "复用冻结",
+      "basis": "docsNAMEBOOK.md:434"
+    },
+    {
+      "name": "Pending",
+      "status": "待 PROTOCOL 追认",
+      "basis": "GuidanceLineState 状态值；Exited 同字复用 ChartPlaybackState，但本线状态枚举仍待追认。"
+    },
+    {
+      "name": "Waiting",
+      "status": "待 PROTOCOL 追认",
+      "basis": "GuidanceLineState 状态值；Exited 同字复用 ChartPlaybackState，但本线状态枚举仍待追认。"
+    },
+    {
+      "name": "Running",
+      "status": "待 PROTOCOL 追认",
+      "basis": "GuidanceLineState 状态值；Exited 同字复用 ChartPlaybackState，但本线状态枚举仍待追认。"
+    },
+    {
+      "name": "TimedOut",
+      "status": "待 PROTOCOL 追认",
+      "basis": "GuidanceLineState 状态值；Exited 同字复用 ChartPlaybackState，但本线状态枚举仍待追认。"
+    },
+    {
+      "name": "Finished",
+      "status": "待 PROTOCOL 追认",
+      "basis": "GuidanceLineState 状态值；Exited 同字复用 ChartPlaybackState，但本线状态枚举仍待追认。"
+    },
+    {
+      "name": "Exited",
+      "status": "待 PROTOCOL 追认",
+      "basis": "GuidanceLineState 状态值；Exited 同字复用 ChartPlaybackState，但本线状态枚举仍待追认。"
+    }
+  ],
+  "technicalValues": [
+    {
+      "name": "schemaVersion",
+      "value": 1,
+      "status": "待 PROTOCOL 追认",
+      "basis": "A 步技术资源版本，root 授权选定；字段名本身已冻结。"
+    },
+    {
+      "name": "1000",
+      "status": "标准毫秒/秒单位换算，非业务平衡常量"
+    }
+  ],
+  "readonlyFollowup": {
+    "blur": "InputCollector.clearHeldInput 现已在清队列后排 Up；不会再次清掉释放边沿。暂停 Up 仅释放 runtime，不推进。",
+    "pause": "SceneBuilder 先暂停，再 seek 到 ChartPremiere 冻结媒体时间并 resetChart；恢复 playing 事件重建输出映射。此前约一帧跳进风险已修复。",
+    "zeroTapDistance": "GuidanceChart 无 duration 字段（严格解析拒绝额外字段）；非零路径与有限正 speed 保证常规运行时长为正。pathDistance=0 合法，目标时间等于 startedAtMs；Space 分支只启动并立即返回，不能消费 Tap。Tap 须独立非 Space Down，按实际位置有效键判定；初始 gap/Space 允许，窗口内无有效键则最终一次 Miss。"
+  }
+}

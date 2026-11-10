@@ -1,0 +1,27 @@
+{
+  "batch": "B2.3",
+  "category": "SubsequentProtocolAuthorizedTraeLanding",
+  "executor": "Trae",
+  "authorizedBy": "PROTOCOL",
+  "observedAt": "2026-10-10T12:53:14.837747+00:00",
+  "editedByB23Implementer": false,
+  "note": "Later authorized documentation landings are separate from original B2.3 implementation and acceptance counts. Snapshot times record observation, not original test execution.",
+  "files": [
+    {
+      "path": "docs/spec/stage-1.md",
+      "snapshotPath": "post-acceptance-trae/docs/spec/stage-1.md",
+      "acceptedSha256": "86be27d38426bb6e8483a90979fc193deafe336240c93c01833031c895c296ea",
+      "observedSha256": "7b495e9e0b403b515c475ce41df08ea6cd1f63552cfd8983bb20559cca42be26",
+      "bytes": 46640,
+      "lastWriteTimeUtc": "2026-10-10T12:50:46.125242+00:00"
+    },
+    {
+      "path": "docs/NAMEBOOK.md",
+      "snapshotPath": "post-acceptance-trae/docs/NAMEBOOK.md",
+      "acceptedSha256": "566c6ea998b92e5945dc0f4f37d824fb96a5975f62fdc31717db2ff7f46459b9",
+      "observedSha256": "9fc3c2d253ee71a3abf2340cb46f694fbefa2cd46d2f868a9ae7d29c2419d570",
+      "bytes": 69887,
+      "lastWriteTimeUtc": "2026-10-10T12:45:06.812649+00:00"
+    }
+  ]
+}

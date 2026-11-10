@@ -1,0 +1,157 @@
+{
+  "phase": "B2.5c-2b real historical B2.5b auth regression",
+  "runName": "final",
+  "generatedUtc": "2026-10-11T07:45:50.324Z",
+  "nodeVersion": "v24.19.0",
+  "database": {
+    "host": "127.0.0.1",
+    "port": 55437,
+    "name": "c2b_history_auth",
+    "majorVersion": 17,
+    "credentialRecorded": false
+  },
+  "build": {
+    "name": "server-isolated-build",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "D:\\Project\\A_New_Begin\\Neurou_official\\server\\node_modules\\typescript\\bin\\tsc",
+      "-p",
+      "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-2b\\evidence\\history-b-auth\\final\\tsconfig-history.json"
+    ],
+    "cwd": "D:\\Project\\A_New_Begin\\Neurou_official",
+    "startedUtc": "2026-10-11T07:45:43.571Z",
+    "completedUtc": "2026-10-11T07:45:44.562Z",
+    "exitCode": 0,
+    "pass": true,
+    "log": "history-b-auth/final/server-isolated-build.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "serverTests": {
+    "name": "old-server-http",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "--test",
+      "--test-reporter=tap",
+      "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-2b\\evidence\\history-b-auth\\final\\server\\dist\\test\\http.test.js",
+      "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-2b\\evidence\\history-b-auth\\final\\server\\dist\\test\\main-process.test.js"
+    ],
+    "cwd": "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-2b\\evidence\\history-b-auth\\final\\server",
+    "startedUtc": "2026-10-11T07:45:44.562Z",
+    "completedUtc": "2026-10-11T07:45:47.580Z",
+    "exitCode": 0,
+    "pass": true,
+    "log": "history-b-auth/final/old-server-http.log",
+    "sha256": "a8210f2c19b57581b84e3e8a2b93f04732703b19de84c5ef8162fee4fccab71e"
+  },
+  "clientTests": {
+    "name": "old-client-contract-and-http",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-2b\\evidence\\history-b-auth\\final\\client\\run.cjs",
+      "--http"
+    ],
+    "cwd": "D:\\Project\\A_New_Begin\\Neurou_official",
+    "startedUtc": "2026-10-11T07:45:47.607Z",
+    "completedUtc": "2026-10-11T07:45:50.323Z",
+    "exitCode": 0,
+    "pass": true,
+    "log": "history-b-auth/final/old-client-contract-and-http.log",
+    "sha256": "68e58422c00167c344386e8823948994efdad9de48ae3c7c5104a4b3d435aa0d"
+  },
+  "counts": {
+    "serverTests": 16,
+    "serverPass": 16,
+    "serverFail": 0,
+    "clientChecks": 30,
+    "clientContractChecks": 24,
+    "clientRealHttpChecks": 6
+  },
+  "sourceStability": [
+    {
+      "path": "server/src/app.ts",
+      "sha256": "6dc85a8972825b42c9948133c0a27317aaa7393236cbdb215695cc7c1bc13562",
+      "finalSha256": "6dc85a8972825b42c9948133c0a27317aaa7393236cbdb215695cc7c1bc13562"
+    },
+    {
+      "path": "server/src/cli.ts",
+      "sha256": "c49e19e4248dc3622faa4affb7c1f117f0a8648b2304c115d5632f7e25356487",
+      "finalSha256": "c49e19e4248dc3622faa4affb7c1f117f0a8648b2304c115d5632f7e25356487"
+    },
+    {
+      "path": "server/src/config.ts",
+      "sha256": "95373f1f2921f2f7693f2c3bbbbb42124b6485364a051911499b7e8362c4ddcd",
+      "finalSha256": "95373f1f2921f2f7693f2c3bbbbb42124b6485364a051911499b7e8362c4ddcd"
+    },
+    {
+      "path": "server/src/contracts.ts",
+      "sha256": "5b16a140736093879410c3d78d6389b019b8acc5ac2229e2fc3c1ef4bfe8de48",
+      "finalSha256": "5b16a140736093879410c3d78d6389b019b8acc5ac2229e2fc3c1ef4bfe8de48"
+    },
+    {
+      "path": "server/src/crypto.ts",
+      "sha256": "6fab4ce66d4a042f0b0b74ebda74af5a1e8a511e6a156a1b835095899eb8ac86",
+      "finalSha256": "6fab4ce66d4a042f0b0b74ebda74af5a1e8a511e6a156a1b835095899eb8ac86"
+    },
+    {
+      "path": "server/src/db.ts",
+      "sha256": "f6bb0704a84966a5676830465032657195e2203acd44dd3b8d4b74223f41067f",
+      "finalSha256": "f6bb0704a84966a5676830465032657195e2203acd44dd3b8d4b74223f41067f"
+    },
+    {
+      "path": "server/src/main.ts",
+      "sha256": "43c35003f60b0850435aef645857f3a9687832a9192d323535a83b21e319e93d",
+      "finalSha256": "43c35003f60b0850435aef645857f3a9687832a9192d323535a83b21e319e93d"
+    },
+    {
+      "path": "server/src/strict-json.ts",
+      "sha256": "c4f0a182e2e16511649dd19e55a0601bb152f292d801ff3800a98735f19b4e94",
+      "finalSha256": "c4f0a182e2e16511649dd19e55a0601bb152f292d801ff3800a98735f19b4e94"
+    },
+    {
+      "path": "server/test/http.test.ts",
+      "sha256": "0ed0ba545af69d7789caf4328dbcaa5dca4e978fdd9bab5745c65f23ee3a3273",
+      "finalSha256": "0ed0ba545af69d7789caf4328dbcaa5dca4e978fdd9bab5745c65f23ee3a3273"
+    },
+    {
+      "path": "server/test/main-process.test.ts",
+      "sha256": "21c73df82f7db7dc1b0470add584f66af8bbf34e44ddeec14045b3a344e2d955",
+      "finalSha256": "21c73df82f7db7dc1b0470add584f66af8bbf34e44ddeec14045b3a344e2d955"
+    },
+    {
+      "path": "server/migrations/001.sql",
+      "sha256": "5468eb425557c8ca1be6c5fb969dbd5bb038e7715b10e9f4842ea15859a30d13",
+      "finalSha256": "5468eb425557c8ca1be6c5fb969dbd5bb038e7715b10e9f4842ea15859a30d13"
+    },
+    {
+      "path": "server/package.json",
+      "sha256": "2599ae4a12a65e4e46650bea6405f9788b1f4a70a0ceed3f23c6e882b0488f7a",
+      "finalSha256": "2599ae4a12a65e4e46650bea6405f9788b1f4a70a0ceed3f23c6e882b0488f7a"
+    },
+    {
+      "path": "server/tsconfig.json",
+      "sha256": "295c9c007e532ff44657232ec600efb4f27995fddf159c803b6fe6e451fe856a",
+      "finalSha256": "295c9c007e532ff44657232ec600efb4f27995fddf159c803b6fe6e451fe856a"
+    },
+    {
+      "path": "quality-review/b2-real-auth/client-tests/run.cjs",
+      "sha256": "66c05389fd0db67025d9512b7953bf5e0c5cc571e31be3e35b03d23ca55eac52",
+      "finalSha256": "66c05389fd0db67025d9512b7953bf5e0c5cc571e31be3e35b03d23ca55eac52"
+    },
+    {
+      "path": "src/presentation/RealAuthServiceAdapter.ts",
+      "sha256": "18afa41f6d3f7a8f0fcaec62e21cfcd72d9c8d2b0bc0c406dcb2c8323c8f65bb",
+      "finalSha256": "18afa41f6d3f7a8f0fcaec62e21cfcd72d9c8d2b0bc0c406dcb2c8323c8f65bb"
+    }
+  ],
+  "clientRunnerCopy": {
+    "sourceSha256": "66c05389fd0db67025d9512b7953bf5e0c5cc571e31be3e35b03d23ca55eac52",
+    "copySha256": "33913e6bf51687f6219068ae4850306859236ebf36d5c48d0dc503ecb71ed6b0",
+    "rewrites": [
+      "Exact workspace root anchor",
+      "Exact independently built server module path"
+    ],
+    "casesAndAssertionsUnchanged": true
+  },
+  "pass": true,
+  "limits": "Real TCP loopback HTTP and PostgreSQL17 using unchanged old b modules, routes, guards and case assertions. Separate isolated old-b compilation does not certify new shared authority. All generated key/CSRF/password/session/DB values are confined to memory/private local directories, never report output. No old evidence mutation."
+}

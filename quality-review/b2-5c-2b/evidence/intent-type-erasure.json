@@ -1,0 +1,17 @@
+{
+  "generatedUtc": "2026-10-11T08:03:25.898Z",
+  "typescriptVersion": "5.5.4",
+  "beforeSourceBytes": 49042,
+  "afterSourceBytes": 50175,
+  "suffixBytes": 1133,
+  "prefixPreserved": true,
+  "suffixTypeOnly": true,
+  "exportCount": 1,
+  "beforeEmittedSha256": "a056a6f909f6eed6ff6bbe844eb55b678871fd3c0c705b1cc1f0ef09bd57e734",
+  "afterEmittedSha256": "a056a6f909f6eed6ff6bbe844eb55b678871fd3c0c705b1cc1f0ef09bd57e734",
+  "runtimeBytesEqual": true,
+  "noNewRuntimeDependency": true,
+  "diagnostics": [],
+  "pass": true,
+  "scope": "Comment-free ES2015 transpilation before/after proves erased type-only suffix and identical emitted runtime. This is separate from full repository typecheck."
+}

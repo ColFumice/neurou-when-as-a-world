@@ -1,0 +1,17 @@
+{
+  "capturedAt": "2026-10-10T08:59:34.244Z",
+  "algorithm": "SHA-256 over binary file reads",
+  "protectedFileCount": 3519,
+  "exclusions": [
+    ".git",
+    "library",
+    "node_modules",
+    "temp",
+    "tmp",
+    "build",
+    "quality-review/b2-state-milestones"
+  ],
+  "coverage": "Project source, assets, constants, scripts, docs, design DOCX, historical JSONL, editor/reference files, configuration, and existing quality-review evidence. External references recovered from B2.1 protected inventory.",
+  "policy": "No protected file mutations authorized; new evidence only in this directory.",
+  "baselineOnly": true
+}

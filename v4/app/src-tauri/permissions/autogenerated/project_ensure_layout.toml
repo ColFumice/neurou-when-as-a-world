@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-project-ensure-layout"
+description = "Enables the project_ensure_layout command without any pre-configured scope."
+commands.allow = ["project_ensure_layout"]
+
+[[permission]]
+identifier = "deny-project-ensure-layout"
+description = "Denies the project_ensure_layout command without any pre-configured scope."
+commands.deny = ["project_ensure_layout"]

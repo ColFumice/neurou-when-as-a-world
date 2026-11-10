@@ -1,0 +1,35 @@
+{
+  "generatedUtc": "2026-10-11T04:51:49.064Z",
+  "rawHashEquality": false,
+  "baselineCapturedUtc": "2026-10-11T04:05:40.542Z",
+  "comparedUtc": "2026-10-11T04:51:23.968Z",
+  "changes": [
+    {
+      "path": "docs/NAMEBOOK.md",
+      "before": {
+        "path": "docs/NAMEBOOK.md",
+        "bytes": 101742,
+        "sha256": "cf1e686fcf56e1f05c9b897a94872da1195390694a7a31b4c1da16cea159850e"
+      },
+      "after": {
+        "bytes": 133013,
+        "sha256": "150978462ee718a717d46abd846a8d27556cd539e1d8bc66cad27ad8c469c619",
+        "mtimeUtc": "2026-10-11T04:09:46.666Z"
+      }
+    },
+    {
+      "path": "docs/spec/stage-1.md",
+      "before": {
+        "path": "docs/spec/stage-1.md",
+        "bytes": 75156,
+        "sha256": "a11d5be896857a7586d59c3f9dcd6feb1e13861b1a7c279972cc968f23f25aaf"
+      },
+      "after": {
+        "bytes": 87732,
+        "sha256": "94c186628f23e12a18d6bb28acaa6c66caef8c6e8e43da71a8da592f661a5340",
+        "mtimeUtc": "2026-10-11T04:37:38.316Z"
+      }
+    }
+  ],
+  "scope": "New c-1 baseline changes; previous P3 attribution does not automatically cover these later mutations. No attribution is inferred. Raw failure is preserved without resetting the baseline."
+}

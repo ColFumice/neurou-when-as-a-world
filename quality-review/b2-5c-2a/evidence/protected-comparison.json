@@ -1,0 +1,35 @@
+{
+  "phase": "B2.5c-2a freeze protection",
+  "comparedUtc": "2026-10-11T06:51:35.420Z",
+  "baselineCapturedUtc": "2026-10-11T06:27:23.760Z",
+  "baselineSha256": "f01d9bebb8dcf2efcc3ee250f70f795787da1121cf113691e5576000465526bc",
+  "beforeCount": 7154,
+  "afterCount": 7154,
+  "changed": [],
+  "removed": [],
+  "added": [],
+  "unauthorizedChanged": [],
+  "unauthorizedAdded": [],
+  "pass": true,
+  "excludedDirectoryNames": [
+    "node_modules",
+    "library",
+    "temp",
+    "tmp",
+    "dist",
+    ".git",
+    ".local",
+    ".secret",
+    "secrets"
+  ],
+  "excludedPrefixes": [
+    "quality-review/b2-5c-2a",
+    "quality-review/b2-real-auth/evidence/runtime/pgsql"
+  ],
+  "excludedFilePatterns": [
+    ".env",
+    "*.(pem|key|p12|pfx)",
+    "*.(zip|exe|dll|pdb|lib|o|obj|tar|gz|bz2|7z)"
+  ],
+  "limits": "All pre-existing non-excluded files are protected: c-1 five pure modules, IntentPort, prior c-1/P3/B2.5b delivery/evidence, docs/namebook/reference, archive/core, server source/package, existing gate scripts. No production source changes or additions are authorized in this freeze round. Junction targets are hashed without traversal. Dependencies/caches/compiled output directories/private local data/keys/runtime binaries and the new c-2a delivery directory are excluded; private files are never read."
+}

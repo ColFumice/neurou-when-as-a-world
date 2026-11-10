@@ -1,0 +1,113 @@
+{
+  "generatedAt": "2026-10-10T08:33:53.149Z",
+  "baselineCapturedAt": "2026-10-10T08:13:32.703Z",
+  "productionFiles": [
+    {
+      "path": "assets/scripts/WorldFolderBuilder.ts",
+      "change": "modified",
+      "beforeSha256": "c0b7214d85a9eee4a244d870a369e366909734ea1ab5b0f0f6c5743d8430962b",
+      "afterSha256": "257b9e07a416bac089f3c5fa1845c028ecf3b56aa80198406a70514657581b6d",
+      "bytes": 8680,
+      "baselineFile": "baseline/assets/scripts/WorldFolderBuilder.ts"
+    },
+    {
+      "path": "src/director/IntentPort.ts",
+      "change": "modified",
+      "beforeSha256": "f82126332e3caf1dafb640306d2d3d2fe3ad196ed18af1f0313b7a5e9dc095e2",
+      "afterSha256": "4eba8835849c789636a67fc01ceb1ff27fd5c53c4c161bf25cb447f7aa17b21c",
+      "bytes": 40423,
+      "baselineFile": "baseline/src/director/IntentPort.ts"
+    },
+    {
+      "path": "src/presentation/FolderCatalog.ts",
+      "change": "modified",
+      "beforeSha256": "96668acbc55d190e87b74779a51a2fb4584d685d6cf95820d32a6baaa93540c0",
+      "afterSha256": "930c65d034781192f8d7570ac6d4660ae348a5858469e1e15a4c02a5a41d101a",
+      "bytes": 2914,
+      "baselineFile": "baseline/src/presentation/FolderCatalog.ts"
+    },
+    {
+      "path": "src/presentation/WorldFolderView.ts",
+      "change": "modified",
+      "beforeSha256": "8e8d3b6a40e7e0b714ec004ed4177dfc258b40b64f7cf090f5773af4561471bc",
+      "afterSha256": "27f77dd8d0bee09d7b872b10d27625f9746faa50593d00bc71a2325b04dcb05b",
+      "bytes": 11445,
+      "baselineFile": "baseline/src/presentation/WorldFolderView.ts"
+    },
+    {
+      "path": "assets/scripts/MinimalWorldBuilder.ts",
+      "change": "added",
+      "beforeSha256": null,
+      "afterSha256": "7b827cc11b2bdf5855ef7c2007a52f2149097aab32e2a7840542dba91b07cbf7",
+      "bytes": 5785
+    },
+    {
+      "path": "assets/scripts/MinimalWorldBuilder.ts.meta",
+      "change": "added",
+      "beforeSha256": null,
+      "afterSha256": "e2702ef017b3ef1b8cb4a91cfb3d396f3ad7d33c2df134d2dc99e534ca1458e0",
+      "bytes": 180,
+      "creatorImport": {
+        "authoredImported": false,
+        "currentImported": true,
+        "uuid": "ae9b0c27-494d-49f1-ac47-cee523c6d1c3",
+        "stableUuid": true,
+        "evidence": "Reviewer observed authored imported:false/this UUID before the real Creator import; current metadata reads imported:true with the same UUID. No library/temp/cache rewrite used."
+      }
+    },
+    {
+      "path": "src/director/WorldFolderSession.ts",
+      "change": "added",
+      "beforeSha256": null,
+      "afterSha256": "59777e43dccd7ad6d2d0767b28daf83e525a176ae391b1f60a9500d739ea0420",
+      "bytes": 6623
+    },
+    {
+      "path": "src/director/WorldFolderSession.ts.meta",
+      "change": "added",
+      "beforeSha256": null,
+      "afterSha256": "3df7cd3541da46e99af7488ed99179e7bd167137f57717b3eb032cb9abb0776d",
+      "bytes": 180,
+      "creatorImport": {
+        "authoredImported": false,
+        "currentImported": true,
+        "uuid": "f3d84597-b396-4155-a9f9-654e7d199c0d",
+        "stableUuid": true,
+        "evidence": "Reviewer observed authored imported:false/this UUID before the real Creator import; current metadata reads imported:true with the same UUID. No library/temp/cache rewrite used."
+      }
+    },
+    {
+      "path": "src/presentation/WorldLocalStorage.ts",
+      "change": "added",
+      "beforeSha256": null,
+      "afterSha256": "25ac84d7c55b59c2e59ae8e30270c4b4c43c625f472132ef997de64e96d3ebf1",
+      "bytes": 1091
+    },
+    {
+      "path": "src/presentation/WorldLocalStorage.ts.meta",
+      "change": "added",
+      "beforeSha256": null,
+      "afterSha256": "466c34886cb1e47caf3ea3a81387e2b5b45cd8095a71a744afc1cd677a6a4db8",
+      "bytes": 180,
+      "creatorImport": {
+        "authoredImported": false,
+        "currentImported": true,
+        "uuid": "dd52d2cc-4b83-4316-aed3-83ba184721f6",
+        "stableUuid": true,
+        "evidence": "Reviewer observed authored imported:false/this UUID before the real Creator import; current metadata reads imported:true with the same UUID. No library/temp/cache rewrite used."
+      }
+    }
+  ],
+  "counts": {
+    "modifiedTs": 4,
+    "addedTs": 3,
+    "addedMeta": 3,
+    "total": 10
+  },
+  "sceneBuilderUnchanged": true,
+  "notes": [
+    "No Git repository is initialized; modified files use the captured byte baseline, additions use /dev/null.",
+    "The three .meta files were initially authored imported:false with stable UUIDs; Creator genuinely imported them and changed imported:true. Their current bytes are delivered.",
+    "docs/NAMEBOOK, specs, historical references, existing editors and gameplay domains are excluded from the production delta."
+  ]
+}

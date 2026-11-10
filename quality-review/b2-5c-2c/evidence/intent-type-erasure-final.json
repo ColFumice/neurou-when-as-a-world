@@ -1,0 +1,29 @@
+{
+  "phase": "B2.5c-2c final IntentPort byte-prefix and emitted runtime preservation",
+  "generatedUtc": "2026-10-11T09:14:57.409Z",
+  "typescriptVersion": "5.5.4",
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "CommonJS",
+    "strict": true
+  },
+  "beforeBytes": 50175,
+  "beforeSha256": "1e29ebc8f7cf1bfef700eea7fc1bae8a09e6cdb4e1f39d9e2ef07549991649a3",
+  "afterBytes": 50374,
+  "afterSha256": "4348f4bdc950f1f9c6e224364fa77a80adeb0f2722c608e1dd961c0fe5a4e0a2",
+  "originalBytePrefixPreserved": true,
+  "suffixBytes": 199,
+  "suffixExportStatementCount": 1,
+  "suffixExportedTypeReferenceCount": 3,
+  "suffixExportedTypeReferences": [
+    "SharedCommitValidator",
+    "ValidatedSharedCommit",
+    "SharedValidationResult"
+  ],
+  "suffixTypeOnly": true,
+  "beforeEmittedSha256": "e382aee3d6c265b6a0df9037f4dee9ad320732311e130efd87173769c7f5e7b4",
+  "afterEmittedSha256": "e382aee3d6c265b6a0df9037f4dee9ad320732311e130efd87173769c7f5e7b4",
+  "emittedRuntimeBytesIdentical": true,
+  "pass": true,
+  "scope": "TypeScript transpilation proves this approved type-only suffix adds no runtime require/export bytes and preserves the entire c-2b accepted IntentPort prefix. The three names reference existing c-1 declarations and are not new public declaration names."
+}

@@ -1,0 +1,64 @@
+{
+  "kind": "ContractOracle",
+  "passed": 13,
+  "failed": 0,
+  "realHttp": false,
+  "realPostgreSQL": false,
+  "actualSessionOwner": true,
+  "simulatedElapsedClock": true,
+  "observedNativeTimers": true,
+  "results": [
+    {
+      "label": "unchanged auth login challenge and login timers are 12000ms",
+      "passed": true
+    },
+    {
+      "label": "validated pull wait=0 uses actual timer 7000ms",
+      "passed": true
+    },
+    {
+      "label": "validated pull wait=25000 uses actual timer 32000ms",
+      "passed": true
+    },
+    {
+      "label": "ordinary shared request actual timer remains 12000ms",
+      "passed": true
+    },
+    {
+      "label": "ordinary auth time request actual timer remains 12000ms",
+      "passed": true
+    },
+    {
+      "label": "legal pull simulated elapsed 25001ms survives previous 12000ms cutoff",
+      "passed": true
+    },
+    {
+      "label": "ordinary shared elapsed >12000ms remains unavailable",
+      "passed": true
+    },
+    {
+      "label": "pull elapsed >32000ms returns unavailable without changing request nonce",
+      "passed": true
+    },
+    {
+      "label": "wait zero elapsed >7000ms returns unavailable",
+      "passed": true
+    },
+    {
+      "label": "network retry retains exact signed body/nonce within same deadline",
+      "passed": true
+    },
+    {
+      "label": "deadline abort stops retry and returns unavailable",
+      "passed": true
+    },
+    {
+      "label": "invalid wait=-1 rejected by existing codec before timer/transport",
+      "passed": true
+    },
+    {
+      "label": "invalid wait=25001 rejected by existing codec before timer/transport",
+      "passed": true
+    }
+  ]
+}

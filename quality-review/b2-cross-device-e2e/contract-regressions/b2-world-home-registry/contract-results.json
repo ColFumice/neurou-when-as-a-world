@@ -1,0 +1,199 @@
+{
+  "schemaVersion": 1,
+  "phase": "B2.4b WorldHomeRegistry minimum closure",
+  "capturedAt": "2026-10-10T16:25:45.473Z",
+  "runtime": "v24.19.0",
+  "loading": "TypeScript transpileModule in memory; no emit and no production edits",
+  "sources": [
+    {
+      "path": "src/director/WorldHomeRegistry.ts",
+      "sha256": "5c0858c6ee83c01ca596ff5358936f6e733c886d7fa328a8ce36aff72a8f4b70"
+    },
+    {
+      "path": "src/presentation/WorldHomeContractAdapter.ts",
+      "sha256": "36c47b6649fda91d7fc16fcd7f32618c4e7dd57d1b3b044c3883fc499989662a"
+    },
+    {
+      "path": "src/director/WorldFolderSession.ts",
+      "sha256": "59777e43dccd7ad6d2d0767b28daf83e525a176ae391b1f60a9500d739ea0420"
+    }
+  ],
+  "fixture": "Real WorldFolderSession metadata; shared WorldHomeContractAdapter authority with two logical devices and controlled server-time callback",
+  "summary": {
+    "total": 34,
+    "passed": 34,
+    "failed": 0
+  },
+  "cases": [
+    {
+      "name": "two-device shared authority: simultaneous first registration has one winner and preserves winner record",
+      "result": "PASS",
+      "elapsedMs": 4.603
+    },
+    {
+      "name": "same device new request AlreadyHomed; original request preserves Registered replay and revision",
+      "result": "PASS",
+      "elapsedMs": 0.349
+    },
+    {
+      "name": "registration ID replay scoped to account and device; conflicting reuse never creates another world",
+      "result": "PASS",
+      "elapsedMs": 0.756
+    },
+    {
+      "name": "same world ID in different accounts has independent ownership and revision",
+      "result": "PASS",
+      "elapsedMs": 0.802
+    },
+    {
+      "name": "bound identity is copied/frozen; request cannot override account or device",
+      "result": "PASS",
+      "elapsedMs": 1.132
+    },
+    {
+      "name": "session identity remains original after constructor context input is mutated",
+      "result": "PASS",
+      "elapsedMs": 1.182
+    },
+    {
+      "name": "InitialWorld returns ExcludedWorld before folder, authority and registration ID factory",
+      "result": "PASS",
+      "elapsedMs": 0.435
+    },
+    {
+      "name": "unknown and tombstoned local worlds are rejected without authority or ID allocation",
+      "result": "PASS",
+      "elapsedMs": 1.449
+    },
+    {
+      "name": "wrong-account directory returns InvalidLocalDirectory before authority or ID allocation",
+      "result": "PASS",
+      "elapsedMs": 0.483
+    },
+    {
+      "name": "malformed local metadata never reaches authority and never mutates directory",
+      "result": "PASS",
+      "elapsedMs": 0.525
+    },
+    {
+      "name": "directory metadata title/description whitespace is rejected consistently with WorldFolderSession",
+      "result": "PASS",
+      "elapsedMs": 1.342
+    },
+    {
+      "name": "absent service is explicit, never allocates an ID or reports cached local success",
+      "result": "PASS",
+      "elapsedMs": 0.751
+    },
+    {
+      "name": "offline failure retains request ID; online retry uses same ID and success is never cached",
+      "result": "PASS",
+      "elapsedMs": 1.249
+    },
+    {
+      "name": "wrong identity or mode in authority binding returns InvalidAuthorityResponse",
+      "result": "PASS",
+      "elapsedMs": 0.294
+    },
+    {
+      "name": "invalid or reused registration ID factory fails before second authority write",
+      "result": "PASS",
+      "elapsedMs": 0.287
+    },
+    {
+      "name": "all codec structures reject unknown own fields and own symbols",
+      "result": "PASS",
+      "elapsedMs": 0.306
+    },
+    {
+      "name": "codec rejects object and array accessors without invoking getters",
+      "result": "PASS",
+      "elapsedMs": 0.118
+    },
+    {
+      "name": "codec rejects non-data prototype, sparse/nonplain arrays and array extras",
+      "result": "PASS",
+      "elapsedMs": 0.204
+    },
+    {
+      "name": "codec accepts null-prototype data and detaches/freeze-copies nested raw data",
+      "result": "PASS",
+      "elapsedMs": 0.075
+    },
+    {
+      "name": "codec rejects duplicate or InitialWorld IDs and mismatched account/record identities",
+      "result": "PASS",
+      "elapsedMs": 0.144
+    },
+    {
+      "name": "codec enforces Homed/Released device-state relation; rejects unknown state",
+      "result": "PASS",
+      "elapsedMs": 0.101
+    },
+    {
+      "name": "codec rejects unsafe/fractional/negative versions and times, record beyond observed boundary",
+      "result": "PASS",
+      "elapsedMs": 0.414
+    },
+    {
+      "name": "codec checks reply account/device/request/world identity and result-owner consistency",
+      "result": "PASS",
+      "elapsedMs": 0.296
+    },
+    {
+      "name": "malicious reply cannot poison observations or request identity; a valid retry recovers",
+      "result": "PASS",
+      "elapsedMs": 0.613
+    },
+    {
+      "name": "malicious registry identity/revision rollback/known-record mutation and disappearance do not poison observations",
+      "result": "PASS",
+      "elapsedMs": 0.849
+    },
+    {
+      "name": "session rejects Released/home-revision mutation/inflated revision from authority and subsequently recovers",
+      "result": "PASS",
+      "elapsedMs": 0.45
+    },
+    {
+      "name": "partial reply adding a world without advancing registry revision is rejected and retry recovers",
+      "result": "PASS",
+      "elapsedMs": 0.487
+    },
+    {
+      "name": "adapter and session outputs are deeply frozen and each response is a detached copy",
+      "result": "PASS",
+      "elapsedMs": 0.361
+    },
+    {
+      "name": "invalid clock first-registration failures publish neither registry record nor replay",
+      "result": "PASS",
+      "elapsedMs": 1.131
+    },
+    {
+      "name": "backward server time leaves established ownership and failed new-world registration unpublished",
+      "result": "PASS",
+      "elapsedMs": 0.528
+    },
+    {
+      "name": "schema validator failure after candidate creation publishes neither authority map nor replay",
+      "result": "PASS",
+      "elapsedMs": 0.16
+    },
+    {
+      "name": "callback configuration reentrancy fails before authority publication and preserves availability",
+      "result": "PASS",
+      "elapsedMs": 0.106
+    },
+    {
+      "name": "nested authority operation is rejected; rejected nested request has no world or replay side effect",
+      "result": "PASS",
+      "elapsedMs": 0.367
+    },
+    {
+      "name": "adapter constructor captures callbacks; later binding-object mutation cannot change its clock or identity parser",
+      "result": "PASS",
+      "elapsedMs": 0.075
+    }
+  ]
+}

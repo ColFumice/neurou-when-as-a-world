@@ -1,0 +1,14 @@
+{
+  "capturedAt": "2026-10-10T09:22:23.337Z",
+  "previewUrl": "http://localhost:7456/",
+  "profile": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\neurou-b22-foundation-evidence-1791624143337",
+  "classification": "PRODUCTION UI ACCEPTANCE — no FirstWorldCleared injection or actual gameplay clear",
+  "policy": "Fresh temporary Electron userData and persistent partition per resolution. Product login/prologue controls are the only writers; no user profile accessed. New FirstWorldCleared key must remain absent. UI capture, restore availability and refresh must preserve storage bytes. Read-only Cocos component/DOM/storage observation. PNGs are unmodified direct CDP output, not B2.1 screenshots. Only explicit restore refusal is demonstrated; no gameplay restore success is claimed.",
+  "harnessSha256": "7404297de4e55293e1b409f47680c0e9965a4feccb490b89dde01aeac1b14708",
+  "resolutions": [],
+  "rendererErrors": [],
+  "runtimeErrors": [],
+  "requests": [],
+  "pass": false,
+  "error": "AssertionError [ERR_ASSERTION]: Stale compiled source: assets/scripts/WorldFolderBuilder.ts\n    at D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-foundation\\creator-preview.cjs:76:12\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async Promise.all (index 0)\n    at async D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-foundation\\creator-preview.cjs:279:26"
+}

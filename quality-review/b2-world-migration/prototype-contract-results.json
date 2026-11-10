@@ -1,0 +1,94 @@
+{
+  "schemaVersion": 1,
+  "phase": "B2.4d composition",
+  "mode": "ContractAdapter",
+  "total": 12,
+  "passed": 12,
+  "pass": true,
+  "cases": [
+    {
+      "name": "MP01 real composition drains all three A worlds, starts account pause, service expires, B publishes and opens same ID",
+      "mode": "ContractAdapter",
+      "result": "PASS"
+    },
+    {
+      "name": "MP02 RealityPause rejects both devices and every InitialWorld/source/empty-world/new activity admission",
+      "mode": "ContractAdapter",
+      "result": "PASS"
+    },
+    {
+      "name": "MP03 persistent initiating device binding survives client reconstruction, rejects other account, ignores deleted local pause cache",
+      "mode": "ContractAdapter",
+      "result": "PASS"
+    },
+    {
+      "name": "MP04 reconstructed target requires persistent LocalPublished plus current service ownership before open",
+      "mode": "ContractAdapter",
+      "result": "PASS"
+    },
+    {
+      "name": "MP05 source active graph or uncommitted account transaction refuses drain without forcibly ending activity",
+      "mode": "ContractAdapter",
+      "result": "PASS"
+    },
+    {
+      "name": "MP06 migration does not require CopyPermission or manufacture account facts",
+      "mode": "ContractAdapter",
+      "result": "PASS"
+    },
+    {
+      "name": "MP07 client wall-clock changes cannot expire RealityPause; only independent service fixture advances",
+      "mode": "ContractAdapter",
+      "result": "PASS"
+    },
+    {
+      "name": "MP08 service Claim/local directory quota remains Claimed; new composition reconciles without target Core rewrite",
+      "mode": "ContractAdapter",
+      "result": "PASS"
+    },
+    {
+      "name": "MP09 no Web Locks cannot authenticate fixture or Release, no source/journal/Core writes",
+      "mode": "ContractAdapter",
+      "result": "PASS"
+    },
+    {
+      "name": "MP10 disposal during pending formal manifest blocks login and every authority/world side effect",
+      "mode": "ContractAdapter",
+      "result": "PASS"
+    },
+    {
+      "name": "MP11 disposal during async open service validation releases target lease and never calls runtime factory",
+      "mode": "ContractAdapter",
+      "result": "PASS"
+    },
+    {
+      "name": "MP12 accepted Release with source journal quota stays Prepared and missing service domain cannot reopen its source",
+      "mode": "ContractAdapter",
+      "result": "PASS"
+    }
+  ],
+  "generatedAt": "2026-10-10T14:50:57.983Z",
+  "sourceFiles": [
+    {
+      "file": "assets/scripts/WorldMigrationPrototype.ts",
+      "sha256": "dd647ffef7acd25debed4a65a9c61747384cda947ab4f4dd509760e076910abe"
+    },
+    {
+      "file": "src/director/WorldMigration.ts",
+      "sha256": "43006e243f11ac2589895bbd1851df5ee5f249734f787fe6b48049a7b8b836c4"
+    },
+    {
+      "file": "src/presentation/WorldMigrationContractAdapter.ts",
+      "sha256": "a37a069880e5eb88e1f04c426573df96ccf266bc08ecfa7a9d8b755ddaec0a47"
+    },
+    {
+      "file": "src/presentation/SafePointDrainStorage.ts",
+      "sha256": "76fb9391a9aabc553ade293c31bc6aba66e1e2aec986b679151a8068b5c4ea3d"
+    },
+    {
+      "file": "src/presentation/WorldMigrationStorage.ts",
+      "sha256": "bfea840ae818b6b4e443a9a77092b9cfa3f7f96a43014f7bef704ff2551d1d3f"
+    }
+  ],
+  "limitation": "Actual additive composition with production codecs, live drain issuer and world leases. Resource callback, Web Locks, storage and gameplay input fixtures controlled; service clock advanced explicitly. This is not Creator production acceptance or an external service."
+}

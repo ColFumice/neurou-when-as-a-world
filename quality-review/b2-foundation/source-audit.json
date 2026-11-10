@@ -1,0 +1,124 @@
+{
+  "generatedAt": "2026-10-10T09:28:53.204715+00:00",
+  "gitRepository": false,
+  "comparison": "Task-start SHA-256 inventory and copied source baseline; no Git history is assumed.",
+  "implementationFiles": [
+    {
+      "path": "src/director/IntentPort.ts",
+      "kind": "Modified",
+      "baselineSha256": "4eba8835849c789636a67fc01ceb1ff27fd5c53c4c161bf25cb447f7aa17b21c",
+      "sha256": "b6ec38dbf2e9915cfc3a70d9ab41ac501dd14d22ec49ba94af5763caf3f1365c",
+      "bytes": 40815
+    },
+    {
+      "path": "src/presentation/WorldFolderView.ts",
+      "kind": "Modified",
+      "baselineSha256": "27f77dd8d0bee09d7b872b10d27625f9746faa50593d00bc71a2325b04dcb05b",
+      "sha256": "6d728d3fc775065b46921864f013d9575c964004f60918508f352d2f3e4d9a7d",
+      "bytes": 16607
+    },
+    {
+      "path": "assets/scripts/WorldFolderBuilder.ts",
+      "kind": "Modified",
+      "baselineSha256": "257b9e07a416bac089f3c5fa1845c028ecf3b56aa80198406a70514657581b6d",
+      "sha256": "1f27ca70c8ce82fefca4731fb3655edb8d542937933313faf3985362bbab52d2",
+      "bytes": 10457
+    },
+    {
+      "path": "src/director/AccountMilestone.ts",
+      "kind": "Added",
+      "baselineSha256": null,
+      "sha256": "ea937e6676b97cafd8a726d051db54d16077a9fe82438cce8374a4635d1b846e",
+      "bytes": 3276
+    },
+    {
+      "path": "src/director/AccountMilestone.ts.meta",
+      "kind": "Added",
+      "baselineSha256": null,
+      "sha256": "de335bf0d6acd4d37384104db36573b7396d25ac82d8eadeed13188c7558c149",
+      "bytes": 171
+    },
+    {
+      "path": "src/director/WorldStateSession.ts",
+      "kind": "Added",
+      "baselineSha256": null,
+      "sha256": "dee799181f9216ce6244c0087ba5dba830ea481cd8140591ec0f7ad099ecfecb",
+      "bytes": 12033
+    },
+    {
+      "path": "src/director/WorldStateSession.ts.meta",
+      "kind": "Added",
+      "baselineSha256": null,
+      "sha256": "829a580b743dbc5f3a665ff37eb09300e320020405b3924369fda402c373a2ab",
+      "bytes": 171
+    },
+    {
+      "path": "src/presentation/AccountMilestoneStorage.ts",
+      "kind": "Added",
+      "baselineSha256": null,
+      "sha256": "ec36e1490443d5ca59c983119e56f5273a0d62e8522f9171fb21be7b05c0ac19",
+      "bytes": 4160
+    },
+    {
+      "path": "src/presentation/AccountMilestoneStorage.ts.meta",
+      "kind": "Added",
+      "baselineSha256": null,
+      "sha256": "6496fd4ded03821d6bc4eae86aec0be60f874be7f2a2eaf5cbd493bba7da96c2",
+      "bytes": 171
+    },
+    {
+      "path": "src/presentation/WorldStateStorage.ts",
+      "kind": "Added",
+      "baselineSha256": null,
+      "sha256": "95e03b7610946041e0aa635d37cf5790b17cdd37d3ed7272080a5b69815e8056",
+      "bytes": 1906
+    },
+    {
+      "path": "src/presentation/WorldStateStorage.ts.meta",
+      "kind": "Added",
+      "baselineSha256": null,
+      "sha256": "2a52c9c41a868e92da84519f635ab2c3a4358a3f806921addd999a782597b0a1",
+      "bytes": 171
+    }
+  ],
+  "baselineExistingCount": 3530,
+  "existingFilesChecked": 3530,
+  "deltas": [
+    {
+      "path": "assets/scripts/WorldFolderBuilder.ts",
+      "kind": "Implementation",
+      "baselineSha256": "257b9e07a416bac089f3c5fa1845c028ecf3b56aa80198406a70514657581b6d",
+      "sha256": "1f27ca70c8ce82fefca4731fb3655edb8d542937933313faf3985362bbab52d2",
+      "observedLastWriteTime": "2026-10-10T17:22:01.703687+08:00"
+    },
+    {
+      "path": "docs/NAMEBOOK.md",
+      "kind": "ConcurrentExternalProtectedDelta",
+      "baselineSha256": "a179ba444b24db1529b504560c35f53a27135d244b61573e9958e81354e6ed8c",
+      "sha256": "1f9f2c7ad622f7551f8539d1882aa47e7c73cf5014cad02ba5c8439c7c8ad170",
+      "observedLastWriteTime": "2026-10-10T17:15:00.269801+08:00"
+    },
+    {
+      "path": "docs/spec/stage-1.md",
+      "kind": "ConcurrentExternalProtectedDelta",
+      "baselineSha256": "404f466dd71a3be15e7d175cd921ceaacbd09d507e85f367445a2c96f798e6be",
+      "sha256": "2169145d5bcc0ead9da062cd0170ddfa85044679d8dfa811ce65fa158b3c4b88",
+      "observedLastWriteTime": "2026-10-10T17:15:23.179650+08:00"
+    },
+    {
+      "path": "src/director/IntentPort.ts",
+      "kind": "Implementation",
+      "baselineSha256": "4eba8835849c789636a67fc01ceb1ff27fd5c53c4c161bf25cb447f7aa17b21c",
+      "sha256": "b6ec38dbf2e9915cfc3a70d9ab41ac501dd14d22ec49ba94af5763caf3f1365c",
+      "observedLastWriteTime": "2026-10-10T17:18:03.895197+08:00"
+    },
+    {
+      "path": "src/presentation/WorldFolderView.ts",
+      "kind": "Implementation",
+      "baselineSha256": "27f77dd8d0bee09d7b872b10d27625f9746faa50593d00bc71a2325b04dcb05b",
+      "sha256": "6d728d3fc775065b46921864f013d9575c964004f60918508f352d2f3e4d9a7d",
+      "observedLastWriteTime": "2026-10-10T17:26:49.309793+08:00"
+    }
+  ],
+  "protectedNote": "This implementation did not write docs/namebook/reference files. Two separately observed concurrent docs deltas are preserved and not attributed to an actor. Do not claim all protected files are byte-unchanged."
+}

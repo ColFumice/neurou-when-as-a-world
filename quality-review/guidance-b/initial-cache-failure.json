@@ -1,0 +1,89 @@
+{
+  "creator": "3.8.8",
+  "url": "http://localhost:7456/",
+  "fixture": "Only DirectorSession.endpointSettled=true to bypass the already-tested T6 entrance. No score/node/media clock replacement. GameCanvas receives DOM KeyboardEvent edges through the Cocos web input source, InputCollector, FrameDriver and director.",
+  "resolutions": [
+    {
+      "resolution": "1920x1080",
+      "evidence": [],
+      "checks": []
+    }
+  ],
+  "rendererErrors": [],
+  "pass": false,
+  "failure": {
+    "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ 'guidance-a-1'\n- 'guidance-b-1'\n            ^\n",
+    "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ 'guidance-a-1'\n- 'guidance-b-1'\n            ^\n\n    at resolution (D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\guidance-b\\creator-preview.cjs:143:41)\n    at async D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\guidance-b\\creator-preview.cjs:205:7",
+    "snapshot": {
+      "wallMs": 1563.6000000014901,
+      "timeMs": 0,
+      "mediaHeadMs": -1,
+      "state": "Ready",
+      "entered": false,
+      "world": true,
+      "ledger": 0,
+      "perfect": 0,
+      "good": 0,
+      "miss": 0,
+      "score": 0,
+      "result": null,
+      "line": {
+        "id": "line-a-1",
+        "state": "Pending",
+        "head": {
+          "id": "head-a-1",
+          "spawnTimeMs": 2000
+        },
+        "startedAtMs": null,
+        "judgmentPoint": null,
+        "remainingPoints": [
+          {
+            "u": 0.18,
+            "v": 0.5
+          },
+          {
+            "u": 0.82,
+            "v": 0.5
+          }
+        ],
+        "nodes": [
+          {
+            "node": {
+              "id": "tap-a-1",
+              "kind": "Tap",
+              "pathDistance": 0.5688888888888889
+            },
+            "position": {
+              "u": 0.5,
+              "v": 0.5
+            },
+            "tier": null,
+            "resolvedAtMs": null
+          }
+        ]
+      },
+      "visuals": {
+        "container": [
+          100,
+          100
+        ]
+      },
+      "dimensions": {
+        "inner": [
+          1920,
+          1080
+        ],
+        "canvas": [
+          1920,
+          1080
+        ],
+        "canvasCss": [
+          1920,
+          1080
+        ],
+        "dpr": 1
+      }
+    },
+    "inputEvents": []
+  }
+}

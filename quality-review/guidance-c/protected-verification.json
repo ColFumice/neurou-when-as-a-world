@@ -1,0 +1,24 @@
+{
+  "pass": true,
+  "scope": "docs 全目录，包括名库与规格；未编辑 A/B 原证据和原谱面资源",
+  "files": [
+    {
+      "file": "docs\\NAMEBOOK.md",
+      "sha256": "6ded1330e84ee85b71eb596eb9cdac173d56ac7c5d3a56bcd942bb631d7e6946",
+      "currentSha256": "6ded1330e84ee85b71eb596eb9cdac173d56ac7c5d3a56bcd942bb631d7e6946",
+      "unchanged": true
+    },
+    {
+      "file": "docs\\spec\\stage-1-acceptance.md",
+      "sha256": "c08c7cbfb24876b56e0482559c578ad51d9c623e97ced7045907cba742e2bf59",
+      "currentSha256": "c08c7cbfb24876b56e0482559c578ad51d9c623e97ced7045907cba742e2bf59",
+      "unchanged": true
+    },
+    {
+      "file": "docs\\spec\\stage-1.md",
+      "sha256": "0518695b56f6784fb9fe2932566d4ee9807b7c69f30e3a120f30274a8bb3e195",
+      "currentSha256": "0518695b56f6784fb9fe2932566d4ee9807b7c69f30e3a120f30274a8bb3e195",
+      "unchanged": true
+    }
+  ]
+}

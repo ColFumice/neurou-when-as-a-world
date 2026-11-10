@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-workspace-read-json"
+description = "Enables the workspace_read_json command without any pre-configured scope."
+commands.allow = ["workspace_read_json"]
+
+[[permission]]
+identifier = "deny-workspace-read-json"
+description = "Denies the workspace_read_json command without any pre-configured scope."
+commands.deny = ["workspace_read_json"]

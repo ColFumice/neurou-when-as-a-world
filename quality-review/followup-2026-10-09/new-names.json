@@ -1,0 +1,22 @@
+[
+  {
+    "name": "rows",
+    "file": "src/presentation/ChartPadView.ts"
+  },
+  {
+    "name": "a",
+    "file": "src/presentation/ChartPadView.ts"
+  },
+  {
+    "name": "b",
+    "file": "src/presentation/ChartPadView.ts"
+  },
+  {
+    "name": "rowHeight",
+    "file": "src/presentation/ChartPadView.ts"
+  },
+  {
+    "name": "row",
+    "file": "src/presentation/ChartPadView.ts"
+  }
+]

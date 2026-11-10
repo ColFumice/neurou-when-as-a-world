@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "outDir": ".dist",
+    "rootDir": ".",
+    "module": "CommonJS",
+    "moduleResolution": "node10",
+    "lib": ["ES2022", "DOM"],
+    "sourceMap": false,
+    "declaration": false
+  },
+  "include": ["core/**/*.ts", "adapters/**/*.ts", "tests/**/*.ts"],
+  "exclude": ["node_modules", ".dist"]
+}

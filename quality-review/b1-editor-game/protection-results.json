@@ -1,0 +1,723 @@
+{
+  "generatedAt": "2026-10-10T07:35:50.263Z",
+  "reviewer": "architecture_audit independent subagent",
+  "algorithm": "SHA-256, binary file reads",
+  "pass": true,
+  "primary": {
+    "manifest": "quality-review/b1-editor-game/protected-hashes.json",
+    "checked": 79,
+    "unchanged": 79,
+    "categoryCounts": {
+      "docs": 3,
+      "constants": 2,
+      "src/chart": 24,
+      "src/editor": 2,
+      "src/musicEditor": 8,
+      "src/director": 10,
+      "src/ledger": 10,
+      "编辑器": 8,
+      "external": 12
+    },
+    "records": [
+      {
+        "path": "docs/NAMEBOOK.md",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "8aa3add2838ffd8d966968224fc9fb775c9083c3756f7aa0499251ca110bf4e4",
+        "actualSha256": "8aa3add2838ffd8d966968224fc9fb775c9083c3756f7aa0499251ca110bf4e4",
+        "unchanged": true
+      },
+      {
+        "path": "docs/spec/stage-1-acceptance.md",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "c08c7cbfb24876b56e0482559c578ad51d9c623e97ced7045907cba742e2bf59",
+        "actualSha256": "c08c7cbfb24876b56e0482559c578ad51d9c623e97ced7045907cba742e2bf59",
+        "unchanged": true
+      },
+      {
+        "path": "docs/spec/stage-1.md",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "70f34032643ad93959c00c42ab945328ee8422de60b96c714efc87bc4a34f596",
+        "actualSha256": "70f34032643ad93959c00c42ab945328ee8422de60b96c714efc87bc4a34f596",
+        "unchanged": true
+      },
+      {
+        "path": "constants/index.ts",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "ebc4b8b2fdaf25d4f0372458cf8e0245da4397a2de05cafc5ea59a3c70518674",
+        "actualSha256": "ebc4b8b2fdaf25d4f0372458cf8e0245da4397a2de05cafc5ea59a3c70518674",
+        "unchanged": true
+      },
+      {
+        "path": "constants/index.ts.meta",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "c5d95f92801eca1493881c89e333a4f2d6a6780652a48bb9134e74edf0a78b2b",
+        "actualSha256": "c5d95f92801eca1493881c89e333a4f2d6a6780652a48bb9134e74edf0a78b2b",
+        "unchanged": true
+      },
+      {
+        "path": "src/chart/ChartPlaybackState.ts",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "9dee861745d0214eb2a8b0c6222e63967d6b2a5a08b2ee2da684e20c16d7a2c4",
+        "actualSha256": "9dee861745d0214eb2a8b0c6222e63967d6b2a5a08b2ee2da684e20c16d7a2c4",
+        "unchanged": true
+      },
+      {
+        "path": "src/chart/ChartPlaybackState.ts.meta",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "2096b246aab8cc063221e130f51af5dfe8e319b51e83a319a48be15da6ce5057",
+        "actualSha256": "2096b246aab8cc063221e130f51af5dfe8e319b51e83a319a48be15da6ce5057",
+        "unchanged": true
+      },
+      {
+        "path": "src/chart/ChartPremiere.ts",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "50617d366ae7c5b8dd6b402389f1ef9e43822bf24e03f0687476e1558853eb6d",
+        "actualSha256": "50617d366ae7c5b8dd6b402389f1ef9e43822bf24e03f0687476e1558853eb6d",
+        "unchanged": true
+      },
+      {
+        "path": "src/chart/ChartPremiere.ts.meta",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "9019c2928bb0e7728718b7f4c005026aff467a528a364a9bf59c3747553c5e36",
+        "actualSha256": "9019c2928bb0e7728718b7f4c005026aff467a528a364a9bf59c3747553c5e36",
+        "unchanged": true
+      },
+      {
+        "path": "src/chart/ChartScore.ts",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "12329ce38b4c30d1e537d9652717c83770c137679fef330e56955da12fdac231",
+        "actualSha256": "12329ce38b4c30d1e537d9652717c83770c137679fef330e56955da12fdac231",
+        "unchanged": true
+      },
+      {
+        "path": "src/chart/ChartScore.ts.meta",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "638eb3406b87addd1e693a42a1b7593d342e12d75deae28d61395dc91e1dca2c",
+        "actualSha256": "638eb3406b87addd1e693a42a1b7593d342e12d75deae28d61395dc91e1dca2c",
+        "unchanged": true
+      },
+      {
+        "path": "src/chart/FrameLocator.ts",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "c1b52344168a824c5a110b7d6a4d61493b16ee1fc741c694b9535e276606a622",
+        "actualSha256": "c1b52344168a824c5a110b7d6a4d61493b16ee1fc741c694b9535e276606a622",
+        "unchanged": true
+      },
+      {
+        "path": "src/chart/FrameLocator.ts.meta",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "c296021147fa789c7fb5094d650d341aa2136e6d3451e5b15a7cf0711e2c4011",
+        "actualSha256": "c296021147fa789c7fb5094d650d341aa2136e6d3451e5b15a7cf0711e2c4011",
+        "unchanged": true
+      },
+      {
+        "path": "src/chart/GuidanceChart.ts",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "a4e46b00d782f393b736ed6a71282caf24961df40feb503cbadce734b0d71faa",
+        "actualSha256": "a4e46b00d782f393b736ed6a71282caf24961df40feb503cbadce734b0d71faa",
+        "unchanged": true
+      },
+      {
+        "path": "src/chart/GuidanceChart.ts.meta",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "3fc5d89d6a2d110f2504014d544a6430a0d6f989287a59331c218e8719ccab84",
+        "actualSha256": "3fc5d89d6a2d110f2504014d544a6430a0d6f989287a59331c218e8719ccab84",
+        "unchanged": true
+      },
+      {
+        "path": "src/chart/GuidanceChartRuntime.ts",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "b9b9f293760711aa30dc997d61ccf156c63ba7dbfcc2c7a1b71cf078781929f8",
+        "actualSha256": "b9b9f293760711aa30dc997d61ccf156c63ba7dbfcc2c7a1b71cf078781929f8",
+        "unchanged": true
+      },
+      {
+        "path": "src/chart/GuidanceChartRuntime.ts.meta",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "44ea0756a2495c25b2f5372367cb26f349a9f0695c172160a62363229af2e271",
+        "actualSha256": "44ea0756a2495c25b2f5372367cb26f349a9f0695c172160a62363229af2e271",
+        "unchanged": true
+      },
+      {
+        "path": "src/chart/GuidanceLineRuntime.ts",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "2560babe86a45d207cb7ed6f2a66713b50fc43a5c2e8a9764d5fc22d1b451204",
+        "actualSha256": "2560babe86a45d207cb7ed6f2a66713b50fc43a5c2e8a9764d5fc22d1b451204",
+        "unchanged": true
+      },
+      {
+        "path": "src/chart/GuidanceLineRuntime.ts.meta",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "928a9eae95c8d77b16c942ac70536ccc7eb9a9afc07fbb92f24b9b2a9f2544e1",
+        "actualSha256": "928a9eae95c8d77b16c942ac70536ccc7eb9a9afc07fbb92f24b9b2a9f2544e1",
+        "unchanged": true
+      },
+      {
+        "path": "src/chart/GuidanceTiming.ts",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "6c8b1a55fba9c64c7c70644b8bbd6985c3c5318086b13d1c9aab4dd4ebdbcd4a",
+        "actualSha256": "6c8b1a55fba9c64c7c70644b8bbd6985c3c5318086b13d1c9aab4dd4ebdbcd4a",
+        "unchanged": true
+      },
+      {
+        "path": "src/chart/GuidanceTiming.ts.meta",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "d458506fa77c85a8e012edd2c85f657f1cab1f52f57f03047ddccfdb4ff74c85",
+        "actualSha256": "d458506fa77c85a8e012edd2c85f657f1cab1f52f57f03047ddccfdb4ff74c85",
+        "unchanged": true
+      },
+      {
+        "path": "src/chart/KeyboardPadLayout.ts",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "73adc3efcb5e1311040385d63352ca3242536743b75505283954720dd545e992",
+        "actualSha256": "73adc3efcb5e1311040385d63352ca3242536743b75505283954720dd545e992",
+        "unchanged": true
+      },
+      {
+        "path": "src/chart/KeyboardPadLayout.ts.meta",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "5b9428b82b402d5126a8fcda9e403d9aec371968ba34131464b7b8eecff8b83f",
+        "actualSha256": "5b9428b82b402d5126a8fcda9e403d9aec371968ba34131464b7b8eecff8b83f",
+        "unchanged": true
+      },
+      {
+        "path": "src/chart/Note.ts",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "b515eb95517e964de92435976378651891009c78ac08775b8fe1250908f5f674",
+        "actualSha256": "b515eb95517e964de92435976378651891009c78ac08775b8fe1250908f5f674",
+        "unchanged": true
+      },
+      {
+        "path": "src/chart/Note.ts.meta",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "cf329ca9537228380fdeacc1b3114bc835300e366a447efb0db3cefb02f57493",
+        "actualSha256": "cf329ca9537228380fdeacc1b3114bc835300e366a447efb0db3cefb02f57493",
+        "unchanged": true
+      },
+      {
+        "path": "src/chart/Strike.ts",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "5a78bd13c0ce661cd2605451cf7761bd7c686af2a2b9742e33c8f30c3a07ca19",
+        "actualSha256": "5a78bd13c0ce661cd2605451cf7761bd7c686af2a2b9742e33c8f30c3a07ca19",
+        "unchanged": true
+      },
+      {
+        "path": "src/chart/Strike.ts.meta",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "354870c67d9808002bf84b405ba3bb316426d8da9d5f88d8280386f59efdb5a2",
+        "actualSha256": "354870c67d9808002bf84b405ba3bb316426d8da9d5f88d8280386f59efdb5a2",
+        "unchanged": true
+      },
+      {
+        "path": "src/chart/VideoSyncTest.ts",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "0e4ec6f867f150cd65862278c69abf1f125d611c160dc5d941e025149caa0461",
+        "actualSha256": "0e4ec6f867f150cd65862278c69abf1f125d611c160dc5d941e025149caa0461",
+        "unchanged": true
+      },
+      {
+        "path": "src/chart/VideoSyncTest.ts.meta",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "3d8e586a47e4a645cec561670ef0f7ce50f225dd6ee95f415ebefe9aea397686",
+        "actualSha256": "3d8e586a47e4a645cec561670ef0f7ce50f225dd6ee95f415ebefe9aea397686",
+        "unchanged": true
+      },
+      {
+        "path": "src/editor/GuidanceEditorSession.ts",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "7be0662fcf921b04908ad4657b1ad066e35387fe7880d6acd9a1de9ec7e4eb8b",
+        "actualSha256": "7be0662fcf921b04908ad4657b1ad066e35387fe7880d6acd9a1de9ec7e4eb8b",
+        "unchanged": true
+      },
+      {
+        "path": "src/editor/GuidanceEditorSession.ts.meta",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "1f56274b857c28bd26db6ce228346d3dda84a309c1f67dbe055244c348e99eef",
+        "actualSha256": "1f56274b857c28bd26db6ce228346d3dda84a309c1f67dbe055244c348e99eef",
+        "unchanged": true
+      },
+      {
+        "path": "src/musicEditor/ChartSourceBuilder.ts",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "2cbe0e42768a890745806a7c4edcd68ed8197ac88ad198982d7df60b6793221b",
+        "actualSha256": "2cbe0e42768a890745806a7c4edcd68ed8197ac88ad198982d7df60b6793221b",
+        "unchanged": true
+      },
+      {
+        "path": "src/musicEditor/ChartSourceBuilder.ts.meta",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "27c60854074bf1b3efdb8a90956e622f6418aeebaacac2a55a075e4ea0db4d45",
+        "actualSha256": "27c60854074bf1b3efdb8a90956e622f6418aeebaacac2a55a075e4ea0db4d45",
+        "unchanged": true
+      },
+      {
+        "path": "src/musicEditor/MusicEditorSession.ts",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "ef6f514f37a34c715117ed871b4c1a8525e5a85c3d0c3d3a754bf17a7dbac97b",
+        "actualSha256": "ef6f514f37a34c715117ed871b4c1a8525e5a85c3d0c3d3a754bf17a7dbac97b",
+        "unchanged": true
+      },
+      {
+        "path": "src/musicEditor/MusicEditorSession.ts.meta",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "4f784f2b095b19764f6c4bf2dde8b982c2107a4a806f714c456012eee8178e2c",
+        "actualSha256": "4f784f2b095b19764f6c4bf2dde8b982c2107a4a806f714c456012eee8178e2c",
+        "unchanged": true
+      },
+      {
+        "path": "src/musicEditor/MusicProjectData.ts",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "0cbf532438e377d80f4e3452e831e5769c0e5df6fea3e15455b24e53b7c0c424",
+        "actualSha256": "0cbf532438e377d80f4e3452e831e5769c0e5df6fea3e15455b24e53b7c0c424",
+        "unchanged": true
+      },
+      {
+        "path": "src/musicEditor/MusicProjectData.ts.meta",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "ec5c2336d81ac72af496ae533f567ad451627c7b11025ad016aff1edb6da1ce1",
+        "actualSha256": "ec5c2336d81ac72af496ae533f567ad451627c7b11025ad016aff1edb6da1ce1",
+        "unchanged": true
+      },
+      {
+        "path": "src/musicEditor/MusicTiming.ts",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "8bdc2f6ce19ab8b85ea4178f54329e3707c6b429a00872e6fbd409da13981ac1",
+        "actualSha256": "8bdc2f6ce19ab8b85ea4178f54329e3707c6b429a00872e6fbd409da13981ac1",
+        "unchanged": true
+      },
+      {
+        "path": "src/musicEditor/MusicTiming.ts.meta",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "e3cc91656e265f4f0e82ac8d5b5ecd63d7839e6d904f268282e9ce8b2d30cb9b",
+        "actualSha256": "e3cc91656e265f4f0e82ac8d5b5ecd63d7839e6d904f268282e9ce8b2d30cb9b",
+        "unchanged": true
+      },
+      {
+        "path": "src/director/AccountStartupSession.ts",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "f376a9d618bbf3a4cdfebd57f615a855825d7149c1f33cae4f5b8ab5941684bb",
+        "actualSha256": "f376a9d618bbf3a4cdfebd57f615a855825d7149c1f33cae4f5b8ab5941684bb",
+        "unchanged": true
+      },
+      {
+        "path": "src/director/AccountStartupSession.ts.meta",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "59ee840c06a6d65b678bd5921f17ad1a401b49ef3d93354c57a2a44fc377adba",
+        "actualSha256": "59ee840c06a6d65b678bd5921f17ad1a401b49ef3d93354c57a2a44fc377adba",
+        "unchanged": true
+      },
+      {
+        "path": "src/director/Chapter.ts",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "3d1df38c555a1e3d088a98eea0358b4c22026b32adc04b7e98659cc6fc385545",
+        "actualSha256": "3d1df38c555a1e3d088a98eea0358b4c22026b32adc04b7e98659cc6fc385545",
+        "unchanged": true
+      },
+      {
+        "path": "src/director/Chapter.ts.meta",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "d2a8b723966bcb718c66dbde500b8a37fd847849f18b8b0ae2e2a1e83d3b4a9f",
+        "actualSha256": "d2a8b723966bcb718c66dbde500b8a37fd847849f18b8b0ae2e2a1e83d3b4a9f",
+        "unchanged": true
+      },
+      {
+        "path": "src/director/EndingWindow.ts",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "053840e88285ec185f60abbff4723ab9f16b70db3b7eb42ca13ed28fe433bc11",
+        "actualSha256": "053840e88285ec185f60abbff4723ab9f16b70db3b7eb42ca13ed28fe433bc11",
+        "unchanged": true
+      },
+      {
+        "path": "src/director/EndingWindow.ts.meta",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "09a4ce2e9b6bd923a6d139f09f1978cf3ae415f23f39bac27d421b7d074d843a",
+        "actualSha256": "09a4ce2e9b6bd923a6d139f09f1978cf3ae415f23f39bac27d421b7d074d843a",
+        "unchanged": true
+      },
+      {
+        "path": "src/director/IntentPort.ts",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "f82126332e3caf1dafb640306d2d3d2fe3ad196ed18af1f0313b7a5e9dc095e2",
+        "actualSha256": "f82126332e3caf1dafb640306d2d3d2fe3ad196ed18af1f0313b7a5e9dc095e2",
+        "unchanged": true
+      },
+      {
+        "path": "src/director/IntentPort.ts.meta",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "705fe51ca8be48406e96307773729e8270e16579a89972c7e4c8736dc6e32b4f",
+        "actualSha256": "705fe51ca8be48406e96307773729e8270e16579a89972c7e4c8736dc6e32b4f",
+        "unchanged": true
+      },
+      {
+        "path": "src/director/PlayerIntent.ts",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "731ae4eb2bf26729f028912b28401546da9fcdf80108a1bc7e5f21798105a3cd",
+        "actualSha256": "731ae4eb2bf26729f028912b28401546da9fcdf80108a1bc7e5f21798105a3cd",
+        "unchanged": true
+      },
+      {
+        "path": "src/director/PlayerIntent.ts.meta",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "f529e67eb9b1fcd1db179a034f825e80a8b7e87250480f681cba9fb3d41f4635",
+        "actualSha256": "f529e67eb9b1fcd1db179a034f825e80a8b7e87250480f681cba9fb3d41f4635",
+        "unchanged": true
+      },
+      {
+        "path": "src/ledger/LedgerAppend.ts",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "e2a73908338c153ebf19846257ed86fcf0fb698b92b40ae29a43d360594556e9",
+        "actualSha256": "e2a73908338c153ebf19846257ed86fcf0fb698b92b40ae29a43d360594556e9",
+        "unchanged": true
+      },
+      {
+        "path": "src/ledger/LedgerAppend.ts.meta",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "a417e2ba2c784083b5f7598ac27a5a8ff595c9df1aaf947f0d66be76fc1c782b",
+        "actualSha256": "a417e2ba2c784083b5f7598ac27a5a8ff595c9df1aaf947f0d66be76fc1c782b",
+        "unchanged": true
+      },
+      {
+        "path": "src/ledger/LedgerPosition.ts",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "7f8dbce4fc7541ee8524c0ec3915b0b4d7fd0cb8d5c47869d92d15614201a143",
+        "actualSha256": "7f8dbce4fc7541ee8524c0ec3915b0b4d7fd0cb8d5c47869d92d15614201a143",
+        "unchanged": true
+      },
+      {
+        "path": "src/ledger/LedgerPosition.ts.meta",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "f6ac4efb19572e15b49717c48dc1825cfaf433cbe7342e47f9535dc1ed959e86",
+        "actualSha256": "f6ac4efb19572e15b49717c48dc1825cfaf433cbe7342e47f9535dc1ed959e86",
+        "unchanged": true
+      },
+      {
+        "path": "src/ledger/LedgerRead.ts",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "6b104efed0d85259a3990372e4da13ce8346a352c4a02777247f0df5d34731e0",
+        "actualSha256": "6b104efed0d85259a3990372e4da13ce8346a352c4a02777247f0df5d34731e0",
+        "unchanged": true
+      },
+      {
+        "path": "src/ledger/LedgerRead.ts.meta",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "b86b5646c4056b8bda3c51ac94599011f0f8dd5e64c1687f93c0af6a4f4e0608",
+        "actualSha256": "b86b5646c4056b8bda3c51ac94599011f0f8dd5e64c1687f93c0af6a4f4e0608",
+        "unchanged": true
+      },
+      {
+        "path": "src/ledger/MomentInfo.ts",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "e26f7a95e194685b4bb6e9eebd92490057e43c636807adfab33507f3865018b9",
+        "actualSha256": "e26f7a95e194685b4bb6e9eebd92490057e43c636807adfab33507f3865018b9",
+        "unchanged": true
+      },
+      {
+        "path": "src/ledger/MomentInfo.ts.meta",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "7be38484a784260d5a83c3657e90692daaf4322e64b598aec177b2ed3cbc8491",
+        "actualSha256": "7be38484a784260d5a83c3657e90692daaf4322e64b598aec177b2ed3cbc8491",
+        "unchanged": true
+      },
+      {
+        "path": "src/ledger/NarrativeEvent.ts",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "1ef150d369693d6921be3ff9de60f53f699a148509139f820b8100e2a9dcb323",
+        "actualSha256": "1ef150d369693d6921be3ff9de60f53f699a148509139f820b8100e2a9dcb323",
+        "unchanged": true
+      },
+      {
+        "path": "src/ledger/NarrativeEvent.ts.meta",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "11986bd1b4de27d5b08880c5d3ec43502b17de80946f5f25142a35dc1f6ee7cd",
+        "actualSha256": "11986bd1b4de27d5b08880c5d3ec43502b17de80946f5f25142a35dc1f6ee7cd",
+        "unchanged": true
+      },
+      {
+        "path": "编辑器/世界编辑器/谱面编辑器/引导线编辑器/mock_midi.json",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "2fa3169f4f6d6af4c256ab488311f44ad7f9c5fc5cca65ec0cb08cfa4d9a9aa5",
+        "actualSha256": "2fa3169f4f6d6af4c256ab488311f44ad7f9c5fc5cca65ec0cb08cfa4d9a9aa5",
+        "unchanged": true
+      },
+      {
+        "path": "编辑器/使用说明.md",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "f26a3c86654389d26954d6975be077c5d5d8078b0da8cd05905e3a4b96ad23ec",
+        "actualSha256": "f26a3c86654389d26954d6975be077c5d5d8078b0da8cd05905e3a4b96ad23ec",
+        "unchanged": true
+      },
+      {
+        "path": "编辑器/启动引导线编辑器.ps1",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "ac1d8cb40f76b9e59958c6d72d856355bed9b33d87c81ee172100a059b32fd51",
+        "actualSha256": "ac1d8cb40f76b9e59958c6d72d856355bed9b33d87c81ee172100a059b32fd51",
+        "unchanged": true
+      },
+      {
+        "path": "编辑器/启动音乐编辑器.ps1",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "9879012aa619addbd64b313cbd0c8fccf1890fe4a4efb3f4e901a7b097494f5c",
+        "actualSha256": "9879012aa619addbd64b313cbd0c8fccf1890fe4a4efb3f4e901a7b097494f5c",
+        "unchanged": true
+      },
+      {
+        "path": "编辑器/导出/引导线/editor-mock-1-chart.json",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "7457a09b64d47ed35e94f9e8090926d4c86e51737c3afd469c2f3b6b0fad9671",
+        "actualSha256": "7457a09b64d47ed35e94f9e8090926d4c86e51737c3afd469c2f3b6b0fad9671",
+        "unchanged": true
+      },
+      {
+        "path": "编辑器/导出/引导线/editor-mock-1-chart.visual.json",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "5d7fd8e688df66fee5e08a7f1668b9ede9d89a31b21ea7bdb8c99cf93b1e6e08",
+        "actualSha256": "5d7fd8e688df66fee5e08a7f1668b9ede9d89a31b21ea7bdb8c99cf93b1e6e08",
+        "unchanged": true
+      },
+      {
+        "path": "编辑器/打开引导线编辑器.cmd",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "d03c626cf4a02761a7fe827672abc6f12f3f7eca6e94cb7a420b4182efa0d7c5",
+        "actualSha256": "d03c626cf4a02761a7fe827672abc6f12f3f7eca6e94cb7a420b4182efa0d7c5",
+        "unchanged": true
+      },
+      {
+        "path": "编辑器/打开音乐编辑器.cmd",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "78f76f19b4e75aa327200d6986e34fcce5fa7613ba89ae76b8a69f66cd80cacc",
+        "actualSha256": "78f76f19b4e75aa327200d6986e34fcce5fa7613ba89ae76b8a69f66cd80cacc",
+        "unchanged": true
+      },
+      {
+        "path": "D:/Project/A_New_Begin/colormusic_mode_code.txt",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "5ba868183fb8b6454ab15823002071063057c8a04b7a1577431dfda860ed3c23",
+        "actualSha256": "5ba868183fb8b6454ab15823002071063057c8a04b7a1577431dfda860ed3c23",
+        "unchanged": true
+      },
+      {
+        "path": "D:/Project/A_New_Begin/ColorMusic/assets/scripts/SynthMapping.ts",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "83aa85a18579312054fcf2b62bacf78fa1224f3968f5318307ee1e6f76dd5a97",
+        "actualSha256": "83aa85a18579312054fcf2b62bacf78fa1224f3968f5318307ee1e6f76dd5a97",
+        "unchanged": true
+      },
+      {
+        "path": "D:/Project/A_New_Begin/ColorMusic/assets/scripts/GridSettings.ts",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "32b57b37949d9bab5a03580ff795bb4956d5ffd953877e137f09451f2a7ac82d",
+        "actualSha256": "32b57b37949d9bab5a03580ff795bb4956d5ffd953877e137f09451f2a7ac82d",
+        "unchanged": true
+      },
+      {
+        "path": "D:/Project/A_New_Begin/ColorMusic/assets/scripts/GameManager.ts",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "5bb44d36f643f59ee35f5622be694cdaef5092a113e63d03f4203c03bec23996",
+        "actualSha256": "5bb44d36f643f59ee35f5622be694cdaef5092a113e63d03f4203c03bec23996",
+        "unchanged": true
+      },
+      {
+        "path": "D:/Project/A_New_Begin/ColorMusic/assets/scripts/Effects.ts",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "c6b383ff647a5728d8d5ca66cd8c03cd6af24b13ed73b52a6796771f559b3e52",
+        "actualSha256": "c6b383ff647a5728d8d5ca66cd8c03cd6af24b13ed73b52a6796771f559b3e52",
+        "unchanged": true
+      },
+      {
+        "path": "D:/Project/A_New_Begin/ColorMusic/assets/scripts/DrumLibrary.ts",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "ae0326f0c8ebca627a4c1d4cba293548290c80330a3effb30fca3d258da99c7e",
+        "actualSha256": "ae0326f0c8ebca627a4c1d4cba293548290c80330a3effb30fca3d258da99c7e",
+        "unchanged": true
+      },
+      {
+        "path": "D:/Project/A_New_Begin/ColorMusic/THIRD_PARTY_DRUM_SAMPLES.md",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "2bae632c1a7f8c4da1870a86f7a34c838ff2d9a0d8f44cf8dd03372b99251adc",
+        "actualSha256": "2bae632c1a7f8c4da1870a86f7a34c838ff2d9a0d8f44cf8dd03372b99251adc",
+        "unchanged": true
+      },
+      {
+        "path": "D:/Project/A_New_Begin/ColorMusic/assets/scripts/NativeBridge.ts",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "7aa0c4869a672d8c547f59c6874deb9c76f77386f0f93c817d3020ba55f82553",
+        "actualSha256": "7aa0c4869a672d8c547f59c6874deb9c76f77386f0f93c817d3020ba55f82553",
+        "unchanged": true
+      },
+      {
+        "path": "D:/Project/A_New_Begin/ColorMusic/assets/scripts/FxUI.ts",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "2ec28152174a61e5eb4f1b49b10ed9602116cfc97a5c7a9bbbc53b0dc7469e12",
+        "actualSha256": "2ec28152174a61e5eb4f1b49b10ed9602116cfc97a5c7a9bbbc53b0dc7469e12",
+        "unchanged": true
+      },
+      {
+        "path": "D:/Project/A_New_Begin/ColorMusic/native/engine/android/app/src/com/colormusic/game/NativeBridge.java",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "e0056853787d343c47b60bc8993ccd83d8efbb3cda1d2296dc19320372a762e7",
+        "actualSha256": "e0056853787d343c47b60bc8993ccd83d8efbb3cda1d2296dc19320372a762e7",
+        "unchanged": true
+      },
+      {
+        "path": "D:/Project/A_New_Begin/ColorMusic/native/engine/android/app/src/com/colormusic/game/AudioSynth.java",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "f4b2ce293e2f8e5b86323ed16f2ecadb0b4209dfb105b11e867fed07a4bc7ff8",
+        "actualSha256": "f4b2ce293e2f8e5b86323ed16f2ecadb0b4209dfb105b11e867fed07a4bc7ff8",
+        "unchanged": true
+      },
+      {
+        "path": "D:/Project/A_New_Begin/ColorMusic/tools/build-drum-library.mjs",
+        "baseline": "quality-review/b1-editor-game/protected-hashes.json",
+        "expectedSha256": "a270c0c1690640651e99e9241df31e8d45326073871f573be7e1f43f66eda7f0",
+        "actualSha256": "a270c0c1690640651e99e9241df31e8d45326073871f573be7e1f43f66eda7f0",
+        "unchanged": true
+      }
+    ]
+  },
+  "supplementalLegacyResources": {
+    "checked": 5,
+    "unchanged": 5,
+    "records": [
+      {
+        "path": "assets/resources/chart/guidance_a.json",
+        "baseline": "quality-review/pad-grid-2026-10-10/baseline/assets/resources/chart/guidance_a.json",
+        "expectedSha256": "cd1ae543e8545ad7ad8ca13545341ab75dece5d17e396b0d8742ea1b79c97b55",
+        "actualSha256": "cd1ae543e8545ad7ad8ca13545341ab75dece5d17e396b0d8742ea1b79c97b55",
+        "unchanged": true,
+        "prePadGridBaselineSha256": "31a9fc84ff667928bdef1e53dfbd3bd636003ed55d623e1fdbc0d0d72c0515dc",
+        "historicalDeliveryDiff": "quality-review/pad-grid-2026-10-10/implementation.diff",
+        "historicalChanges": [
+          {
+            "before": "\"layoutVersion\": \"pad-layout-1\"",
+            "after": "\"layoutVersion\": \"pad-layout-2\""
+          }
+        ],
+        "method": "Reconstruct prior completed pad-grid delivery in memory from its exact byte backup plus its archived JSON hunks; preserve BOM and line endings."
+      },
+      {
+        "path": "assets/resources/chart/guidance_b.json",
+        "baseline": "quality-review/pad-grid-2026-10-10/baseline/assets/resources/chart/guidance_b.json",
+        "expectedSha256": "df30bb3a1143be31a0783f557618005fa68326240baeffe2fcbcad63fe63ea9f",
+        "actualSha256": "df30bb3a1143be31a0783f557618005fa68326240baeffe2fcbcad63fe63ea9f",
+        "unchanged": true,
+        "prePadGridBaselineSha256": "062786c697e4f3d91dd4023bb924c599e743a6d3fa5170e135708851651af190",
+        "historicalDeliveryDiff": "quality-review/pad-grid-2026-10-10/implementation.diff",
+        "historicalChanges": [
+          {
+            "before": "\"layoutVersion\": \"pad-layout-1\"",
+            "after": "\"layoutVersion\": \"pad-layout-2\""
+          }
+        ],
+        "method": "Reconstruct prior completed pad-grid delivery in memory from its exact byte backup plus its archived JSON hunks; preserve BOM and line endings."
+      },
+      {
+        "path": "assets/resources/chart/chart_placeholder.json",
+        "baseline": "quality-review/pad-grid-2026-10-10/baseline/assets/resources/chart/chart_placeholder.json",
+        "expectedSha256": "3f1bb7c8dda04cafac444624e6c5c3f8152b1c1f2b76c160d0fbd7a231b158e0",
+        "actualSha256": "3f1bb7c8dda04cafac444624e6c5c3f8152b1c1f2b76c160d0fbd7a231b158e0",
+        "unchanged": true,
+        "prePadGridBaselineSha256": "9bfd12793264045e2529e08e7f52830bfa4eeb5dd21310ddabd3fe52fe6cc369",
+        "historicalDeliveryDiff": "quality-review/pad-grid-2026-10-10/implementation.diff",
+        "historicalChanges": [
+          {
+            "before": "\"layoutVersion\": \"pad-layout-1\"",
+            "after": "\"layoutVersion\": \"pad-layout-2\""
+          },
+          {
+            "before": "\"timeMs\": 3500, \"keyId\": \"Space\"",
+            "after": "\"timeMs\": 3500, \"keyId\": \"KeyG\""
+          },
+          {
+            "before": "\"timeMs\": 9000, \"keyId\": \"Space\"",
+            "after": "\"timeMs\": 9000, \"keyId\": \"KeyG\""
+          }
+        ],
+        "method": "Reconstruct prior completed pad-grid delivery in memory from its exact byte backup plus its archived JSON hunks; preserve BOM and line endings."
+      },
+      {
+        "path": "assets/resources/chart/guidance_c.json",
+        "baseline": "quality-review/guidance-c/files.json#hashes",
+        "expectedSha256": "4c025a5b30346f175f4f007d8940b14abcc8088fd32181ad3d7c2a6b8f501e4b",
+        "actualSha256": "4c025a5b30346f175f4f007d8940b14abcc8088fd32181ad3d7c2a6b8f501e4b",
+        "unchanged": true
+      },
+      {
+        "path": "assets/resources/chart/guidance_c.json.meta",
+        "baseline": "quality-review/guidance-c/files.json#hashes",
+        "expectedSha256": "f7a10624968e58fe62888bba32216c2c16481aa215737ea58ed31f72d8868b92",
+        "actualSha256": "f7a10624968e58fe62888bba32216c2c16481aa215737ea58ed31f72d8868b92",
+        "unchanged": true
+      }
+    ]
+  },
+  "sceneInventory": {
+    "records": [
+      {
+        "path": "assets/scenes/T2Graybox.scene",
+        "currentSha256": "e1f15b181d6e446184294c4102c7b99dca98f1540219be3c86557de3b5de74c8",
+        "unchanged": null,
+        "reason": "No pre-B1 scene hash found in inspected prior manifests; current hash records inventory only, without claiming byte-identical protection."
+      },
+      {
+        "path": "assets/scenes/T2Graybox.scene.meta",
+        "currentSha256": "daba0fe51bdfa66f38e43908342e09ec7ef67e9f348b1e8a7baa8425e008edab",
+        "unchanged": null,
+        "reason": "No pre-B1 scene hash found in inspected prior manifests; current hash records inventory only, without claiming byte-identical protection."
+      }
+    ],
+    "baselineVerified": false,
+    "inspectedPriorManifests": [
+      "quality-review/music-editor-operations/baseline-files.json",
+      "quality-review/music-editor-operations/protected-hashes.json",
+      "quality-review/music-editor/baseline-files.json",
+      "quality-review/music-editor/protected-hashes.json",
+      "quality-review/world-folder/baseline-files.json",
+      "quality-review/world-folder/protected-hashes.json",
+      "quality-review/guidance-editor/protected-hashes.json",
+      "quality-review/judgement-window-2026-10-10/baseline-files.json",
+      "quality-review/judgement-window-2026-10-10/protected-hashes.json"
+    ]
+  },
+  "productionChanges": [
+    {
+      "path": "assets/scripts/SceneBuilder.ts",
+      "baselineSha256": "221d6069895058358d3b70774377e0336332a1e628cfb540eb13ab674b89294b",
+      "currentSha256": "10371fdc3d2a1d66f63d87d019d8777d0bb8e80191788e65bf8eb2b6002c09c9"
+    },
+    {
+      "path": "src/presentation/ChartPadView.ts",
+      "baselineSha256": "426f0888c6bbb7e3cfc1d609bc942e353ee6503af54d27c9942e7d83db9b2160",
+      "currentSha256": "9f7286486c4672ad4359c7a2fb531e2f120af4ca0ffe507507761f07fa8e2818"
+    }
+  ],
+  "addedResources": [
+    {
+      "path": "assets/resources/chart/music-project-1-chart.json",
+      "uiExportPath": "quality-review\\b1-editor-game\\1920x1080-music-project-1-chart.json",
+      "currentSha256": "74e30f25507b8939cd6a6cd2ffda3ccf7bae92ec590c4e5bd293e28975c8935c",
+      "uiExportSha256": "74e30f25507b8939cd6a6cd2ffda3ccf7bae92ec590c4e5bd293e28975c8935c",
+      "byteIdenticalToActualUiExport": true
+    },
+    {
+      "path": "assets/resources/chart/music-project-1-chart.visual.json",
+      "uiExportPath": "quality-review\\b1-editor-game\\1920x1080-music-project-1-chart.visual.json",
+      "currentSha256": "664bb750567353b13d1d9fdaa6e5da11e6458be1b232dbe27339754eeefdc6ac",
+      "uiExportSha256": "664bb750567353b13d1d9fdaa6e5da11e6458be1b232dbe27339754eeefdc6ac",
+      "byteIdenticalToActualUiExport": true
+    }
+  ],
+  "creatorGeneratedMetadata": [
+    {
+      "path": "assets/resources/chart/music-project-1-chart.json.meta",
+      "exists": false
+    },
+    {
+      "path": "assets/resources/chart/music-project-1-chart.visual.json.meta",
+      "exists": false
+    }
+  ],
+  "limitations": [
+    "Scene preservation is only cryptographically asserted when a historical baseline hash is available.",
+    "Creator-imported .meta sidecars for new resources are permitted additions; existing protected metadata was hashed normally."
+  ]
+}

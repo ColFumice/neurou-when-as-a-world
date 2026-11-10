@@ -1,0 +1,2632 @@
+{
+  "generatedAt": "2026-10-10T08:39:27.319Z",
+  "reviewer": "architecture_audit independent subagent",
+  "pass": true,
+  "checks": {
+    "protectedBaseline": true,
+    "productionManifest": true,
+    "compiledCurrentSources": true,
+    "screenshotHashesAndDimensions": true,
+    "diffReplaysExactBytes": true,
+    "actualPreviewPassed": true,
+    "actualIndependentProcessRestartPassed": true,
+    "threeGates": true,
+    "deliveryDocumentLinks": true
+  },
+  "counts": {
+    "protectedFiles": 211,
+    "productionFiles": 10,
+    "compiledSources": 16,
+    "pngs": 30
+  },
+  "protectedChecks": [
+    {
+      "file": "641f3d33-4bab-4769-8f46-62a03315d1b1.jsonl",
+      "expected": "da503328305993c77ebe1e161504c066d8143808eb2278be1c2094d6b9ac100a",
+      "actual": "da503328305993c77ebe1e161504c066d8143808eb2278be1c2094d6b9ac100a",
+      "pass": true
+    },
+    {
+      "file": "D:/Project/A_New_Begin/ColorMusic/THIRD_PARTY_DRUM_SAMPLES.md",
+      "expected": "2bae632c1a7f8c4da1870a86f7a34c838ff2d9a0d8f44cf8dd03372b99251adc",
+      "actual": "2bae632c1a7f8c4da1870a86f7a34c838ff2d9a0d8f44cf8dd03372b99251adc",
+      "pass": true
+    },
+    {
+      "file": "D:/Project/A_New_Begin/ColorMusic/assets/scripts/DrumLibrary.ts",
+      "expected": "ae0326f0c8ebca627a4c1d4cba293548290c80330a3effb30fca3d258da99c7e",
+      "actual": "ae0326f0c8ebca627a4c1d4cba293548290c80330a3effb30fca3d258da99c7e",
+      "pass": true
+    },
+    {
+      "file": "D:/Project/A_New_Begin/ColorMusic/assets/scripts/Effects.ts",
+      "expected": "c6b383ff647a5728d8d5ca66cd8c03cd6af24b13ed73b52a6796771f559b3e52",
+      "actual": "c6b383ff647a5728d8d5ca66cd8c03cd6af24b13ed73b52a6796771f559b3e52",
+      "pass": true
+    },
+    {
+      "file": "D:/Project/A_New_Begin/ColorMusic/assets/scripts/FxUI.ts",
+      "expected": "2ec28152174a61e5eb4f1b49b10ed9602116cfc97a5c7a9bbbc53b0dc7469e12",
+      "actual": "2ec28152174a61e5eb4f1b49b10ed9602116cfc97a5c7a9bbbc53b0dc7469e12",
+      "pass": true
+    },
+    {
+      "file": "D:/Project/A_New_Begin/ColorMusic/assets/scripts/GameManager.ts",
+      "expected": "5bb44d36f643f59ee35f5622be694cdaef5092a113e63d03f4203c03bec23996",
+      "actual": "5bb44d36f643f59ee35f5622be694cdaef5092a113e63d03f4203c03bec23996",
+      "pass": true
+    },
+    {
+      "file": "D:/Project/A_New_Begin/ColorMusic/assets/scripts/GridSettings.ts",
+      "expected": "32b57b37949d9bab5a03580ff795bb4956d5ffd953877e137f09451f2a7ac82d",
+      "actual": "32b57b37949d9bab5a03580ff795bb4956d5ffd953877e137f09451f2a7ac82d",
+      "pass": true
+    },
+    {
+      "file": "D:/Project/A_New_Begin/ColorMusic/assets/scripts/NativeBridge.ts",
+      "expected": "7aa0c4869a672d8c547f59c6874deb9c76f77386f0f93c817d3020ba55f82553",
+      "actual": "7aa0c4869a672d8c547f59c6874deb9c76f77386f0f93c817d3020ba55f82553",
+      "pass": true
+    },
+    {
+      "file": "D:/Project/A_New_Begin/ColorMusic/assets/scripts/SynthMapping.ts",
+      "expected": "83aa85a18579312054fcf2b62bacf78fa1224f3968f5318307ee1e6f76dd5a97",
+      "actual": "83aa85a18579312054fcf2b62bacf78fa1224f3968f5318307ee1e6f76dd5a97",
+      "pass": true
+    },
+    {
+      "file": "D:/Project/A_New_Begin/ColorMusic/native/engine/android/app/src/com/colormusic/game/AudioSynth.java",
+      "expected": "f4b2ce293e2f8e5b86323ed16f2ecadb0b4209dfb105b11e867fed07a4bc7ff8",
+      "actual": "f4b2ce293e2f8e5b86323ed16f2ecadb0b4209dfb105b11e867fed07a4bc7ff8",
+      "pass": true
+    },
+    {
+      "file": "D:/Project/A_New_Begin/ColorMusic/native/engine/android/app/src/com/colormusic/game/NativeBridge.java",
+      "expected": "e0056853787d343c47b60bc8993ccd83d8efbb3cda1d2296dc19320372a762e7",
+      "actual": "e0056853787d343c47b60bc8993ccd83d8efbb3cda1d2296dc19320372a762e7",
+      "pass": true
+    },
+    {
+      "file": "D:/Project/A_New_Begin/ColorMusic/tools/build-drum-library.mjs",
+      "expected": "a270c0c1690640651e99e9241df31e8d45326073871f573be7e1f43f66eda7f0",
+      "actual": "a270c0c1690640651e99e9241df31e8d45326073871f573be7e1f43f66eda7f0",
+      "pass": true
+    },
+    {
+      "file": "D:/Project/A_New_Begin/colormusic_mode_code.txt",
+      "expected": "5ba868183fb8b6454ab15823002071063057c8a04b7a1577431dfda860ed3c23",
+      "actual": "5ba868183fb8b6454ab15823002071063057c8a04b7a1577431dfda860ed3c23",
+      "pass": true
+    },
+    {
+      "file": "assets/resources/chart/chart_placeholder.json",
+      "expected": "3f1bb7c8dda04cafac444624e6c5c3f8152b1c1f2b76c160d0fbd7a231b158e0",
+      "actual": "3f1bb7c8dda04cafac444624e6c5c3f8152b1c1f2b76c160d0fbd7a231b158e0",
+      "pass": true
+    },
+    {
+      "file": "assets/resources/chart/chart_placeholder.json.meta",
+      "expected": "262ab1633b122e67eecafc704b6f11ea8a5681f1ed10f02f5fcda084d6e98d61",
+      "actual": "262ab1633b122e67eecafc704b6f11ea8a5681f1ed10f02f5fcda084d6e98d61",
+      "pass": true
+    },
+    {
+      "file": "assets/resources/chart/guidance_a.json",
+      "expected": "cd1ae543e8545ad7ad8ca13545341ab75dece5d17e396b0d8742ea1b79c97b55",
+      "actual": "cd1ae543e8545ad7ad8ca13545341ab75dece5d17e396b0d8742ea1b79c97b55",
+      "pass": true
+    },
+    {
+      "file": "assets/resources/chart/guidance_a.json.meta",
+      "expected": "9a042e9c176076ae81f1de4d1686d3d19bb78fb8b218d719d05eea0ca3433622",
+      "actual": "9a042e9c176076ae81f1de4d1686d3d19bb78fb8b218d719d05eea0ca3433622",
+      "pass": true
+    },
+    {
+      "file": "assets/resources/chart/guidance_b.json",
+      "expected": "df30bb3a1143be31a0783f557618005fa68326240baeffe2fcbcad63fe63ea9f",
+      "actual": "df30bb3a1143be31a0783f557618005fa68326240baeffe2fcbcad63fe63ea9f",
+      "pass": true
+    },
+    {
+      "file": "assets/resources/chart/guidance_b.json.meta",
+      "expected": "b1e3656c3cb918a33474ab8a307d6c3a69d6ae0effa6749e136c8f8dca3dc7c6",
+      "actual": "b1e3656c3cb918a33474ab8a307d6c3a69d6ae0effa6749e136c8f8dca3dc7c6",
+      "pass": true
+    },
+    {
+      "file": "assets/resources/chart/guidance_c.json",
+      "expected": "4c025a5b30346f175f4f007d8940b14abcc8088fd32181ad3d7c2a6b8f501e4b",
+      "actual": "4c025a5b30346f175f4f007d8940b14abcc8088fd32181ad3d7c2a6b8f501e4b",
+      "pass": true
+    },
+    {
+      "file": "assets/resources/chart/guidance_c.json.meta",
+      "expected": "f7a10624968e58fe62888bba32216c2c16481aa215737ea58ed31f72d8868b92",
+      "actual": "f7a10624968e58fe62888bba32216c2c16481aa215737ea58ed31f72d8868b92",
+      "pass": true
+    },
+    {
+      "file": "assets/resources/chart/music-project-1-chart.json",
+      "expected": "74e30f25507b8939cd6a6cd2ffda3ccf7bae92ec590c4e5bd293e28975c8935c",
+      "actual": "74e30f25507b8939cd6a6cd2ffda3ccf7bae92ec590c4e5bd293e28975c8935c",
+      "pass": true
+    },
+    {
+      "file": "assets/resources/chart/music-project-1-chart.json.meta",
+      "expected": "f43b2a4d563b702ae3195912123aa43f03fe099b7d87daf16e9f4f37109fcb89",
+      "actual": "f43b2a4d563b702ae3195912123aa43f03fe099b7d87daf16e9f4f37109fcb89",
+      "pass": true
+    },
+    {
+      "file": "assets/resources/chart/music-project-1-chart.visual.json",
+      "expected": "664bb750567353b13d1d9fdaa6e5da11e6458be1b232dbe27339754eeefdc6ac",
+      "actual": "664bb750567353b13d1d9fdaa6e5da11e6458be1b232dbe27339754eeefdc6ac",
+      "pass": true
+    },
+    {
+      "file": "assets/resources/chart/music-project-1-chart.visual.json.meta",
+      "expected": "c63da1a971a7fb202deace86e33374f20376399e70a7e323350d7c0a4abf0e86",
+      "actual": "c63da1a971a7fb202deace86e33374f20376399e70a7e323350d7c0a4abf0e86",
+      "pass": true
+    },
+    {
+      "file": "assets/scenes/T2Graybox.scene",
+      "expected": "e1f15b181d6e446184294c4102c7b99dca98f1540219be3c86557de3b5de74c8",
+      "actual": "e1f15b181d6e446184294c4102c7b99dca98f1540219be3c86557de3b5de74c8",
+      "pass": true
+    },
+    {
+      "file": "assets/scenes/T2Graybox.scene.meta",
+      "expected": "daba0fe51bdfa66f38e43908342e09ec7ef67e9f348b1e8a7baa8425e008edab",
+      "actual": "daba0fe51bdfa66f38e43908342e09ec7ef67e9f348b1e8a7baa8425e008edab",
+      "pass": true
+    },
+    {
+      "file": "assets/scripts/Bootstrap.ts",
+      "expected": "28bb2b93faca15b3b513880fc4754d5f8fefc37ac5a700c8bbe870b03a09af50",
+      "actual": "28bb2b93faca15b3b513880fc4754d5f8fefc37ac5a700c8bbe870b03a09af50",
+      "pass": true
+    },
+    {
+      "file": "assets/scripts/Bootstrap.ts.meta",
+      "expected": "510115d10d15eec6adb5b069693b8943516efe09810cd2555ac21b1acf302226",
+      "actual": "510115d10d15eec6adb5b069693b8943516efe09810cd2555ac21b1acf302226",
+      "pass": true
+    },
+    {
+      "file": "assets/scripts/GuidanceEditorBuilder.ts",
+      "expected": "13f8210df2184d2f8dabaefeb2b16ed73cfa474f0812920c2d5990e3b15cbed2",
+      "actual": "13f8210df2184d2f8dabaefeb2b16ed73cfa474f0812920c2d5990e3b15cbed2",
+      "pass": true
+    },
+    {
+      "file": "assets/scripts/GuidanceEditorBuilder.ts.meta",
+      "expected": "a96d815a03c9ee3959006c67f7e063e10dbeb9093c5131fc3c17fa89251cc7d9",
+      "actual": "a96d815a03c9ee3959006c67f7e063e10dbeb9093c5131fc3c17fa89251cc7d9",
+      "pass": true
+    },
+    {
+      "file": "assets/scripts/MusicEditorBuilder.ts",
+      "expected": "ee326b12bd4dcdac03779502d1fd39ba04d0e78bd21af943071a8fbc9851c124",
+      "actual": "ee326b12bd4dcdac03779502d1fd39ba04d0e78bd21af943071a8fbc9851c124",
+      "pass": true
+    },
+    {
+      "file": "assets/scripts/MusicEditorBuilder.ts.meta",
+      "expected": "10c680739941adbe8d18a87284b8ef7cd7aecccf61e70664ea85171cee01425f",
+      "actual": "10c680739941adbe8d18a87284b8ef7cd7aecccf61e70664ea85171cee01425f",
+      "pass": true
+    },
+    {
+      "file": "assets/scripts/SceneBuilder.ts.meta",
+      "expected": "16f0b66151e5d6ea34b1b799858d0892d0f5187b2e94ea130e5b3b47218f3da2",
+      "actual": "16f0b66151e5d6ea34b1b799858d0892d0f5187b2e94ea130e5b3b47218f3da2",
+      "pass": true
+    },
+    {
+      "file": "assets/scripts/WorldFolderBuilder.ts.meta",
+      "expected": "d2575df9781d58e4c9de35b8e497a6dfac2db398a4f806ebfffa9e6611c16f74",
+      "actual": "d2575df9781d58e4c9de35b8e497a6dfac2db398a4f806ebfffa9e6611c16f74",
+      "pass": true
+    },
+    {
+      "file": "assets/scripts/constants.meta",
+      "expected": "0efb7a36b561a43da50bf877bc948c39b7f9aade4de95e2a20c1487cbcdfa604",
+      "actual": "0efb7a36b561a43da50bf877bc948c39b7f9aade4de95e2a20c1487cbcdfa604",
+      "pass": true
+    },
+    {
+      "file": "assets/scripts/src.meta",
+      "expected": "a0968124fb57fab6c10e533d6179070782c2c4944775cd06ed5f00e46b27c214",
+      "actual": "a0968124fb57fab6c10e533d6179070782c2c4944775cd06ed5f00e46b27c214",
+      "pass": true
+    },
+    {
+      "file": "constants/index.ts",
+      "expected": "ebc4b8b2fdaf25d4f0372458cf8e0245da4397a2de05cafc5ea59a3c70518674",
+      "actual": "ebc4b8b2fdaf25d4f0372458cf8e0245da4397a2de05cafc5ea59a3c70518674",
+      "pass": true
+    },
+    {
+      "file": "constants/index.ts.meta",
+      "expected": "c5d95f92801eca1493881c89e333a4f2d6a6780652a48bb9134e74edf0a78b2b",
+      "actual": "c5d95f92801eca1493881c89e333a4f2d6a6780652a48bb9134e74edf0a78b2b",
+      "pass": true
+    },
+    {
+      "file": "docs/NAMEBOOK.md",
+      "expected": "fe63b902b49ceb58c2cdbe2920c671769306f594987c7baf8c91e3218f359899",
+      "actual": "fe63b902b49ceb58c2cdbe2920c671769306f594987c7baf8c91e3218f359899",
+      "pass": true
+    },
+    {
+      "file": "docs/spec/stage-1-acceptance.md",
+      "expected": "c08c7cbfb24876b56e0482559c578ad51d9c623e97ced7045907cba742e2bf59",
+      "actual": "c08c7cbfb24876b56e0482559c578ad51d9c623e97ced7045907cba742e2bf59",
+      "pass": true
+    },
+    {
+      "file": "docs/spec/stage-1.md",
+      "expected": "378eef5d485287228be46b7c715be85d1a034f6584f8d06c73ee960124277f95",
+      "actual": "378eef5d485287228be46b7c715be85d1a034f6584f8d06c73ee960124277f95",
+      "pass": true
+    },
+    {
+      "file": "package-lock.json",
+      "expected": "e6ffa70eb60ed8f8e88329a512256e8eaaad587e5728f7a153029996283b38a0",
+      "actual": "e6ffa70eb60ed8f8e88329a512256e8eaaad587e5728f7a153029996283b38a0",
+      "pass": true
+    },
+    {
+      "file": "package.json",
+      "expected": "60effb8caf406856d0f101802eccac7cb845654ee613b68887b97c978441bcf0",
+      "actual": "60effb8caf406856d0f101802eccac7cb845654ee613b68887b97c978441bcf0",
+      "pass": true
+    },
+    {
+      "file": "scripts/check-dependencies.js",
+      "expected": "1decddbb7798523b91cc905b9f73bf6bd584058246bbde418f7a283da734043e",
+      "actual": "1decddbb7798523b91cc905b9f73bf6bd584058246bbde418f7a283da734043e",
+      "pass": true
+    },
+    {
+      "file": "scripts/check-naming.js",
+      "expected": "bfe1a53af4e6cb79f0a4f33814b6052dbc3d4652eae9ff8b1f57c697d6c30191",
+      "actual": "bfe1a53af4e6cb79f0a4f33814b6052dbc3d4652eae9ff8b1f57c697d6c30191",
+      "pass": true
+    },
+    {
+      "file": "src/character.meta",
+      "expected": "da8a3b57d0662b96f5a10c49004e73e4f9b266c024adfed03cf3467950ee24cf",
+      "actual": "da8a3b57d0662b96f5a10c49004e73e4f9b266c024adfed03cf3467950ee24cf",
+      "pass": true
+    },
+    {
+      "file": "src/character/DecorationPalette.ts",
+      "expected": "f547e81d1af02bdb414af9396e975240660742cded8500b55849d59cb83c7ed0",
+      "actual": "f547e81d1af02bdb414af9396e975240660742cded8500b55849d59cb83c7ed0",
+      "pass": true
+    },
+    {
+      "file": "src/character/DecorationPalette.ts.meta",
+      "expected": "0f198626b2410ca4ae1197313f3e9f31f678f9cb1715c2fc40e64bd38e748f6d",
+      "actual": "0f198626b2410ca4ae1197313f3e9f31f678f9cb1715c2fc40e64bd38e748f6d",
+      "pass": true
+    },
+    {
+      "file": "src/character/HairColor.ts",
+      "expected": "95dfc12ae3212f13a601d41b30abf7a9550182c897d616311411eeffab8da26e",
+      "actual": "95dfc12ae3212f13a601d41b30abf7a9550182c897d616311411eeffab8da26e",
+      "pass": true
+    },
+    {
+      "file": "src/character/HairColor.ts.meta",
+      "expected": "7355ad1b66f9101627b1808116f1861d23c61cb40150542163c2737965e8741f",
+      "actual": "7355ad1b66f9101627b1808116f1861d23c61cb40150542163c2737965e8741f",
+      "pass": true
+    },
+    {
+      "file": "src/character/MoveSpeed.ts",
+      "expected": "36f5806295d48cb7911e456129346c9aef5ad597f1097bc8ead2b88e67d56fc2",
+      "actual": "36f5806295d48cb7911e456129346c9aef5ad597f1097bc8ead2b88e67d56fc2",
+      "pass": true
+    },
+    {
+      "file": "src/character/MoveSpeed.ts.meta",
+      "expected": "e4f071358b014f9773edba33db9c554dcafed09f3f3ae8e60c0f65259261d3d0",
+      "actual": "e4f071358b014f9773edba33db9c554dcafed09f3f3ae8e60c0f65259261d3d0",
+      "pass": true
+    },
+    {
+      "file": "src/character/Protagonist.ts",
+      "expected": "92bbc77a6f210d1763756cef51574347c96cfc12345302e7beadcc1679b7bb9b",
+      "actual": "92bbc77a6f210d1763756cef51574347c96cfc12345302e7beadcc1679b7bb9b",
+      "pass": true
+    },
+    {
+      "file": "src/character/Protagonist.ts.meta",
+      "expected": "dbcac8713119dfd1820ac44401624237899bc0b76c28f33e125ab46f6cefdb6f",
+      "actual": "dbcac8713119dfd1820ac44401624237899bc0b76c28f33e125ab46f6cefdb6f",
+      "pass": true
+    },
+    {
+      "file": "src/character/TrailLength.ts",
+      "expected": "f19ea1c0adb4871368ffc4e3b2471c11b0cdf195bfa8a4d56091a132055b5c52",
+      "actual": "f19ea1c0adb4871368ffc4e3b2471c11b0cdf195bfa8a4d56091a132055b5c52",
+      "pass": true
+    },
+    {
+      "file": "src/character/TrailLength.ts.meta",
+      "expected": "d1c15558e20a56f737524a286c97ff46e780e13ff6a268c4961b52aaa04b0177",
+      "actual": "d1c15558e20a56f737524a286c97ff46e780e13ff6a268c4961b52aaa04b0177",
+      "pass": true
+    },
+    {
+      "file": "src/chart.meta",
+      "expected": "8ce844880cb4986a0736ee45f363344565d20aec63ae5f42392af9df031094b7",
+      "actual": "8ce844880cb4986a0736ee45f363344565d20aec63ae5f42392af9df031094b7",
+      "pass": true
+    },
+    {
+      "file": "src/chart/ChartPlaybackState.ts",
+      "expected": "9dee861745d0214eb2a8b0c6222e63967d6b2a5a08b2ee2da684e20c16d7a2c4",
+      "actual": "9dee861745d0214eb2a8b0c6222e63967d6b2a5a08b2ee2da684e20c16d7a2c4",
+      "pass": true
+    },
+    {
+      "file": "src/chart/ChartPlaybackState.ts.meta",
+      "expected": "2096b246aab8cc063221e130f51af5dfe8e319b51e83a319a48be15da6ce5057",
+      "actual": "2096b246aab8cc063221e130f51af5dfe8e319b51e83a319a48be15da6ce5057",
+      "pass": true
+    },
+    {
+      "file": "src/chart/ChartPremiere.ts",
+      "expected": "50617d366ae7c5b8dd6b402389f1ef9e43822bf24e03f0687476e1558853eb6d",
+      "actual": "50617d366ae7c5b8dd6b402389f1ef9e43822bf24e03f0687476e1558853eb6d",
+      "pass": true
+    },
+    {
+      "file": "src/chart/ChartPremiere.ts.meta",
+      "expected": "9019c2928bb0e7728718b7f4c005026aff467a528a364a9bf59c3747553c5e36",
+      "actual": "9019c2928bb0e7728718b7f4c005026aff467a528a364a9bf59c3747553c5e36",
+      "pass": true
+    },
+    {
+      "file": "src/chart/ChartScore.ts",
+      "expected": "12329ce38b4c30d1e537d9652717c83770c137679fef330e56955da12fdac231",
+      "actual": "12329ce38b4c30d1e537d9652717c83770c137679fef330e56955da12fdac231",
+      "pass": true
+    },
+    {
+      "file": "src/chart/ChartScore.ts.meta",
+      "expected": "638eb3406b87addd1e693a42a1b7593d342e12d75deae28d61395dc91e1dca2c",
+      "actual": "638eb3406b87addd1e693a42a1b7593d342e12d75deae28d61395dc91e1dca2c",
+      "pass": true
+    },
+    {
+      "file": "src/chart/FrameLocator.ts",
+      "expected": "c1b52344168a824c5a110b7d6a4d61493b16ee1fc741c694b9535e276606a622",
+      "actual": "c1b52344168a824c5a110b7d6a4d61493b16ee1fc741c694b9535e276606a622",
+      "pass": true
+    },
+    {
+      "file": "src/chart/FrameLocator.ts.meta",
+      "expected": "c296021147fa789c7fb5094d650d341aa2136e6d3451e5b15a7cf0711e2c4011",
+      "actual": "c296021147fa789c7fb5094d650d341aa2136e6d3451e5b15a7cf0711e2c4011",
+      "pass": true
+    },
+    {
+      "file": "src/chart/GuidanceChart.ts",
+      "expected": "a4e46b00d782f393b736ed6a71282caf24961df40feb503cbadce734b0d71faa",
+      "actual": "a4e46b00d782f393b736ed6a71282caf24961df40feb503cbadce734b0d71faa",
+      "pass": true
+    },
+    {
+      "file": "src/chart/GuidanceChart.ts.meta",
+      "expected": "3fc5d89d6a2d110f2504014d544a6430a0d6f989287a59331c218e8719ccab84",
+      "actual": "3fc5d89d6a2d110f2504014d544a6430a0d6f989287a59331c218e8719ccab84",
+      "pass": true
+    },
+    {
+      "file": "src/chart/GuidanceChartRuntime.ts",
+      "expected": "b9b9f293760711aa30dc997d61ccf156c63ba7dbfcc2c7a1b71cf078781929f8",
+      "actual": "b9b9f293760711aa30dc997d61ccf156c63ba7dbfcc2c7a1b71cf078781929f8",
+      "pass": true
+    },
+    {
+      "file": "src/chart/GuidanceChartRuntime.ts.meta",
+      "expected": "44ea0756a2495c25b2f5372367cb26f349a9f0695c172160a62363229af2e271",
+      "actual": "44ea0756a2495c25b2f5372367cb26f349a9f0695c172160a62363229af2e271",
+      "pass": true
+    },
+    {
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "expected": "2560babe86a45d207cb7ed6f2a66713b50fc43a5c2e8a9764d5fc22d1b451204",
+      "actual": "2560babe86a45d207cb7ed6f2a66713b50fc43a5c2e8a9764d5fc22d1b451204",
+      "pass": true
+    },
+    {
+      "file": "src/chart/GuidanceLineRuntime.ts.meta",
+      "expected": "928a9eae95c8d77b16c942ac70536ccc7eb9a9afc07fbb92f24b9b2a9f2544e1",
+      "actual": "928a9eae95c8d77b16c942ac70536ccc7eb9a9afc07fbb92f24b9b2a9f2544e1",
+      "pass": true
+    },
+    {
+      "file": "src/chart/GuidanceTiming.ts",
+      "expected": "6c8b1a55fba9c64c7c70644b8bbd6985c3c5318086b13d1c9aab4dd4ebdbcd4a",
+      "actual": "6c8b1a55fba9c64c7c70644b8bbd6985c3c5318086b13d1c9aab4dd4ebdbcd4a",
+      "pass": true
+    },
+    {
+      "file": "src/chart/GuidanceTiming.ts.meta",
+      "expected": "d458506fa77c85a8e012edd2c85f657f1cab1f52f57f03047ddccfdb4ff74c85",
+      "actual": "d458506fa77c85a8e012edd2c85f657f1cab1f52f57f03047ddccfdb4ff74c85",
+      "pass": true
+    },
+    {
+      "file": "src/chart/KeyboardPadLayout.ts",
+      "expected": "73adc3efcb5e1311040385d63352ca3242536743b75505283954720dd545e992",
+      "actual": "73adc3efcb5e1311040385d63352ca3242536743b75505283954720dd545e992",
+      "pass": true
+    },
+    {
+      "file": "src/chart/KeyboardPadLayout.ts.meta",
+      "expected": "5b9428b82b402d5126a8fcda9e403d9aec371968ba34131464b7b8eecff8b83f",
+      "actual": "5b9428b82b402d5126a8fcda9e403d9aec371968ba34131464b7b8eecff8b83f",
+      "pass": true
+    },
+    {
+      "file": "src/chart/Note.ts",
+      "expected": "b515eb95517e964de92435976378651891009c78ac08775b8fe1250908f5f674",
+      "actual": "b515eb95517e964de92435976378651891009c78ac08775b8fe1250908f5f674",
+      "pass": true
+    },
+    {
+      "file": "src/chart/Note.ts.meta",
+      "expected": "cf329ca9537228380fdeacc1b3114bc835300e366a447efb0db3cefb02f57493",
+      "actual": "cf329ca9537228380fdeacc1b3114bc835300e366a447efb0db3cefb02f57493",
+      "pass": true
+    },
+    {
+      "file": "src/chart/Strike.ts",
+      "expected": "5a78bd13c0ce661cd2605451cf7761bd7c686af2a2b9742e33c8f30c3a07ca19",
+      "actual": "5a78bd13c0ce661cd2605451cf7761bd7c686af2a2b9742e33c8f30c3a07ca19",
+      "pass": true
+    },
+    {
+      "file": "src/chart/Strike.ts.meta",
+      "expected": "354870c67d9808002bf84b405ba3bb316426d8da9d5f88d8280386f59efdb5a2",
+      "actual": "354870c67d9808002bf84b405ba3bb316426d8da9d5f88d8280386f59efdb5a2",
+      "pass": true
+    },
+    {
+      "file": "src/chart/VideoSyncTest.ts",
+      "expected": "0e4ec6f867f150cd65862278c69abf1f125d611c160dc5d941e025149caa0461",
+      "actual": "0e4ec6f867f150cd65862278c69abf1f125d611c160dc5d941e025149caa0461",
+      "pass": true
+    },
+    {
+      "file": "src/chart/VideoSyncTest.ts.meta",
+      "expected": "3d8e586a47e4a645cec561670ef0f7ce50f225dd6ee95f415ebefe9aea397686",
+      "actual": "3d8e586a47e4a645cec561670ef0f7ce50f225dd6ee95f415ebefe9aea397686",
+      "pass": true
+    },
+    {
+      "file": "src/director.meta",
+      "expected": "2b04bea623048c6d2d524504e059da5f87b30e19e3835e20865a0254b1d5f8ad",
+      "actual": "2b04bea623048c6d2d524504e059da5f87b30e19e3835e20865a0254b1d5f8ad",
+      "pass": true
+    },
+    {
+      "file": "src/director/AccountStartupSession.ts",
+      "expected": "f376a9d618bbf3a4cdfebd57f615a855825d7149c1f33cae4f5b8ab5941684bb",
+      "actual": "f376a9d618bbf3a4cdfebd57f615a855825d7149c1f33cae4f5b8ab5941684bb",
+      "pass": true
+    },
+    {
+      "file": "src/director/AccountStartupSession.ts.meta",
+      "expected": "59ee840c06a6d65b678bd5921f17ad1a401b49ef3d93354c57a2a44fc377adba",
+      "actual": "59ee840c06a6d65b678bd5921f17ad1a401b49ef3d93354c57a2a44fc377adba",
+      "pass": true
+    },
+    {
+      "file": "src/director/Chapter.ts",
+      "expected": "3d1df38c555a1e3d088a98eea0358b4c22026b32adc04b7e98659cc6fc385545",
+      "actual": "3d1df38c555a1e3d088a98eea0358b4c22026b32adc04b7e98659cc6fc385545",
+      "pass": true
+    },
+    {
+      "file": "src/director/Chapter.ts.meta",
+      "expected": "d2a8b723966bcb718c66dbde500b8a37fd847849f18b8b0ae2e2a1e83d3b4a9f",
+      "actual": "d2a8b723966bcb718c66dbde500b8a37fd847849f18b8b0ae2e2a1e83d3b4a9f",
+      "pass": true
+    },
+    {
+      "file": "src/director/EndingWindow.ts",
+      "expected": "053840e88285ec185f60abbff4723ab9f16b70db3b7eb42ca13ed28fe433bc11",
+      "actual": "053840e88285ec185f60abbff4723ab9f16b70db3b7eb42ca13ed28fe433bc11",
+      "pass": true
+    },
+    {
+      "file": "src/director/EndingWindow.ts.meta",
+      "expected": "09a4ce2e9b6bd923a6d139f09f1978cf3ae415f23f39bac27d421b7d074d843a",
+      "actual": "09a4ce2e9b6bd923a6d139f09f1978cf3ae415f23f39bac27d421b7d074d843a",
+      "pass": true
+    },
+    {
+      "file": "src/director/IntentPort.ts.meta",
+      "expected": "705fe51ca8be48406e96307773729e8270e16579a89972c7e4c8736dc6e32b4f",
+      "actual": "705fe51ca8be48406e96307773729e8270e16579a89972c7e4c8736dc6e32b4f",
+      "pass": true
+    },
+    {
+      "file": "src/director/PlayerIntent.ts",
+      "expected": "731ae4eb2bf26729f028912b28401546da9fcdf80108a1bc7e5f21798105a3cd",
+      "actual": "731ae4eb2bf26729f028912b28401546da9fcdf80108a1bc7e5f21798105a3cd",
+      "pass": true
+    },
+    {
+      "file": "src/director/PlayerIntent.ts.meta",
+      "expected": "f529e67eb9b1fcd1db179a034f825e80a8b7e87250480f681cba9fb3d41f4635",
+      "actual": "f529e67eb9b1fcd1db179a034f825e80a8b7e87250480f681cba9fb3d41f4635",
+      "pass": true
+    },
+    {
+      "file": "src/editor.meta",
+      "expected": "38b15b50450b9188c9148f94bf96c96df054b76bac5adc7c18b8cf98993d7ca7",
+      "actual": "38b15b50450b9188c9148f94bf96c96df054b76bac5adc7c18b8cf98993d7ca7",
+      "pass": true
+    },
+    {
+      "file": "src/editor/GuidanceEditorSession.ts",
+      "expected": "7be0662fcf921b04908ad4657b1ad066e35387fe7880d6acd9a1de9ec7e4eb8b",
+      "actual": "7be0662fcf921b04908ad4657b1ad066e35387fe7880d6acd9a1de9ec7e4eb8b",
+      "pass": true
+    },
+    {
+      "file": "src/editor/GuidanceEditorSession.ts.meta",
+      "expected": "1f56274b857c28bd26db6ce228346d3dda84a309c1f67dbe055244c348e99eef",
+      "actual": "1f56274b857c28bd26db6ce228346d3dda84a309c1f67dbe055244c348e99eef",
+      "pass": true
+    },
+    {
+      "file": "src/ledger.meta",
+      "expected": "9a17f744f48b3fc6536aa6bf1948f9d696f3f2cf933c1b57e8cade7dedfd0427",
+      "actual": "9a17f744f48b3fc6536aa6bf1948f9d696f3f2cf933c1b57e8cade7dedfd0427",
+      "pass": true
+    },
+    {
+      "file": "src/ledger/LedgerAppend.ts",
+      "expected": "e2a73908338c153ebf19846257ed86fcf0fb698b92b40ae29a43d360594556e9",
+      "actual": "e2a73908338c153ebf19846257ed86fcf0fb698b92b40ae29a43d360594556e9",
+      "pass": true
+    },
+    {
+      "file": "src/ledger/LedgerAppend.ts.meta",
+      "expected": "a417e2ba2c784083b5f7598ac27a5a8ff595c9df1aaf947f0d66be76fc1c782b",
+      "actual": "a417e2ba2c784083b5f7598ac27a5a8ff595c9df1aaf947f0d66be76fc1c782b",
+      "pass": true
+    },
+    {
+      "file": "src/ledger/LedgerPosition.ts",
+      "expected": "7f8dbce4fc7541ee8524c0ec3915b0b4d7fd0cb8d5c47869d92d15614201a143",
+      "actual": "7f8dbce4fc7541ee8524c0ec3915b0b4d7fd0cb8d5c47869d92d15614201a143",
+      "pass": true
+    },
+    {
+      "file": "src/ledger/LedgerPosition.ts.meta",
+      "expected": "f6ac4efb19572e15b49717c48dc1825cfaf433cbe7342e47f9535dc1ed959e86",
+      "actual": "f6ac4efb19572e15b49717c48dc1825cfaf433cbe7342e47f9535dc1ed959e86",
+      "pass": true
+    },
+    {
+      "file": "src/ledger/LedgerRead.ts",
+      "expected": "6b104efed0d85259a3990372e4da13ce8346a352c4a02777247f0df5d34731e0",
+      "actual": "6b104efed0d85259a3990372e4da13ce8346a352c4a02777247f0df5d34731e0",
+      "pass": true
+    },
+    {
+      "file": "src/ledger/LedgerRead.ts.meta",
+      "expected": "b86b5646c4056b8bda3c51ac94599011f0f8dd5e64c1687f93c0af6a4f4e0608",
+      "actual": "b86b5646c4056b8bda3c51ac94599011f0f8dd5e64c1687f93c0af6a4f4e0608",
+      "pass": true
+    },
+    {
+      "file": "src/ledger/MomentInfo.ts",
+      "expected": "e26f7a95e194685b4bb6e9eebd92490057e43c636807adfab33507f3865018b9",
+      "actual": "e26f7a95e194685b4bb6e9eebd92490057e43c636807adfab33507f3865018b9",
+      "pass": true
+    },
+    {
+      "file": "src/ledger/MomentInfo.ts.meta",
+      "expected": "7be38484a784260d5a83c3657e90692daaf4322e64b598aec177b2ed3cbc8491",
+      "actual": "7be38484a784260d5a83c3657e90692daaf4322e64b598aec177b2ed3cbc8491",
+      "pass": true
+    },
+    {
+      "file": "src/ledger/NarrativeEvent.ts",
+      "expected": "1ef150d369693d6921be3ff9de60f53f699a148509139f820b8100e2a9dcb323",
+      "actual": "1ef150d369693d6921be3ff9de60f53f699a148509139f820b8100e2a9dcb323",
+      "pass": true
+    },
+    {
+      "file": "src/ledger/NarrativeEvent.ts.meta",
+      "expected": "11986bd1b4de27d5b08880c5d3ec43502b17de80946f5f25142a35dc1f6ee7cd",
+      "actual": "11986bd1b4de27d5b08880c5d3ec43502b17de80946f5f25142a35dc1f6ee7cd",
+      "pass": true
+    },
+    {
+      "file": "src/musicEditor.meta",
+      "expected": "a15a347292e997bbe6ea2ad605b7cab2e80ca1ba2549a826ad2b10a289560a91",
+      "actual": "a15a347292e997bbe6ea2ad605b7cab2e80ca1ba2549a826ad2b10a289560a91",
+      "pass": true
+    },
+    {
+      "file": "src/musicEditor/ChartSourceBuilder.ts",
+      "expected": "2cbe0e42768a890745806a7c4edcd68ed8197ac88ad198982d7df60b6793221b",
+      "actual": "2cbe0e42768a890745806a7c4edcd68ed8197ac88ad198982d7df60b6793221b",
+      "pass": true
+    },
+    {
+      "file": "src/musicEditor/ChartSourceBuilder.ts.meta",
+      "expected": "27c60854074bf1b3efdb8a90956e622f6418aeebaacac2a55a075e4ea0db4d45",
+      "actual": "27c60854074bf1b3efdb8a90956e622f6418aeebaacac2a55a075e4ea0db4d45",
+      "pass": true
+    },
+    {
+      "file": "src/musicEditor/MusicEditorSession.ts",
+      "expected": "ef6f514f37a34c715117ed871b4c1a8525e5a85c3d0c3d3a754bf17a7dbac97b",
+      "actual": "ef6f514f37a34c715117ed871b4c1a8525e5a85c3d0c3d3a754bf17a7dbac97b",
+      "pass": true
+    },
+    {
+      "file": "src/musicEditor/MusicEditorSession.ts.meta",
+      "expected": "4f784f2b095b19764f6c4bf2dde8b982c2107a4a806f714c456012eee8178e2c",
+      "actual": "4f784f2b095b19764f6c4bf2dde8b982c2107a4a806f714c456012eee8178e2c",
+      "pass": true
+    },
+    {
+      "file": "src/musicEditor/MusicProjectData.ts",
+      "expected": "0cbf532438e377d80f4e3452e831e5769c0e5df6fea3e15455b24e53b7c0c424",
+      "actual": "0cbf532438e377d80f4e3452e831e5769c0e5df6fea3e15455b24e53b7c0c424",
+      "pass": true
+    },
+    {
+      "file": "src/musicEditor/MusicProjectData.ts.meta",
+      "expected": "ec5c2336d81ac72af496ae533f567ad451627c7b11025ad016aff1edb6da1ce1",
+      "actual": "ec5c2336d81ac72af496ae533f567ad451627c7b11025ad016aff1edb6da1ce1",
+      "pass": true
+    },
+    {
+      "file": "src/musicEditor/MusicTiming.ts",
+      "expected": "8bdc2f6ce19ab8b85ea4178f54329e3707c6b429a00872e6fbd409da13981ac1",
+      "actual": "8bdc2f6ce19ab8b85ea4178f54329e3707c6b429a00872e6fbd409da13981ac1",
+      "pass": true
+    },
+    {
+      "file": "src/musicEditor/MusicTiming.ts.meta",
+      "expected": "e3cc91656e265f4f0e82ac8d5b5ecd63d7839e6d904f268282e9ce8b2d30cb9b",
+      "actual": "e3cc91656e265f4f0e82ac8d5b5ecd63d7839e6d904f268282e9ce8b2d30cb9b",
+      "pass": true
+    },
+    {
+      "file": "src/presentation.meta",
+      "expected": "731f7838de50c529f18d17426ec7d14cd0a64d5a693e82abe241c74e3392d4a3",
+      "actual": "731f7838de50c529f18d17426ec7d14cd0a64d5a693e82abe241c74e3392d4a3",
+      "pass": true
+    },
+    {
+      "file": "src/presentation/AudioOutputClock.ts",
+      "expected": "16ea1319d3380bb82940ca85dfb06ede1f259bd509589f7b9b35a395c52c9414",
+      "actual": "16ea1319d3380bb82940ca85dfb06ede1f259bd509589f7b9b35a395c52c9414",
+      "pass": true
+    },
+    {
+      "file": "src/presentation/AudioOutputClock.ts.meta",
+      "expected": "63082c20ac9cf3ea70b8ac9c25da384a77954cdacdd28f68ded66e7aeef39977",
+      "actual": "63082c20ac9cf3ea70b8ac9c25da384a77954cdacdd28f68ded66e7aeef39977",
+      "pass": true
+    },
+    {
+      "file": "src/presentation/CameraRig.ts",
+      "expected": "646e4876c4eb3e0943021c0a2cd987e776bfaf777400f8971634cc159c6ecba9",
+      "actual": "646e4876c4eb3e0943021c0a2cd987e776bfaf777400f8971634cc159c6ecba9",
+      "pass": true
+    },
+    {
+      "file": "src/presentation/CameraRig.ts.meta",
+      "expected": "ca709c609d349d6ee1a7b4c46a601063a2a891fc6e21e3ed0fbf5be01fa4d987",
+      "actual": "ca709c609d349d6ee1a7b4c46a601063a2a891fc6e21e3ed0fbf5be01fa4d987",
+      "pass": true
+    },
+    {
+      "file": "src/presentation/ChartPadView.ts",
+      "expected": "9f7286486c4672ad4359c7a2fb531e2f120af4ca0ffe507507761f07fa8e2818",
+      "actual": "9f7286486c4672ad4359c7a2fb531e2f120af4ca0ffe507507761f07fa8e2818",
+      "pass": true
+    },
+    {
+      "file": "src/presentation/ChartPadView.ts.meta",
+      "expected": "9ad24aede9b67e0cadab19e85cf11acb959c88207c4301ebb051535346664e0c",
+      "actual": "9ad24aede9b67e0cadab19e85cf11acb959c88207c4301ebb051535346664e0c",
+      "pass": true
+    },
+    {
+      "file": "src/presentation/ChartPausePanel.ts",
+      "expected": "99bb46fceaeed708c9b3ec22dac3574800088c1526088858a7cc22172ba75810",
+      "actual": "99bb46fceaeed708c9b3ec22dac3574800088c1526088858a7cc22172ba75810",
+      "pass": true
+    },
+    {
+      "file": "src/presentation/ChartPausePanel.ts.meta",
+      "expected": "f2a34ef4cc7eb400a792b958335c1411c715599d8582be3fa68ffc90bb1ab3dd",
+      "actual": "f2a34ef4cc7eb400a792b958335c1411c715599d8582be3fa68ffc90bb1ab3dd",
+      "pass": true
+    },
+    {
+      "file": "src/presentation/DebugPanel.ts",
+      "expected": "8b2e26a55f1cb73408304bd9be8151a137bc59098d74926d33473fa78662ca15",
+      "actual": "8b2e26a55f1cb73408304bd9be8151a137bc59098d74926d33473fa78662ca15",
+      "pass": true
+    },
+    {
+      "file": "src/presentation/DebugPanel.ts.meta",
+      "expected": "7f60f090adf125ba71e2d02a62c0c5d2e834ce4c28c8078a245fb1097bd89a7f",
+      "actual": "7f60f090adf125ba71e2d02a62c0c5d2e834ce4c28c8078a245fb1097bd89a7f",
+      "pass": true
+    },
+    {
+      "file": "src/presentation/DeepTraceRevealSequence.ts",
+      "expected": "5f5e87ca78973ca7453881cc5fbebc370c31dbfba813489b1d94751c106ed27c",
+      "actual": "5f5e87ca78973ca7453881cc5fbebc370c31dbfba813489b1d94751c106ed27c",
+      "pass": true
+    },
+    {
+      "file": "src/presentation/DeepTraceRevealSequence.ts.meta",
+      "expected": "d68139c3969046a1385ff69cf41d637794f27d3fbcf5319c4141dbaf2027fc6f",
+      "actual": "d68139c3969046a1385ff69cf41d637794f27d3fbcf5319c4141dbaf2027fc6f",
+      "pass": true
+    },
+    {
+      "file": "src/presentation/EditorFolderView.ts",
+      "expected": "68a69bdd8259f9444a99ad788dc4b181193ccbde37e132e9aceee932024127e2",
+      "actual": "68a69bdd8259f9444a99ad788dc4b181193ccbde37e132e9aceee932024127e2",
+      "pass": true
+    },
+    {
+      "file": "src/presentation/EditorFolderView.ts.meta",
+      "expected": "44e46c752e75e9b1bc35aba544be14d0fc8f90de5abbc3216393c24ff5b6ed45",
+      "actual": "44e46c752e75e9b1bc35aba544be14d0fc8f90de5abbc3216393c24ff5b6ed45",
+      "pass": true
+    },
+    {
+      "file": "src/presentation/ElementEntityView.ts",
+      "expected": "1f25c4cc415f1213f0ff252d72ce435c53ef5654c6248033832ef35f73ce790d",
+      "actual": "1f25c4cc415f1213f0ff252d72ce435c53ef5654c6248033832ef35f73ce790d",
+      "pass": true
+    },
+    {
+      "file": "src/presentation/ElementEntityView.ts.meta",
+      "expected": "010c472e1bcd4dcdcff06ddca5a04a3b4a35831c9aaac18173646bc9b7e73291",
+      "actual": "010c472e1bcd4dcdcff06ddca5a04a3b4a35831c9aaac18173646bc9b7e73291",
+      "pass": true
+    },
+    {
+      "file": "src/presentation/FolderCatalog.ts.meta",
+      "expected": "2bd8aafc960d65892062d3dac55d92be834a9877eacb6c59172c56a444e47b9d",
+      "actual": "2bd8aafc960d65892062d3dac55d92be834a9877eacb6c59172c56a444e47b9d",
+      "pass": true
+    },
+    {
+      "file": "src/presentation/FolderStartupView.ts",
+      "expected": "50fa7afb3f2be26a78715a8916b8677ee6862dbe66e0dc14cab878ca78083988",
+      "actual": "50fa7afb3f2be26a78715a8916b8677ee6862dbe66e0dc14cab878ca78083988",
+      "pass": true
+    },
+    {
+      "file": "src/presentation/FolderStartupView.ts.meta",
+      "expected": "4d879e1156c42069f5ad1978674bb0d41427c7aeb3d720afdf5d774d7c5e189b",
+      "actual": "4d879e1156c42069f5ad1978674bb0d41427c7aeb3d720afdf5d774d7c5e189b",
+      "pass": true
+    },
+    {
+      "file": "src/presentation/FolderTheme.ts",
+      "expected": "3d40411374946e9014a5f558837cfdaf0240c3074e627583061391244015f033",
+      "actual": "3d40411374946e9014a5f558837cfdaf0240c3074e627583061391244015f033",
+      "pass": true
+    },
+    {
+      "file": "src/presentation/FolderTheme.ts.meta",
+      "expected": "3482b9ef4f3ca1707bfe0d44155403700c64e3e7c9a6cd3eee5d03cc4db0d15a",
+      "actual": "3482b9ef4f3ca1707bfe0d44155403700c64e3e7c9a6cd3eee5d03cc4db0d15a",
+      "pass": true
+    },
+    {
+      "file": "src/presentation/FrameDriver.ts",
+      "expected": "e70232f3ef6f803bba02a6c2af1d40107aea95400dfd65e9845636a836faf3a6",
+      "actual": "e70232f3ef6f803bba02a6c2af1d40107aea95400dfd65e9845636a836faf3a6",
+      "pass": true
+    },
+    {
+      "file": "src/presentation/FrameDriver.ts.meta",
+      "expected": "d516605f7ae1e4f5303de5123712c1ea261d6316dbf44440a16a48a685b33032",
+      "actual": "d516605f7ae1e4f5303de5123712c1ea261d6316dbf44440a16a48a685b33032",
+      "pass": true
+    },
+    {
+      "file": "src/presentation/GuidanceEditorView.ts",
+      "expected": "894e7dcccc9b071b016b7c8233952cdb6b9d19593868ccf80580154466738175",
+      "actual": "894e7dcccc9b071b016b7c8233952cdb6b9d19593868ccf80580154466738175",
+      "pass": true
+    },
+    {
+      "file": "src/presentation/GuidanceEditorView.ts.meta",
+      "expected": "88e23b2963762e95c3c34b9a659bb17154266b1a9b5a4044e7b8d1ade1cf31b7",
+      "actual": "88e23b2963762e95c3c34b9a659bb17154266b1a9b5a4044e7b8d1ade1cf31b7",
+      "pass": true
+    },
+    {
+      "file": "src/presentation/InputCollector.ts",
+      "expected": "1cf85eb3e8de3621bc199a3e6e96cba92a1309fb6172ce1221ef692281b67420",
+      "actual": "1cf85eb3e8de3621bc199a3e6e96cba92a1309fb6172ce1221ef692281b67420",
+      "pass": true
+    },
+    {
+      "file": "src/presentation/InputCollector.ts.meta",
+      "expected": "c54c67fbbd9ef0a2a044d08b51eafe5dc5c672ada79f7b12fc37447fdcefd1c1",
+      "actual": "c54c67fbbd9ef0a2a044d08b51eafe5dc5c672ada79f7b12fc37447fdcefd1c1",
+      "pass": true
+    },
+    {
+      "file": "src/presentation/LineEraseEffect.ts",
+      "expected": "dd236db85a35abe343477cdbfafead610ccb29ef709fc2c250e2c59a632c0697",
+      "actual": "dd236db85a35abe343477cdbfafead610ccb29ef709fc2c250e2c59a632c0697",
+      "pass": true
+    },
+    {
+      "file": "src/presentation/LineEraseEffect.ts.meta",
+      "expected": "f4cc3f603b845d286876f30fcc9ea1bcc048ed9f50ff271b7704b224650dada0",
+      "actual": "f4cc3f603b845d286876f30fcc9ea1bcc048ed9f50ff271b7704b224650dada0",
+      "pass": true
+    },
+    {
+      "file": "src/presentation/MusicEditorView.ts",
+      "expected": "fc5a6d4c774d841177b264d67fdac2658226f2df976cb5f95cef3d7fb50e425d",
+      "actual": "fc5a6d4c774d841177b264d67fdac2658226f2df976cb5f95cef3d7fb50e425d",
+      "pass": true
+    },
+    {
+      "file": "src/presentation/MusicEditorView.ts.meta",
+      "expected": "83e475b9ba7b97659385169c6a16dbf9ed15c82397f0feb257347d6a510a8780",
+      "actual": "83e475b9ba7b97659385169c6a16dbf9ed15c82397f0feb257347d6a510a8780",
+      "pass": true
+    },
+    {
+      "file": "src/presentation/MusicPreviewAudio.ts",
+      "expected": "95b2b483fc035031a56709c817d8da97498657b49d203d8bb2d368e507aad997",
+      "actual": "95b2b483fc035031a56709c817d8da97498657b49d203d8bb2d368e507aad997",
+      "pass": true
+    },
+    {
+      "file": "src/presentation/MusicPreviewAudio.ts.meta",
+      "expected": "669bb91347096e72f6ca031f25b41ad052a73d4f7ddcdd03a4171273734f1b8a",
+      "actual": "669bb91347096e72f6ca031f25b41ad052a73d4f7ddcdd03a4171273734f1b8a",
+      "pass": true
+    },
+    {
+      "file": "src/presentation/PerceptionFilter.ts",
+      "expected": "8e5d15d33542f965f64c05275550c6936459dbe3ad27c60c7def908649c5d2c1",
+      "actual": "8e5d15d33542f965f64c05275550c6936459dbe3ad27c60c7def908649c5d2c1",
+      "pass": true
+    },
+    {
+      "file": "src/presentation/PerceptionFilter.ts.meta",
+      "expected": "3fbf46f2addbe94b76241bb82f6573fb3cdd9f7018bcadb44df4207cce5f9043",
+      "actual": "3fbf46f2addbe94b76241bb82f6573fb3cdd9f7018bcadb44df4207cce5f9043",
+      "pass": true
+    },
+    {
+      "file": "src/presentation/ProtagonistView.ts",
+      "expected": "0f8db6f43e81f0b00255a2486c5087fd72b1b30c769267274c811f6867dedfe3",
+      "actual": "0f8db6f43e81f0b00255a2486c5087fd72b1b30c769267274c811f6867dedfe3",
+      "pass": true
+    },
+    {
+      "file": "src/presentation/ProtagonistView.ts.meta",
+      "expected": "63ee4aa0b19ca1b2ca9ced731cf21d2368e67d6b883e018ddf7c8b4cb661548c",
+      "actual": "63ee4aa0b19ca1b2ca9ced731cf21d2368e67d6b883e018ddf7c8b4cb661548c",
+      "pass": true
+    },
+    {
+      "file": "src/presentation/ScreenInvertRipple.ts",
+      "expected": "b528cc815597a01d01469f9e580c688a00b1cbd420ec065d6c8c1bab2f4ee264",
+      "actual": "b528cc815597a01d01469f9e580c688a00b1cbd420ec065d6c8c1bab2f4ee264",
+      "pass": true
+    },
+    {
+      "file": "src/presentation/ScreenInvertRipple.ts.meta",
+      "expected": "0d9fc361c7b8eced076f1e0c0c2100804c0ef423f98512b13053131ee4ac0547",
+      "actual": "0d9fc361c7b8eced076f1e0c0c2100804c0ef423f98512b13053131ee4ac0547",
+      "pass": true
+    },
+    {
+      "file": "src/presentation/TrailRender.ts",
+      "expected": "ac21c5dea3cd09021972721708b4be9b6cfdbe4e55ad988241565ecaf70cfed6",
+      "actual": "ac21c5dea3cd09021972721708b4be9b6cfdbe4e55ad988241565ecaf70cfed6",
+      "pass": true
+    },
+    {
+      "file": "src/presentation/TrailRender.ts.meta",
+      "expected": "925f4182b43bcbb4642bf9c32833d0e0e3702f48cd9c7067aa162eb22788d9d5",
+      "actual": "925f4182b43bcbb4642bf9c32833d0e0e3702f48cd9c7067aa162eb22788d9d5",
+      "pass": true
+    },
+    {
+      "file": "src/presentation/WorldFolderView.ts.meta",
+      "expected": "c7747a57260319fc51a9411d21d45a8ae3ac3c852824f5a99997e74fb23c7610",
+      "actual": "c7747a57260319fc51a9411d21d45a8ae3ac3c852824f5a99997e74fb23c7610",
+      "pass": true
+    },
+    {
+      "file": "src/trace.meta",
+      "expected": "4c1316dd45d1a7d28f4c3dcf0f6f9b85aa4acd2766a7a58541f50fc73b6a7205",
+      "actual": "4c1316dd45d1a7d28f4c3dcf0f6f9b85aa4acd2766a7a58541f50fc73b6a7205",
+      "pass": true
+    },
+    {
+      "file": "src/trace/DeepTrace.ts",
+      "expected": "57416414e343a735915bcf7d70e1412cbf2a132f33b01bfe364d10631c6a8d44",
+      "actual": "57416414e343a735915bcf7d70e1412cbf2a132f33b01bfe364d10631c6a8d44",
+      "pass": true
+    },
+    {
+      "file": "src/trace/DeepTrace.ts.meta",
+      "expected": "05aece12674ca2642add4072226b9f6b39125486ee73089fc9b886ca06cc4f34",
+      "actual": "05aece12674ca2642add4072226b9f6b39125486ee73089fc9b886ca06cc4f34",
+      "pass": true
+    },
+    {
+      "file": "src/trace/EchoTrace.ts",
+      "expected": "acb9b9d87cef559e9144c06ff0c0ff3c3c3ff793bbb5c9394bdbb42cebf8d70a",
+      "actual": "acb9b9d87cef559e9144c06ff0c0ff3c3c3ff793bbb5c9394bdbb42cebf8d70a",
+      "pass": true
+    },
+    {
+      "file": "src/trace/EchoTrace.ts.meta",
+      "expected": "e6cb67500cbd4c78dc6b54cdcca8e7f9cfcc18ae1e5b509575ae4153caef0f14",
+      "actual": "e6cb67500cbd4c78dc6b54cdcca8e7f9cfcc18ae1e5b509575ae4153caef0f14",
+      "pass": true
+    },
+    {
+      "file": "src/trace/ElementEntity.ts",
+      "expected": "f907c498b8b2542a3b1204b720fe620d5a2d6186d4155ae869d04b0b69d89bf2",
+      "actual": "f907c498b8b2542a3b1204b720fe620d5a2d6186d4155ae869d04b0b69d89bf2",
+      "pass": true
+    },
+    {
+      "file": "src/trace/ElementEntity.ts.meta",
+      "expected": "05001979814949a6b58b173b5a8f9957cce724813078072e30d5901c5da2c89c",
+      "actual": "05001979814949a6b58b173b5a8f9957cce724813078072e30d5901c5da2c89c",
+      "pass": true
+    },
+    {
+      "file": "src/trace/EmpathyScaling.ts",
+      "expected": "b69da01576601c0e23c85dd1fd4f4f380145478e8ef82a13f0575db1e9b83f11",
+      "actual": "b69da01576601c0e23c85dd1fd4f4f380145478e8ef82a13f0575db1e9b83f11",
+      "pass": true
+    },
+    {
+      "file": "src/trace/EmpathyScaling.ts.meta",
+      "expected": "beba7c282302d70be740f76d70757be3206922045bfbd8a78468eed40693499c",
+      "actual": "beba7c282302d70be740f76d70757be3206922045bfbd8a78468eed40693499c",
+      "pass": true
+    },
+    {
+      "file": "src/trace/PuzzleChain.ts",
+      "expected": "221d0ddb675c1ca07c61e48e73839fd93154f0258ccee69358f72f96d416f9e0",
+      "actual": "221d0ddb675c1ca07c61e48e73839fd93154f0258ccee69358f72f96d416f9e0",
+      "pass": true
+    },
+    {
+      "file": "src/trace/PuzzleChain.ts.meta",
+      "expected": "76b9357f9881b01dac9668b147d198f34c2e574eb4b1ed503ef3388bac438730",
+      "actual": "76b9357f9881b01dac9668b147d198f34c2e574eb4b1ed503ef3388bac438730",
+      "pass": true
+    },
+    {
+      "file": "src/trace/PuzzleProgress.ts",
+      "expected": "9930df35b56d7e22faeee2cff6d80f24f2338996c0bc3500aa0ae5544f535411",
+      "actual": "9930df35b56d7e22faeee2cff6d80f24f2338996c0bc3500aa0ae5544f535411",
+      "pass": true
+    },
+    {
+      "file": "src/trace/PuzzleProgress.ts.meta",
+      "expected": "72994ef1e08e0ca1e4e064f7c8bae0acdef31a65483e1680069d2143a23a8664",
+      "actual": "72994ef1e08e0ca1e4e064f7c8bae0acdef31a65483e1680069d2143a23a8664",
+      "pass": true
+    },
+    {
+      "file": "src/trace/RhythmStrike.ts",
+      "expected": "428d6315b65d9cecfd32524b6aa68c8cd1d81ef56631c6c7173015858e6050a4",
+      "actual": "428d6315b65d9cecfd32524b6aa68c8cd1d81ef56631c6c7173015858e6050a4",
+      "pass": true
+    },
+    {
+      "file": "src/trace/RhythmStrike.ts.meta",
+      "expected": "9c3409375cc93700a4eaa51bc526e06a429f8bb095c7342041b278d6948d844b",
+      "actual": "9c3409375cc93700a4eaa51bc526e06a429f8bb095c7342041b278d6948d844b",
+      "pass": true
+    },
+    {
+      "file": "src/trace/Trace.ts",
+      "expected": "843295b12eb979404708c7c08543f7f900f86841d006d095b61552dabd709686",
+      "actual": "843295b12eb979404708c7c08543f7f900f86841d006d095b61552dabd709686",
+      "pass": true
+    },
+    {
+      "file": "src/trace/Trace.ts.meta",
+      "expected": "9915615ac6c3cb59a2a56ef045d1dea72775090316b2881d31657f96b4b468b7",
+      "actual": "9915615ac6c3cb59a2a56ef045d1dea72775090316b2881d31657f96b4b468b7",
+      "pass": true
+    },
+    {
+      "file": "src/trace/TraceOrigin.ts",
+      "expected": "0bb0540235f6f1a5cc09567327ce31143420065553a9777fab3f70283c944348",
+      "actual": "0bb0540235f6f1a5cc09567327ce31143420065553a9777fab3f70283c944348",
+      "pass": true
+    },
+    {
+      "file": "src/trace/TraceOrigin.ts.meta",
+      "expected": "19403260866de00226098d0f784c29a14aaca072a16048b884cddae4eb4b906a",
+      "actual": "19403260866de00226098d0f784c29a14aaca072a16048b884cddae4eb4b906a",
+      "pass": true
+    },
+    {
+      "file": "src/trace/TraceProximityVolume.ts",
+      "expected": "d689e7eae056339f81d850d0ff6a80db1773242423c5d64dc7243c42a578c053",
+      "actual": "d689e7eae056339f81d850d0ff6a80db1773242423c5d64dc7243c42a578c053",
+      "pass": true
+    },
+    {
+      "file": "src/trace/TraceProximityVolume.ts.meta",
+      "expected": "c6d3792b6a49ff60878324b586713c632b11fdabb905ef083e18b9f6c0ba82ea",
+      "actual": "c6d3792b6a49ff60878324b586713c632b11fdabb905ef083e18b9f6c0ba82ea",
+      "pass": true
+    },
+    {
+      "file": "src/trace/TraceTier.ts",
+      "expected": "0af1275da6e47a1660e58d3fcd53af8b735bea0d23935b96c7abdab1c36b8b3e",
+      "actual": "0af1275da6e47a1660e58d3fcd53af8b735bea0d23935b96c7abdab1c36b8b3e",
+      "pass": true
+    },
+    {
+      "file": "src/trace/TraceTier.ts.meta",
+      "expected": "829cc1138b6e22f1663911928760f1da36ef2de656f9a68c57d565d11a5a6c3f",
+      "actual": "829cc1138b6e22f1663911928760f1da36ef2de656f9a68c57d565d11a5a6c3f",
+      "pass": true
+    },
+    {
+      "file": "src/trace/VisibilityState.ts",
+      "expected": "8967aaa0098af6d4425a88f45beb961abd1b2eaa2d227da7074d730707fa67c9",
+      "actual": "8967aaa0098af6d4425a88f45beb961abd1b2eaa2d227da7074d730707fa67c9",
+      "pass": true
+    },
+    {
+      "file": "src/trace/VisibilityState.ts.meta",
+      "expected": "024b19c7eb767554b30558df345ae5e147d46e8baa2eccb63195afe122b58500",
+      "actual": "024b19c7eb767554b30558df345ae5e147d46e8baa2eccb63195afe122b58500",
+      "pass": true
+    },
+    {
+      "file": "src/trace/VisibilityTransition.ts",
+      "expected": "db16e0bec6ac13468985dd6f1125f1d96c36a13dea5cfbc0f9542287196049ff",
+      "actual": "db16e0bec6ac13468985dd6f1125f1d96c36a13dea5cfbc0f9542287196049ff",
+      "pass": true
+    },
+    {
+      "file": "src/trace/VisibilityTransition.ts.meta",
+      "expected": "87177270493f9b8fc93e4ef102420eb10c6dbe6107ac21fa52dbe3c96f3378f4",
+      "actual": "87177270493f9b8fc93e4ef102420eb10c6dbe6107ac21fa52dbe3c96f3378f4",
+      "pass": true
+    },
+    {
+      "file": "src/world.meta",
+      "expected": "5bdfe8494c7ddbdf48c6592385d4783d8d5931d9b9cb330b7108b25df4af6ba7",
+      "actual": "5bdfe8494c7ddbdf48c6592385d4783d8d5931d9b9cb330b7108b25df4af6ba7",
+      "pass": true
+    },
+    {
+      "file": "src/world/DepthAxis.ts",
+      "expected": "d4b65989cb943b4c02d050d61cd9050b9362622b1192d53cc4eaeea1ae760768",
+      "actual": "d4b65989cb943b4c02d050d61cd9050b9362622b1192d53cc4eaeea1ae760768",
+      "pass": true
+    },
+    {
+      "file": "src/world/DepthAxis.ts.meta",
+      "expected": "85146a89d3ed02b8578e740d005371cec857afd65ae4379298f0fb1e30c588aa",
+      "actual": "85146a89d3ed02b8578e740d005371cec857afd65ae4379298f0fb1e30c588aa",
+      "pass": true
+    },
+    {
+      "file": "src/world/LateralAxis.ts",
+      "expected": "9c2e6fc570e2b656cbefff7f5030b01ea9b5671aaeda369c574ac0bbf9b3e1f0",
+      "actual": "9c2e6fc570e2b656cbefff7f5030b01ea9b5671aaeda369c574ac0bbf9b3e1f0",
+      "pass": true
+    },
+    {
+      "file": "src/world/LateralAxis.ts.meta",
+      "expected": "d53a5f985c03abd3f206de0dc39c38dec474b8361865f3cc0a3f049904da5433",
+      "actual": "d53a5f985c03abd3f206de0dc39c38dec474b8361865f3cc0a3f049904da5433",
+      "pass": true
+    },
+    {
+      "file": "src/world/MapCenter.ts",
+      "expected": "dc5171943a6a79f3655d25e0b0e1a5a526f8f8afe68e149d458228a793ca26be",
+      "actual": "dc5171943a6a79f3655d25e0b0e1a5a526f8f8afe68e149d458228a793ca26be",
+      "pass": true
+    },
+    {
+      "file": "src/world/MapCenter.ts.meta",
+      "expected": "aac2a4c01bc4dcce8a66b534417b153c863a920bd32a9ca6872f0562b64ad427",
+      "actual": "aac2a4c01bc4dcce8a66b534417b153c863a920bd32a9ca6872f0562b64ad427",
+      "pass": true
+    },
+    {
+      "file": "src/world/VerticalAxis.ts",
+      "expected": "f4a59268e561036bcb4891c64fa6128780305a39b2d9c036d55eb99760bdc238",
+      "actual": "f4a59268e561036bcb4891c64fa6128780305a39b2d9c036d55eb99760bdc238",
+      "pass": true
+    },
+    {
+      "file": "src/world/VerticalAxis.ts.meta",
+      "expected": "fe890b0d727d9c96e98a7efe97b46315e6f71303d3db83dddc7c232752604b37",
+      "actual": "fe890b0d727d9c96e98a7efe97b46315e6f71303d3db83dddc7c232752604b37",
+      "pass": true
+    },
+    {
+      "file": "src/world/WorldInstance.ts",
+      "expected": "c77d3f044a773c72b9b27fd1d208bb0ba42de08a2e077da8212440d3e572954c",
+      "actual": "c77d3f044a773c72b9b27fd1d208bb0ba42de08a2e077da8212440d3e572954c",
+      "pass": true
+    },
+    {
+      "file": "src/world/WorldInstance.ts.meta",
+      "expected": "7cd8b2309a396ee33815faeaf62546327afab9f6a56dffc96e2b08ca3e089a1b",
+      "actual": "7cd8b2309a396ee33815faeaf62546327afab9f6a56dffc96e2b08ca3e089a1b",
+      "pass": true
+    },
+    {
+      "file": "src/world/WorldMap.ts",
+      "expected": "89ee978b1ba328eaedfea7a6016aa5618cb22ea8de1c6a393ffa0e29d1bd133f",
+      "actual": "89ee978b1ba328eaedfea7a6016aa5618cb22ea8de1c6a393ffa0e29d1bd133f",
+      "pass": true
+    },
+    {
+      "file": "src/world/WorldMap.ts.meta",
+      "expected": "9718f1b8a8cad7a8117334385c17b4ece27a13a9aed6c572a4bbad98e0f5b390",
+      "actual": "9718f1b8a8cad7a8117334385c17b4ece27a13a9aed6c572a4bbad98e0f5b390",
+      "pass": true
+    },
+    {
+      "file": "src/world/WorldMeter.ts",
+      "expected": "f6bebb7130bc78a820df7ccca5ed34b4d63fe14ebf7f55fa29c16d974d317480",
+      "actual": "f6bebb7130bc78a820df7ccca5ed34b4d63fe14ebf7f55fa29c16d974d317480",
+      "pass": true
+    },
+    {
+      "file": "src/world/WorldMeter.ts.meta",
+      "expected": "868e5941f934374a2605d47a8f9529dc616627eb78d73c493446d18352a43b78",
+      "actual": "868e5941f934374a2605d47a8f9529dc616627eb78d73c493446d18352a43b78",
+      "pass": true
+    },
+    {
+      "file": "tsconfig.json",
+      "expected": "a59e509ab6304ed7cdb238ac1309c7f40c39c307e02cb90ff2de366060f41aa5",
+      "actual": "a59e509ab6304ed7cdb238ac1309c7f40c39c307e02cb90ff2de366060f41aa5",
+      "pass": true
+    },
+    {
+      "file": "编辑器/世界编辑器/谱面编辑器/引导线编辑器/mock_midi.json",
+      "expected": "2fa3169f4f6d6af4c256ab488311f44ad7f9c5fc5cca65ec0cb08cfa4d9a9aa5",
+      "actual": "2fa3169f4f6d6af4c256ab488311f44ad7f9c5fc5cca65ec0cb08cfa4d9a9aa5",
+      "pass": true
+    },
+    {
+      "file": "编辑器/使用说明.md",
+      "expected": "f26a3c86654389d26954d6975be077c5d5d8078b0da8cd05905e3a4b96ad23ec",
+      "actual": "f26a3c86654389d26954d6975be077c5d5d8078b0da8cd05905e3a4b96ad23ec",
+      "pass": true
+    },
+    {
+      "file": "编辑器/启动引导线编辑器.ps1",
+      "expected": "ac1d8cb40f76b9e59958c6d72d856355bed9b33d87c81ee172100a059b32fd51",
+      "actual": "ac1d8cb40f76b9e59958c6d72d856355bed9b33d87c81ee172100a059b32fd51",
+      "pass": true
+    },
+    {
+      "file": "编辑器/启动音乐编辑器.ps1",
+      "expected": "9879012aa619addbd64b313cbd0c8fccf1890fe4a4efb3f4e901a7b097494f5c",
+      "actual": "9879012aa619addbd64b313cbd0c8fccf1890fe4a4efb3f4e901a7b097494f5c",
+      "pass": true
+    },
+    {
+      "file": "编辑器/导出/引导线/editor-mock-1-chart.json",
+      "expected": "7457a09b64d47ed35e94f9e8090926d4c86e51737c3afd469c2f3b6b0fad9671",
+      "actual": "7457a09b64d47ed35e94f9e8090926d4c86e51737c3afd469c2f3b6b0fad9671",
+      "pass": true
+    },
+    {
+      "file": "编辑器/导出/引导线/editor-mock-1-chart.visual.json",
+      "expected": "5d7fd8e688df66fee5e08a7f1668b9ede9d89a31b21ea7bdb8c99cf93b1e6e08",
+      "actual": "5d7fd8e688df66fee5e08a7f1668b9ede9d89a31b21ea7bdb8c99cf93b1e6e08",
+      "pass": true
+    },
+    {
+      "file": "编辑器/打开引导线编辑器.cmd",
+      "expected": "d03c626cf4a02761a7fe827672abc6f12f3f7eca6e94cb7a420b4182efa0d7c5",
+      "actual": "d03c626cf4a02761a7fe827672abc6f12f3f7eca6e94cb7a420b4182efa0d7c5",
+      "pass": true
+    },
+    {
+      "file": "编辑器/打开音乐编辑器.cmd",
+      "expected": "78f76f19b4e75aa327200d6986e34fcce5fa7613ba89ae76b8a69f66cd80cacc",
+      "actual": "78f76f19b4e75aa327200d6986e34fcce5fa7613ba89ae76b8a69f66cd80cacc",
+      "pass": true
+    },
+    {
+      "file": "雨若_Neurou_core_gameplay.docx",
+      "expected": "3b87bb275b71bd0bd6b76ae66374644cca241524f3240cb97e7fe5998bec2026",
+      "actual": "3b87bb275b71bd0bd6b76ae66374644cca241524f3240cb97e7fe5998bec2026",
+      "pass": true
+    },
+    {
+      "file": "雨若_Neurou_main_describe.docx",
+      "expected": "ebc48dd847891829d96a75ffc2e8e23cb73270b209555c46a603f7a8b6f68e92",
+      "actual": "ebc48dd847891829d96a75ffc2e8e23cb73270b209555c46a603f7a8b6f68e92",
+      "pass": true
+    }
+  ],
+  "manifestChecks": [
+    {
+      "file": "assets/scripts/WorldFolderBuilder.ts",
+      "expected": "257b9e07a416bac089f3c5fa1845c028ecf3b56aa80198406a70514657581b6d",
+      "actual": "257b9e07a416bac089f3c5fa1845c028ecf3b56aa80198406a70514657581b6d",
+      "pass": true
+    },
+    {
+      "file": "src/director/IntentPort.ts",
+      "expected": "4eba8835849c789636a67fc01ceb1ff27fd5c53c4c161bf25cb447f7aa17b21c",
+      "actual": "4eba8835849c789636a67fc01ceb1ff27fd5c53c4c161bf25cb447f7aa17b21c",
+      "pass": true
+    },
+    {
+      "file": "src/presentation/FolderCatalog.ts",
+      "expected": "930c65d034781192f8d7570ac6d4660ae348a5858469e1e15a4c02a5a41d101a",
+      "actual": "930c65d034781192f8d7570ac6d4660ae348a5858469e1e15a4c02a5a41d101a",
+      "pass": true
+    },
+    {
+      "file": "src/presentation/WorldFolderView.ts",
+      "expected": "27f77dd8d0bee09d7b872b10d27625f9746faa50593d00bc71a2325b04dcb05b",
+      "actual": "27f77dd8d0bee09d7b872b10d27625f9746faa50593d00bc71a2325b04dcb05b",
+      "pass": true
+    },
+    {
+      "file": "assets/scripts/MinimalWorldBuilder.ts",
+      "expected": "7b827cc11b2bdf5855ef7c2007a52f2149097aab32e2a7840542dba91b07cbf7",
+      "actual": "7b827cc11b2bdf5855ef7c2007a52f2149097aab32e2a7840542dba91b07cbf7",
+      "pass": true
+    },
+    {
+      "file": "assets/scripts/MinimalWorldBuilder.ts.meta",
+      "expected": "e2702ef017b3ef1b8cb4a91cfb3d396f3ad7d33c2df134d2dc99e534ca1458e0",
+      "actual": "e2702ef017b3ef1b8cb4a91cfb3d396f3ad7d33c2df134d2dc99e534ca1458e0",
+      "pass": true
+    },
+    {
+      "file": "src/director/WorldFolderSession.ts",
+      "expected": "59777e43dccd7ad6d2d0767b28daf83e525a176ae391b1f60a9500d739ea0420",
+      "actual": "59777e43dccd7ad6d2d0767b28daf83e525a176ae391b1f60a9500d739ea0420",
+      "pass": true
+    },
+    {
+      "file": "src/director/WorldFolderSession.ts.meta",
+      "expected": "3df7cd3541da46e99af7488ed99179e7bd167137f57717b3eb032cb9abb0776d",
+      "actual": "3df7cd3541da46e99af7488ed99179e7bd167137f57717b3eb032cb9abb0776d",
+      "pass": true
+    },
+    {
+      "file": "src/presentation/WorldLocalStorage.ts",
+      "expected": "25ac84d7c55b59c2e59ae8e30270c4b4c43c625f472132ef997de64e96d3ebf1",
+      "actual": "25ac84d7c55b59c2e59ae8e30270c4b4c43c625f472132ef997de64e96d3ebf1",
+      "pass": true
+    },
+    {
+      "file": "src/presentation/WorldLocalStorage.ts.meta",
+      "expected": "466c34886cb1e47caf3ea3a81387e2b5b45cd8095a71a744afc1cd677a6a4db8",
+      "actual": "466c34886cb1e47caf3ea3a81387e2b5b45cd8095a71a744afc1cd677a6a4db8",
+      "pass": true
+    }
+  ],
+  "compiledChecks": [
+    {
+      "file": "assets/scripts/SceneBuilder.ts",
+      "expectedSourceSha256": "10371fdc3d2a1d66f63d87d019d8777d0bb8e80191788e65bf8eb2b6002c09c9",
+      "currentSourceSha256": "10371fdc3d2a1d66f63d87d019d8777d0bb8e80191788e65bf8eb2b6002c09c9",
+      "chunk": "./chunks/8b/8b7eae5ef325431fd5924802b2c0ea4b14e61744.js",
+      "expectedChunkSha256": "eafa2d6b2c8422b916bea3fc55eb17300fd7578bb631d65860310c511b6d67e3",
+      "currentChunkSha256": "eafa2d6b2c8422b916bea3fc55eb17300fd7578bb631d65860310c511b6d67e3",
+      "currentSourceMapMatches": true,
+      "previewServedEqualsCompilerOutput": true,
+      "pass": true
+    },
+    {
+      "file": "assets/scripts/WorldFolderBuilder.ts",
+      "expectedSourceSha256": "257b9e07a416bac089f3c5fa1845c028ecf3b56aa80198406a70514657581b6d",
+      "currentSourceSha256": "257b9e07a416bac089f3c5fa1845c028ecf3b56aa80198406a70514657581b6d",
+      "chunk": "./chunks/c8/c89cca6e27a0e04da4c658b697e7bc59e71b096a.js",
+      "expectedChunkSha256": "0c7a2b1b6ecba402062bd668cea319688af222350cece1782ee746bf12801633",
+      "currentChunkSha256": "0c7a2b1b6ecba402062bd668cea319688af222350cece1782ee746bf12801633",
+      "currentSourceMapMatches": true,
+      "previewServedEqualsCompilerOutput": true,
+      "pass": true
+    },
+    {
+      "file": "assets/scripts/MinimalWorldBuilder.ts",
+      "expectedSourceSha256": "7b827cc11b2bdf5855ef7c2007a52f2149097aab32e2a7840542dba91b07cbf7",
+      "currentSourceSha256": "7b827cc11b2bdf5855ef7c2007a52f2149097aab32e2a7840542dba91b07cbf7",
+      "chunk": "./chunks/dc/dc69610e1587a201108556c634a607fab6a0539e.js",
+      "expectedChunkSha256": "ce40ee51cfaa2d4e7e291e778db5cf1753e91d83d6d7a38c320827193832ef3e",
+      "currentChunkSha256": "ce40ee51cfaa2d4e7e291e778db5cf1753e91d83d6d7a38c320827193832ef3e",
+      "currentSourceMapMatches": true,
+      "previewServedEqualsCompilerOutput": true,
+      "pass": true
+    },
+    {
+      "file": "assets/scripts/Bootstrap.ts",
+      "expectedSourceSha256": "28bb2b93faca15b3b513880fc4754d5f8fefc37ac5a700c8bbe870b03a09af50",
+      "currentSourceSha256": "28bb2b93faca15b3b513880fc4754d5f8fefc37ac5a700c8bbe870b03a09af50",
+      "chunk": "./chunks/9e/9e2c13831323df77824f6de3d4244f62f225f2e0.js",
+      "expectedChunkSha256": "421058e3366ca3e02557374030cc95c8f5eb3a3e2055883fab6d6a6f7d29b103",
+      "currentChunkSha256": "421058e3366ca3e02557374030cc95c8f5eb3a3e2055883fab6d6a6f7d29b103",
+      "currentSourceMapMatches": true,
+      "previewServedEqualsCompilerOutput": true,
+      "pass": true
+    },
+    {
+      "file": "src/presentation/WorldFolderView.ts",
+      "expectedSourceSha256": "27f77dd8d0bee09d7b872b10d27625f9746faa50593d00bc71a2325b04dcb05b",
+      "currentSourceSha256": "27f77dd8d0bee09d7b872b10d27625f9746faa50593d00bc71a2325b04dcb05b",
+      "chunk": "./chunks/d2/d2d6e6d95a20b4190042fb0999b7f1bc153afac7.js",
+      "expectedChunkSha256": "5c7d308a0c4e6de41a9e5378d38b379e5b432406f12e922e7d664b6e4314b129",
+      "currentChunkSha256": "5c7d308a0c4e6de41a9e5378d38b379e5b432406f12e922e7d664b6e4314b129",
+      "currentSourceMapMatches": true,
+      "previewServedEqualsCompilerOutput": true,
+      "pass": true
+    },
+    {
+      "file": "src/presentation/FolderCatalog.ts",
+      "expectedSourceSha256": "930c65d034781192f8d7570ac6d4660ae348a5858469e1e15a4c02a5a41d101a",
+      "currentSourceSha256": "930c65d034781192f8d7570ac6d4660ae348a5858469e1e15a4c02a5a41d101a",
+      "chunk": "./chunks/8c/8c3cfae05cf8500736a1f9a4214bc6917d8baa93.js",
+      "expectedChunkSha256": "47c4f5a3083be851eb68d93e10a5d5d8457fdafeb10d523de7fe503424c723ec",
+      "currentChunkSha256": "47c4f5a3083be851eb68d93e10a5d5d8457fdafeb10d523de7fe503424c723ec",
+      "currentSourceMapMatches": true,
+      "previewServedEqualsCompilerOutput": true,
+      "pass": true
+    },
+    {
+      "file": "src/presentation/FolderStartupView.ts",
+      "expectedSourceSha256": "50fa7afb3f2be26a78715a8916b8677ee6862dbe66e0dc14cab878ca78083988",
+      "currentSourceSha256": "50fa7afb3f2be26a78715a8916b8677ee6862dbe66e0dc14cab878ca78083988",
+      "chunk": "./chunks/71/71feaa4c2021f182b17818d17e6bffb6762728cf.js",
+      "expectedChunkSha256": "c6da0d67553dd96ed5dea9641ac0aa073150718bc1a47a3da2ed646b113e201c",
+      "currentChunkSha256": "c6da0d67553dd96ed5dea9641ac0aa073150718bc1a47a3da2ed646b113e201c",
+      "currentSourceMapMatches": true,
+      "previewServedEqualsCompilerOutput": true,
+      "pass": true
+    },
+    {
+      "file": "src/director/AccountStartupSession.ts",
+      "expectedSourceSha256": "f376a9d618bbf3a4cdfebd57f615a855825d7149c1f33cae4f5b8ab5941684bb",
+      "currentSourceSha256": "f376a9d618bbf3a4cdfebd57f615a855825d7149c1f33cae4f5b8ab5941684bb",
+      "chunk": "./chunks/0d/0d72978f95e3b1351889a247aff58a0cf1c3ada0.js",
+      "expectedChunkSha256": "c5995b3f278d6af2696e6605c3ff0ccf289c8601375ee7f97a57ea25cc283605",
+      "currentChunkSha256": "c5995b3f278d6af2696e6605c3ff0ccf289c8601375ee7f97a57ea25cc283605",
+      "currentSourceMapMatches": true,
+      "previewServedEqualsCompilerOutput": true,
+      "pass": true
+    },
+    {
+      "file": "src/presentation/FrameDriver.ts",
+      "expectedSourceSha256": "e70232f3ef6f803bba02a6c2af1d40107aea95400dfd65e9845636a836faf3a6",
+      "currentSourceSha256": "e70232f3ef6f803bba02a6c2af1d40107aea95400dfd65e9845636a836faf3a6",
+      "chunk": "./chunks/fa/faf4ead6ab2aff43422b70a8edd6e2755751b585.js",
+      "expectedChunkSha256": "c62fa482dcd849e6eaaefad09eb99646ef31988e959169fc135ed90c0a3b4822",
+      "currentChunkSha256": "c62fa482dcd849e6eaaefad09eb99646ef31988e959169fc135ed90c0a3b4822",
+      "currentSourceMapMatches": true,
+      "previewServedEqualsCompilerOutput": true,
+      "pass": true
+    },
+    {
+      "file": "src/presentation/InputCollector.ts",
+      "expectedSourceSha256": "1cf85eb3e8de3621bc199a3e6e96cba92a1309fb6172ce1221ef692281b67420",
+      "currentSourceSha256": "1cf85eb3e8de3621bc199a3e6e96cba92a1309fb6172ce1221ef692281b67420",
+      "chunk": "./chunks/80/80b5318e658fb283a27d22d0af4d9a8d28eaaca0.js",
+      "expectedChunkSha256": "6816e7d6fbfb17545953e5a78b235f0e2cecc916247b3709b5d851388b1bae58",
+      "currentChunkSha256": "6816e7d6fbfb17545953e5a78b235f0e2cecc916247b3709b5d851388b1bae58",
+      "currentSourceMapMatches": true,
+      "previewServedEqualsCompilerOutput": true,
+      "pass": true
+    },
+    {
+      "file": "src/director/IntentPort.ts",
+      "expectedSourceSha256": "4eba8835849c789636a67fc01ceb1ff27fd5c53c4c161bf25cb447f7aa17b21c",
+      "currentSourceSha256": "4eba8835849c789636a67fc01ceb1ff27fd5c53c4c161bf25cb447f7aa17b21c",
+      "chunk": "./chunks/49/498a6617b96cfa47405016084b673d49f11a12d0.js",
+      "expectedChunkSha256": "e322977b9f015c97976ddba214a0659854f2f4883a90192636f7ee3eddb94b0e",
+      "currentChunkSha256": "e322977b9f015c97976ddba214a0659854f2f4883a90192636f7ee3eddb94b0e",
+      "currentSourceMapMatches": true,
+      "previewServedEqualsCompilerOutput": true,
+      "pass": true
+    },
+    {
+      "file": "src/director/WorldFolderSession.ts",
+      "expectedSourceSha256": "59777e43dccd7ad6d2d0767b28daf83e525a176ae391b1f60a9500d739ea0420",
+      "currentSourceSha256": "59777e43dccd7ad6d2d0767b28daf83e525a176ae391b1f60a9500d739ea0420",
+      "chunk": "./chunks/ca/ca518216c3a5a6ffdae1c91376d10fbbe5fd7c0b.js",
+      "expectedChunkSha256": "087f463d01cb641db2fd86e84cfef24bbc70f577c769c19ac8f06506721785e8",
+      "currentChunkSha256": "087f463d01cb641db2fd86e84cfef24bbc70f577c769c19ac8f06506721785e8",
+      "currentSourceMapMatches": true,
+      "previewServedEqualsCompilerOutput": true,
+      "pass": true
+    },
+    {
+      "file": "src/presentation/WorldLocalStorage.ts",
+      "expectedSourceSha256": "25ac84d7c55b59c2e59ae8e30270c4b4c43c625f472132ef997de64e96d3ebf1",
+      "currentSourceSha256": "25ac84d7c55b59c2e59ae8e30270c4b4c43c625f472132ef997de64e96d3ebf1",
+      "chunk": "./chunks/f2/f2c58e49d17326318248deee9162c10942eb4601.js",
+      "expectedChunkSha256": "c8c1840aab66cfe3713f193db7e6e459968b9ae3e679bfbf0d33cfcb2e0ac448",
+      "currentChunkSha256": "c8c1840aab66cfe3713f193db7e6e459968b9ae3e679bfbf0d33cfcb2e0ac448",
+      "currentSourceMapMatches": true,
+      "previewServedEqualsCompilerOutput": true,
+      "pass": true
+    },
+    {
+      "file": "src/presentation/EditorFolderView.ts",
+      "expectedSourceSha256": "68a69bdd8259f9444a99ad788dc4b181193ccbde37e132e9aceee932024127e2",
+      "currentSourceSha256": "68a69bdd8259f9444a99ad788dc4b181193ccbde37e132e9aceee932024127e2",
+      "chunk": "./chunks/03/0338eae4705f4ce378870ad1b40016e775fd81af.js",
+      "expectedChunkSha256": "5e915dfcb24240eb9c39c590ab430475acabae044cb2d87e8d5bfd25af24d06d",
+      "currentChunkSha256": "5e915dfcb24240eb9c39c590ab430475acabae044cb2d87e8d5bfd25af24d06d",
+      "currentSourceMapMatches": true,
+      "previewServedEqualsCompilerOutput": true,
+      "pass": true
+    },
+    {
+      "file": "src/presentation/CameraRig.ts",
+      "expectedSourceSha256": "646e4876c4eb3e0943021c0a2cd987e776bfaf777400f8971634cc159c6ecba9",
+      "currentSourceSha256": "646e4876c4eb3e0943021c0a2cd987e776bfaf777400f8971634cc159c6ecba9",
+      "chunk": "./chunks/a8/a86e574d3e9bd9ff4eebee3e17e14608de492348.js",
+      "expectedChunkSha256": "f7670836a16b2f9172747aff8743afd439f485e9ebae5eb73563aba989b6f140",
+      "currentChunkSha256": "f7670836a16b2f9172747aff8743afd439f485e9ebae5eb73563aba989b6f140",
+      "currentSourceMapMatches": true,
+      "previewServedEqualsCompilerOutput": true,
+      "pass": true
+    },
+    {
+      "file": "src/presentation/ProtagonistView.ts",
+      "expectedSourceSha256": "0f8db6f43e81f0b00255a2486c5087fd72b1b30c769267274c811f6867dedfe3",
+      "currentSourceSha256": "0f8db6f43e81f0b00255a2486c5087fd72b1b30c769267274c811f6867dedfe3",
+      "chunk": "./chunks/20/2000eb1ab6ab7bde2b2ec3b3134c5749ed8deb57.js",
+      "expectedChunkSha256": "1641792550a098a07517baa3235ee96cd2f2cdca25bb8b3eb34d5713fc74a23f",
+      "currentChunkSha256": "1641792550a098a07517baa3235ee96cd2f2cdca25bb8b3eb34d5713fc74a23f",
+      "currentSourceMapMatches": true,
+      "previewServedEqualsCompilerOutput": true,
+      "pass": true
+    }
+  ],
+  "screenshotChecks": [
+    {
+      "file": "1920x1080-00-default-world-list.png",
+      "origin": "creator-preview-results.json",
+      "expectedSha256": "cb2c91670416355e4f3fe56e698d49979816d59e89dae3e24b0429b955ec6c16",
+      "currentSha256": "cb2c91670416355e4f3fe56e698d49979816d59e89dae3e24b0429b955ec6c16",
+      "expectedDimensions": [
+        1920,
+        1080
+      ],
+      "currentDimensions": [
+        1920,
+        1080
+      ],
+      "bytes": 34075,
+      "pass": true
+    },
+    {
+      "file": "1920x1080-00a-initial-world-default-chart.png",
+      "origin": "creator-preview-results.json",
+      "expectedSha256": "c7265fe787cbd7a9e3edfc9f3f6e759d95b3ba0c16702f137f63fa8ebc265d8a",
+      "currentSha256": "c7265fe787cbd7a9e3edfc9f3f6e759d95b3ba0c16702f137f63fa8ebc265d8a",
+      "expectedDimensions": [
+        1920,
+        1080
+      ],
+      "currentDimensions": [
+        1920,
+        1080
+      ],
+      "bytes": 118256,
+      "pass": true
+    },
+    {
+      "file": "1920x1080-00b-global-editor-directory.png",
+      "origin": "creator-preview-results.json",
+      "expectedSha256": "2e73cbca60fab893f6d442aa83713a63295aa8c0f79cc41e5e7b84078d153ab6",
+      "currentSha256": "2e73cbca60fab893f6d442aa83713a63295aa8c0f79cc41e5e7b84078d153ab6",
+      "expectedDimensions": [
+        1920,
+        1080
+      ],
+      "currentDimensions": [
+        1920,
+        1080
+      ],
+      "bytes": 47767,
+      "pass": true
+    },
+    {
+      "file": "1920x1080-01-create-world-form.png",
+      "origin": "creator-preview-results.json",
+      "expectedSha256": "687e01646c849ffa35139d20a48067ab794d01b599d15b5f514872639cc78a88",
+      "currentSha256": "687e01646c849ffa35139d20a48067ab794d01b599d15b5f514872639cc78a88",
+      "expectedDimensions": [
+        1920,
+        1080
+      ],
+      "currentDimensions": [
+        1920,
+        1080
+      ],
+      "bytes": 43012,
+      "pass": true
+    },
+    {
+      "file": "1920x1080-02-multiple-world-list.png",
+      "origin": "creator-preview-results.json",
+      "expectedSha256": "d7a013b71d72ba6393a73b13bfcf160e6703c9dcfa75d5c7f1ee3e930b43c00c",
+      "currentSha256": "d7a013b71d72ba6393a73b13bfcf160e6703c9dcfa75d5c7f1ee3e930b43c00c",
+      "expectedDimensions": [
+        1920,
+        1080
+      ],
+      "currentDimensions": [
+        1920,
+        1080
+      ],
+      "bytes": 50515,
+      "pass": true
+    },
+    {
+      "file": "1920x1080-03-fork-not-open.png",
+      "origin": "creator-preview-results.json",
+      "expectedSha256": "3f59f645a226ce8cc60a68ecb90ba3dd6f4ef83f6152e717481e6b2dfd2076a3",
+      "currentSha256": "3f59f645a226ce8cc60a68ecb90ba3dd6f4ef83f6152e717481e6b2dfd2076a3",
+      "expectedDimensions": [
+        1920,
+        1080
+      ],
+      "currentDimensions": [
+        1920,
+        1080
+      ],
+      "bytes": 51091,
+      "pass": true
+    },
+    {
+      "file": "1920x1080-04-minimal-world-movement.png",
+      "origin": "creator-preview-results.json",
+      "expectedSha256": "fd4efd5ac01634ba5779f8143cdf8e4447bffd072371d4d055a49874c08af09b",
+      "currentSha256": "fd4efd5ac01634ba5779f8143cdf8e4447bffd072371d4d055a49874c08af09b",
+      "expectedDimensions": [
+        1920,
+        1080
+      ],
+      "currentDimensions": [
+        1920,
+        1080
+      ],
+      "bytes": 22382,
+      "pass": true
+    },
+    {
+      "file": "1920x1080-05-return-world-list.png",
+      "origin": "creator-preview-results.json",
+      "expectedSha256": "2bda49f5c628ba780273ecaa532e47cfbc42b929a6ae708f00632dd1398bb5ee",
+      "currentSha256": "2bda49f5c628ba780273ecaa532e47cfbc42b929a6ae708f00632dd1398bb5ee",
+      "expectedDimensions": [
+        1920,
+        1080
+      ],
+      "currentDimensions": [
+        1920,
+        1080
+      ],
+      "bytes": 49506,
+      "pass": true
+    },
+    {
+      "file": "1920x1080-06-delete-confirmation.png",
+      "origin": "creator-preview-results.json",
+      "expectedSha256": "77ea5118c5be3fca3be33683fa0deeab63f6d21bf4b035ae556ab2c4f1086941",
+      "currentSha256": "77ea5118c5be3fca3be33683fa0deeab63f6d21bf4b035ae556ab2c4f1086941",
+      "expectedDimensions": [
+        1920,
+        1080
+      ],
+      "currentDimensions": [
+        1920,
+        1080
+      ],
+      "bytes": 56282,
+      "pass": true
+    },
+    {
+      "file": "1920x1080-07-local-world-tombstoned.png",
+      "origin": "creator-preview-results.json",
+      "expectedSha256": "8184fa129dbaa40bd3d0c3d0e493806f6fa3c3c91e44c2b7574afe3d8c00c306",
+      "currentSha256": "8184fa129dbaa40bd3d0c3d0e493806f6fa3c3c91e44c2b7574afe3d8c00c306",
+      "expectedDimensions": [
+        1920,
+        1080
+      ],
+      "currentDimensions": [
+        1920,
+        1080
+      ],
+      "bytes": 43477,
+      "pass": true
+    },
+    {
+      "file": "1920x1080-08-persisted-after-window-restart.png",
+      "origin": "creator-preview-results.json",
+      "expectedSha256": "ac2e53b09ade7ab5ed83c1361862cd7916960080f1e5be91cd88972ba8a2a8a9",
+      "currentSha256": "ac2e53b09ade7ab5ed83c1361862cd7916960080f1e5be91cd88972ba8a2a8a9",
+      "expectedDimensions": [
+        1920,
+        1080
+      ],
+      "currentDimensions": [
+        1920,
+        1080
+      ],
+      "bytes": 41582,
+      "pass": true
+    },
+    {
+      "file": "1920x1080-09-reenter-world-at-spawn.png",
+      "origin": "creator-preview-results.json",
+      "expectedSha256": "e93d4af23f3d46ddebc23d8ae87d600d4c5d42df33929081e43f8c74fbfcebe5",
+      "currentSha256": "e93d4af23f3d46ddebc23d8ae87d600d4c5d42df33929081e43f8c74fbfcebe5",
+      "expectedDimensions": [
+        1920,
+        1080
+      ],
+      "currentDimensions": [
+        1920,
+        1080
+      ],
+      "bytes": 22272,
+      "pass": true
+    },
+    {
+      "file": "1920x1080-10-second-account-isolated.png",
+      "origin": "creator-preview-results.json",
+      "expectedSha256": "40e70ec6b63014afb9c2704f67e6811f73678acddf848b63dc98ea5d3997e9be",
+      "currentSha256": "40e70ec6b63014afb9c2704f67e6811f73678acddf848b63dc98ea5d3997e9be",
+      "expectedDimensions": [
+        1920,
+        1080
+      ],
+      "currentDimensions": [
+        1920,
+        1080
+      ],
+      "bytes": 34181,
+      "pass": true
+    },
+    {
+      "file": "1920x1080-11-original-account-preserved.png",
+      "origin": "creator-preview-results.json",
+      "expectedSha256": "ac2e53b09ade7ab5ed83c1361862cd7916960080f1e5be91cd88972ba8a2a8a9",
+      "currentSha256": "ac2e53b09ade7ab5ed83c1361862cd7916960080f1e5be91cd88972ba8a2a8a9",
+      "expectedDimensions": [
+        1920,
+        1080
+      ],
+      "currentDimensions": [
+        1920,
+        1080
+      ],
+      "bytes": 41582,
+      "pass": true
+    },
+    {
+      "file": "2560x1440-00-default-world-list.png",
+      "origin": "creator-preview-results.json",
+      "expectedSha256": "54d2c3020e7e14c74ca9fbaba5291bcee4e73e553f2c63aa14df3b729713e8ee",
+      "currentSha256": "54d2c3020e7e14c74ca9fbaba5291bcee4e73e553f2c63aa14df3b729713e8ee",
+      "expectedDimensions": [
+        2560,
+        1440
+      ],
+      "currentDimensions": [
+        2560,
+        1440
+      ],
+      "bytes": 39674,
+      "pass": true
+    },
+    {
+      "file": "2560x1440-00a-initial-world-default-chart.png",
+      "origin": "creator-preview-results.json",
+      "expectedSha256": "7afc68db7258e93c0a236997d4160d27abe5eff564df9b507378b8610e5a7174",
+      "currentSha256": "7afc68db7258e93c0a236997d4160d27abe5eff564df9b507378b8610e5a7174",
+      "expectedDimensions": [
+        2560,
+        1440
+      ],
+      "currentDimensions": [
+        2560,
+        1440
+      ],
+      "bytes": 198610,
+      "pass": true
+    },
+    {
+      "file": "2560x1440-00b-global-editor-directory.png",
+      "origin": "creator-preview-results.json",
+      "expectedSha256": "a6d14c44e96a1a3de5dd2fe2b5d8e6ae760ea5c9f8871572595a99f5c57a493a",
+      "currentSha256": "a6d14c44e96a1a3de5dd2fe2b5d8e6ae760ea5c9f8871572595a99f5c57a493a",
+      "expectedDimensions": [
+        2560,
+        1440
+      ],
+      "currentDimensions": [
+        2560,
+        1440
+      ],
+      "bytes": 54159,
+      "pass": true
+    },
+    {
+      "file": "2560x1440-01-create-world-form.png",
+      "origin": "creator-preview-results.json",
+      "expectedSha256": "3b106d48e313c3b05d7306b3ff576cb9e4783ee3a80b9ecb3bd327e5c5e58b7a",
+      "currentSha256": "3b106d48e313c3b05d7306b3ff576cb9e4783ee3a80b9ecb3bd327e5c5e58b7a",
+      "expectedDimensions": [
+        2560,
+        1440
+      ],
+      "currentDimensions": [
+        2560,
+        1440
+      ],
+      "bytes": 48738,
+      "pass": true
+    },
+    {
+      "file": "2560x1440-02-multiple-world-list.png",
+      "origin": "creator-preview-results.json",
+      "expectedSha256": "e28c2464075c6bc84dd52c9915837913f76b102336d7de3263f10aa321d5226f",
+      "currentSha256": "e28c2464075c6bc84dd52c9915837913f76b102336d7de3263f10aa321d5226f",
+      "expectedDimensions": [
+        2560,
+        1440
+      ],
+      "currentDimensions": [
+        2560,
+        1440
+      ],
+      "bytes": 56337,
+      "pass": true
+    },
+    {
+      "file": "2560x1440-03-fork-not-open.png",
+      "origin": "creator-preview-results.json",
+      "expectedSha256": "57814788873f5c770e21db36024b29d0d65c30f91c600d36802d420f53ca5e1e",
+      "currentSha256": "57814788873f5c770e21db36024b29d0d65c30f91c600d36802d420f53ca5e1e",
+      "expectedDimensions": [
+        2560,
+        1440
+      ],
+      "currentDimensions": [
+        2560,
+        1440
+      ],
+      "bytes": 56963,
+      "pass": true
+    },
+    {
+      "file": "2560x1440-04-minimal-world-movement.png",
+      "origin": "creator-preview-results.json",
+      "expectedSha256": "2bb555ade6b91f15993727ce20d8ade1b25f41fc4e9c5f7613c52526a6a1177d",
+      "currentSha256": "2bb555ade6b91f15993727ce20d8ade1b25f41fc4e9c5f7613c52526a6a1177d",
+      "expectedDimensions": [
+        2560,
+        1440
+      ],
+      "currentDimensions": [
+        2560,
+        1440
+      ],
+      "bytes": 30981,
+      "pass": true
+    },
+    {
+      "file": "2560x1440-05-return-world-list.png",
+      "origin": "creator-preview-results.json",
+      "expectedSha256": "0a82d6dc1ecc445089f12e2983a9f86c07aaaa037ca325f48eecc6384c4c83ee",
+      "currentSha256": "0a82d6dc1ecc445089f12e2983a9f86c07aaaa037ca325f48eecc6384c4c83ee",
+      "expectedDimensions": [
+        2560,
+        1440
+      ],
+      "currentDimensions": [
+        2560,
+        1440
+      ],
+      "bytes": 55286,
+      "pass": true
+    },
+    {
+      "file": "2560x1440-06-delete-confirmation.png",
+      "origin": "creator-preview-results.json",
+      "expectedSha256": "000c75a6832558209502b0180819de3e4cce0e6d0f5cdbfd218e02ee5969aa12",
+      "currentSha256": "000c75a6832558209502b0180819de3e4cce0e6d0f5cdbfd218e02ee5969aa12",
+      "expectedDimensions": [
+        2560,
+        1440
+      ],
+      "currentDimensions": [
+        2560,
+        1440
+      ],
+      "bytes": 65157,
+      "pass": true
+    },
+    {
+      "file": "2560x1440-07-local-world-tombstoned.png",
+      "origin": "creator-preview-results.json",
+      "expectedSha256": "25b8d4282298ed4c46c829cf98a2280c1c72612e76dd8767fddeda41ee9e67ef",
+      "currentSha256": "25b8d4282298ed4c46c829cf98a2280c1c72612e76dd8767fddeda41ee9e67ef",
+      "expectedDimensions": [
+        2560,
+        1440
+      ],
+      "currentDimensions": [
+        2560,
+        1440
+      ],
+      "bytes": 49570,
+      "pass": true
+    },
+    {
+      "file": "2560x1440-08-persisted-after-window-restart.png",
+      "origin": "creator-preview-results.json",
+      "expectedSha256": "5a65ce258e1fe8f45081bd9503cb62fd239e53b3f35b0f39b3237837e1a6c8f9",
+      "currentSha256": "5a65ce258e1fe8f45081bd9503cb62fd239e53b3f35b0f39b3237837e1a6c8f9",
+      "expectedDimensions": [
+        2560,
+        1440
+      ],
+      "currentDimensions": [
+        2560,
+        1440
+      ],
+      "bytes": 47574,
+      "pass": true
+    },
+    {
+      "file": "2560x1440-09-reenter-world-at-spawn.png",
+      "origin": "creator-preview-results.json",
+      "expectedSha256": "439ee3d34f7b3de26ccfa922f22530c684275536b8c0565ff0b9be36bd23142e",
+      "currentSha256": "439ee3d34f7b3de26ccfa922f22530c684275536b8c0565ff0b9be36bd23142e",
+      "expectedDimensions": [
+        2560,
+        1440
+      ],
+      "currentDimensions": [
+        2560,
+        1440
+      ],
+      "bytes": 29596,
+      "pass": true
+    },
+    {
+      "file": "2560x1440-10-second-account-isolated.png",
+      "origin": "creator-preview-results.json",
+      "expectedSha256": "883989ff5b817bd438d0c7238ee1fc4b23b464fc4513760a0a59ffa2d6e683cd",
+      "currentSha256": "883989ff5b817bd438d0c7238ee1fc4b23b464fc4513760a0a59ffa2d6e683cd",
+      "expectedDimensions": [
+        2560,
+        1440
+      ],
+      "currentDimensions": [
+        2560,
+        1440
+      ],
+      "bytes": 39773,
+      "pass": true
+    },
+    {
+      "file": "2560x1440-11-original-account-preserved.png",
+      "origin": "creator-preview-results.json",
+      "expectedSha256": "5a65ce258e1fe8f45081bd9503cb62fd239e53b3f35b0f39b3237837e1a6c8f9",
+      "currentSha256": "5a65ce258e1fe8f45081bd9503cb62fd239e53b3f35b0f39b3237837e1a6c8f9",
+      "expectedDimensions": [
+        2560,
+        1440
+      ],
+      "currentDimensions": [
+        2560,
+        1440
+      ],
+      "bytes": 47574,
+      "pass": true
+    },
+    {
+      "file": "1920x1080-12-persisted-after-process-restart.png",
+      "origin": "process-restart-results.json",
+      "expectedSha256": "ac2e53b09ade7ab5ed83c1361862cd7916960080f1e5be91cd88972ba8a2a8a9",
+      "currentSha256": "ac2e53b09ade7ab5ed83c1361862cd7916960080f1e5be91cd88972ba8a2a8a9",
+      "expectedDimensions": [
+        1920,
+        1080
+      ],
+      "currentDimensions": [
+        1920,
+        1080
+      ],
+      "bytes": 41582,
+      "pass": true
+    },
+    {
+      "file": "2560x1440-12-persisted-after-process-restart.png",
+      "origin": "process-restart-results.json",
+      "expectedSha256": "5a65ce258e1fe8f45081bd9503cb62fd239e53b3f35b0f39b3237837e1a6c8f9",
+      "currentSha256": "5a65ce258e1fe8f45081bd9503cb62fd239e53b3f35b0f39b3237837e1a6c8f9",
+      "expectedDimensions": [
+        2560,
+        1440
+      ],
+      "currentDimensions": [
+        2560,
+        1440
+      ],
+      "bytes": 47574,
+      "pass": true
+    }
+  ],
+  "pngInventoryMatches": true,
+  "diffReplay": {
+    "exitCode": 0,
+    "stderr": "",
+    "tempDirectory": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\neurou-b2-diff-integrity-8jrvms",
+    "checks": [
+      {
+        "file": "assets/scripts/WorldFolderBuilder.ts",
+        "expected": "257b9e07a416bac089f3c5fa1845c028ecf3b56aa80198406a70514657581b6d",
+        "actual": "257b9e07a416bac089f3c5fa1845c028ecf3b56aa80198406a70514657581b6d",
+        "pass": true
+      },
+      {
+        "file": "src/director/IntentPort.ts",
+        "expected": "4eba8835849c789636a67fc01ceb1ff27fd5c53c4c161bf25cb447f7aa17b21c",
+        "actual": "4eba8835849c789636a67fc01ceb1ff27fd5c53c4c161bf25cb447f7aa17b21c",
+        "pass": true
+      },
+      {
+        "file": "src/presentation/FolderCatalog.ts",
+        "expected": "930c65d034781192f8d7570ac6d4660ae348a5858469e1e15a4c02a5a41d101a",
+        "actual": "930c65d034781192f8d7570ac6d4660ae348a5858469e1e15a4c02a5a41d101a",
+        "pass": true
+      },
+      {
+        "file": "src/presentation/WorldFolderView.ts",
+        "expected": "27f77dd8d0bee09d7b872b10d27625f9746faa50593d00bc71a2325b04dcb05b",
+        "actual": "27f77dd8d0bee09d7b872b10d27625f9746faa50593d00bc71a2325b04dcb05b",
+        "pass": true
+      },
+      {
+        "file": "assets/scripts/MinimalWorldBuilder.ts",
+        "expected": "7b827cc11b2bdf5855ef7c2007a52f2149097aab32e2a7840542dba91b07cbf7",
+        "actual": "7b827cc11b2bdf5855ef7c2007a52f2149097aab32e2a7840542dba91b07cbf7",
+        "pass": true
+      },
+      {
+        "file": "assets/scripts/MinimalWorldBuilder.ts.meta",
+        "expected": "e2702ef017b3ef1b8cb4a91cfb3d396f3ad7d33c2df134d2dc99e534ca1458e0",
+        "actual": "e2702ef017b3ef1b8cb4a91cfb3d396f3ad7d33c2df134d2dc99e534ca1458e0",
+        "pass": true
+      },
+      {
+        "file": "src/director/WorldFolderSession.ts",
+        "expected": "59777e43dccd7ad6d2d0767b28daf83e525a176ae391b1f60a9500d739ea0420",
+        "actual": "59777e43dccd7ad6d2d0767b28daf83e525a176ae391b1f60a9500d739ea0420",
+        "pass": true
+      },
+      {
+        "file": "src/director/WorldFolderSession.ts.meta",
+        "expected": "3df7cd3541da46e99af7488ed99179e7bd167137f57717b3eb032cb9abb0776d",
+        "actual": "3df7cd3541da46e99af7488ed99179e7bd167137f57717b3eb032cb9abb0776d",
+        "pass": true
+      },
+      {
+        "file": "src/presentation/WorldLocalStorage.ts",
+        "expected": "25ac84d7c55b59c2e59ae8e30270c4b4c43c625f472132ef997de64e96d3ebf1",
+        "actual": "25ac84d7c55b59c2e59ae8e30270c4b4c43c625f472132ef997de64e96d3ebf1",
+        "pass": true
+      },
+      {
+        "file": "src/presentation/WorldLocalStorage.ts.meta",
+        "expected": "466c34886cb1e47caf3ea3a81387e2b5b45cd8095a71a744afc1cd677a6a4db8",
+        "actual": "466c34886cb1e47caf3ea3a81387e2b5b45cd8095a71a744afc1cd677a6a4db8",
+        "pass": true
+      }
+    ]
+  },
+  "restartEvidence": {
+    "processPID": 15644,
+    "launchEvidence": {
+      "launcherPID": 10168,
+      "launchedAt": "2026-10-10T08:35:28.504Z",
+      "priorHarnessProcesses": [],
+      "priorHarnessProcessCheck": "Read-only Win32_Process check before independent Electron spawn",
+      "script": "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-local-worlds\\process-restart.cjs"
+    },
+    "baselineReportSha256": "0c80b4a5b7d039c571db77cd84decf6aa2fe9144813efa1871fbf6d57348fb1e",
+    "currentPreviewReportSha256": "0c80b4a5b7d039c571db77cd84decf6aa2fe9144813efa1871fbf6d57348fb1e",
+    "restartMatchesPreview": true,
+    "compilationSameAfterProcessRestart": true
+  },
+  "artifactChecks": [
+    {
+      "file": "files.json",
+      "sha256": "0808482eebea689995cddc97d7c7c0b8baa505f65e99d2d75cf4ac4e0e8f07e3",
+      "bytes": 4670
+    },
+    {
+      "file": "production.diff",
+      "sha256": "8a8398d3173ef487c26337634b2fa290a9ba2ece7772851160ee5353f996f97a",
+      "bytes": 33020
+    },
+    {
+      "file": "新增命名清单.json",
+      "sha256": "8e010e62c93911317defe55e23141d5c0e9974861ef9d6e49a1e0d8005935e2d",
+      "bytes": 103548
+    },
+    {
+      "file": "protection-results.json",
+      "sha256": "6826750f30b04f352e5494802ab78e57cf0d8047d21d23de11ba1ae01bc8abfb",
+      "bytes": 52475
+    },
+    {
+      "file": "review-results.json",
+      "sha256": "0166fded23e9660c06faa9b73b063f59629e7fb41025342ce2c96eaa7206ec82",
+      "bytes": 7565
+    },
+    {
+      "file": "gate-results.json",
+      "sha256": "11ab99019257940616d9c53ab46370c95884b511bd83fb3daa9b570b85e2f084",
+      "bytes": 470
+    },
+    {
+      "file": "logic-results.json",
+      "sha256": "326d0aa959204c65cc45d65881de2e6d13e5d0dfed296468ddbb1ff455422b87",
+      "bytes": 7005
+    },
+    {
+      "file": "builder-boundary-results.json",
+      "sha256": "4c94ba4b529ba3fcf4e7194aa619cae8bd9eacc9218c9051286031c8024d0c3f",
+      "bytes": 3440
+    },
+    {
+      "file": "dom-boundary-results.json",
+      "sha256": "3a1c2c1a1deefbb67d1e69f272d66158e42ee46f5ef6042f8c10115884011fa9",
+      "bytes": 2709
+    },
+    {
+      "file": "b1-regression-results.json",
+      "sha256": "578da86816948821a19c4101fd6b0164e3cd8c69e95ad125d371b886242ed4cd",
+      "bytes": 782
+    },
+    {
+      "file": "creator-preview-results.json",
+      "sha256": "0c80b4a5b7d039c571db77cd84decf6aa2fe9144813efa1871fbf6d57348fb1e",
+      "bytes": 572183
+    },
+    {
+      "file": "process-restart-results.json",
+      "sha256": "28be6945a6dd0f25a9fe25f58182de435916ef4a201c3faa8a8ece53aa20bb55",
+      "bytes": 99783
+    },
+    {
+      "file": "process-restart-lifecycle.json",
+      "sha256": "f3dc87d396ec04d7534ccaf940d407bc5dbea811c0a85140fea022af593c0692",
+      "bytes": 392
+    },
+    {
+      "file": "creator-preview-lifecycle.json",
+      "sha256": "9a711b693832a0550e435a6bf3951dabd5e9e4f9a1a6b846a43d9aaecf0fdc21",
+      "bytes": 264
+    },
+    {
+      "file": "visual-qa-results.json",
+      "sha256": "d207818738cf8db481a9417cc94bb5dd32dacbbb203c745892781691116c0ea1",
+      "bytes": 15520
+    },
+    {
+      "file": "test-summary.json",
+      "sha256": "3f4906914a81e8faf7b901f6859dfa45d7c114e36960e7f29d37cc27c90b181a",
+      "bytes": 4542
+    },
+    {
+      "file": "VERDICT-201-210.md",
+      "sha256": "28fad214dba2478098be136010fc8081a98b33b76dc4f5714061e8444403e7cf",
+      "bytes": 5319
+    },
+    {
+      "file": "名库v3.6附录提案.md",
+      "sha256": "0da5ed9497554b72a19899c97a0312c8f60d0168c9c2c71c2f90c5232994d037",
+      "bytes": 3767
+    },
+    {
+      "file": "依赖矩阵与阶段范围提案.md",
+      "sha256": "d8ad3a5fbc5ee893206397041dc486ca1053f6b671ae17c276bdb1bdfbd7d7d2",
+      "bytes": 1631
+    },
+    {
+      "file": "交付报告.md",
+      "sha256": "971dcb26b33084ae5b7a955bdc5855940e19d4c61daf9fe44011c67755ae0359",
+      "bytes": 12887
+    },
+    {
+      "file": "截图索引.md",
+      "sha256": "83fcd29f9c5bcf2e7b576e6daf4235cd342336dfb5bea532b40e2fed7234ab73",
+      "bytes": 5774
+    }
+  ],
+  "notes": [
+    "Production files were only read. The complete delivered patch was replayed against baseline copies in a new temporary directory; all ten reconstructed files must match current delivered bytes.",
+    "Source maps and local compiler chunks were rechecked against final current source hashes, in addition to the preview report recorded served/disk equality.",
+    "PNG checks verify original byte hash and native IHDR width/height against separate actual Creator preview and independent Electron process restart reports."
+  ],
+  "documentLinkChecks": [
+    {
+      "document": "交付报告.md",
+      "target": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/VERDICT-201-210.md",
+      "fileTarget": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/VERDICT-201-210.md",
+      "absolute": true,
+      "exists": true,
+      "pass": true
+    },
+    {
+      "document": "交付报告.md",
+      "target": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/名库v3.6附录提案.md",
+      "fileTarget": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/名库v3.6附录提案.md",
+      "absolute": true,
+      "exists": true,
+      "pass": true
+    },
+    {
+      "document": "交付报告.md",
+      "target": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/files.json",
+      "fileTarget": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/files.json",
+      "absolute": true,
+      "exists": true,
+      "pass": true
+    },
+    {
+      "document": "交付报告.md",
+      "target": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/production.diff",
+      "fileTarget": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/production.diff",
+      "absolute": true,
+      "exists": true,
+      "pass": true
+    },
+    {
+      "document": "交付报告.md",
+      "target": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/gate-results.json",
+      "fileTarget": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/gate-results.json",
+      "absolute": true,
+      "exists": true,
+      "pass": true
+    },
+    {
+      "document": "交付报告.md",
+      "target": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/截图索引.md",
+      "fileTarget": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/截图索引.md",
+      "absolute": true,
+      "exists": true,
+      "pass": true
+    },
+    {
+      "document": "交付报告.md",
+      "target": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/test-summary.json",
+      "fileTarget": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/test-summary.json",
+      "absolute": true,
+      "exists": true,
+      "pass": true
+    },
+    {
+      "document": "交付报告.md",
+      "target": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/creator-preview-results.json",
+      "fileTarget": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/creator-preview-results.json",
+      "absolute": true,
+      "exists": true,
+      "pass": true
+    },
+    {
+      "document": "交付报告.md",
+      "target": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/process-restart-results.json",
+      "fileTarget": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/process-restart-results.json",
+      "absolute": true,
+      "exists": true,
+      "pass": true
+    },
+    {
+      "document": "交付报告.md",
+      "target": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/新增命名清单.json",
+      "fileTarget": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/新增命名清单.json",
+      "absolute": true,
+      "exists": true,
+      "pass": true
+    },
+    {
+      "document": "交付报告.md",
+      "target": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/依赖矩阵与阶段范围提案.md",
+      "fileTarget": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/依赖矩阵与阶段范围提案.md",
+      "absolute": true,
+      "exists": true,
+      "pass": true
+    },
+    {
+      "document": "交付报告.md",
+      "target": "D:/Project/A_New_Begin/Neurou_official/src/presentation/FolderCatalog.ts",
+      "fileTarget": "D:/Project/A_New_Begin/Neurou_official/src/presentation/FolderCatalog.ts",
+      "absolute": true,
+      "exists": true,
+      "pass": true
+    },
+    {
+      "document": "交付报告.md",
+      "target": "D:/Project/A_New_Begin/Neurou_official/src/presentation/WorldFolderView.ts",
+      "fileTarget": "D:/Project/A_New_Begin/Neurou_official/src/presentation/WorldFolderView.ts",
+      "absolute": true,
+      "exists": true,
+      "pass": true
+    },
+    {
+      "document": "交付报告.md",
+      "target": "D:/Project/A_New_Begin/Neurou_official/src/director/IntentPort.ts",
+      "fileTarget": "D:/Project/A_New_Begin/Neurou_official/src/director/IntentPort.ts",
+      "absolute": true,
+      "exists": true,
+      "pass": true
+    },
+    {
+      "document": "交付报告.md",
+      "target": "D:/Project/A_New_Begin/Neurou_official/assets/scripts/WorldFolderBuilder.ts",
+      "fileTarget": "D:/Project/A_New_Begin/Neurou_official/assets/scripts/WorldFolderBuilder.ts",
+      "absolute": true,
+      "exists": true,
+      "pass": true
+    },
+    {
+      "document": "交付报告.md",
+      "target": "D:/Project/A_New_Begin/Neurou_official/src/director/WorldFolderSession.ts",
+      "fileTarget": "D:/Project/A_New_Begin/Neurou_official/src/director/WorldFolderSession.ts",
+      "absolute": true,
+      "exists": true,
+      "pass": true
+    },
+    {
+      "document": "交付报告.md",
+      "target": "D:/Project/A_New_Begin/Neurou_official/src/presentation/WorldLocalStorage.ts",
+      "fileTarget": "D:/Project/A_New_Begin/Neurou_official/src/presentation/WorldLocalStorage.ts",
+      "absolute": true,
+      "exists": true,
+      "pass": true
+    },
+    {
+      "document": "交付报告.md",
+      "target": "D:/Project/A_New_Begin/Neurou_official/assets/scripts/MinimalWorldBuilder.ts",
+      "fileTarget": "D:/Project/A_New_Begin/Neurou_official/assets/scripts/MinimalWorldBuilder.ts",
+      "absolute": true,
+      "exists": true,
+      "pass": true
+    },
+    {
+      "document": "交付报告.md",
+      "target": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/review-results.json",
+      "fileTarget": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/review-results.json",
+      "absolute": true,
+      "exists": true,
+      "pass": true
+    },
+    {
+      "document": "交付报告.md",
+      "target": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/protection-results.json",
+      "fileTarget": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/protection-results.json",
+      "absolute": true,
+      "exists": true,
+      "pass": true
+    },
+    {
+      "document": "交付报告.md",
+      "target": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/final-artifact-integrity.json",
+      "fileTarget": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/final-artifact-integrity.json",
+      "absolute": true,
+      "exists": true,
+      "pass": true
+    },
+    {
+      "document": "截图索引.md",
+      "target": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/creator-preview-results.json",
+      "fileTarget": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/creator-preview-results.json",
+      "absolute": true,
+      "exists": true,
+      "pass": true
+    },
+    {
+      "document": "截图索引.md",
+      "target": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/process-restart-results.json",
+      "fileTarget": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/process-restart-results.json",
+      "absolute": true,
+      "exists": true,
+      "pass": true
+    },
+    {
+      "document": "截图索引.md",
+      "target": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/1920x1080-00-default-world-list.png",
+      "fileTarget": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/1920x1080-00-default-world-list.png",
+      "absolute": true,
+      "exists": true,
+      "pass": true
+    },
+    {
+      "document": "截图索引.md",
+      "target": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/2560x1440-00-default-world-list.png",
+      "fileTarget": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/2560x1440-00-default-world-list.png",
+      "absolute": true,
+      "exists": true,
+      "pass": true
+    },
+    {
+      "document": "截图索引.md",
+      "target": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/1920x1080-00a-initial-world-default-chart.png",
+      "fileTarget": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/1920x1080-00a-initial-world-default-chart.png",
+      "absolute": true,
+      "exists": true,
+      "pass": true
+    },
+    {
+      "document": "截图索引.md",
+      "target": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/2560x1440-00a-initial-world-default-chart.png",
+      "fileTarget": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/2560x1440-00a-initial-world-default-chart.png",
+      "absolute": true,
+      "exists": true,
+      "pass": true
+    },
+    {
+      "document": "截图索引.md",
+      "target": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/1920x1080-00b-global-editor-directory.png",
+      "fileTarget": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/1920x1080-00b-global-editor-directory.png",
+      "absolute": true,
+      "exists": true,
+      "pass": true
+    },
+    {
+      "document": "截图索引.md",
+      "target": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/2560x1440-00b-global-editor-directory.png",
+      "fileTarget": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/2560x1440-00b-global-editor-directory.png",
+      "absolute": true,
+      "exists": true,
+      "pass": true
+    },
+    {
+      "document": "截图索引.md",
+      "target": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/1920x1080-01-create-world-form.png",
+      "fileTarget": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/1920x1080-01-create-world-form.png",
+      "absolute": true,
+      "exists": true,
+      "pass": true
+    },
+    {
+      "document": "截图索引.md",
+      "target": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/2560x1440-01-create-world-form.png",
+      "fileTarget": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/2560x1440-01-create-world-form.png",
+      "absolute": true,
+      "exists": true,
+      "pass": true
+    },
+    {
+      "document": "截图索引.md",
+      "target": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/1920x1080-02-multiple-world-list.png",
+      "fileTarget": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/1920x1080-02-multiple-world-list.png",
+      "absolute": true,
+      "exists": true,
+      "pass": true
+    },
+    {
+      "document": "截图索引.md",
+      "target": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/2560x1440-02-multiple-world-list.png",
+      "fileTarget": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/2560x1440-02-multiple-world-list.png",
+      "absolute": true,
+      "exists": true,
+      "pass": true
+    },
+    {
+      "document": "截图索引.md",
+      "target": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/1920x1080-03-fork-not-open.png",
+      "fileTarget": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/1920x1080-03-fork-not-open.png",
+      "absolute": true,
+      "exists": true,
+      "pass": true
+    },
+    {
+      "document": "截图索引.md",
+      "target": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/2560x1440-03-fork-not-open.png",
+      "fileTarget": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/2560x1440-03-fork-not-open.png",
+      "absolute": true,
+      "exists": true,
+      "pass": true
+    },
+    {
+      "document": "截图索引.md",
+      "target": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/1920x1080-04-minimal-world-movement.png",
+      "fileTarget": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/1920x1080-04-minimal-world-movement.png",
+      "absolute": true,
+      "exists": true,
+      "pass": true
+    },
+    {
+      "document": "截图索引.md",
+      "target": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/2560x1440-04-minimal-world-movement.png",
+      "fileTarget": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/2560x1440-04-minimal-world-movement.png",
+      "absolute": true,
+      "exists": true,
+      "pass": true
+    },
+    {
+      "document": "截图索引.md",
+      "target": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/1920x1080-05-return-world-list.png",
+      "fileTarget": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/1920x1080-05-return-world-list.png",
+      "absolute": true,
+      "exists": true,
+      "pass": true
+    },
+    {
+      "document": "截图索引.md",
+      "target": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/2560x1440-05-return-world-list.png",
+      "fileTarget": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/2560x1440-05-return-world-list.png",
+      "absolute": true,
+      "exists": true,
+      "pass": true
+    },
+    {
+      "document": "截图索引.md",
+      "target": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/1920x1080-06-delete-confirmation.png",
+      "fileTarget": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/1920x1080-06-delete-confirmation.png",
+      "absolute": true,
+      "exists": true,
+      "pass": true
+    },
+    {
+      "document": "截图索引.md",
+      "target": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/2560x1440-06-delete-confirmation.png",
+      "fileTarget": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/2560x1440-06-delete-confirmation.png",
+      "absolute": true,
+      "exists": true,
+      "pass": true
+    },
+    {
+      "document": "截图索引.md",
+      "target": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/1920x1080-07-local-world-tombstoned.png",
+      "fileTarget": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/1920x1080-07-local-world-tombstoned.png",
+      "absolute": true,
+      "exists": true,
+      "pass": true
+    },
+    {
+      "document": "截图索引.md",
+      "target": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/2560x1440-07-local-world-tombstoned.png",
+      "fileTarget": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/2560x1440-07-local-world-tombstoned.png",
+      "absolute": true,
+      "exists": true,
+      "pass": true
+    },
+    {
+      "document": "截图索引.md",
+      "target": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/1920x1080-08-persisted-after-window-restart.png",
+      "fileTarget": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/1920x1080-08-persisted-after-window-restart.png",
+      "absolute": true,
+      "exists": true,
+      "pass": true
+    },
+    {
+      "document": "截图索引.md",
+      "target": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/2560x1440-08-persisted-after-window-restart.png",
+      "fileTarget": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/2560x1440-08-persisted-after-window-restart.png",
+      "absolute": true,
+      "exists": true,
+      "pass": true
+    },
+    {
+      "document": "截图索引.md",
+      "target": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/1920x1080-09-reenter-world-at-spawn.png",
+      "fileTarget": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/1920x1080-09-reenter-world-at-spawn.png",
+      "absolute": true,
+      "exists": true,
+      "pass": true
+    },
+    {
+      "document": "截图索引.md",
+      "target": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/2560x1440-09-reenter-world-at-spawn.png",
+      "fileTarget": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/2560x1440-09-reenter-world-at-spawn.png",
+      "absolute": true,
+      "exists": true,
+      "pass": true
+    },
+    {
+      "document": "截图索引.md",
+      "target": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/1920x1080-10-second-account-isolated.png",
+      "fileTarget": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/1920x1080-10-second-account-isolated.png",
+      "absolute": true,
+      "exists": true,
+      "pass": true
+    },
+    {
+      "document": "截图索引.md",
+      "target": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/2560x1440-10-second-account-isolated.png",
+      "fileTarget": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/2560x1440-10-second-account-isolated.png",
+      "absolute": true,
+      "exists": true,
+      "pass": true
+    },
+    {
+      "document": "截图索引.md",
+      "target": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/1920x1080-11-original-account-preserved.png",
+      "fileTarget": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/1920x1080-11-original-account-preserved.png",
+      "absolute": true,
+      "exists": true,
+      "pass": true
+    },
+    {
+      "document": "截图索引.md",
+      "target": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/2560x1440-11-original-account-preserved.png",
+      "fileTarget": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/2560x1440-11-original-account-preserved.png",
+      "absolute": true,
+      "exists": true,
+      "pass": true
+    },
+    {
+      "document": "截图索引.md",
+      "target": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/1920x1080-12-persisted-after-process-restart.png",
+      "fileTarget": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/1920x1080-12-persisted-after-process-restart.png",
+      "absolute": true,
+      "exists": true,
+      "pass": true
+    },
+    {
+      "document": "截图索引.md",
+      "target": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/2560x1440-12-persisted-after-process-restart.png",
+      "fileTarget": "D:/Project/A_New_Begin/Neurou_official/quality-review/b2-local-worlds/2560x1440-12-persisted-after-process-restart.png",
+      "absolute": true,
+      "exists": true,
+      "pass": true
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "comparedUtc": "2026-10-11T02:59:27.557Z",
+  "baselineFile": "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-real-auth\\evidence\\protected-baseline.json",
+  "baselineSha256": "8ed627ff7f4be84062df34934d19bcb8b21fe48fe11666f827e43568b63231d2",
+  "beforeCount": 6962,
+  "afterCount": 6965,
+  "changed": [
+    "src/director/IntentPort.ts"
+  ],
+  "removed": [],
+  "added": [
+    "assets/scripts/RealServiceBuilder.ts",
+    "src/director/RealServiceContracts.ts",
+    "src/presentation/RealAuthServiceAdapter.ts"
+  ],
+  "authorizedIntentTypeOnlyAppend": true,
+  "allowedNewProductionFiles": [
+    "src/director/RealServiceContracts.ts",
+    "src/presentation/RealAuthServiceAdapter.ts",
+    "assets/scripts/RealServiceBuilder.ts"
+  ],
+  "authorizedAdded": [
+    "assets/scripts/RealServiceBuilder.ts",
+    "src/director/RealServiceContracts.ts",
+    "src/presentation/RealAuthServiceAdapter.ts"
+  ],
+  "serverFiles": [
+    "server/.env.example",
+    "server/.gitignore",
+    "server/compose.yaml",
+    "server/initialize-private-directory.ps1",
+    "server/migrations/001.sql",
+    "server/package-lock.json",
+    "server/package.json",
+    "server/README.md",
+    "server/src/app.ts",
+    "server/src/cli.ts",
+    "server/src/config.ts",
+    "server/src/contracts.ts",
+    "server/src/crypto.ts",
+    "server/src/db.ts",
+    "server/src/main.ts",
+    "server/src/strict-json.ts",
+    "server/test/http.test.ts",
+    "server/test/main-process.test.ts",
+    "server/tsconfig.json"
+  ],
+  "unauthorizedChanges": [],
+  "unauthorizedAdded": [],
+  "protectedPass": true,
+  "authorization": "User explicitly permits additive new contracts, type-only exports, composition-root wiring and mode routing. Existing files except type-only IntentPort append remain protected. New server package is separately inventoried.",
+  "limits": "Hashes establish byte stability since this B2.5b snapshot; excluded caches/dependencies/runtime and delivery files are not source-reviewed. The earlier B2.5a raw FAIL is retained unchanged."
+}

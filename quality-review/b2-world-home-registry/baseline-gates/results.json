@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "phase": "B2.4a finalized freeze baseline before B2.4b",
+  "capturedAt": "2026-10-10T13:24:07.762Z",
+  "cwd": "D:/Project/A_New_Begin/Neurou_official",
+  "baselineFiles": 587,
+  "gates": [
+    {
+      "command": "npm run check:naming",
+      "result": "PASS",
+      "exitCode": 0,
+      "log": "baseline-gates/check-naming.log",
+      "errors": 0,
+      "warnings": 22,
+      "notes": "Existing 22 semantic warnings; no new naming errors. Manual semantics unchanged from B2.4a previous baseline."
+    },
+    {
+      "command": "npm run typecheck",
+      "result": "PASS",
+      "exitCode": 0,
+      "log": "baseline-gates/typecheck.log",
+      "errors": 0,
+      "warnings": 0,
+      "notes": "No TypeScript diagnostics."
+    },
+    {
+      "command": "npm run check:dependencies",
+      "result": "PASS",
+      "exitCode": 0,
+      "log": "baseline-gates/check-dependencies.log",
+      "errors": 0,
+      "warnings": 0,
+      "notes": "Dependency direction matrix passed."
+    }
+  ]
+}

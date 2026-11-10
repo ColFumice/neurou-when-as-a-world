@@ -1,0 +1,54 @@
+﻿﻿﻿﻿{
+  "task": "落盘 docs/refactor-r0/scope-statement.md（定稿 v1）",
+  "auditTime": "2026-10-18 20:50:28 +08:00",
+  "executor": "Trae (EXECUTOR)",
+  "roundChanges": {
+    "added": [
+      {
+        "path": "docs/refactor-r0/scope-statement.md",
+        "bytes": 17919,
+        "sha256": "ED0BB235C31212BEFD6CCEB3C985ECF116E3E4D431D207EA0DAA9887D96332E6",
+        "note": "定稿 v1，自长文本源字节级复制；源无 BOM，UTF-8；目标位置此前无同名文件，未产生 scope-statement.v0.md"
+      },
+      {
+        "path": "quality-review/refactor-r0/protected-final-audit-scope-statement.json",
+        "note": "本审计文件自身"
+      }
+    ],
+    "overwritten": [],
+    "modified": []
+  },
+  "protectedFilesUnchanged": [
+    {
+      "path": "docs/NAMEBOOK.md",
+      "bytes": 178559,
+      "sha256": "398ED2E5AE2581094708FD5EDBEF958E9FCA20A3CBCCBC79F1A8CF7D9D381DAC",
+      "unchanged": true
+    },
+    {
+      "path": "docs/spec/stage-1.md",
+      "bytes": 108712,
+      "sha256": "C4E9A3090BC96D2204E57401B57F788B448386D822ADA7EDAE6874C68AC63FCE",
+      "unchanged": true
+    }
+  ],
+  "untouchedAreasByDesign": [
+    "src/",
+    "server/",
+    "assets/scripts/",
+    "scripts/（门禁脚本与白名单）",
+    "docs/ 下全部已有文件",
+    "quality-review/ 已有内容（含 R0 轮 protected-final-audit.json，未覆盖）",
+    "archive/ 已有内容"
+  ],
+  "gateResults": {
+    "check:naming": "0 ERROR / 45 WARN（与基线一致，无新增）",
+    "check:dependencies": "0 ERROR（132 个 .ts 文件，约 448 条静态依赖子句）",
+    "typecheck": "exit 0"
+  },
+  "notes": [
+    "本轮仅新增 1 份内容文件（scope-statement.md）+ 1 份本审计文件；零覆盖、零修改已有文件。",
+    "审计文件命名为 protected-final-audit-scope-statement.json 而非 protected-final-audit.json，原因是 R0 轮已有同名审计文件，按「不改 quality-review/ 已有内容」约束另立新名。",
+    "docs/NAMEBOOK.md 与 docs/spec/stage-1.md 继续作为唯一生效口径。"
+  ]
+}

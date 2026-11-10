@@ -1,0 +1,40 @@
+{
+  "passed": 4,
+  "failed": 0,
+  "checks": [
+    {
+      "name": "first account completes once; restart skips prologue; second account is independent",
+      "pass": true,
+      "evidence": {
+        "accountCount": 2,
+        "storedMilestones": 1,
+        "restartPhase": "WorldFolder"
+      }
+    },
+    {
+      "name": "failed milestone persistence does not commit completion; retry commits exactly once",
+      "pass": true,
+      "evidence": {
+        "saves": 1,
+        "failedAttemptPreservesSnapshot": true
+      }
+    },
+    {
+      "name": "login validation and storage failures never masquerade as a completed account",
+      "pass": true,
+      "evidence": {
+        "invalidAccountCases": 3,
+        "invalidStoredCases": 4
+      }
+    },
+    {
+      "name": "new account orchestration carries no world, ledger, chart, editor or engine imports",
+      "pass": true,
+      "evidence": {
+        "logicZeroEngine": true,
+        "noGameplaySession": true,
+        "noWorldLedger": true
+      }
+    }
+  ]
+}

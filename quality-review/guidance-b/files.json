@@ -1,0 +1,16 @@
+{
+  "baselineMethod": "Byte copies taken before B implementation; workspace has no Git repository",
+  "changed": [
+    "constants/index.ts",
+    "src/chart/GuidanceChart.ts",
+    "src/chart/GuidanceLineRuntime.ts",
+    "src/chart/ChartPremiere.ts",
+    "src/presentation/LineEraseEffect.ts",
+    "assets/scripts/SceneBuilder.ts"
+  ],
+  "added": [
+    "assets/resources/chart/guidance_b.json",
+    "assets/resources/chart/guidance_b.json.meta"
+  ],
+  "evidenceDirectory": "quality-review/guidance-b"
+}

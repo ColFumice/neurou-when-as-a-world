@@ -1,0 +1,10 @@
+{
+  "launcherPID": 10168,
+  "launchedAt": "2026-10-10T08:35:28.504Z",
+  "priorHarnessProcesses": [],
+  "priorHarnessProcessCheck": "Read-only Win32_Process check before independent Electron spawn",
+  "script": "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-local-worlds\\process-restart.cjs",
+  "electronPID": 15644,
+  "exitedAt": "2026-10-10T08:35:30.615Z",
+  "exitCode": 0
+}

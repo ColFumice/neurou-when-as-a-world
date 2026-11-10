@@ -1,0 +1,10 @@
+ledger.ndjson SHA256=0B1B8AC88C6A0722D74F5D7C5E3241AF6E2E281EABFD9C103E89F957A46BDB79
+ledger.head.json SHA256=57F693E8F801EF4F6B9D3AAE0427B3F65C253F739B21FEE805481A7C0E375CC2
+ledger lines=1
+append before=none (worlds/w1 absent)
+append after=1 line, eventId=premiere:chart-w1
+midway exit=no ledger files
+fallback complete=no ledger files
+corrupt head SHA256=A457BDD32670A0E1AAD9689D42C26C2694B96D191B7F2DA1127399BD554C834F
+corrupt run ledger SHA256=0B1B8AC88C6A0722D74F5D7C5E3241AF6E2E281EABFD9C103E89F957A46BDB79 (unchanged)
+replay hashes unchanged, lines=1

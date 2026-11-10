@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "chartId": "guidance-a-1",
+  "tier": "Regular",
+  "layoutVersion": "pad-layout-1",
+  "aspectRatio": 1.7777777777777777,
+  "lines": [
+    {
+      "id": "line-a-1",
+      "head": { "id": "head-a-1", "spawnTimeMs": 2000 },
+      "path": { "kind": "Polyline", "points": [ { "u": 0.18, "v": 0.5 }, { "u": 0.82, "v": 0.5 } ] },
+      "speed": 0.28444444444444444,
+      "nodes": [ { "id": "tap-a-1", "kind": "Tap", "pathDistance": 0.5688888888888889 } ]
+    }
+  ]
+}

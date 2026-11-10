@@ -1,0 +1,144 @@
+{
+  "frozen": [
+    "GuidanceChartRuntime",
+    "getGuidanceSnapshots"
+  ],
+  "publicTechnicalAdditions": [
+    {
+      "name": "getTapCandidate",
+      "meaning": "单线只读 Tap 仲裁候选，不推进或结算"
+    },
+    {
+      "name": "allowTap / allowHead",
+      "meaning": "多线协调器向单线广播的边沿消费资格，默认 true 保留单线兼容"
+    },
+    {
+      "name": "lineId",
+      "meaning": "GuidanceLineRuntime 可选构造参数，指定独立运行的线"
+    },
+    {
+      "name": "headPosition",
+      "meaning": "GuidanceLineSnapshot 的冻结路径首点，Head 动画不随路径进度移动"
+    }
+  ],
+  "privateTechnicalAdditions": [
+    {
+      "name": "headSprites",
+      "meaning": "每条线的独立 Head Sprite 映射"
+    }
+  ],
+  "newIdentifierSpellings": [
+    {
+      "name": "rawLine",
+      "file": "src/chart/GuidanceChart.ts",
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "name": "allowTap",
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "name": "allowHead",
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "name": "getTapCandidate",
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "name": "required",
+      "file": "src/chart/GuidanceLineRuntime.ts",
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "name": "GuidanceChartRuntime",
+      "file": "src/chart/ChartPremiere.ts",
+      "status": "本轮 PROTOCOL 已冻结"
+    },
+    {
+      "name": "getGuidanceSnapshots",
+      "file": "src/chart/ChartPremiere.ts",
+      "status": "本轮 PROTOCOL 已冻结"
+    },
+    {
+      "name": "headSprites",
+      "file": "src/presentation/LineEraseEffect.ts",
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "name": "Map",
+      "file": "src/presentation/LineEraseEffect.ts",
+      "status": "标准库词形，不属于项目新增命名"
+    },
+    {
+      "name": "snapshots",
+      "file": "src/presentation/LineEraseEffect.ts",
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "name": "getGuidanceSnapshots",
+      "file": "src/presentation/LineEraseEffect.ts",
+      "status": "本轮 PROTOCOL 已冻结"
+    },
+    {
+      "name": "get",
+      "file": "src/presentation/LineEraseEffect.ts",
+      "status": "标准库词形，不属于项目新增命名"
+    },
+    {
+      "name": "set",
+      "file": "src/presentation/LineEraseEffect.ts",
+      "status": "标准库词形，不属于项目新增命名"
+    },
+    {
+      "name": "GuidanceChartRuntime",
+      "file": "src/chart/GuidanceChartRuntime.ts",
+      "status": "本轮 PROTOCOL 已冻结"
+    },
+    {
+      "name": "heads",
+      "file": "src/chart/GuidanceChartRuntime.ts",
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "name": "taps",
+      "file": "src/chart/GuidanceChartRuntime.ts",
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "name": "getTapCandidate",
+      "file": "src/chart/GuidanceChartRuntime.ts",
+      "status": "待 PROTOCOL 追认"
+    },
+    {
+      "name": "NonNullable",
+      "file": "src/chart/GuidanceChartRuntime.ts",
+      "status": "标准库词形，不属于项目新增命名"
+    },
+    {
+      "name": "getGuidanceSnapshots",
+      "file": "src/chart/GuidanceChartRuntime.ts",
+      "status": "本轮 PROTOCOL 已冻结"
+    }
+  ],
+  "resourceIds": [
+    "guidance-c-1",
+    "line-c-a",
+    "head-c-a",
+    "line-c-a-conflict",
+    "drag-c-a-1",
+    "hold-c-a-1",
+    "tap-c-a-corner",
+    "tap-c-a-end",
+    "line-c-b",
+    "head-c-b",
+    "line-c-b-conflict",
+    "drag-c-b-1",
+    "hold-c-b-1",
+    "tap-c-b-corner",
+    "tap-c-b-end"
+  ]
+}

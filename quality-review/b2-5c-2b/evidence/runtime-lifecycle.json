@@ -1,0 +1,9 @@
+{
+  "observedUtc": "2026-10-11T08:07:54.6388704Z",
+  "port": 55437,
+  "listenerStopped": true,
+  "privateDataRetained": true,
+  "connectionMetadataRetained": true,
+  "oldDatabaseDataTouched": false,
+  "pass": true
+}

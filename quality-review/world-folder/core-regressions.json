@@ -1,0 +1,35 @@
+{
+  "pass": true,
+  "originalHarnessSourcesUnchanged": true,
+  "coverage": "Accepted current B/C/pad/editor pure logic and collector/frame-driver integration; editor check 16 replays the preserved A/B/C resources. cc stubs in those tests are not Creator screenshot evidence.",
+  "runs": [
+    {
+      "name": "b",
+      "source": "quality-review/guidance-editor/b-regression.cjs",
+      "sourceSha256": "af5d63c60e4eba2ad6975deb82518d385ae5ebc7c6ab0559e2bb490c29722eaa",
+      "exitCode": 0,
+      "error": null
+    },
+    {
+      "name": "c",
+      "source": "quality-review/guidance-editor/c-regression.cjs",
+      "sourceSha256": "5908118d03f7a65d64f412342d0ec80a4441f3545d327486e69ee1c0f4028abf",
+      "exitCode": 0,
+      "error": null
+    },
+    {
+      "name": "pad",
+      "source": "quality-review/guidance-editor/pad-regression.cjs",
+      "sourceSha256": "69c89d3619ba19589a46f3e7a1dd02dca9fb8a02c6b94332fe8c195a38017847",
+      "exitCode": 0,
+      "error": null
+    },
+    {
+      "name": "editor",
+      "source": "quality-review/guidance-editor/acceptance.cjs",
+      "sourceSha256": "5279a3b9bb2d19812aa715e7f851af193637eb18f83ddd5676253f3563f6ef24",
+      "exitCode": 0,
+      "error": null
+    }
+  ]
+}

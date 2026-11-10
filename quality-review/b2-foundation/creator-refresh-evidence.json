@@ -1,0 +1,138 @@
+{
+  "capturedAt": "2026-10-10T09:24:44.657Z",
+  "tool": "computer-use skill / @oai/sky",
+  "targetWindow": "scene.scene - neurou_official - Cocos Creator 3.8.8",
+  "selection": "Unique exact title from sky.list_windows()",
+  "actions": [
+    "sky.activate_window on current project editor: automatic import-map count increased 91→95 on both ports",
+    "Assets toolbar refresh click after final source modification",
+    "Focus moved temporarily to existing b2-local-worlds Explorer window, then Creator refocused; final source maps became current"
+  ],
+  "sourceOfBehavior": "Installed Creator asset-db/i18n/en.js: refocus editor to trigger automatic refresh",
+  "policy": "No generated compilation edited manually; no core resource content or docs modified. Normal Creator scanner/compiler produced served preview.",
+  "diagnostics": [
+    "First preflight correctly blocked stale WorldFolderBuilder map before any screenshots",
+    "First fresh preview detected legacy fork status, preserved separately; no accepted evidence from failure"
+  ],
+  "finalPreview": {
+    "pass": true,
+    "compilationUnchanged": true,
+    "targets": [
+      {
+        "file": "assets/scripts/WorldFolderBuilder.ts",
+        "chunk": "./chunks/c8/c89cca6e27a0e04da4c658b697e7bc59e71b096a.js",
+        "sourceSha256": "1f27ca70c8ce82fefca4731fb3655edb8d542937933313faf3985362bbab52d2",
+        "chunkSha256": "440b0a616c3f4ebf255e5a4b50c51b7f936b1a63213cca18866c3fc38e0d55c2",
+        "sourceMapMatches": true,
+        "servedEqualsCompilerOutput": true
+      },
+      {
+        "file": "src/presentation/WorldFolderView.ts",
+        "chunk": "./chunks/d2/d2d6e6d95a20b4190042fb0999b7f1bc153afac7.js",
+        "sourceSha256": "6d728d3fc775065b46921864f013d9575c964004f60918508f352d2f3e4d9a7d",
+        "chunkSha256": "dd7ae4dfd5c170df5db6de2953649756f48e24283c9fd13534557057fd6579fd",
+        "sourceMapMatches": true,
+        "servedEqualsCompilerOutput": true
+      },
+      {
+        "file": "src/director/AccountMilestone.ts",
+        "chunk": "./chunks/0b/0bbc1ab5f6983c6d092452a66128609169ea2463.js",
+        "sourceSha256": "ea937e6676b97cafd8a726d051db54d16077a9fe82438cce8374a4635d1b846e",
+        "chunkSha256": "0f8cb22774a1278321e5ca892cd4716e814002b764f45a2ca59580b8c1608a5d",
+        "sourceMapMatches": true,
+        "servedEqualsCompilerOutput": true
+      },
+      {
+        "file": "src/presentation/AccountMilestoneStorage.ts",
+        "chunk": "./chunks/70/70b14def92647dd9778936629299bd14935b0acb.js",
+        "sourceSha256": "ec36e1490443d5ca59c983119e56f5273a0d62e8522f9171fb21be7b05c0ac19",
+        "chunkSha256": "75fd9ac232d333c082cea48fd81d47bd6f58e69f0b5bb90883c56d7b7ec7640a",
+        "sourceMapMatches": true,
+        "servedEqualsCompilerOutput": true
+      },
+      {
+        "file": "src/director/WorldStateSession.ts",
+        "chunk": "./chunks/0a/0a2b504fa5aca7b8b681bdf287da2d0512a62eaa.js",
+        "sourceSha256": "dee799181f9216ce6244c0087ba5dba830ea481cd8140591ec0f7ad099ecfecb",
+        "chunkSha256": "38c1d35d08c978386ca945a3a5bb699ea31a5287fc5ea4a5ee33913c93117bb9",
+        "sourceMapMatches": true,
+        "servedEqualsCompilerOutput": true
+      },
+      {
+        "file": "src/presentation/WorldStateStorage.ts",
+        "chunk": "./chunks/39/3903194a6c7f50d7cc41776dfaa2486c66f60344.js",
+        "sourceSha256": "95e03b7610946041e0aa635d37cf5790b17cdd37d3ed7272080a5b69815e8056",
+        "chunkSha256": "8acadc1b262cc14951083ff61cfa91f2b61e1b5c528ba1b671e1decbd6f83f65",
+        "sourceMapMatches": true,
+        "servedEqualsCompilerOutput": true
+      },
+      {
+        "file": "src/director/IntentPort.ts",
+        "chunk": "./chunks/49/498a6617b96cfa47405016084b673d49f11a12d0.js",
+        "sourceSha256": "b6ec38dbf2e9915cfc3a70d9ab41ac501dd14d22ec49ba94af5763caf3f1365c",
+        "chunkSha256": "fd95216c617093aa2e992abf843ba1834bc101d50b10879db47c2356c710b25f",
+        "sourceMapMatches": true,
+        "servedEqualsCompilerOutput": true
+      }
+    ],
+    "actualDimensions": [
+      {
+        "file": "1920x1080-00-directory-permission-derived-false.png",
+        "dimensions": [
+          1920,
+          1080
+        ]
+      },
+      {
+        "file": "1920x1080-01-incomplete-diagnostics.png",
+        "dimensions": [
+          1920,
+          1080
+        ]
+      },
+      {
+        "file": "1920x1080-02-complete-restore-rejected.png",
+        "dimensions": [
+          1920,
+          1080
+        ]
+      },
+      {
+        "file": "1920x1080-03-copy-permission-derived-read.png",
+        "dimensions": [
+          1920,
+          1080
+        ]
+      },
+      {
+        "file": "2560x1440-00-directory-permission-derived-false.png",
+        "dimensions": [
+          2560,
+          1440
+        ]
+      },
+      {
+        "file": "2560x1440-01-incomplete-diagnostics.png",
+        "dimensions": [
+          2560,
+          1440
+        ]
+      },
+      {
+        "file": "2560x1440-02-complete-restore-rejected.png",
+        "dimensions": [
+          2560,
+          1440
+        ]
+      },
+      {
+        "file": "2560x1440-03-copy-permission-derived-read.png",
+        "dimensions": [
+          2560,
+          1440
+        ]
+      }
+    ],
+    "allPngHashesVerified": true
+  }
+}

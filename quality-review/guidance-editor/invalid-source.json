@@ -1,0 +1,212 @@
+{
+  "schemaVersion": 1,
+  "sourceId": "editor-mock-1",
+  "sourceRevision": "r1",
+  "provenance": "Mock",
+  "layoutVersion": "pad-layout-2",
+  "aspectRatio": 1.7777777777777777,
+  "mappingVersion": "mock-mapping-1",
+  "mediaDurationMs": 12000,
+  "events": [
+    {
+      "id": "a0",
+      "trackId": "track-a",
+      "lineId": "a",
+      "timeMs": 1000,
+      "position": {
+        "u": 0.15,
+        "v": 0.55
+      },
+      "color": {
+        "r": 256,
+        "g": 174,
+        "b": 80
+      },
+      "pitch": 60,
+      "drumType": null,
+      "velocity": 120,
+      "endTimeMs": 1100,
+      "emphasis": true
+    },
+    {
+      "id": "a1",
+      "trackId": "track-a",
+      "lineId": "a",
+      "timeMs": 2300,
+      "position": {
+        "u": 0.3,
+        "v": 0.55
+      },
+      "color": {
+        "r": 248,
+        "g": 174,
+        "b": 80
+      },
+      "pitch": 61,
+      "drumType": null,
+      "velocity": 90,
+      "endTimeMs": 2400,
+      "emphasis": false
+    },
+    {
+      "id": "a2",
+      "trackId": "track-a",
+      "lineId": "a",
+      "timeMs": 3100,
+      "position": {
+        "u": 0.5,
+        "v": 0.55
+      },
+      "color": {
+        "r": 248,
+        "g": 174,
+        "b": 80
+      },
+      "pitch": 62,
+      "drumType": null,
+      "velocity": 90,
+      "endTimeMs": 3200,
+      "emphasis": false
+    },
+    {
+      "id": "a3",
+      "trackId": "track-a",
+      "lineId": "a",
+      "timeMs": 5000,
+      "position": {
+        "u": 0.65,
+        "v": 0.55
+      },
+      "color": {
+        "r": 248,
+        "g": 174,
+        "b": 80
+      },
+      "pitch": 63,
+      "drumType": null,
+      "velocity": 90,
+      "endTimeMs": 5100,
+      "emphasis": false
+    },
+    {
+      "id": "a4",
+      "trackId": "track-a",
+      "lineId": "a",
+      "timeMs": 6800,
+      "position": {
+        "u": 0.85,
+        "v": 0.55
+      },
+      "color": {
+        "r": 248,
+        "g": 174,
+        "b": 80
+      },
+      "pitch": 64,
+      "drumType": null,
+      "velocity": 90,
+      "endTimeMs": 6900,
+      "emphasis": false
+    },
+    {
+      "id": "b0",
+      "trackId": "track-b",
+      "lineId": "b",
+      "timeMs": 1000,
+      "position": {
+        "u": 0.15,
+        "v": 0.65
+      },
+      "color": {
+        "r": 95,
+        "g": 190,
+        "b": 250
+      },
+      "pitch": 60,
+      "drumType": null,
+      "velocity": 120,
+      "endTimeMs": 1100,
+      "emphasis": true
+    },
+    {
+      "id": "b1",
+      "trackId": "track-b",
+      "lineId": "b",
+      "timeMs": 2300,
+      "position": {
+        "u": 0.3,
+        "v": 0.65
+      },
+      "color": {
+        "r": 95,
+        "g": 190,
+        "b": 250
+      },
+      "pitch": 61,
+      "drumType": null,
+      "velocity": 90,
+      "endTimeMs": 2400,
+      "emphasis": false
+    },
+    {
+      "id": "b2",
+      "trackId": "track-b",
+      "lineId": "b",
+      "timeMs": 3100,
+      "position": {
+        "u": 0.5,
+        "v": 0.65
+      },
+      "color": {
+        "r": 95,
+        "g": 190,
+        "b": 250
+      },
+      "pitch": 62,
+      "drumType": null,
+      "velocity": 90,
+      "endTimeMs": 3200,
+      "emphasis": false
+    },
+    {
+      "id": "b3",
+      "trackId": "track-b",
+      "lineId": "b",
+      "timeMs": 5000,
+      "position": {
+        "u": 0.65,
+        "v": 0.65
+      },
+      "color": {
+        "r": 95,
+        "g": 190,
+        "b": 250
+      },
+      "pitch": 63,
+      "drumType": null,
+      "velocity": 90,
+      "endTimeMs": 5100,
+      "emphasis": false
+    },
+    {
+      "id": "b4",
+      "trackId": "track-b",
+      "lineId": "b",
+      "timeMs": 6800,
+      "position": {
+        "u": 0.85,
+        "v": 0.65
+      },
+      "color": {
+        "r": 95,
+        "g": 190,
+        "b": 250
+      },
+      "pitch": 64,
+      "drumType": null,
+      "velocity": 90,
+      "endTimeMs": 6900,
+      "emphasis": false
+    }
+  ]
+}

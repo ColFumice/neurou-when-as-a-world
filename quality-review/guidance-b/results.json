@@ -1,0 +1,746 @@
+{
+  "task": "Guidance B: single Polyline, mixed Tap / Drag / Hold",
+  "headWindowMs": 1000,
+  "generatedAt": "2026-10-09T16:13:52.058Z",
+  "command": "node quality-review/guidance-b/acceptance.cjs",
+  "coverage": "公开 chart/director API；真实采集器/帧驱动使用仅事件总线 cc stub，Creator 视觉验收另行提供。B 仍拒绝多线，lineID 排序层在本范围恒等。",
+  "passed": 31,
+  "failed": 0,
+  "checks": [
+    {
+      "name": "B parser accepts mixed nodes and Polyline; strict rejection of unsupported resource fields and types",
+      "pass": true,
+      "evidence": {
+        "accepted": [
+          "Tap",
+          "Drag",
+          "Hold",
+          "Polyline"
+        ],
+        "rejected": [
+          "schema",
+          "layoutVersion",
+          "multiple lines",
+          "Bezier",
+          "unknown node kind",
+          "unknown chart field",
+          "unknown line field",
+          "Tap keyId undefined",
+          "Tap default key",
+          "Drag Space",
+          "Hold Space",
+          "Drag missing key",
+          "Hold key absent in layout",
+          "Drag unknown field",
+          "Hold tail equals start",
+          "Hold tail before start",
+          "Hold tail beyond path",
+          "Hold missing tail",
+          "duplicate ID",
+          "negative distance",
+          "nonfinite speed",
+          "nonpositive speed",
+          "outside path point",
+          "coincident adjacent path points"
+        ]
+      }
+    },
+    {
+      "name": "Internal turns require Tap or Hold start; Drag alone and Hold tail alone are rejected",
+      "pass": true,
+      "evidence": {
+        "turnDistance": 0.5,
+        "accepted": [
+          "Tap",
+          "Hold start"
+        ],
+        "rejected": [
+          "Drag alone",
+          "Hold tail alone"
+        ]
+      }
+    },
+    {
+      "name": "Node order is normalized deterministically and resource / snapshots remain immutable copies",
+      "pass": true,
+      "evidence": {
+        "orderedIDs": [
+          "a",
+          "b",
+          "z"
+        ],
+        "originalIDs": [
+          "z",
+          "b",
+          "a"
+        ],
+        "deepFrozen": true
+      }
+    },
+    {
+      "name": "Polyline uses weighted arc length; equal durations cross unequal-length segments at uniform speed",
+      "pass": true,
+      "evidence": {
+        "speed": 0.125,
+        "aspectRatio": 2,
+        "samples": [
+          {
+            "timeMs": 4000,
+            "distance": 0.375,
+            "position": {
+              "u": 0.3125,
+              "v": 0.5
+            },
+            "remainingPoints": [
+              {
+                "u": 0.3125,
+                "v": 0.5
+              },
+              {
+                "u": 0.375,
+                "v": 0.5
+              },
+              {
+                "u": 0.375,
+                "v": 0.75
+              }
+            ]
+          },
+          {
+            "timeMs": 5000,
+            "distance": 0.5,
+            "position": {
+              "u": 0.375,
+              "v": 0.5
+            },
+            "remainingPoints": [
+              {
+                "u": 0.375,
+                "v": 0.5
+              },
+              {
+                "u": 0.375,
+                "v": 0.75
+              }
+            ]
+          },
+          {
+            "timeMs": 6000,
+            "distance": 0.625,
+            "position": {
+              "u": 0.375,
+              "v": 0.625
+            },
+            "remainingPoints": [
+              {
+                "u": 0.375,
+                "v": 0.625
+              },
+              {
+                "u": 0.375,
+                "v": 0.75
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "Head keeps authorized 1000ms window; timeout finalizes all Tap / Drag / Hold exactly once",
+      "pass": true,
+      "evidence": {
+        "acceptedStartMs": [
+          1000,
+          1100,
+          1999,
+          2000
+        ],
+        "timeoutAtMs": 2000.001,
+        "missedDescendants": 3
+      }
+    },
+    {
+      "name": "Drag uses an early Down / later Up spanning target even when no render frame hits arrival",
+      "pass": true,
+      "evidence": {
+        "downAtMs": 2999,
+        "targetAtMs": 3000,
+        "upAtMs": 3001,
+        "renderFrames": [
+          2800,
+          3300
+        ],
+        "tier": "Perfect",
+        "frameRates": [
+          {
+            "mode": "Down before arrival",
+            "fps": 30,
+            "framePeriodMs": 33.333333333333336,
+            "frameCount": 69,
+            "tier": "Perfect",
+            "resolvedAtMs": 3000,
+            "submittedEdges": [
+              {
+                "inputTimeMs": 2999,
+                "phase": "Down",
+                "collectedBeforeFrameMs": 3000
+              },
+              {
+                "inputTimeMs": 3001,
+                "phase": "Up",
+                "collectedBeforeFrameMs": 3033.3333333333335
+              }
+            ]
+          },
+          {
+            "mode": "Down before arrival",
+            "fps": 60,
+            "framePeriodMs": 16.666666666666668,
+            "frameCount": 138,
+            "tier": "Perfect",
+            "resolvedAtMs": 3000,
+            "submittedEdges": [
+              {
+                "inputTimeMs": 2999,
+                "phase": "Down",
+                "collectedBeforeFrameMs": 3000
+              },
+              {
+                "inputTimeMs": 3001,
+                "phase": "Up",
+                "collectedBeforeFrameMs": 3016.666666666667
+              }
+            ]
+          },
+          {
+            "mode": "Down before arrival",
+            "fps": 144,
+            "framePeriodMs": 6.944444444444445,
+            "frameCount": 332,
+            "tier": "Perfect",
+            "resolvedAtMs": 3000,
+            "submittedEdges": [
+              {
+                "inputTimeMs": 2999,
+                "phase": "Down",
+                "collectedBeforeFrameMs": 3000
+              },
+              {
+                "inputTimeMs": 3001,
+                "phase": "Up",
+                "collectedBeforeFrameMs": 3006.9444444444443
+              }
+            ]
+          },
+          {
+            "mode": "Down before arrival",
+            "fps": 2,
+            "framePeriodMs": 500,
+            "frameCount": 5,
+            "tier": "Perfect",
+            "resolvedAtMs": 3000,
+            "submittedEdges": [
+              {
+                "inputTimeMs": 2999,
+                "phase": "Down",
+                "collectedBeforeFrameMs": 3000
+              },
+              {
+                "inputTimeMs": 3001,
+                "phase": "Up",
+                "collectedBeforeFrameMs": 3300
+              }
+            ]
+          },
+          {
+            "mode": "Down after arrival",
+            "fps": 30,
+            "framePeriodMs": 33.333333333333336,
+            "frameCount": 69,
+            "tier": "Miss",
+            "resolvedAtMs": 3000,
+            "submittedEdges": [
+              {
+                "inputTimeMs": 3001,
+                "phase": "Down",
+                "collectedBeforeFrameMs": 3033.3333333333335
+              },
+              {
+                "inputTimeMs": 3002,
+                "phase": "Up",
+                "collectedBeforeFrameMs": 3033.3333333333335
+              }
+            ]
+          },
+          {
+            "mode": "Down after arrival",
+            "fps": 60,
+            "framePeriodMs": 16.666666666666668,
+            "frameCount": 138,
+            "tier": "Miss",
+            "resolvedAtMs": 3000,
+            "submittedEdges": [
+              {
+                "inputTimeMs": 3001,
+                "phase": "Down",
+                "collectedBeforeFrameMs": 3016.666666666667
+              },
+              {
+                "inputTimeMs": 3002,
+                "phase": "Up",
+                "collectedBeforeFrameMs": 3016.666666666667
+              }
+            ]
+          },
+          {
+            "mode": "Down after arrival",
+            "fps": 144,
+            "framePeriodMs": 6.944444444444445,
+            "frameCount": 332,
+            "tier": "Miss",
+            "resolvedAtMs": 3000,
+            "submittedEdges": [
+              {
+                "inputTimeMs": 3001,
+                "phase": "Down",
+                "collectedBeforeFrameMs": 3006.9444444444443
+              },
+              {
+                "inputTimeMs": 3002,
+                "phase": "Up",
+                "collectedBeforeFrameMs": 3006.9444444444443
+              }
+            ]
+          },
+          {
+            "mode": "Down after arrival",
+            "fps": 2,
+            "framePeriodMs": 500,
+            "frameCount": 5,
+            "tier": "Miss",
+            "resolvedAtMs": 3000,
+            "submittedEdges": [
+              {
+                "inputTimeMs": 3001,
+                "phase": "Down",
+                "collectedBeforeFrameMs": 3300
+              },
+              {
+                "inputTimeMs": 3002,
+                "phase": "Up",
+                "collectedBeforeFrameMs": 3300
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "Drag late Down or absent input misses once and cannot be repaired",
+      "pass": true,
+      "evidence": [
+        {
+          "mode": "late Down",
+          "tier": "Miss"
+        },
+        {
+          "mode": "no input",
+          "tier": "Miss"
+        }
+      ]
+    },
+    {
+      "name": "Drag equal-time boundary: Down at arrival valid; Up at arrival means no key held",
+      "pass": true,
+      "evidence": {
+        "targetAtMs": 3000,
+        "equalDown": "Perfect",
+        "equalUp": "Miss"
+      }
+    },
+    {
+      "name": "Drag binding is independent of current path grid and never substitutes another held key",
+      "pass": true,
+      "evidence": {
+        "pathGridAtArrival": "KeyB",
+        "binding": "KeyA",
+        "boundHeld": "Perfect",
+        "onlyGridKeyHeld": "Miss"
+      }
+    },
+    {
+      "name": "Hold pre-held start follows fixed key through another grid; resolves and fades only at tail",
+      "pass": true,
+      "evidence": {
+        "boundKey": "KeyA",
+        "crossedGrid": "KeyB",
+        "startAtMs": 3000,
+        "resolvedAtMs": 5000,
+        "disappearAtMs": 5000,
+        "score": 100
+      }
+    },
+    {
+      "name": "Hold Down exactly at start qualifies, and start missing becomes unrecoverable Miss",
+      "pass": true,
+      "evidence": {
+        "exactStart": "Perfect",
+        "missingStartFailureLockedAtMs": 3000,
+        "finalMissAtMs": 5000,
+        "lateStartDidNotRepair": true
+      }
+    },
+    {
+      "name": "Hold middle release locks failure; final Miss and fade wait for tail, and re-press cannot repair",
+      "pass": true,
+      "evidence": {
+        "failureLockedAtMs": 3500,
+        "repressedAtMs": 3501,
+        "resolvedAtMs": 5000,
+        "disappearAtMs": 5000,
+        "finalTier": "Miss",
+        "oneMiss": true
+      }
+    },
+    {
+      "name": "Hold release strictly before tail fails; release exactly at tail succeeds; late release cannot rescore",
+      "pass": true,
+      "evidence": [
+        {
+          "releaseMs": 4999.999,
+          "tier": "Miss",
+          "resolvedAtMs": 5000
+        },
+        {
+          "releaseMs": 5000,
+          "tier": "Perfect",
+          "resolvedAtMs": 5000
+        },
+        {
+          "releaseMs": 5000.001,
+          "tier": "Perfect",
+          "resolvedAtMs": 5000
+        }
+      ]
+    },
+    {
+      "name": "Hold is one node and one score after many frames / repeat Downs; transparency changes points only",
+      "pass": true,
+      "evidence": [
+        {
+          "transparency": 0,
+          "frames": 141,
+          "perfectCount": 1,
+          "score": 100
+        },
+        {
+          "transparency": 100,
+          "frames": 141,
+          "perfectCount": 1,
+          "score": 200
+        }
+      ]
+    },
+    {
+      "name": "A Hold tail may span a Polyline turn with Tap at turn; remaining held segment follows logical path",
+      "pass": true,
+      "evidence": {
+        "clippedHoldPointsAtMs4000": 3,
+        "cornerTier": "Perfect",
+        "holdTier": "Miss",
+        "fadeAtMs": 6000
+      }
+    },
+    {
+      "name": "Mixed Tap / Drag / Hold finalizes by node rules and counts only nodes, with no media-end shortcut",
+      "pass": true,
+      "evidence": {
+        "nodes": 3,
+        "perfect": 3,
+        "score": 300,
+        "allResolvedAtMs": 5000,
+        "mediaCompletedAtMs": 12000
+      }
+    },
+    {
+      "name": "Tap candidate ranking chooses absolute time difference before target time",
+      "pass": true,
+      "evidence": {
+        "inputAtMs": 3070,
+        "targets": [
+          3000,
+          3080
+        ],
+        "selected": "near",
+        "secondary": "early"
+      }
+    },
+    {
+      "name": "Tap candidate equal-difference tie chooses earlier target time",
+      "pass": true,
+      "evidence": {
+        "inputAtMs": 3040,
+        "targets": [
+          3000,
+          3080
+        ],
+        "selected": "earlier-z"
+      }
+    },
+    {
+      "name": "Tap candidates share one B line ID; equal time tie chooses node ID and one Down consumes at most one Tap",
+      "pass": true,
+      "evidence": {
+        "lineID": "line-b",
+        "sameTargetMs": 3000,
+        "selectedFirst": "a-node",
+        "repeatDownConsumed": false,
+        "freshDownSelected": "z-node",
+        "multiLine": "explicitly rejected by parser"
+      }
+    },
+    {
+      "name": "Drag / Hold arrival checks are autonomous and do not consume the one Tap allowed for a Down",
+      "pass": true,
+      "evidence": {
+        "atSingleDownMs": 3000,
+        "autonomousDrag": "Perfect",
+        "autonomousHold": "active",
+        "oneTapConsumed": "tap-a",
+        "otherTap": "Miss",
+        "finalPerfect": 3,
+        "finalMiss": 1
+      }
+    },
+    {
+      "name": "Multiple autonomous arrivals crossed in one coarse frame resolve independently in event time order",
+      "pass": true,
+      "evidence": {
+        "coarseFrameAtMs": 6500,
+        "resolvedTimesMs": [
+          3000,
+          4000,
+          5000,
+          6000
+        ],
+        "perfect": 4
+      }
+    },
+    {
+      "name": "Pause with a held key freezes active Hold, progress, judgments and fade clock; resume can complete tail",
+      "pass": true,
+      "evidence": {
+        "pausedAtMs": 3500,
+        "frozenHoldActive": true,
+        "wallTimeIgnoredMs": 90000,
+        "resumedTier": "Perfect",
+        "tailAtMs": 5000
+      }
+    },
+    {
+      "name": "Paused Up only releases guard; resumed Hold remains pending to tail and re-press cannot repair interruption",
+      "pass": true,
+      "evidence": {
+        "pausedReleaseDidNotJudge": true,
+        "pendingOnResumeAtMs": 3500,
+        "finalMissAtMs": 5000,
+        "repressedDidNotRepair": true,
+        "fadeAtMs": 5000
+      }
+    },
+    {
+      "name": "Early media end plus failed Hold keeps full interval alive; Completed only at tail with one Miss",
+      "pass": true,
+      "evidence": [
+        {
+          "mode": "missing start",
+          "mediaEndedBeforeStart": true,
+          "stillPlayingAtMs": 4999,
+          "resolvedAtMs": 5000,
+          "completedAtMs": 5000,
+          "missCount": 1
+        },
+        {
+          "mode": "middle release",
+          "mediaEndedBeforeStart": true,
+          "stillPlayingAtMs": 4999,
+          "resolvedAtMs": 5000,
+          "completedAtMs": 5000,
+          "missCount": 1
+        }
+      ]
+    },
+    {
+      "name": "Autonomous simultaneous Hold tails sort feedback by node ID after time / distance / event rank",
+      "pass": true,
+      "evidence": {
+        "sharedTailAtMs": 5000,
+        "sharedDistance": 0.5,
+        "eventKind": "Tail",
+        "feedbackOrder": [
+          "a-hold",
+          "z-hold"
+        ],
+        "allPerfect": true
+      }
+    },
+    {
+      "name": "Exit / reopen resets mixed node tiers, Hold active range, key guards, score, feedback and media end",
+      "pass": true,
+      "evidence": {
+        "resetNodeCount": 3,
+        "freshStartAndKeyEdges": true,
+        "staleMediaEndCleared": true
+      }
+    },
+    {
+      "name": "All settled + media end and independent unavailable timeout preserve R26 B for mixed nodes",
+      "pass": true,
+      "evidence": {
+        "earlyEndWaitedUntilHoldTailMs": 5000,
+        "independentTimeoutMs": 30000,
+        "pausedTimeoutExcludedMs": 60000
+      }
+    },
+    {
+      "name": "Director T6 entrance + mixed premiere: early exit writes none, reentry retains endpoint, media completion appends once",
+      "pass": true,
+      "evidence": {
+        "endpointRecords": 1,
+        "middleExitCompletionRecords": 0,
+        "completionRecords": 1,
+        "totalLedger": 2,
+        "mixedPerfectCount": 3
+      }
+    },
+    {
+      "name": "Real InputCollector / FrameDriver delivers cross-frame Down / Up timestamps before later Drag / Hold logic advance",
+      "pass": true,
+      "evidence": {
+        "inputDownAtMs": 2999,
+        "inputUpAtMs": 3001,
+        "rendererAtMs": 3500,
+        "dragTier": "Perfect",
+        "holdInterruptedAtMs": 3001,
+        "holdResolvedAtMs": 5000,
+        "firstRefresh": {
+          "timeMs": 3500,
+          "dragTier": "Perfect",
+          "holdTier": null
+        },
+        "tailRefresh": {
+          "timeMs": 5000,
+          "dragTier": "Perfect",
+          "holdTier": "Miss"
+        }
+      }
+    },
+    {
+      "name": "Real SceneBuilder methods continue failed Hold after native ended clock stops; pause excludes wall time and exit / reentry reset fallback",
+      "pass": true,
+      "evidence": {
+        "extractedMethods": [
+          "update",
+          "readVideoTimeMs",
+          "onFrameRefresh",
+          "teardownChart"
+        ],
+        "completeMethodsExecuted": true,
+        "mediaControls": "stub native player and graphical nodes; no chart logic replacement",
+        "frozenNativeClockMs": 4000,
+        "pausedWallDurationMs": 1000,
+        "partialExitFallbackCleared": true,
+        "reentryStartedFromMs": 0,
+        "samples": [
+          {
+            "frame": 1,
+            "nativeTimeMs": 4000,
+            "logicalTimeMs": 4100,
+            "state": "Playing",
+            "holdTier": null
+          },
+          {
+            "frame": 2,
+            "nativeTimeMs": 4000,
+            "logicalTimeMs": 4200,
+            "state": "Playing",
+            "holdTier": null
+          },
+          {
+            "frame": 3,
+            "nativeTimeMs": 4000,
+            "logicalTimeMs": 4300,
+            "state": "Playing",
+            "holdTier": null
+          },
+          {
+            "frame": 4,
+            "nativeTimeMs": 4000,
+            "logicalTimeMs": 4400,
+            "state": "Playing",
+            "holdTier": null
+          },
+          {
+            "frame": 5,
+            "nativeTimeMs": 4000,
+            "logicalTimeMs": 4500,
+            "state": "Playing",
+            "holdTier": null
+          },
+          {
+            "frame": 6,
+            "nativeTimeMs": 4000,
+            "logicalTimeMs": 4600,
+            "state": "Playing",
+            "holdTier": null
+          },
+          {
+            "frame": 7,
+            "nativeTimeMs": 4000,
+            "logicalTimeMs": 4700,
+            "state": "Playing",
+            "holdTier": null
+          },
+          {
+            "frame": 8,
+            "nativeTimeMs": 4000,
+            "logicalTimeMs": 4800,
+            "state": "Playing",
+            "holdTier": null
+          },
+          {
+            "frame": 9,
+            "nativeTimeMs": 4000,
+            "logicalTimeMs": 4900,
+            "state": "Playing",
+            "holdTier": null
+          },
+          {
+            "frame": 10,
+            "nativeTimeMs": 4000,
+            "logicalTimeMs": 5000,
+            "state": "Exited",
+            "holdTier": "Miss"
+          }
+        ],
+        "holdFinalizedAtMs": 5000,
+        "completionRecords": 1,
+        "realTeardownResetCalls": 3
+      }
+    },
+    {
+      "name": "Actual B resource loads independently and preserves default 48-key half-open grid resolution",
+      "pass": true,
+      "evidence": {
+        "chartId": "guidance-b-1",
+        "nodeCount": 4,
+        "kinds": [
+          "Drag",
+          "Hold",
+          "Tap"
+        ],
+        "layoutSlots": 48
+      }
+    }
+  ]
+}

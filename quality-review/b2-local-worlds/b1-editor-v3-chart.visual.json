@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "chartId": "b1-editor-v3-chart",
+  "nodes": [
+    {
+      "nodeId": "node-music-note-2",
+      "color": {
+        "r": 110,
+        "g": 190,
+        "b": 255
+      }
+    },
+    {
+      "nodeId": "node-music-note-3",
+      "color": {
+        "r": 110,
+        "g": 190,
+        "b": 255
+      }
+    },
+    {
+      "nodeId": "node-music-note-5",
+      "color": {
+        "r": 230,
+        "g": 166,
+        "b": 96
+      }
+    },
+    {
+      "nodeId": "node-music-note-6",
+      "color": {
+        "r": 230,
+        "g": 166,
+        "b": 96
+      }
+    }
+  ]
+}

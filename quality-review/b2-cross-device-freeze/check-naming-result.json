@@ -1,0 +1,7 @@
+{
+  "command": "npm run check:naming",
+  "finishedAt": "2026-10-10T13:00:51.9695833+00:00",
+  "log": "check-naming.log",
+  "exitCode": 0,
+  "startedAt": "2026-10-10T13:00:51.2747196+00:00"
+}

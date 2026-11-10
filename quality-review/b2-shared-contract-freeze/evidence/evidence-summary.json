@@ -1,0 +1,98 @@
+{
+  "generatedUtc": "2026-10-11T03:57:05.394Z",
+  "stage": "B2.5c precondition P3 documentation-only freeze",
+  "pass": false,
+  "evidenceDisposition": "Three gates PASS; raw protection FAIL preserved; two external document changes attributed by user to TraeAuthorized. Attribution closed; rawHashEquality=false.",
+  "sourceAttributionClosed": true,
+  "sourceAttribution": {
+    "closedUtc": "2026-10-11T03:42:11.006Z",
+    "authority": "User confirmed in active P3 conversation, relayed by root to evidence agent: docs/NAMEBOOK.md and docs/spec/stage-1.md are Trae-authorized synchronization of B2.5b/v3.16.",
+    "classification": "TraeAuthorized",
+    "coveredChanges": [
+      "docs/NAMEBOOK.md",
+      "docs/spec/stage-1.md"
+    ],
+    "scope": "Attribution closure for the two external document changes observed during P3; not authorization for evidence agent to edit docs, alter old contracts or reset evidence.",
+    "rawHashEquality": false,
+    "rawProtectionPass": false,
+    "attributionClosed": true,
+    "unexpectedChanged": [],
+    "unexpectedAdded": [],
+    "unexpectedRemoved": [],
+    "baselineSha256": "b3cdbde22a9823fb547e1ac882094709de6d96603679675737920698c486f66d",
+    "firstRawFailure": "first-protection-failure/protected-comparison.json",
+    "finalRawComparison": "protected-comparison.json",
+    "action": "Original baseline and first raw FAIL preserved. No protected source/docs were changed by this evidence agent; no rollback or rebaseline performed."
+  },
+  "gates": [
+    {
+      "name": "check-naming",
+      "pass": true,
+      "exitCode": 0,
+      "errors": 0,
+      "warnings": 22,
+      "priorB25bRawSha256": "a4d096b14413e0aeae14d1e11169b2e6af60d30403d1c70d954e9395128b2063",
+      "p3BaselineRawSha256": "a4d096b14413e0aeae14d1e11169b2e6af60d30403d1c70d954e9395128b2063",
+      "p3FinalRawSha256": "a4d096b14413e0aeae14d1e11169b2e6af60d30403d1c70d954e9395128b2063",
+      "sameRawAsB25b": true,
+      "sameRawAsP3Baseline": true,
+      "addedWarnings": [],
+      "removedWarnings": []
+    },
+    {
+      "name": "check-dependencies",
+      "pass": true,
+      "exitCode": 0,
+      "errors": 0,
+      "warnings": null,
+      "priorB25bRawSha256": "fb826fecb706599abff46a51f038c973bdec61799bb09c77f252ebdf2cc5d984",
+      "p3BaselineRawSha256": "fb826fecb706599abff46a51f038c973bdec61799bb09c77f252ebdf2cc5d984",
+      "p3FinalRawSha256": "fb826fecb706599abff46a51f038c973bdec61799bb09c77f252ebdf2cc5d984",
+      "sameRawAsB25b": true,
+      "sameRawAsP3Baseline": true,
+      "addedWarnings": [],
+      "removedWarnings": []
+    },
+    {
+      "name": "typecheck",
+      "pass": true,
+      "exitCode": 0,
+      "errors": null,
+      "warnings": null,
+      "priorB25bRawSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "p3BaselineRawSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "p3FinalRawSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sameRawAsB25b": true,
+      "sameRawAsP3Baseline": true,
+      "addedWarnings": [],
+      "removedWarnings": []
+    }
+  ],
+  "protected": {
+    "pass": false,
+    "beforeCount": 7042,
+    "afterCount": 7042,
+    "changed": [
+      "docs/NAMEBOOK.md",
+      "docs/spec/stage-1.md"
+    ],
+    "removed": [],
+    "added": [],
+    "baselineCapturedUtc": "2026-10-11T03:22:00.381Z",
+    "comparedUtc": "2026-10-11T03:57:05.029Z",
+    "baselineSha256": "b3cdbde22a9823fb547e1ac882094709de6d96603679675737920698c486f66d",
+    "historicalQualityFilesCovered": 6622,
+    "serverPackageFilesCovered": 19,
+    "junctionsCovered": [
+      {
+        "path": "assets/scripts/constants",
+        "target": "D:\\Project\\A_New_Begin\\Neurou_official\\constants"
+      },
+      {
+        "path": "assets/scripts/src",
+        "target": "D:\\Project\\A_New_Begin\\Neurou_official\\src"
+      }
+    ]
+  },
+  "limits": "Three existing code gates establish unchanged source health, not executable P3 schema correctness or Relay/security implementation. The P3 schema is a document draft; no ContractAdapter or network Relay mechanism was added. Protection begins at this recorded P3 baseline and excludes this new delivery directory, dependencies/caches/compiled outputs, private local data, keys and runtime binary payload. All older raw FAIL/WARN evidence is preserved as historical bytes."
+}

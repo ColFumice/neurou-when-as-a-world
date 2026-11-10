@@ -1,0 +1,97 @@
+{
+  "phase": "B2.5c-2c paused P11 evidence index and interpretation",
+  "generatedUtc": "2026-10-11T09:06:52.651Z",
+  "status": "PausedP11",
+  "stageComplete": false,
+  "history": [
+    {
+      "path": "evidence/history-b24/implementation/results.json",
+      "sha256": "701405268ecbdf6ba21f43d9a90d4b79f532dbc2ae96c343d0f160d5da56f8b8",
+      "category": "ContractAdapterLogicalFixture",
+      "passed": 227,
+      "pass": true
+    },
+    {
+      "path": "evidence/history-c1/implementation/results.json",
+      "sha256": "16586c5c5a3b4a6a19428f770f2152d1453e39b70df0ef4286143f66473d3fed",
+      "category": "PureCanonicalValidatorReplay",
+      "passed": 154,
+      "pass": true
+    },
+    {
+      "path": "evidence/history-b-auth/implementation/results.json",
+      "sha256": "f3c011cefebba595fc9762d3a2133dd1588d6abf43121983d2737d4921e6e552",
+      "category": "OldAuth16ServerHttpPGPlus24ClientOraclePlus6ClientHttpPG",
+      "passed": 46,
+      "pass": true
+    },
+    {
+      "path": "evidence/history-c2b-pure/results.json",
+      "sha256": "5a89fca8f1565da79a0ba15afee42618477fc6b8df2859105bf1cd992b369cb8",
+      "category": "Authority32ProtocolPlus18ClientTransportOracle",
+      "passed": 50,
+      "pass": true
+    },
+    {
+      "path": "evidence/history-c2b-http/verified-results.json",
+      "sha256": "17a9cd25aa325fc92bbd1e5a45a1d869d8358e76d18bd6a2e7a357441bcbe3dd",
+      "category": "Authority20ServerAnd11ProductionAdapterRealHttpPG",
+      "passed": 31,
+      "pass": true
+    }
+  ],
+  "historicalPassTotal": 508,
+  "pass": true,
+  "currentSourceHealth": {
+    "gates": {
+      "path": "evidence/gate-runs/current-paused-source-state/results.json",
+      "sha256": "cee9b43f4a32a8501937a7b25c9b334d24fed1de49bda85e5c8bb3733d1fb56d",
+      "pass": true,
+      "warningCount": 45
+    },
+    "serverNoEmit": {
+      "path": "evidence/server-paused-noemit-results.json",
+      "sha256": "533a8153b3fb68f8356af4ca3e8c0ed949e4476dd50d81ff9b5dae8ff47942f4",
+      "pass": true
+    }
+  },
+  "workInProgress": {
+    "audit": {
+      "path": "evidence/protected-implementation-paused-audit.json",
+      "sha256": "9e66cf208a710a5678dd8d28df49e340a94568850b165e512a1aff5b8c91ce61",
+      "pass": true,
+      "changed": [
+        "src/director/IntentPort.ts",
+        "src/presentation/RealSharedServiceSessionAdapter.ts"
+      ],
+      "added": [
+        "server/src/buildRelayServer.ts",
+        "server/src/RelayRoute.ts",
+        "server/src/RelayService.ts",
+        "server/src/RelayStorage.ts",
+        "src/presentation/RealCommitRelayAdapter.ts"
+      ]
+    },
+    "diff": {
+      "path": "evidence/wip-code.diff",
+      "sha256": "fffe43a6bf8dc72246094b6cef9f6802fea61495478bcb32de6985437b88a285",
+      "sourceManifest": "evidence/wip-changed-files.json",
+      "sourceManifestSha256": "b760ef4dcc97c9de950dfa43acd8cd21c5fda3eb588dc3c1e9f30a52e7cd1bc6"
+    },
+    "names": {
+      "path": "evidence/wip-new-names.json",
+      "sha256": "f5486b70072e37a1d46d89597901f87bc1fa5459852e6a06ec371f38d4fbdffe",
+      "publicTopLevelDeclarations": 8,
+      "cumulativePublicTopLevelDeclarations": 72,
+      "approvedVocabulary": false
+    }
+  },
+  "interpretation": [
+    "All original baseline/protected-final-audit prerequisite files remain immutable. Paused implementation audit is separate; it proves current allowed bytes, not stage completion.",
+    "The inherited baseline limits sentence No PG process or Relay test is started refers only to the original prerequisite capture stage. Afterwards the parent launched a new c-2c PostgreSQL17 cluster at 127.0.0.1:55438; current historical HTTP evidence uses separate new databases. No final Relay acceptance was run by this evidence task.",
+    "c-2b HTTP raw summary false/-1 is preserved. Actual subprocesses and all cases passed; verified-results.json separately corrects a Node default spec reporter count-prefix parser, without changing raw logs or test assertions.",
+    "Client agent disclosed one transient rewrite of accepted c-2b client-compiled session JS while directly rerunning the old oracle, then exact restoration from saved original source. Current protection audit hashes old evidence and proves final byte identity; it does not claim old generated evidence was never written during the session.",
+    "All 508 passing checks are historical regression categories. They do not establish new Relay HTTP/PG acceptance, c-2d key delivery, c-2e full dual-client chain, LAN TLS, or product integration.",
+    "Both pre-existing .shared-kernel trees have 14 hashed files each and no current changes. They remain the intermediate compile tree and intentional shared-dist runtime layout copy, not separate implementations or extra test cases."
+  ]
+}

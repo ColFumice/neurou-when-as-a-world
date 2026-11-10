@@ -1,0 +1,177 @@
+{
+  "schemaVersion": 1,
+  "documentId": "primary-rain-world-draft-1",
+  "chartId": "primary-rain-world-1",
+  "tier": "World",
+  "source": {
+    "schemaVersion": 1,
+    "sourceId": "primary-rain-world-music-1",
+    "sourceRevision": "revision-0-634d299f3ae4aec1",
+    "provenance": "Midi",
+    "layoutVersion": "pad-layout-2",
+    "aspectRatio": 1.7777777777777777,
+    "mappingVersion": "music-mapping-1",
+    "mediaDurationMs": 6000,
+    "events": [
+      {
+        "id": "rain-note-1",
+        "trackId": "rain-memory-piano",
+        "lineId": "rain-memory-line",
+        "timeMs": 750,
+        "position": {
+          "u": 0.045454545454545456,
+          "v": 0.375
+        },
+        "color": {
+          "r": 146,
+          "g": 202,
+          "b": 219
+        },
+        "pitch": 60,
+        "drumType": null,
+        "velocity": 68,
+        "endTimeMs": 1125,
+        "emphasis": false
+      },
+      {
+        "id": "rain-note-2",
+        "trackId": "rain-memory-piano",
+        "lineId": "rain-memory-line",
+        "timeMs": 1500,
+        "position": {
+          "u": 0.13636363636363635,
+          "v": 0.375
+        },
+        "color": {
+          "r": 146,
+          "g": 202,
+          "b": 219
+        },
+        "pitch": 64,
+        "drumType": null,
+        "velocity": 72,
+        "endTimeMs": 1875,
+        "emphasis": false
+      },
+      {
+        "id": "rain-note-3",
+        "trackId": "rain-memory-piano",
+        "lineId": "rain-memory-line",
+        "timeMs": 2250,
+        "position": {
+          "u": 0.22727272727272727,
+          "v": 0.375
+        },
+        "color": {
+          "r": 146,
+          "g": 202,
+          "b": 219
+        },
+        "pitch": 67,
+        "drumType": null,
+        "velocity": 76,
+        "endTimeMs": 2625,
+        "emphasis": false
+      },
+      {
+        "id": "rain-note-4",
+        "trackId": "rain-memory-piano",
+        "lineId": "rain-memory-line",
+        "timeMs": 3000,
+        "position": {
+          "u": 0.3181818181818182,
+          "v": 0.375
+        },
+        "color": {
+          "r": 146,
+          "g": 202,
+          "b": 219
+        },
+        "pitch": 69,
+        "drumType": null,
+        "velocity": 74,
+        "endTimeMs": 3375,
+        "emphasis": false
+      },
+      {
+        "id": "rain-note-5",
+        "trackId": "rain-memory-piano",
+        "lineId": "rain-memory-line",
+        "timeMs": 3750,
+        "position": {
+          "u": 0.40909090909090906,
+          "v": 0.375
+        },
+        "color": {
+          "r": 146,
+          "g": 202,
+          "b": 219
+        },
+        "pitch": 67,
+        "drumType": null,
+        "velocity": 70,
+        "endTimeMs": 4125,
+        "emphasis": false
+      },
+      {
+        "id": "rain-note-6",
+        "trackId": "rain-memory-piano",
+        "lineId": "rain-memory-line",
+        "timeMs": 4500,
+        "position": {
+          "u": 0.5,
+          "v": 0.375
+        },
+        "color": {
+          "r": 146,
+          "g": 202,
+          "b": 219
+        },
+        "pitch": 72,
+        "drumType": null,
+        "velocity": 64,
+        "endTimeMs": 4875,
+        "emphasis": false
+      }
+    ]
+  },
+  "selection": {
+    "heads": {
+      "rain-memory-line": "rain-note-1"
+    },
+    "nodes": {
+      "rain-note-1": {
+        "kind": "Tap",
+        "holdEndEventId": null
+      },
+      "rain-note-2": {
+        "kind": "Tap",
+        "holdEndEventId": null
+      },
+      "rain-note-3": {
+        "kind": "Tap",
+        "holdEndEventId": null
+      },
+      "rain-note-4": {
+        "kind": "Tap",
+        "holdEndEventId": null
+      },
+      "rain-note-5": {
+        "kind": "Tap",
+        "holdEndEventId": null
+      },
+      "rain-note-6": {
+        "kind": "Tap",
+        "holdEndEventId": null
+      }
+    }
+  },
+  "history": {
+    "entries": [],
+    "cursor": 0
+  },
+  "media": {
+    "videoPath": null,
+    "audioPath": "audio/primary-rain-world-1"
+  }
+}

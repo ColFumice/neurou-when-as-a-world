@@ -1,0 +1,29 @@
+{
+  "allPreserved": true,
+  "files": [
+    {
+      "path": "quality-review/world-folder/b-regression.cjs",
+      "originalSha256": "af5d63c60e4eba2ad6975deb82518d385ae5ebc7c6ab0559e2bb490c29722eaa",
+      "currentSha256": "af5d63c60e4eba2ad6975deb82518d385ae5ebc7c6ab0559e2bb490c29722eaa",
+      "preserved": true
+    },
+    {
+      "path": "quality-review/world-folder/c-regression.cjs",
+      "originalSha256": "5908118d03f7a65d64f412342d0ec80a4441f3545d327486e69ee1c0f4028abf",
+      "currentSha256": "5908118d03f7a65d64f412342d0ec80a4441f3545d327486e69ee1c0f4028abf",
+      "preserved": true
+    },
+    {
+      "path": "quality-review/world-folder/pad-regression.cjs",
+      "originalSha256": "69c89d3619ba19589a46f3e7a1dd02dca9fb8a02c6b94332fe8c195a38017847",
+      "currentSha256": "69c89d3619ba19589a46f3e7a1dd02dca9fb8a02c6b94332fe8c195a38017847",
+      "preserved": true
+    },
+    {
+      "path": "quality-review/world-folder/editor-regression.cjs",
+      "originalSha256": "59bf06796123ae374c69f6722fe397a213b7d476d60d08fcf828032822e204d6",
+      "currentSha256": "59bf06796123ae374c69f6722fe397a213b7d476d60d08fcf828032822e204d6",
+      "preserved": true
+    }
+  ]
+}

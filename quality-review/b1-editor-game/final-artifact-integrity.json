@@ -1,0 +1,541 @@
+{
+  "generatedAt": "2026-10-10T07:49:03.776Z",
+  "reviewer": "architecture_audit independent subagent",
+  "scope": "Final read-only deliverable integrity check. No tests rerun; no production changes.",
+  "pass": true,
+  "findings": [],
+  "productionFiles": {
+    "count": 6,
+    "matched": 6,
+    "records": [
+      {
+        "path": "assets/scripts/SceneBuilder.ts",
+        "change": "modified",
+        "expectedSha256": "10371fdc3d2a1d66f63d87d019d8777d0bb8e80191788e65bf8eb2b6002c09c9",
+        "currentSha256": "10371fdc3d2a1d66f63d87d019d8777d0bb8e80191788e65bf8eb2b6002c09c9",
+        "match": true,
+        "baselineSha256": "221d6069895058358d3b70774377e0336332a1e628cfb540eb13ab674b89294b",
+        "baselineMatches": true
+      },
+      {
+        "path": "src/presentation/ChartPadView.ts",
+        "change": "modified",
+        "expectedSha256": "9f7286486c4672ad4359c7a2fb531e2f120af4ca0ffe507507761f07fa8e2818",
+        "currentSha256": "9f7286486c4672ad4359c7a2fb531e2f120af4ca0ffe507507761f07fa8e2818",
+        "match": true,
+        "baselineSha256": "426f0888c6bbb7e3cfc1d609bc942e353ee6503af54d27c9942e7d83db9b2160",
+        "baselineMatches": true
+      },
+      {
+        "path": "assets/resources/chart/music-project-1-chart.json",
+        "change": "added",
+        "expectedSha256": "74e30f25507b8939cd6a6cd2ffda3ccf7bae92ec590c4e5bd293e28975c8935c",
+        "currentSha256": "74e30f25507b8939cd6a6cd2ffda3ccf7bae92ec590c4e5bd293e28975c8935c",
+        "match": true
+      },
+      {
+        "path": "assets/resources/chart/music-project-1-chart.json.meta",
+        "change": "added",
+        "expectedSha256": "f43b2a4d563b702ae3195912123aa43f03fe099b7d87daf16e9f4f37109fcb89",
+        "currentSha256": "f43b2a4d563b702ae3195912123aa43f03fe099b7d87daf16e9f4f37109fcb89",
+        "match": true
+      },
+      {
+        "path": "assets/resources/chart/music-project-1-chart.visual.json",
+        "change": "added",
+        "expectedSha256": "664bb750567353b13d1d9fdaa6e5da11e6458be1b232dbe27339754eeefdc6ac",
+        "currentSha256": "664bb750567353b13d1d9fdaa6e5da11e6458be1b232dbe27339754eeefdc6ac",
+        "match": true
+      },
+      {
+        "path": "assets/resources/chart/music-project-1-chart.visual.json.meta",
+        "change": "added",
+        "expectedSha256": "c63da1a971a7fb202deace86e33374f20376399e70a7e323350d7c0a4abf0e86",
+        "currentSha256": "c63da1a971a7fb202deace86e33374f20376399e70a7e323350d7c0a4abf0e86",
+        "match": true
+      }
+    ]
+  },
+  "productionDiff": {
+    "path": "quality-review/b1-editor-game/production.diff",
+    "method": "Regenerate all six no-index diffs in memory; normalize only CRLF and the baseline-side path prefixes used in delivery.",
+    "matchesBaselineAndCurrentFiles": true,
+    "sha256": "9fe52e9663d9c17b14aabb3980c9c2a764dfde3ed5de482460859154b0dd0bf2"
+  },
+  "creatorImportedMetadata": {
+    "records": [
+      {
+        "path": "assets/resources/chart/music-project-1-chart.json.meta",
+        "exists": true,
+        "imported": true,
+        "importer": "json",
+        "files": [
+          ".json"
+        ],
+        "uuid": "63863f1e-7eac-4fc4-b99a-f20879882563",
+        "sha256": "f43b2a4d563b702ae3195912123aa43f03fe099b7d87daf16e9f4f37109fcb89"
+      },
+      {
+        "path": "assets/resources/chart/music-project-1-chart.visual.json.meta",
+        "exists": true,
+        "imported": true,
+        "importer": "json",
+        "files": [
+          ".json"
+        ],
+        "uuid": "c1b81c0d-bc48-4434-982d-8224e0885fda",
+        "sha256": "c63da1a971a7fb202deace86e33374f20376399e70a7e323350d7c0a4abf0e86"
+      }
+    ],
+    "supersedes": "protection-results.json creatorGeneratedMetadata.exists=false is the earlier pre-import snapshot, not final resource state."
+  },
+  "finalCreatorPreview": {
+    "path": "quality-review/b1-editor-game/creator-preview-results.json",
+    "sha256": "690e7ccaab88477b599f9f7d9c48b7747fc20916a0b66970f784dc6d7925d59a",
+    "reportedPass": true,
+    "url": "http://localhost:7456/",
+    "rendererErrors": [],
+    "compilationUnchanged": true,
+    "compiledSourceCount": 17,
+    "compiledSourceMatches": [
+      {
+        "file": "assets/scripts/SceneBuilder.ts",
+        "snapshotSha256": "10371fdc3d2a1d66f63d87d019d8777d0bb8e80191788e65bf8eb2b6002c09c9",
+        "currentSha256": "10371fdc3d2a1d66f63d87d019d8777d0bb8e80191788e65bf8eb2b6002c09c9",
+        "currentMatchesSnapshot": true,
+        "sourceMapMatches": true,
+        "servedEqualsCompilerOutput": true
+      },
+      {
+        "file": "assets/scripts/WorldFolderBuilder.ts",
+        "snapshotSha256": "c0b7214d85a9eee4a244d870a369e366909734ea1ab5b0f0f6c5743d8430962b",
+        "currentSha256": "c0b7214d85a9eee4a244d870a369e366909734ea1ab5b0f0f6c5743d8430962b",
+        "currentMatchesSnapshot": true,
+        "sourceMapMatches": true,
+        "servedEqualsCompilerOutput": true
+      },
+      {
+        "file": "assets/scripts/MusicEditorBuilder.ts",
+        "snapshotSha256": "ee326b12bd4dcdac03779502d1fd39ba04d0e78bd21af943071a8fbc9851c124",
+        "currentSha256": "ee326b12bd4dcdac03779502d1fd39ba04d0e78bd21af943071a8fbc9851c124",
+        "currentMatchesSnapshot": true,
+        "sourceMapMatches": true,
+        "servedEqualsCompilerOutput": true
+      },
+      {
+        "file": "src/presentation/ChartPadView.ts",
+        "snapshotSha256": "9f7286486c4672ad4359c7a2fb531e2f120af4ca0ffe507507761f07fa8e2818",
+        "currentSha256": "9f7286486c4672ad4359c7a2fb531e2f120af4ca0ffe507507761f07fa8e2818",
+        "currentMatchesSnapshot": true,
+        "sourceMapMatches": true,
+        "servedEqualsCompilerOutput": true
+      },
+      {
+        "file": "src/presentation/LineEraseEffect.ts",
+        "snapshotSha256": "dd236db85a35abe343477cdbfafead610ccb29ef709fc2c250e2c59a632c0697",
+        "currentSha256": "dd236db85a35abe343477cdbfafead610ccb29ef709fc2c250e2c59a632c0697",
+        "currentMatchesSnapshot": true,
+        "sourceMapMatches": true,
+        "servedEqualsCompilerOutput": true
+      },
+      {
+        "file": "src/presentation/InputCollector.ts",
+        "snapshotSha256": "1cf85eb3e8de3621bc199a3e6e96cba92a1309fb6172ce1221ef692281b67420",
+        "currentSha256": "1cf85eb3e8de3621bc199a3e6e96cba92a1309fb6172ce1221ef692281b67420",
+        "currentMatchesSnapshot": true,
+        "sourceMapMatches": true,
+        "servedEqualsCompilerOutput": true
+      },
+      {
+        "file": "src/presentation/FrameDriver.ts",
+        "snapshotSha256": "e70232f3ef6f803bba02a6c2af1d40107aea95400dfd65e9845636a836faf3a6",
+        "currentSha256": "e70232f3ef6f803bba02a6c2af1d40107aea95400dfd65e9845636a836faf3a6",
+        "currentMatchesSnapshot": true,
+        "sourceMapMatches": true,
+        "servedEqualsCompilerOutput": true
+      },
+      {
+        "file": "src/presentation/MusicEditorView.ts",
+        "snapshotSha256": "fc5a6d4c774d841177b264d67fdac2658226f2df976cb5f95cef3d7fb50e425d",
+        "currentSha256": "fc5a6d4c774d841177b264d67fdac2658226f2df976cb5f95cef3d7fb50e425d",
+        "currentMatchesSnapshot": true,
+        "sourceMapMatches": true,
+        "servedEqualsCompilerOutput": true
+      },
+      {
+        "file": "src/presentation/GuidanceEditorView.ts",
+        "snapshotSha256": "894e7dcccc9b071b016b7c8233952cdb6b9d19593868ccf80580154466738175",
+        "currentSha256": "894e7dcccc9b071b016b7c8233952cdb6b9d19593868ccf80580154466738175",
+        "currentMatchesSnapshot": true,
+        "sourceMapMatches": true,
+        "servedEqualsCompilerOutput": true
+      },
+      {
+        "file": "src/editor/GuidanceEditorSession.ts",
+        "snapshotSha256": "7be0662fcf921b04908ad4657b1ad066e35387fe7880d6acd9a1de9ec7e4eb8b",
+        "currentSha256": "7be0662fcf921b04908ad4657b1ad066e35387fe7880d6acd9a1de9ec7e4eb8b",
+        "currentMatchesSnapshot": true,
+        "sourceMapMatches": true,
+        "servedEqualsCompilerOutput": true
+      },
+      {
+        "file": "src/chart/ChartPremiere.ts",
+        "snapshotSha256": "50617d366ae7c5b8dd6b402389f1ef9e43822bf24e03f0687476e1558853eb6d",
+        "currentSha256": "50617d366ae7c5b8dd6b402389f1ef9e43822bf24e03f0687476e1558853eb6d",
+        "currentMatchesSnapshot": true,
+        "sourceMapMatches": true,
+        "servedEqualsCompilerOutput": true
+      },
+      {
+        "file": "src/chart/GuidanceChart.ts",
+        "snapshotSha256": "a4e46b00d782f393b736ed6a71282caf24961df40feb503cbadce734b0d71faa",
+        "currentSha256": "a4e46b00d782f393b736ed6a71282caf24961df40feb503cbadce734b0d71faa",
+        "currentMatchesSnapshot": true,
+        "sourceMapMatches": true,
+        "servedEqualsCompilerOutput": true
+      },
+      {
+        "file": "src/chart/GuidanceTiming.ts",
+        "snapshotSha256": "6c8b1a55fba9c64c7c70644b8bbd6985c3c5318086b13d1c9aab4dd4ebdbcd4a",
+        "currentSha256": "6c8b1a55fba9c64c7c70644b8bbd6985c3c5318086b13d1c9aab4dd4ebdbcd4a",
+        "currentMatchesSnapshot": true,
+        "sourceMapMatches": true,
+        "servedEqualsCompilerOutput": true
+      },
+      {
+        "file": "src/director/IntentPort.ts",
+        "snapshotSha256": "f82126332e3caf1dafb640306d2d3d2fe3ad196ed18af1f0313b7a5e9dc095e2",
+        "currentSha256": "f82126332e3caf1dafb640306d2d3d2fe3ad196ed18af1f0313b7a5e9dc095e2",
+        "currentMatchesSnapshot": true,
+        "sourceMapMatches": true,
+        "servedEqualsCompilerOutput": true
+      },
+      {
+        "file": "src/presentation/AudioOutputClock.ts",
+        "snapshotSha256": "16ea1319d3380bb82940ca85dfb06ede1f259bd509589f7b9b35a395c52c9414",
+        "currentSha256": "16ea1319d3380bb82940ca85dfb06ede1f259bd509589f7b9b35a395c52c9414",
+        "currentMatchesSnapshot": true,
+        "sourceMapMatches": true,
+        "servedEqualsCompilerOutput": true
+      },
+      {
+        "file": "src/musicEditor/ChartSourceBuilder.ts",
+        "snapshotSha256": "2cbe0e42768a890745806a7c4edcd68ed8197ac88ad198982d7df60b6793221b",
+        "currentSha256": "2cbe0e42768a890745806a7c4edcd68ed8197ac88ad198982d7df60b6793221b",
+        "currentMatchesSnapshot": true,
+        "sourceMapMatches": true,
+        "servedEqualsCompilerOutput": true
+      },
+      {
+        "file": "src/musicEditor/MusicEditorSession.ts",
+        "snapshotSha256": "ef6f514f37a34c715117ed871b4c1a8525e5a85c3d0c3d3a754bf17a7dbac97b",
+        "currentSha256": "ef6f514f37a34c715117ed871b4c1a8525e5a85c3d0c3d3a754bf17a7dbac97b",
+        "currentMatchesSnapshot": true,
+        "sourceMapMatches": true,
+        "servedEqualsCompilerOutput": true
+      }
+    ],
+    "resolutionComparison": {
+      "sameExportedGameplayBytes": true,
+      "sameExportedColorBytes": true,
+      "sameChartResult": true,
+      "eachLedgerDeltaRelativeToT6": 1,
+      "actualPngAndCanvasDimensions": [
+        "1920x1080",
+        "2560x1440"
+      ]
+    },
+    "resolutions": [
+      {
+        "resolution": "1920x1080",
+        "reportedPass": true,
+        "allRecordedChecksPass": true,
+        "recordedChecks": 10,
+        "chartId": "music-project-1-chart",
+        "schemaVersion": 3,
+        "loadedColorCount": 4,
+        "loadError": null,
+        "result": {
+          "chartId": "music-project-1-chart",
+          "tier": "Regular",
+          "perfectCount": 4,
+          "goodCount": 0,
+          "missCount": 0,
+          "totalScore": 400,
+          "finishedAtMs": 12000,
+          "completed": true
+        },
+        "baselineLedgerCount": 1,
+        "completedLedgerCount": 2,
+        "returnedLedgerCount": 2,
+        "ledgerDelta": 1,
+        "automaticWorldReturn": {
+          "state": "Exited",
+          "entered": false,
+          "worldActive": true
+        },
+        "teardown": {
+          "frameDrivers": 0,
+          "inputCollectors": 0,
+          "worldCount": 0,
+          "errors": []
+        },
+        "syncSummary": {
+          "samples": 359,
+          "maxRawPresentedErrorMs": 12.968000000001666
+        },
+        "screenshots": [
+          {
+            "file": "1920x1080-00-music-source-export.png",
+            "sha256": "bccc26e831135853d337b00606bbbe9dcb0e5473126775816a6ff04e5ea6b553",
+            "expectedSha256": "bccc26e831135853d337b00606bbbe9dcb0e5473126775816a6ff04e5ea6b553",
+            "hashMatches": true,
+            "pngDimensions": [
+              1920,
+              1080
+            ],
+            "dimensionsMatch": true
+          },
+          {
+            "file": "1920x1080-01-editor-export-v3.png",
+            "sha256": "d2992e3c4835bea358e3b617ee72e1b1a8f2c45c5511b591589ecfe10cbeaedd",
+            "expectedSha256": "d2992e3c4835bea358e3b617ee72e1b1a8f2c45c5511b591589ecfe10cbeaedd",
+            "hashMatches": true,
+            "pngDimensions": [
+              1920,
+              1080
+            ],
+            "dimensionsMatch": true
+          },
+          {
+            "file": "1920x1080-02-editor-preview-zero-gameplay.png",
+            "sha256": "cf7504dc2a594e3799aab97076a766bba92736a7dbba2341b6ec06f3455907fd",
+            "expectedSha256": "cf7504dc2a594e3799aab97076a766bba92736a7dbba2341b6ec06f3455907fd",
+            "hashMatches": true,
+            "pngDimensions": [
+              1920,
+              1080
+            ],
+            "dimensionsMatch": true
+          },
+          {
+            "file": "1920x1080-03-game-resources-load-v3.png",
+            "sha256": "c7265fe787cbd7a9e3edfc9f3f6e759d95b3ba0c16702f137f63fa8ebc265d8a",
+            "expectedSha256": "c7265fe787cbd7a9e3edfc9f3f6e759d95b3ba0c16702f137f63fa8ebc265d8a",
+            "hashMatches": true,
+            "pngDimensions": [
+              1920,
+              1080
+            ],
+            "dimensionsMatch": true
+          },
+          {
+            "file": "1920x1080-04-natural-deep-trace-approach.png",
+            "sha256": "87baa9f31d59a0c5004bf58ac1a5fa9b2dfe9309adc13af94661020facd6744b",
+            "expectedSha256": "87baa9f31d59a0c5004bf58ac1a5fa9b2dfe9309adc13af94661020facd6744b",
+            "hashMatches": true,
+            "pngDimensions": [
+              1920,
+              1080
+            ],
+            "dimensionsMatch": true
+          },
+          {
+            "file": "1920x1080-05-deep-trace-enter-v3.png",
+            "sha256": "a098bca7d6f3f867ec30a6a269d40b5c47d6d92010c578e78205d6b044e1c0a0",
+            "expectedSha256": "a098bca7d6f3f867ec30a6a269d40b5c47d6d92010c578e78205d6b044e1c0a0",
+            "hashMatches": true,
+            "pngDimensions": [
+              1920,
+              1080
+            ],
+            "dimensionsMatch": true
+          },
+          {
+            "file": "1920x1080-06-v3-tap-drag-hold-performance.png",
+            "sha256": "b815e803234fd6ccc38f455971a1301639a192f4d10d58665b97883f5181b68a",
+            "expectedSha256": "b815e803234fd6ccc38f455971a1301639a192f4d10d58665b97883f5181b68a",
+            "hashMatches": true,
+            "pngDimensions": [
+              1920,
+              1080
+            ],
+            "dimensionsMatch": true
+          },
+          {
+            "file": "1920x1080-07-v3-completed-auto-return.png",
+            "sha256": "366bb2e8f34a3e0ce0653bae40d3f98f865664b6c01f0c6ad122740b7e0aa404",
+            "expectedSha256": "366bb2e8f34a3e0ce0653bae40d3f98f865664b6c01f0c6ad122740b7e0aa404",
+            "hashMatches": true,
+            "pngDimensions": [
+              1920,
+              1080
+            ],
+            "dimensionsMatch": true
+          },
+          {
+            "file": "1920x1080-08-auto-return-world-ledger-plus-one.png",
+            "sha256": "366bb2e8f34a3e0ce0653bae40d3f98f865664b6c01f0c6ad122740b7e0aa404",
+            "expectedSha256": "366bb2e8f34a3e0ce0653bae40d3f98f865664b6c01f0c6ad122740b7e0aa404",
+            "hashMatches": true,
+            "pngDimensions": [
+              1920,
+              1080
+            ],
+            "dimensionsMatch": true
+          }
+        ]
+      },
+      {
+        "resolution": "2560x1440",
+        "reportedPass": true,
+        "allRecordedChecksPass": true,
+        "recordedChecks": 10,
+        "chartId": "music-project-1-chart",
+        "schemaVersion": 3,
+        "loadedColorCount": 4,
+        "loadError": null,
+        "result": {
+          "chartId": "music-project-1-chart",
+          "tier": "Regular",
+          "perfectCount": 4,
+          "goodCount": 0,
+          "missCount": 0,
+          "totalScore": 400,
+          "finishedAtMs": 12000,
+          "completed": true
+        },
+        "baselineLedgerCount": 1,
+        "completedLedgerCount": 2,
+        "returnedLedgerCount": 2,
+        "ledgerDelta": 1,
+        "automaticWorldReturn": {
+          "state": "Exited",
+          "entered": false,
+          "worldActive": true
+        },
+        "teardown": {
+          "frameDrivers": 0,
+          "inputCollectors": 0,
+          "worldCount": 0,
+          "errors": []
+        },
+        "syncSummary": {
+          "samples": 359,
+          "maxRawPresentedErrorMs": 14.109999999998763
+        },
+        "screenshots": [
+          {
+            "file": "2560x1440-00-music-source-export.png",
+            "sha256": "89184166d36e1812656c6209fb34624960559c55c9b0f9b8222a72c9fe9a7439",
+            "expectedSha256": "89184166d36e1812656c6209fb34624960559c55c9b0f9b8222a72c9fe9a7439",
+            "hashMatches": true,
+            "pngDimensions": [
+              2560,
+              1440
+            ],
+            "dimensionsMatch": true
+          },
+          {
+            "file": "2560x1440-01-editor-export-v3.png",
+            "sha256": "c146ce902fca7b642ef313406a33493f7ba7d90bb52ab47d3489aa8e5bc47888",
+            "expectedSha256": "c146ce902fca7b642ef313406a33493f7ba7d90bb52ab47d3489aa8e5bc47888",
+            "hashMatches": true,
+            "pngDimensions": [
+              2560,
+              1440
+            ],
+            "dimensionsMatch": true
+          },
+          {
+            "file": "2560x1440-02-editor-preview-zero-gameplay.png",
+            "sha256": "3a3507ffb7d0687b51e0b76046be3145961fc756a4272f937660de85fbb5482b",
+            "expectedSha256": "3a3507ffb7d0687b51e0b76046be3145961fc756a4272f937660de85fbb5482b",
+            "hashMatches": true,
+            "pngDimensions": [
+              2560,
+              1440
+            ],
+            "dimensionsMatch": true
+          },
+          {
+            "file": "2560x1440-03-game-resources-load-v3.png",
+            "sha256": "7afc68db7258e93c0a236997d4160d27abe5eff564df9b507378b8610e5a7174",
+            "expectedSha256": "7afc68db7258e93c0a236997d4160d27abe5eff564df9b507378b8610e5a7174",
+            "hashMatches": true,
+            "pngDimensions": [
+              2560,
+              1440
+            ],
+            "dimensionsMatch": true
+          },
+          {
+            "file": "2560x1440-04-natural-deep-trace-approach.png",
+            "sha256": "ee078174bf093f67d73c6c5950564066e93a74ed62838886e7f0c7d9b14d235a",
+            "expectedSha256": "ee078174bf093f67d73c6c5950564066e93a74ed62838886e7f0c7d9b14d235a",
+            "hashMatches": true,
+            "pngDimensions": [
+              2560,
+              1440
+            ],
+            "dimensionsMatch": true
+          },
+          {
+            "file": "2560x1440-05-deep-trace-enter-v3.png",
+            "sha256": "b8d5e3340cbd9a6a89f04d258d92caae47150167dec560300d56718b84f239a5",
+            "expectedSha256": "b8d5e3340cbd9a6a89f04d258d92caae47150167dec560300d56718b84f239a5",
+            "hashMatches": true,
+            "pngDimensions": [
+              2560,
+              1440
+            ],
+            "dimensionsMatch": true
+          },
+          {
+            "file": "2560x1440-06-v3-tap-drag-hold-performance.png",
+            "sha256": "4b9063da4f1c723e984452b4a2faeedd45f8c03c569c2431a73ba9f4d6c10585",
+            "expectedSha256": "4b9063da4f1c723e984452b4a2faeedd45f8c03c569c2431a73ba9f4d6c10585",
+            "hashMatches": true,
+            "pngDimensions": [
+              2560,
+              1440
+            ],
+            "dimensionsMatch": true
+          },
+          {
+            "file": "2560x1440-07-v3-completed-auto-return.png",
+            "sha256": "6d9cf3a635bf9ef4c40c5c45f8bdd9b929357d919e334c52cf381bfba2c0e82e",
+            "expectedSha256": "6d9cf3a635bf9ef4c40c5c45f8bdd9b929357d919e334c52cf381bfba2c0e82e",
+            "hashMatches": true,
+            "pngDimensions": [
+              2560,
+              1440
+            ],
+            "dimensionsMatch": true
+          },
+          {
+            "file": "2560x1440-08-auto-return-world-ledger-plus-one.png",
+            "sha256": "6d9cf3a635bf9ef4c40c5c45f8bdd9b929357d919e334c52cf381bfba2c0e82e",
+            "expectedSha256": "6d9cf3a635bf9ef4c40c5c45f8bdd9b929357d919e334c52cf381bfba2c0e82e",
+            "hashMatches": true,
+            "pngDimensions": [
+              2560,
+              1440
+            ],
+            "dimensionsMatch": true
+          }
+        ]
+      }
+    ]
+  },
+  "protectionSnapshot": {
+    "generatedAt": "2026-10-10T07:35:50.263Z",
+    "primaryUnchanged": 79,
+    "primaryChecked": 79,
+    "pass": true,
+    "metadataTemporalDifferenceExpected": true
+  },
+  "notes": [
+    "Completed and returned-world images share bytes because the existing director exits in the same completion frame; result.completed=true and ledger delta provide completion evidence."
+  ]
+}

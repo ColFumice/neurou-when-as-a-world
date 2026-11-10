@@ -1,0 +1,82 @@
+{
+  "generatedAt": "2026-10-10T08:38:48.124Z",
+  "scope": "Actual WorldFolderView/FolderTheme executed in isolated real Chromium DOM. Reader/callbacks are declared fixtures; no Creator gameplay or catalog persistence claim.",
+  "sourceHashes": {
+    "src/presentation/WorldFolderView.ts": "27f77dd8d0bee09d7b872b10d27625f9746faa50593d00bc71a2325b04dcb05b",
+    "src/presentation/FolderTheme.ts": "3d40411374946e9014a5f558837cfdaf0240c3074e627583061391244015f033"
+  },
+  "passed": 7,
+  "failed": 0,
+  "checks": [
+    {
+      "name": "D01 dynamic metadata card list has one built-in ID, distinct data identities and exact open callback routing",
+      "pass": true,
+      "evidence": {
+        "cards": 3,
+        "duplicateIds": 0,
+        "opened": [
+          "InitialWorld",
+          "local-a",
+          "local-b"
+        ],
+        "editorDirectoryPreserved": true
+      }
+    },
+    {
+      "name": "D02 metadata and account text remain escaped rather than executing or creating HTML nodes",
+      "pass": true,
+      "evidence": {
+        "htmlNodesCreatedFromMetadata": 0,
+        "scriptExecuted": false,
+        "exactTitleTextRetained": true
+      }
+    },
+    {
+      "name": "D03 destroy/re-mount refreshes current reader data, removes prior card handlers and avoids duplicate view roots",
+      "pass": true,
+      "evidence": {
+        "roots": 1,
+        "latestTitlePresent": true,
+        "oldCardRemoved": true
+      }
+    },
+    {
+      "name": "D04 empty initialized account displays no seeded cards while editor navigation remains available",
+      "pass": true,
+      "evidence": {
+        "activeCards": 0,
+        "InitialWorldReseeded": false,
+        "editorsAvailable": true
+      }
+    },
+    {
+      "name": "D05 actual form creates through real director port, refreshes cards and resets controls only after success",
+      "pass": true,
+      "evidence": {
+        "successfulCreateCount": 1,
+        "trimmedTitle": "DOM新世界",
+        "failedCreateKeepsFields": true,
+        "failedCreateGhosts": 0
+      }
+    },
+    {
+      "name": "D06 delete requires confirmation, cancel writes nothing, failed delete keeps visible record, successful delete tombstones",
+      "pass": true,
+      "evidence": {
+        "preConfirmationWrites": 0,
+        "cancellationWrites": 0,
+        "failedDeleteRetainsCard": true,
+        "successfulTombstone": "world-dom-1"
+      }
+    },
+    {
+      "name": "D07 real fork intent displays unavailable message without creating record; refresh delegates current-reader reload",
+      "pass": true,
+      "evidence": {
+        "forkCreates": 0,
+        "explicitUnavailableFeedback": true,
+        "reloadCallbackCount": 1
+      }
+    }
+  ]
+}

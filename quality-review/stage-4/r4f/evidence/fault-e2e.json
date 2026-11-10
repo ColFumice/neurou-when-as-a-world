@@ -1,0 +1,31 @@
+{
+  "firewall": false,
+  "game": true,
+  "ledgerHud": true,
+  "sidecarWarning": true,
+  "processKill": true,
+  "error": null,
+  "counts": {
+    "perfect": 0,
+    "good": 0,
+    "miss": 0,
+    "combo": 0,
+    "time": "000.000",
+    "complete": false
+  },
+  "ledgerUnchanged": true,
+  "rapidEdit": {
+    "commandOpen": true,
+    "editors": 1,
+    "games": 0
+  },
+  "tauriFailure": {
+    "body": "WORLD / NO MEDIA\n以无视频模式继续\n1 2 3\nQ W E\n4 5 6\nR T Y\n7 8 9\nU I O\n0 - =\nP [ ]\nA S D\nZ X C\nF G H\nV B\nJ K L\nN M <\n: \" |\n> ?\n2×4 KEY ZONES · 123QWE / 456RTY / 789UIO / 0-=P[] · ASDZXC / FGHVB / JKLNM< / ：\"|>?\nNEUROU / PLAY\nfallback-w1\nWORLD w1 · FALLBACK\nSCORE\n000000\nPERFECT 0\nGOOD 0\nMISS 0\nCOMBO\n0\n/ MAX 0\n000.000\n008.000\nAUDIO / OFFLINE\n谱面/项目加载失败：simulated Tauri command failure · 无 NEU 图\n账本不可用：simulated Tauri command failure\nNeurOS C:\\A_Try\\chromato\n>\n/edit · /rhythm · /exit\n\nNEUROU / PLAY\n\nfallback-w1\n\nw1 · FALLBACK · 6 NOTES\n\nSTART / SPACE\n\n2×4 KEY ZONES · 123QWE / 456RTY / 789UIO / 0-=P[] · ASDZXC / FGHVB / JKLNM< / ：\"|>? · SPACE / 123QWE = L1\n\nWORLD COMMAND · 按 / 输入 /edit\n\n账本不可用：simulated Tauri command failure\n\n谱面/项目加载失败：simulated Tauri command failure · 无 NEU 图\n\nESC / EXIT",
+    "screen": true,
+    "errorText": "谱面/项目加载失败：simulated Tauri command failure · 无 NEU 图",
+    "blank": false,
+    "projectOpen": true
+  },
+  "restored": true,
+  "finishedAt": "2026-10-26T05:01:15.686Z"
+}

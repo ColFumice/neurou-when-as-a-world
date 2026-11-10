@@ -1,0 +1,41 @@
+{
+  "pass": true,
+  "officialGatesAllPass": false,
+  "logicChecks": 91,
+  "architectureChecks": 5,
+  "cocosResolutions": [
+    "1920x1080",
+    "2560x1440"
+  ],
+  "screenshots": 20,
+  "report": "交付报告.md",
+  "gates": {
+    "naming": {
+      "command": "npm run check:naming",
+      "exitCode": 0,
+      "errors": 0,
+      "warnings": 16,
+      "pass": true,
+      "log": "gate-naming.log"
+    },
+    "typecheck": {
+      "command": "npm run typecheck",
+      "exitCode": 0,
+      "pass": true,
+      "log": "gate-typecheck.log"
+    },
+    "dependencies": {
+      "command": "npm run check:dependencies",
+      "exitCode": 1,
+      "pass": false,
+      "errors": 2,
+      "codes": [
+        "E6",
+        "E6"
+      ],
+      "pending": "Trae register editor in canonical spec and synchronize gate per PROTOCOL authorization",
+      "log": "gate-dependencies.log"
+    }
+  },
+  "limitations": "See delivery report; pending dependency registration is explicitly authorized, not a waived pass."
+}

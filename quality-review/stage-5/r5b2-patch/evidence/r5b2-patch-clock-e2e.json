@@ -1,0 +1,16 @@
+{
+  "startedAt": "2026-10-26T05:03:28.389Z",
+  "error": null,
+  "result": {
+    "debug": true,
+    "capacity": 600,
+    "count": 6,
+    "lastDriftMs": -29.91199999851142,
+    "lastStatus": "Stable",
+    "hudText": null,
+    "hudClass": null,
+    "hudVisible": false,
+    "audioLabel": "AUDIO / WEB"
+  },
+  "finishedAt": "2026-10-26T05:03:55.240Z"
+}

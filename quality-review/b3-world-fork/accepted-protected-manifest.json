@@ -1,0 +1,32 @@
+{
+  "batch": "B2.3",
+  "evidenceScope": "OriginalAcceptedB23State",
+  "snapshotPreparedAt": "2026-10-10T12:53:14.837747+00:00",
+  "originalReportGeneratedAt": "2026-10-10T12:40:13.561780+00:00",
+  "originalReportPath": "accepted-delivery-results.json",
+  "originalReportSha256": "dc78a0f538bbeb0a85e5db6545cb838912776bc5f1dab2278132c86555313870",
+  "note": "Prepared after PROTOCOL clarification, not a contemporaneous capture. Reconstructed bytes are verified against original accepted hashes; live protected files are never restored.",
+  "files": [
+    {
+      "path": "docs/spec/stage-1.md",
+      "snapshotPath": "accepted-protected/docs/spec/stage-1.md",
+      "sha256": "86be27d38426bb6e8483a90979fc193deafe336240c93c01833031c895c296ea",
+      "bytes": 43022,
+      "provenance": "Reconstructed bytewise by applying only the d2 evidence-label insertion to the baseline, retaining its original final CRLF; original accepted SHA256 and size matched"
+    },
+    {
+      "path": "docs/NAMEBOOK.md",
+      "snapshotPath": "accepted-protected/docs/NAMEBOOK.md",
+      "sha256": "566c6ea998b92e5945dc0f4f37d824fb96a5975f62fdc31717db2ff7f46459b9",
+      "bytes": 62426,
+      "provenance": "Exact bytes from pre-B2.3 baseline; accepted original report records unchanged"
+    },
+    {
+      "path": "scripts/check-naming.js",
+      "snapshotPath": "accepted-protected/scripts/check-naming.js",
+      "sha256": "73dec0e7d35b52b07d55d40cc26fa5ce2f59f20c0408faed42d74790e56499b8",
+      "bytes": 16151,
+      "provenance": "Current preserved bytes exactly match the original accepted concurrent SHA256"
+    }
+  ]
+}

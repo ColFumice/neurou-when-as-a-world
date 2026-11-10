@@ -1,0 +1,2267 @@
+diff --git a/src/director/IntentPort.ts b/src/director/IntentPort.ts
+index 2172aea..3be7efa 100644
+--- a/src/director/IntentPort.ts
++++ b/src/director/IntentPort.ts
+@@ -97,6 +97,8 @@ import { VectorSchemaVersion } from '../../constants/index';
+ import type { NarrativeEventId, ChartRef } from '../../constants/index';
+ import type { ChartPlaybackState } from '../chart/ChartPlaybackState';
+ import type { ChartPremiere } from '../chart/ChartPremiere';
++import type { PuzzleControlState, PuzzleProgressSnapshot } from './PuzzleHydration';
++import { validatePuzzleControlState, validatePuzzleProgressSnapshot } from './PuzzleHydration';
+ 
+ // ------------------------------------------------------------
+ // T5 可见性触发占位参数（AC-11；阶段 1 占位，阶段 4 由
+@@ -325,6 +327,53 @@ export class DirectorSession implements IntentPort {
+ 
+   /** T7 完成账本是否已记录（恰好一条带 ChartRef 事件，幂等闸）。 */
+   private chartCompletionRecorded = false;
++  private puzzleControlHydrated = false;
++  private hasSubmittedFrame = false;
++
++  /** Stable partial capture: no active reveal, chart or seven-second timer is normalized away. */
++  getPuzzleControlState(revealPhase: 'Idle' | 'Playing' | 'Flash' | 'Finished'): PuzzleControlState {
++    const chartState = this.chartPremiere?.getState();
++    if (!this.puzzleChain || !this.deepTrace || !this.chartPremiere || this.chartPremiere.getTier() !== 'Regular' ||
++        this.chartEntryScheduled || this.worldMotionGated || (chartState !== 'Ready' && chartState !== 'Exited') ||
++        (revealPhase !== 'Idle' && revealPhase !== 'Finished') ||
++        (revealPhase === 'Idle' && this.deepTrace.isTriggered())) {
++      throw new Error('UnsupportedBoundary: 解谜未装配或仍在活动谱面/揭示边界');
++    }
++    this.puzzleChain.capturePrivateState();
++    return validatePuzzleControlState({ currentPerceptionMode: this.currentPerceptionMode,
++      beatClockOffsetMs: this.beatClockOffsetMs, endpointSettled: this.endpointSettled,
++      deepTraceTriggered: this.deepTrace.isTriggered(), chartCompletionRecorded: this.chartCompletionRecorded,
++      revealPhase, chartEntryScheduled: false, worldMotionGated: false });
++  }
++
++  /** Assembly-only restore: validate all references and seeded private state before applying any flags. */
++  hydratePuzzleControlState(snapshot: PuzzleProgressSnapshot): void {
++    if (this.hasSubmittedFrame || this.puzzleControlHydrated || !this.puzzleChain || !this.deepTrace ||
++        !this.chartPremiere || this.chartPremiere.getTier() !== 'Regular' || this.chartPremiere.getState() !== 'Ready' ||
++        this.endpointSettled || this.chartCompletionRecorded || this.chartEntryScheduled || this.worldMotionGated) {
++      throw new Error('解谜恢复只允许尚未运行的完整装配');
++    }
++    const descriptors = Object.getOwnPropertyDescriptors(snapshot);
++    const identity: Record<string, string> = {};
++    for (const name of ['accountId', 'worldId', 'chainId', 'deepTraceId']) {
++      const descriptor = descriptors[name];
++      if (!descriptor || !Object.prototype.hasOwnProperty.call(descriptor, 'value') || typeof descriptor.value !== 'string') {
++        throw new Error('解谜恢复身份不可安全读取');
++      }
++      identity[name] = descriptor.value;
++    }
++    const validated = validatePuzzleProgressSnapshot(snapshot, identity.accountId, identity.worldId,
++      identity.chainId, identity.deepTraceId, this.chartPremiere.getChartId(), this.getLedgerEvents());
++    if (JSON.stringify(this.puzzleChain.capturePrivateState()) !== JSON.stringify(validated.chain) ||
++        this.deepTrace.isTriggered() !== validated.control.deepTraceTriggered) {
++      throw new Error('解谜恢复对象种子与已验证快照不一致');
++    }
++    this.currentPerceptionMode = validated.control.currentPerceptionMode;
++    this.beatClockOffsetMs = validated.control.beatClockOffsetMs;
++    this.endpointSettled = validated.control.endpointSettled;
++    this.chartCompletionRecorded = validated.control.chartCompletionRecorded;
++    this.worldMotionGated = false; this.chartEntryScheduled = false; this.puzzleControlHydrated = true;
++  }
+ 
+   /**
+    * 接线解谜链（方法名为"解谜链"直译，待 PROTOCOL 追认）。
+@@ -505,6 +554,7 @@ export class DirectorSession implements IntentPort {
+     intents: ReadonlyArray<PlayerIntent>,
+     frameDurationSeconds: number,
+   ): void {
++    this.hasSubmittedFrame = true;
+     // —— 第 1 步：汇总并筛选有效意图 ——
+     // 非 Jump 意图即时分发；本帧是否存在 Jump 只记录为布尔，
+     // 起跳决策延后到第 2 / 4 步按落地状态执行（请求-消费模型：
+@@ -966,3 +1016,6 @@ export type {
+ export type { WorldGameplayContext, WorldClearReader, WorldClearSnapshot } from './WorldClearSession';
+ export type { RouteSignature, DivergenceAxis, WorldClearRecord, WorldClearProjection } from './RouteSignature';
+ export type { WorldNarrativeContent } from './WorldNarrativeContent';
++export type { PuzzleProgressSnapshot, PuzzleControlState } from './PuzzleHydration';
++export type { LedgerSnapshot, LedgerHydrateResult } from './LedgerHydration';
++export type { WorldCoreStateSnapshot, FormatTimeSnapshot } from './WorldStateCodec';
+diff --git a/src/director/SphereCrossing.ts b/src/director/SphereCrossing.ts
+index 4f80d99..50cbdb4 100644
+--- a/src/director/SphereCrossing.ts
++++ b/src/director/SphereCrossing.ts
+@@ -11,11 +11,13 @@ export class SphereCrossing {
+   private readonly EventSpaceCenter: NarrativeVector;
+   private crossed = false;
+ 
+-  constructor(EventSpaceCenter: NarrativeVector, private readonly EventDistance: number) {
++  constructor(EventSpaceCenter: NarrativeVector, private readonly EventDistance: number, initiallyCrossed = false) {
+     this.EventSpaceCenter = validateNarrativeVector(EventSpaceCenter);
+     if (!Number.isFinite(EventDistance) || EventDistance <= 0) {
+       throw new Error('事件空间半径须为有限正值');
+     }
++    if (typeof initiallyCrossed !== 'boolean') { throw new Error('初始穿越事实须为布尔值'); }
++    this.crossed = initiallyCrossed;
+   }
+ 
+   getDistance(position: NarrativeVector): number {
+diff --git a/src/director/WorldClearSession.ts b/src/director/WorldClearSession.ts
+index 46ad5bf..5aa8a7c 100644
+--- a/src/director/WorldClearSession.ts
++++ b/src/director/WorldClearSession.ts
+@@ -1,13 +1,12 @@
+ // B2.2c: an independent World premiere orchestrator around the unchanged legacy session.
+ import { VectorSchemaVersion } from '../../constants';
+-import type { ChartRef } from '../../constants';
+ import type { ChartEntry } from '../chart/ChartEntry';
+ import type { ChartPlaybackState } from '../chart/ChartPlaybackState';
+ import { CHART_MEDIA_END_TIMEOUT_MS } from '../chart/ChartPremiere';
+ import type { ChartPremiere, ChartPremiereReader } from '../chart/ChartPremiere';
+ import { InputSource } from '../ledger/NarrativeEvent';
+ import type { NarrativeEvent, NarrativeVector } from '../ledger/NarrativeEvent';
+-import { deriveLedgerPosition, validateNarrativeVector } from '../ledger/deriveLedgerPosition';
++import { deriveLedgerPosition } from '../ledger/deriveLedgerPosition';
+ import type { IntentPort } from './IntentPort';
+ import type { PerceptionMode, PlayerIntent } from './PlayerIntent';
+ import { hasChartPremiereCompleted } from './ChartReference';
+@@ -16,6 +15,8 @@ import type { WorldClearRecord } from './RouteSignature';
+ import { SphereCrossing } from './SphereCrossing';
+ import { parseWorldNarrativeContent } from './WorldNarrativeContent';
+ import type { WorldNarrativeContent } from './WorldNarrativeContent';
++import { LedgerHydration, validateLedgerNarrativeEvent } from './LedgerHydration';
++import type { LedgerSnapshot } from './LedgerHydration';
+ 
+ export interface WorldGameplayContext {
+   readonly accountId: string;
+@@ -55,6 +56,8 @@ export interface WorldClearCallbacks {
+   commitRecord(record: WorldClearRecord): Promise<void>;
+   readRecords(): readonly WorldClearRecord[];
+   now(): number;
++  /** A successful return means the complete next Ledger section is durable. */
++  persistLedger?(snapshot: LedgerSnapshot): void;
+ }
+ 
+ function validId(raw: unknown, label: string, maximum: number): asserts raw is string {
+@@ -64,54 +67,11 @@ function validId(raw: unknown, label: string, maximum: number): asserts raw is s
+   try { encodeURIComponent(raw); } catch { throw new Error(`${label}身份编码无效`); }
+ }
+ 
+-function ownFields(raw: unknown, names: readonly string[], label: string): Record<string, unknown> {
+-  if (raw === null || typeof raw !== 'object' || Array.isArray(raw)) { throw new Error(`${label}格式无效`); }
+-  const prototype: unknown = Object.getPrototypeOf(raw);
+-  if (prototype !== Object.prototype && prototype !== null) { throw new Error(`${label}原型无效`); }
+-  const descriptors = Object.getOwnPropertyDescriptors(raw);
+-  if (Reflect.ownKeys(descriptors).length !== names.length) { throw new Error(`${label}字段无效`); }
+-  const value: Record<string, unknown> = {};
+-  for (const name of names) {
+-    const descriptor = descriptors[name];
+-    if (descriptor === undefined || !Object.prototype.hasOwnProperty.call(descriptor, 'value')) {
+-      throw new Error(`${label}字段不可安全读取`);
+-    }
+-    value[name] = descriptor.value;
+-  }
+-  return value;
+-}
+-
+-function immutableEvent(raw: NarrativeEvent): NarrativeEvent {
+-  // Events are constructed by director, never submitted by presentation.
+-  const value = ownFields(raw, ['eventId', 'vector', 'VectorSchemaVersion', 'AppendedAt',
+-    'InputSource', 'ChapterTag', 'ChartRef'], '账本事件');
+-  validId(value.eventId, '账本事件', 128);
+-  const time = ownFields(value.AppendedAt, ['epochMs'], '账本追加时刻');
+-  if (value.VectorSchemaVersion !== VectorSchemaVersion ||
+-      (value.InputSource !== InputSource.Player && value.InputSource !== InputSource.Autopilot) ||
+-      typeof time.epochMs !== 'number' || !Number.isSafeInteger(time.epochMs) || time.epochMs < 0) {
+-    throw new Error('账本事件版本、来源或追加时刻无效');
+-  }
+-  ownFields(value.ChapterTag, [], '本批账本章节标记');
+-  if (value.ChartRef === null || typeof value.ChartRef !== 'object') { throw new Error('谱面引用格式无效'); }
+-  const hasState = Object.prototype.hasOwnProperty.call(value.ChartRef, 'state');
+-  const chart = ownFields(value.ChartRef, hasState ?
+-    ['chartId', 'state'] : ['chartId'], '谱面引用');
+-  validId(chart.chartId, '谱面', 128);
+-  const state = chart.state;
+-  if (hasState && state !== 'Entry' && state !== 'PremiereCompleted') { throw new Error('谱面引用状态无效'); }
+-  if (state === 'PremiereCompleted' && chart.chartId === 'CHART_NOT_BOUND') { throw new Error('未绑定谱面不能完成首演'); }
+-  const ChartRef: ChartRef = state === undefined ? Object.freeze({ chartId: chart.chartId }) :
+-    Object.freeze({ chartId: chart.chartId, state });
+-  return Object.freeze({ eventId: value.eventId, vector: validateNarrativeVector(value.vector), VectorSchemaVersion,
+-    AppendedAt: Object.freeze({ epochMs: time.epochMs }), InputSource: value.InputSource,
+-    ChapterTag: Object.freeze({}), ChartRef });
+-}
+-
+ export class WorldClearSession implements IntentPort, WorldClearReader {
+   private readonly context: WorldGameplayContext;
+   private readonly content: WorldNarrativeContent;
+   private readonly crossing: SphereCrossing;
++  private readonly ledgerHydration: LedgerHydration;
+   private readonly ledgers = new Map<string, NarrativeEvent[]>();
+   private selectedChoiceId: string | null = null;
+   private entry: ChartEntry | null = null;
+@@ -125,10 +85,11 @@ export class WorldClearSession implements IntentPort, WorldClearReader {
+   private completionError: string | null = null;
+   private record: WorldClearRecord | null = null;
+   private completionCandidate: WorldClearRecord | null = null;
++  private completionEventId: string | null = null;
+   private eventSequence = 0;
+ 
+   constructor(context: WorldGameplayContext, content: WorldNarrativeContent, private readonly legacy: IntentPort,
+-    private readonly callbacks: WorldClearCallbacks) {
++    private readonly callbacks: WorldClearCallbacks, hydrated?: LedgerSnapshot) {
+     validId(context.accountId, '账号', 64); validId(context.worldId, '世界', 128);
+     validId(context.protagonistCharacterId, '主角', 128);
+     if (context.worldKind !== 'Primary') { throw new Error('本批真实世界通关只接受 Primary 世界'); }
+@@ -136,20 +97,40 @@ export class WorldClearSession implements IntentPort, WorldClearReader {
+     if (this.content.protagonistCharacterId !== context.protagonistCharacterId) { throw new Error('世界内容主角身份不匹配'); }
+     this.context = Object.freeze({ accountId: context.accountId, worldId: context.worldId,
+       worldKind: 'Primary', protagonistCharacterId: context.protagonistCharacterId });
+-    this.crossing = new SphereCrossing(this.content.EventSpaceCenter, this.content.EventDistance);
+-    this.ledgers.set(context.protagonistCharacterId, []);
++    this.ledgerHydration = new LedgerHydration(this.context, this.content);
++    const seed = hydrated === undefined ? null : this.ledgerHydration.validate(hydrated);
++    this.crossing = new SphereCrossing(this.content.EventSpaceCenter, this.content.EventDistance,
++      seed?.control.sphereCrossed ?? false);
++    if (seed === null) { this.ledgers.set(context.protagonistCharacterId, []); }
++    else {
++      for (const character of seed.characters) { this.ledgers.set(character.characterId, character.events.slice()); }
++      this.selectedChoiceId = seed.control.selectedChoiceId;
++      this.entry = seed.control.entry;
++      this.eventSequence = seed.control.eventSequence;
++      this.completionEventId = seed.control.completionEventId;
++      if (this.completionEventId !== null) {
++        this.completionCandidate = this.deriveCompletionCandidate(this.completionEventId);
++        this.completionStatus = 'Failed';
++        this.completionError = '已恢复合法完成账本；账号保存待显式重试。';
++      }
++    }
+     const existing = callbacks.readRecords().map(value => validateWorldClearRecord(value, context.accountId))
+       .filter(value => value.worldId === context.worldId);
+     if (existing.length > 1) { throw new Error('同一账号世界存在重复通关记录'); }
+     if (existing.length === 1) {
+       if (existing[0].protagonistCharacterId !== context.protagonistCharacterId) { throw new Error('已通关世界主角身份冲突'); }
++      if (this.completionCandidate !== null && JSON.stringify(existing[0]) !== JSON.stringify(this.completionCandidate)) {
++        throw new Error('账号通关记录与已恢复 Ledger 完成事实冲突');
++      }
+       this.record = existing[0]; this.completionStatus = 'Completed';
++      this.completionError = null;
++      this.completionCandidate = null;
+     }
+   }
+ 
+   bindWorldChart(premiere: ChartPremiere, clockProbe: () => number,
+     mediaProbe: () => { ended: boolean; unavailable: boolean }): void {
+-    if (this.chartActive || this.completionCandidate !== null || this.premiere !== null) { throw new Error('World 首演装配不可重复绑定'); }
++    if (this.chartActive || this.premiere !== null) { throw new Error('World 首演装配不可重复绑定'); }
+     if (premiere.getTier() !== 'World' || premiere.getChartId() !== this.content.worldBossChartSource.chartId) {
+       throw new Error('World 首演必须匹配正式内容指定的 World 谱面');
+     }
+@@ -165,6 +146,13 @@ export class WorldClearSession implements IntentPort, WorldClearReader {
+     return Object.freeze((this.ledgers.get(this.context.protagonistCharacterId) ?? []).slice());
+   }
+ 
++  getLedgerSnapshot(): LedgerSnapshot {
++    return this.ledgerHydration.validate(this.buildLedgerSnapshot(this.ledgers, {
++      selectedChoiceId: this.selectedChoiceId, sphereCrossed: this.crossing.hasCrossed(), entry: this.entry,
++      eventSequence: this.eventSequence, completionEventId: this.completionEventId,
++    }));
++  }
++
+   getWorldClearSnapshot(): WorldClearSnapshot {
+     const ledgerPosition = deriveLedgerPosition(this.getLedgerEvents());
+     return Object.freeze({ context: this.context, contentId: this.content.contentId,
+@@ -214,32 +202,56 @@ export class WorldClearSession implements IntentPort, WorldClearReader {
+     return value;
+   }
+ 
+-  private appendEvent(raw: NarrativeEvent, targetCharacterId: string): void {
++  private buildLedgerSnapshot(ledgers: ReadonlyMap<string, readonly NarrativeEvent[]>, control: LedgerSnapshot['control']): LedgerSnapshot {
++    return { schemaVersion: 1, accountId: this.context.accountId, worldId: this.context.worldId,
++      protagonistCharacterId: this.context.protagonistCharacterId, contentId: this.content.contentId,
++      contentRevision: this.content.contentRevision,
++      characters: [...ledgers].map(([characterId, events]) => ({ characterId, events })), control };
++  }
++
++  private appendEvent(raw: NarrativeEvent, targetCharacterId: string,
++    staged?: { readonly selectedChoiceId?: string; readonly eventSequence?: number; readonly completionEventId?: string }): void {
+     validId(targetCharacterId, '账本目标角色', 128);
+-    const narrativeEvent = immutableEvent(raw);
++    const narrativeEvent = validateLedgerNarrativeEvent(raw);
+     const events = this.ledgers.get(targetCharacterId) ?? [];
+     if (events.some(value => value.eventId === narrativeEvent.eventId)) { throw new Error('同一角色账本事件标识重复'); }
+     // Reject overflow before append; no partial append may be reported as successful.
+     const position = deriveLedgerPosition([...events, narrativeEvent]);
+-    events.push(narrativeEvent); this.ledgers.set(targetCharacterId, events);
+-    if (this.record === null && this.crossing.onLedgerAppended(narrativeEvent, targetCharacterId,
+-      this.context.protagonistCharacterId, position)) {
+-      this.entry = Object.freeze({ entryId: JSON.stringify([this.context.accountId, this.context.worldId,
++    const crosses = this.record === null && !this.crossing.hasCrossed() && narrativeEvent.InputSource === InputSource.Player &&
++      targetCharacterId === this.context.protagonistCharacterId && this.crossing.getDistance(position) >= this.content.EventDistance;
++    const nextEntry: ChartEntry | null = crosses ? Object.freeze({ entryId: JSON.stringify([this.context.accountId, this.context.worldId,
+         this.context.protagonistCharacterId, 'SphereCrossing']), worldId: this.context.worldId,
+         characterId: this.context.protagonistCharacterId, ChartRef: Object.freeze({
+-          chartId: this.content.worldBossChartSource.chartId, state: 'Entry' }), tier: 'World', source: 'SphereCrossing' });
+-    }
++          chartId: this.content.worldBossChartSource.chartId, state: 'Entry' }), tier: 'World', source: 'SphereCrossing' }) : this.entry;
++    const nextLedgers = new Map<string, readonly NarrativeEvent[]>(this.ledgers);
++    nextLedgers.set(targetCharacterId, [...events, narrativeEvent]);
++    const snapshot = this.ledgerHydration.validate(this.buildLedgerSnapshot(nextLedgers, {
++      selectedChoiceId: staged?.selectedChoiceId ?? this.selectedChoiceId,
++      sphereCrossed: this.crossing.hasCrossed() || crosses, entry: nextEntry,
++      eventSequence: staged?.eventSequence ?? this.eventSequence,
++      completionEventId: staged?.completionEventId ?? this.completionEventId,
++    }));
++    // Durability happens before any in-memory append, trigger, or entry publication.
++    this.callbacks.persistLedger?.(snapshot);
++    for (const character of snapshot.characters) { this.ledgers.set(character.characterId, character.events.slice()); }
++    this.selectedChoiceId = snapshot.control.selectedChoiceId;
++    this.eventSequence = snapshot.control.eventSequence;
++    this.completionEventId = snapshot.control.completionEventId;
++    if (crosses) { this.crossing.onLedgerAppended(narrativeEvent, targetCharacterId,
++      this.context.protagonistCharacterId, deriveLedgerPosition(this.getLedgerEvents())); }
++    this.entry = snapshot.control.entry;
+   }
+ 
+   private chooseNarrative(choiceId: string): void {
+     if (this.selectedChoiceId !== null || this.record !== null || this.chartActive || this.legacy.isWorldMotionGated()) { return; }
+     const choice = this.content.interaction.choices.find(value => value.choiceId === choiceId);
+     if (choice === undefined) { return; }
+-    const timestamp = this.now(); this.eventSequence += 1;
+-    this.appendEvent({ eventId: `WORLD_NARRATIVE_CHOICE:${timestamp}:${this.eventSequence}`, vector: choice.vector,
++    const timestamp = this.now(); const sequence = this.eventSequence + 1;
++    if (!Number.isSafeInteger(sequence)) { throw new Error('制作事件序号溢出'); }
++    this.appendEvent({ eventId: `WORLD_NARRATIVE_CHOICE:${timestamp}:${sequence}`, vector: choice.vector,
+       VectorSchemaVersion, AppendedAt: { epochMs: timestamp }, InputSource: InputSource.Player, ChapterTag: {},
+-      ChartRef: { chartId: this.content.worldBossChartSource.chartId, state: 'Entry' } }, this.context.protagonistCharacterId);
+-    this.selectedChoiceId = choice.choiceId;
++      ChartRef: { chartId: this.content.worldBossChartSource.chartId, state: 'Entry' } }, this.context.protagonistCharacterId,
++    { selectedChoiceId: choice.choiceId, eventSequence: sequence });
+   }
+ 
+   private enterWorldChart(): void {
+@@ -283,8 +295,9 @@ export class WorldClearSession implements IntentPort, WorldClearReader {
+   private prepareCompletion(): void {
+     if (this.completionCandidate !== null || this.record !== null || this.premiere?.getState() !== 'Completed' ||
+         this.premiere.getResult()?.completed !== true || this.entry === null) { return; }
+-    const timestamp = this.now(); this.eventSequence += 1;
+-    const completionEventId = `WORLD_PREMIERE_COMPLETED:${timestamp}:${this.eventSequence}`;
++    const timestamp = this.now(); const sequence = this.eventSequence + 1;
++    if (!Number.isSafeInteger(sequence)) { throw new Error('制作事件序号溢出'); }
++    const completionEventId = `WORLD_PREMIERE_COMPLETED:${timestamp}:${sequence}`;
+     const events = this.getLedgerEvents();
+     const zeroVector = Object.freeze(this.content.EventSpaceCenter.map(() => 0)) as unknown as NarrativeVector;
+     const event: NarrativeEvent = { eventId: completionEventId, vector: zeroVector, VectorSchemaVersion,
+@@ -292,7 +305,7 @@ export class WorldClearSession implements IntentPort, WorldClearReader {
+       ChartRef: { chartId: this.content.worldBossChartSource.chartId, state: 'PremiereCompleted' } };
+     // Validate the candidate before the append; the snapshot is frozen from that same resulting read view.
+     deriveRouteSignature(deriveLedgerPosition([...events, event]));
+-    this.appendEvent(event, this.context.protagonistCharacterId);
++    this.appendEvent(event, this.context.protagonistCharacterId, { eventSequence: sequence, completionEventId });
+     const completedLedger = this.getLedgerEvents();
+     if (!hasChartPremiereCompleted(completedLedger, this.content.worldBossChartSource.chartId)) {
+       throw new Error('权威账本缺少合法 World 首演完成引用');
+@@ -306,6 +319,18 @@ export class WorldClearSession implements IntentPort, WorldClearReader {
+     this.retryCommit();
+   }
+ 
++  private deriveCompletionCandidate(completionEventId: string): WorldClearRecord {
++    const events = this.getLedgerEvents();
++    const index = events.findIndex(value => value.eventId === completionEventId);
++    if (index < 0) { throw new Error('Ledger 完成事实缺失'); }
++    const event = events[index];
++    return validateWorldClearRecord({ schemaVersion: 1, accountId: this.context.accountId,
++      worldId: this.context.worldId, worldKind: 'Primary', protagonistCharacterId: this.context.protagonistCharacterId,
++      ChartRef: event.ChartRef, contentRevision: this.content.contentRevision, completionEventId,
++      clearedAt: event.AppendedAt, routeSignature: deriveRouteSignature(deriveLedgerPosition(events.slice(0, index + 1))) },
++    this.context.accountId);
++  }
++
+   private retryCommit(): void {
+     if (this.completionCandidate === null || this.completionStatus === 'Pending' || this.completionStatus === 'Completed') { return; }
+     this.completionStatus = 'Pending'; this.completionError = null;
+diff --git a/src/director/WorldStateSession.ts b/src/director/WorldStateSession.ts
+index 55e8345..d3a0d58 100644
+--- a/src/director/WorldStateSession.ts
++++ b/src/director/WorldStateSession.ts
+@@ -1,4 +1,8 @@
+-/** B2.2b foundation: diagnostics and opaque contracts, without gameplay hydration. */
++/** B2.2b complete contract; B2.2d-1 adds validated partial capture only. */
++import type { WorldCoreStateSnapshot } from './WorldStateCodec';
++import type { LedgerSnapshot } from './LedgerHydration';
++import type { PuzzleProgressSnapshot } from './PuzzleHydration';
++import type { FormatTimeSnapshot } from './WorldStateCodec';
+ 
+ /** No full codec exists in B2.2b. Only a later validated codec may create this brand. */
+ declare const validatedWorldState: unique symbol;
+@@ -36,19 +40,19 @@ export type WorldForkAvailability = 'NotImplemented';
+ /**
+  * Ownership contracts are metadata, never captured gameplay data. Inner indexes
+  * supplement the account/world isolation boundary. None belongs to AccountProfile.
+- * FormatTime's proposed value shape is { epochMs: number }; it remains unfrozen.
++ * FormatTime is frozen as an immutable { epochMs: number } in B2.2d-1.
+  */
+ const stateOwnership = Object.freeze({
+   Ledger: Object.freeze({
+     owner: 'WorldObserver' as const,
+     indexes: Object.freeze(['accountId', 'worldId', 'characterId'] as const),
+-    codec: 'NotImplemented' as const,
++    codec: 'Implemented' as const,
+     requires: Object.freeze(['AuthoritativeReadWriteSource', 'RoleIdentity', 'OrderedEvents', 'SideEffectFreeHydration'] as const),
+   }),
+   PuzzleProgress: Object.freeze({
+     owner: 'WorldObserver' as const,
+     indexes: Object.freeze(['accountId', 'worldId', 'chainId'] as const),
+-    codec: 'NotImplemented' as const,
++    codec: 'Implemented' as const,
+     requires: Object.freeze(['PrivateChainTiming', 'EndpointDeduplication', 'DeepTraceState', 'EntryLifecycle'] as const),
+   }),
+   RecallCount: Object.freeze({
+@@ -60,7 +64,7 @@ const stateOwnership = Object.freeze({
+   FormatTime: Object.freeze({
+     owner: 'WorldInstance' as const,
+     indexes: Object.freeze(['accountId', 'worldId'] as const),
+-    codec: 'NotImplemented' as const,
++    codec: 'Implemented' as const,
+     proposal: Object.freeze({ epochMs: 'NonNegativeSafeInteger' as const }),
+     requires: Object.freeze(['AuthoritativeCreationTime', 'ImmutableValue', 'ProposalFreeze'] as const),
+   }),
+@@ -94,13 +98,16 @@ export type WorldStateCaptureResult =
+         readonly schemaVersion: 1;
+         readonly accountId: string;
+         readonly worldId: string;
+-        readonly worldKind: 'Unavailable';
+-        readonly shoreOrigin: 'Unavailable';
+-        readonly revision: 'Unavailable';
++        readonly worldKind: 'Primary' | 'Shore' | 'Unavailable';
++        readonly shoreOrigin: 'BugShore' | 'FinalShore' | null | 'Unavailable';
++        readonly revision: number | 'Unavailable';
+         readonly capturedAt: number;
+       };
+-      /** No authoritative payload is captured at the directory boundary. */
+-      readonly capturedParts: Readonly<Record<string, never>>;
++      readonly capturedParts: {
++        readonly Ledger?: LedgerSnapshot;
++        readonly PuzzleProgress?: readonly PuzzleProgressSnapshot[];
++        readonly FormatTime?: FormatTimeSnapshot;
++      };
+       readonly issues: readonly WorldStateDiagnostic[];
+     };
+ 
+@@ -119,6 +126,7 @@ export class WorldStateSession implements WorldStateReader {
+   readonly ownership = stateOwnership;
+   readonly worldForkAvailability: WorldForkAvailability = 'NotImplemented';
+   private lastCaptureResult: WorldStateCaptureResult | null = null;
++  private coreSource: (() => WorldCoreStateSnapshot | null) | null = null;
+ 
+   constructor(
+     private readonly accountId: string,
+@@ -129,10 +137,14 @@ export class WorldStateSession implements WorldStateReader {
+     validateIdentity(worldId, '世界', 128);
+   }
+ 
++  /** Composition root supplies a strict, content-bound codec reader; never a JSON cast. */
++  bindCoreSource(source: () => WorldCoreStateSnapshot | null): void { this.coreSource = source; }
++
+   /** Read-only diagnostic capture; only the last result reference is published. */
+   captureWorldState(): WorldStateCaptureResult {
+     const capturedAt = this.now();
+     if (!isTime(capturedAt)) { throw new Error('状态捕获时间无效'); }
++    if (this.coreSource !== null) { return this.captureCore(capturedAt); }
+     const issues: readonly WorldStateDiagnostic[] = Object.freeze([
+       diagnostic('Ledger', 'AuthorityUnavailable', '账本缺少同一权威读写来源、角色身份和无副作用恢复。'),
+       diagnostic('PuzzleProgress', 'ProjectionUndefined', '解谜进度缺少完整链计时、终点防重、深痕和入口生命周期。'),
+@@ -160,6 +172,44 @@ export class WorldStateSession implements WorldStateReader {
+ 
+   getLastCaptureResult(): WorldStateCaptureResult | null { return this.lastCaptureResult; }
+ 
++  private captureCore(capturedAt: number): WorldStateCaptureResult {
++    let core: WorldCoreStateSnapshot | null = null;
++    const issues: WorldStateDiagnostic[] = [];
++    try {
++      core = this.coreSource!();
++      if (core !== null && (core.accountId !== this.accountId || core.worldId !== this.worldId || core.kind !== 'Core')) {
++        throw new Error('核心状态身份或文档种类不匹配');
++      }
++    } catch (error: unknown) {
++      issues.push(diagnostic('RuntimeBoundary', 'InvalidSnapshot', error instanceof Error ? error.message : '核心状态无法读取'));
++      core = null;
++    }
++    const capturedParts: { Ledger?: LedgerSnapshot; PuzzleProgress?: readonly PuzzleProgressSnapshot[];
++      FormatTime?: FormatTimeSnapshot } = {};
++    if (core?.sections.Ledger) { capturedParts.Ledger = core.sections.Ledger; }
++    else { issues.push(diagnostic('Ledger', 'AuthorityUnavailable', '本世界尚无已校验的权威账本。')); }
++    if (core?.sections.PuzzleProgress?.length) { capturedParts.PuzzleProgress = core.sections.PuzzleProgress; }
++    else { issues.push(diagnostic('PuzzleProgress', 'UnsupportedBoundary', '本世界无稳定解谜检查点；活动计时、揭示和演奏不支持部分恢复。')); }
++    if (core?.sections.FormatTime) { capturedParts.FormatTime = core.sections.FormatTime; }
++    else { issues.push(diagnostic('FormatTime', 'AuthorityUnavailable', '历史创建时刻缺失，保持 Unavailable；不补写当前时间或目录时间。')); }
++    issues.push(
++      diagnostic('RecallCount', 'MechanismMissing', '回忆次数正式载体尚未实现。'),
++      diagnostic('WorldLink', 'MechanismMissing', '世界链接、孤立与 AIProfileSnapshot 尚未实现。'),
++      diagnostic('ChartSnapshot', 'MechanismMissing', '首演冻结快照尚未实现。'),
++      diagnostic('ChartScore', 'ProjectionUndefined', '谱面成绩持久化更新语义尚未实现。'),
++    );
++    if (!core || core.worldKind === 'Unavailable') {
++      issues.push(diagnostic('RuntimeBoundary', 'IdentityUnavailable', '本世界尚无正式内容声明的实例种类。'));
++    }
++    const result: WorldStateCaptureResult = Object.freeze({ kind: 'Incomplete',
++      candidate: Object.freeze({ schemaVersion: 1, accountId: this.accountId, worldId: this.worldId,
++        worldKind: core?.worldKind ?? 'Unavailable', shoreOrigin: core ? core.shoreOrigin : 'Unavailable',
++        revision: core?.revision ?? 'Unavailable', capturedAt }),
++      capturedParts: Object.freeze(capturedParts), issues: Object.freeze(issues) });
++    this.lastCaptureResult = result;
++    return result;
++  }
++
+   /** No complete restoration can succeed until B2.2d supplies all codecs/hydration. */
+   restoreWorldState(raw: unknown): WorldStateRestoreResult {
+     const issues = [...validateWorldStateHeader(raw, this.accountId, this.worldId),
+diff --git a/src/presentation/DeepTraceRevealSequence.ts b/src/presentation/DeepTraceRevealSequence.ts
+index 4292811..184472b 100644
+--- a/src/presentation/DeepTraceRevealSequence.ts
++++ b/src/presentation/DeepTraceRevealSequence.ts
+@@ -18,15 +18,35 @@ export class DeepTraceRevealSequence extends Component {
+   private phase: 'Idle' | 'Playing' | 'Flash' | 'Finished' = 'Idle';
+   private elapsedSeconds = 0;
+   private flashValue = 0;
++  private lifecycleStarted = false;
++  private terminalHydrated = false;
+   bindSource(deepTrace: DeepTrace): void { this.deepTrace = deepTrace; }
+   bindIntentPort(intentPort: IntentPort): void { this.intentPort = intentPort; }
+   bindInvertRipple(invertRipple: ScreenInvertRipple): void { this.invertRipple = invertRipple; }
++  /** Active reveals are deliberately excluded from the partial world codec. */
++  getTerminalPhase(): 'Idle' | 'Finished' {
++    if (this.phase === 'Playing' || this.phase === 'Flash' ||
++        (this.phase === 'Idle' && this.deepTrace?.isTriggered())) {
++      throw new Error('UnsupportedBoundary: 活动深痕揭示不支持保存或恢复');
++    }
++    return this.phase;
++  }
++  /** Assembly-only terminal hydration, without playing, ending, or sending EnterChart. */
++  hydrateTerminalPhase(phase: 'Idle' | 'Finished'): void {
++    if (this.lifecycleStarted || this.terminalHydrated || this.phase !== 'Idle' ||
++        !this.deepTrace || (phase !== 'Idle' && phase !== 'Finished') ||
++        this.deepTrace.isTriggered() !== (phase === 'Finished')) {
++      throw new Error('深痕揭示恢复须在装配前且与触发事实一致');
++    }
++    this.phase = phase; this.elapsedSeconds = 0; this.flashValue = 0; this.terminalHydrated = true;
++  }
+   onEnable(): void { input.on(Input.EventType.MOUSE_DOWN, this.onSkipInput, this); }
+   onDisable(): void {
+     input.off(Input.EventType.MOUSE_DOWN, this.onSkipInput, this);
+     this.invertRipple?.end();
+   }
+   update(deltaTime: number): void {
++    this.lifecycleStarted = true;
+     if (this.phase === 'Idle') {
+       if (this.deepTrace?.isTriggered() && this.invertRipple?.begin()) { this.phase = 'Playing'; }
+       return;
+@@ -48,6 +68,7 @@ export class DeepTraceRevealSequence extends Component {
+     }
+   }
+   private onSkipInput(): void {
++    this.lifecycleStarted = true;
+     if (this.phase === 'Playing' || this.phase === 'Flash' ||
+         (this.phase === 'Idle' && this.deepTrace?.isTriggered())) { this.finishSequence(); }
+   }
+diff --git a/src/trace/DeepTrace.ts b/src/trace/DeepTrace.ts
+index 162bca2..04f5337 100644
+--- a/src/trace/DeepTrace.ts
++++ b/src/trace/DeepTrace.ts
+@@ -48,11 +48,13 @@ export class DeepTrace extends Trace {
+   /**
+    * @param position 深痕平面坐标（横轴 / 纵深轴，WorldMeter）
+    */
+-  constructor(position: ElementEntityPosition) {
++  constructor(position: ElementEntityPosition, initialTriggered = false) {
+     // 层级固定 Deep（名库 v2.3 深痕身份段）；来源暂以 Normal
+     // 占位——来源归属（TraceOrigin 语义分配）待后续任务冻结。
+     super(TraceTier.Deep, TraceOrigin.Normal);
++    if (typeof initialTriggered !== 'boolean') { throw new Error('深痕初始触发状态无效'); }
+     this.position = Object.freeze({ ...position });
++    this.triggered = initialTriggered;
+   }
+ 
+   /**
+diff --git a/src/trace/PuzzleChain.ts b/src/trace/PuzzleChain.ts
+index b04da0c..3e3806a 100644
+--- a/src/trace/PuzzleChain.ts
++++ b/src/trace/PuzzleChain.ts
+@@ -35,9 +35,61 @@
+ 
+ import { judgeRhythmStrike } from './RhythmStrike';
+ import type { RhythmStrike } from './RhythmStrike';
+-import type { PuzzleProgress } from './PuzzleProgress';
++import type { PuzzleProgress, PuzzleChainStage } from './PuzzleProgress';
+ import { RHYTHM_STRIKE_WINDOW_MS } from '../../constants/index';
+ 
++/** Complete private timing data; active sustained runs are outside the B2.2d-1 boundary. */
++export interface PuzzleChainPrivateState {
++  readonly stage: PuzzleChainStage;
++  readonly sustainedStartMs: number;
++  readonly sustainedElapsedMs: number;
++  readonly lastHitBeatTimeMs: number;
++  readonly nextBeatTimeMs: number;
++  readonly beatIntervalMs: number;
++  readonly requiredSustainedMs: number;
++}
++
++export function validatePuzzleChainPrivateState(raw: unknown, expectedBeatIntervalMs?: number): PuzzleChainPrivateState {
++  if (!raw || typeof raw !== 'object' || Array.isArray(raw) ||
++      (Object.getPrototypeOf(raw) !== Object.prototype && Object.getPrototypeOf(raw) !== null)) {
++    throw new Error('解谜计时快照格式无效');
++  }
++  const descriptors = Object.getOwnPropertyDescriptors(raw);
++  const names = ['stage', 'sustainedStartMs', 'sustainedElapsedMs', 'lastHitBeatTimeMs',
++    'nextBeatTimeMs', 'beatIntervalMs', 'requiredSustainedMs'];
++  if (Reflect.ownKeys(descriptors).length !== names.length) { throw new Error('解谜计时快照字段无效'); }
++  const value: Record<string, unknown> = {};
++  for (const name of names) {
++    const descriptor = descriptors[name];
++    if (!descriptor || !Object.prototype.hasOwnProperty.call(descriptor, 'value')) {
++      throw new Error('解谜计时快照不可安全读取');
++    }
++    value[name] = descriptor.value;
++  }
++  const stage = value.stage;
++  if (stage !== 'Step1' && stage !== 'AwaitingStrike' && stage !== 'Completed') { throw new Error('解谜阶段无效'); }
++  for (const name of names.filter(name => name !== 'stage')) {
++    if (typeof value[name] !== 'number' || !Number.isFinite(value[name])) { throw new Error('解谜计时须为有限数'); }
++  }
++  const start = value.sustainedStartMs as number, elapsed = value.sustainedElapsedMs as number;
++  const last = value.lastHitBeatTimeMs as number, next = value.nextBeatTimeMs as number;
++  const beat = value.beatIntervalMs as number;
++  if (beat <= 0 || value.requiredSustainedMs !== 7000 ||
++      (expectedBeatIntervalMs !== undefined && beat !== expectedBeatIntervalMs)) {
++    throw new Error('解谜计时规则不匹配');
++  }
++  if (stage !== 'Completed') {
++    if (start !== -1 || elapsed !== 0 || last !== -1 || next !== -1) {
++      throw new Error('UnsupportedBoundary: 活动七秒持续期不支持保存或恢复');
++    }
++  } else if (start < 0 || elapsed < 7000 || last < 0 || next !== last + beat ||
++      next < start + 7000 || last >= start + 7000 || !Number.isFinite(start + elapsed)) {
++    throw new Error('已完成解谜计时不一致');
++  }
++  return Object.freeze({ stage, sustainedStartMs: start, sustainedElapsedMs: elapsed,
++    lastHitBeatTimeMs: last, nextBeatTimeMs: next, beatIntervalMs: beat, requiredSustainedMs: 7000 });
++}
++
+ /**
+  * 归一化屏幕投影点（文件内私有结构，不导出新名称）。
+  *
+@@ -99,9 +151,25 @@ export class PuzzleChain {
+   /**
+    * @param progress 解谜进度（由组合根装配注入；本链推进其阶段）
+    */
+-  constructor(progress: PuzzleProgress, private readonly beatIntervalMs = 1000) {
++  constructor(progress: PuzzleProgress, private readonly beatIntervalMs = 1000, initialState?: PuzzleChainPrivateState) {
+     if (!Number.isFinite(beatIntervalMs) || beatIntervalMs <= 0) { throw new Error('PuzzleChain: 拍点间隔必须为正'); }
+     this.progress = progress;
++    if (initialState !== undefined) {
++      const seed = validatePuzzleChainPrivateState(initialState, beatIntervalMs);
++      if (seed.stage !== progress.getStage()) { throw new Error('解谜初始阶段与计时不一致'); }
++      this.sustainedStartMs = seed.sustainedStartMs;
++      this.sustainedElapsedMs = seed.sustainedElapsedMs;
++      this.lastHitBeatTimeMs = seed.lastHitBeatTimeMs;
++      this.nextBeatTimeMs = seed.nextBeatTimeMs;
++    }
++  }
++
++  /** Capture only a stable supported boundary; no timer is reset for serialization. */
++  capturePrivateState(): PuzzleChainPrivateState {
++    return validatePuzzleChainPrivateState({ stage: this.progress.getStage(),
++      sustainedStartMs: this.sustainedStartMs, sustainedElapsedMs: this.sustainedElapsedMs,
++      lastHitBeatTimeMs: this.lastHitBeatTimeMs, nextBeatTimeMs: this.nextBeatTimeMs,
++      beatIntervalMs: this.beatIntervalMs, requiredSustainedMs: this.requiredSustainedMs }, this.beatIntervalMs);
+   }
+ 
+   /**
+diff --git a/src/trace/PuzzleProgress.ts b/src/trace/PuzzleProgress.ts
+index 257e780..e333a64 100644
+--- a/src/trace/PuzzleProgress.ts
++++ b/src/trace/PuzzleProgress.ts
+@@ -42,6 +42,14 @@ export class PuzzleProgress {
+   /** 当前阶段（初始第一步；只经 applyStage 推进） */
+   private currentStage: PuzzleChainStage = 'Step1';
+ 
++  /** Restoration seeds validated data without replaying a stage transition. */
++  constructor(initialStage: PuzzleChainStage = 'Step1') {
++    if (!['Step1', 'AwaitingStrike', 'Completed'].includes(initialStage)) {
++      throw new Error('解谜初始阶段无效');
++    }
++    this.currentStage = initialStage;
++  }
++
+   /**
+    * 读取当前阶段（只读；AC-13 要求第一步形成可观察的进度
+    * 阶段，表现层经本方法读取后展示）。
+diff --git a/src/world/WorldInstance.ts b/src/world/WorldInstance.ts
+index 20405bc..fe866d6 100644
+--- a/src/world/WorldInstance.ts
++++ b/src/world/WorldInstance.ts
+@@ -33,11 +33,11 @@ export interface WallClock {
+  * FormatTime 格式化时间
+  * 名库时间体系冻结名（WallClock / FormatTime）
+  *
+- * 占位说明：具体结构名库未冻结，暂为空接口占位；
+- * 是否拆分为独立文件待 PROTOCOL 指定。
++ * B2.2d-1：权威世界创建时刻，非负安全整数纪元毫秒。
++ * 创建/恢复边界校验；不得用保存时刻或目录更新时间替代。
+  */
+ export interface FormatTime {
+-  // 结构待 PROTOCOL / ARCHITECT 冻结
++  readonly epochMs: number;
+ }
+ 
+ /**
+diff --git a/assets/scripts/SceneBuilder.ts b/assets/scripts/SceneBuilder.ts
+index 28ad3af..14e7ce9 100644
+--- a/assets/scripts/SceneBuilder.ts
++++ b/assets/scripts/SceneBuilder.ts
+@@ -143,6 +143,15 @@ import { parseGuidanceChart } from './src/chart/GuidanceChart';
+ import type { GuidanceChart } from './src/chart/GuidanceChart';
+ import { parseGuidanceVisualData } from './src/editor/GuidanceEditorSession';
+ import { WorldFolderBuilder } from './WorldFolderBuilder';
++import type { WorldRuntimeIdentity } from './WorldFolderBuilder';
++import { LedgerHydration } from './src/director/LedgerHydration';
++import type { LedgerSnapshot } from './src/director/LedgerHydration';
++import { validatePuzzleProgressSnapshot } from './src/director/PuzzleHydration';
++import type { PuzzleProgressSnapshot } from './src/director/PuzzleHydration';
++import { WorldStateCodec } from './src/director/WorldStateCodec';
++import type { WorldCoreStateSnapshot } from './src/director/WorldStateCodec';
++import type { WorldNarrativeContent } from './src/director/WorldNarrativeContent';
++import { WorldCoreStateView } from './src/presentation/WorldCoreStateView';
+ import { WorldClearSession } from './src/director/WorldClearSession';
+ import { parseWorldNarrativeContent } from './src/director/WorldNarrativeContent';
+ import { WorldClearStorage } from './src/presentation/WorldClearStorage';
+@@ -261,7 +270,18 @@ function addBox(
+ export class SceneBuilder extends Component {
+   /** Set only by the folder composition root before Creator invokes start(). */
+   private folderWorld = false;
+-  private worldIdentity: Readonly<{ accountId: string; worldId: string }> | null = null;
++  private worldIdentity: WorldRuntimeIdentity | null = null;
++  private preparedContent: WorldNarrativeContent | null = null;
++  private coreSnapshot: WorldCoreStateSnapshot | null = null;
++  private restoredCore = false;
++  private coreBoundary = '稳定检查点';
++  private coreView: WorldCoreStateView | null = null;
++  private revealSequence: DeepTraceRevealSequence | null = null;
++  private gameplayDriver: FrameDriver | null = null;
++  private gameplayInput: InputCollector | null = null;
++  private regularChartId = '';
++  private readonly chainId = 'T6_MAIN_CHAIN';
++  private readonly deepTraceId = 'T6_MAIN_DEEP_TRACE';
+   private worldClearSession: WorldClearSession | null = null;
+   private worldClearView: WorldClearView | null = null;
+   private worldChartView: WorldChartView | null = null;
+@@ -367,6 +387,7 @@ export class SceneBuilder extends Component {
+   start(): void {
+     if (!this.folderWorld) {
+       const folders = this.node.addComponent(WorldFolderBuilder);
++      folders.bindRegularChartSource(this.UseGuidanceChart, this.ChartResourcePath);
+       folders.bindWorldFactory((node, identity) => {
+         const world = node.addComponent(SceneBuilder);
+         world.folderWorld = true;
+@@ -378,6 +399,74 @@ export class SceneBuilder extends Component {
+       this.enabled = false;
+       return;
+     }
++    void this.prepareCoreRuntime();
++  }
++
++  /** Validate every available section before constructing or activating the new graph. */
++  private async prepareCoreRuntime(): Promise<void> {
++    const identity = this.worldIdentity;
++    if (!identity) { return; }
++    try {
++      const regularPath = this.UseGuidanceChart ? this.ChartResourcePath.trim() : 'chart/chart_placeholder';
++      const [contentAsset, regularAsset] = await Promise.all([
++        this.loadJson('world/primary-rain-dialogue'), this.UseGuidanceChart ? this.loadJson(regularPath)
++          : this.loadJson(regularPath).catch(() => null),
++      ]);
++      if (!isValid(this, true)) { return; }
++      const content = parseWorldNarrativeContent(contentAsset.json);
++      const regular = this.UseGuidanceChart ? parseGuidanceChart(regularAsset!.json, this.keyboardLayout)
++        : parseChartData(regularAsset?.json, this.keyboardLayout.layoutVersion) ??
++          createFallbackChartData(this.keyboardLayout.layoutVersion);
++      if (!regular) { throw new Error('恢复所需常规谱面身份缺失'); }
++      this.regularChartId = regular.chartId;
++      this.chartData = regular; this.chartDataResolved = true;
++      const hydration = new LedgerHydration({ accountId: identity.accountId, worldId: identity.worldId,
++        worldKind: content.worldKind, protagonistCharacterId: content.protagonistCharacterId }, content);
++      identity.coreStorage.bindValidator((raw, accountId, worldId) => {
++        let events: readonly NarrativeEvent[] = [];
++        const codec = new WorldStateCodec({
++          Ledger: value => {
++            const ledger = hydration.validate(value);
++            events = ledger.characters.find(character => character.characterId === content.protagonistCharacterId)!.events;
++            return ledger;
++          },
++          PuzzleProgress: value => validatePuzzleProgressSnapshot(value, accountId, worldId,
++            this.chainId, this.deepTraceId, this.regularChartId, events),
++        });
++        const snapshot = codec.parse(raw, accountId, worldId);
++        if (snapshot.worldKind !== 'Primary' && snapshot.worldKind !== 'Unavailable') {
++          throw new Error('已保存世界种类与正式 Primary 内容不匹配');
++        }
++        if (snapshot.sections.PuzzleProgress !== null &&
++            (snapshot.sections.Ledger === null || snapshot.sections.PuzzleProgress.length !== 1)) {
++          throw new Error('本世界解谜载荷须与唯一账本及正式解谜链同时装配');
++        }
++        return snapshot;
++      });
++      this.coreSnapshot = identity.coreStorage.readValidatedCoreState(identity.accountId, identity.worldId);
++      if (this.coreSnapshot?.sections.Ledger && !this.coreSnapshot.sections.PuzzleProgress?.length) {
++        throw new Error('UnsupportedBoundary: 账本已保存，但尚无稳定解谜检查点；不能重建默认防重状态');
++      }
++      this.restoredCore = this.coreSnapshot?.sections.Ledger !== null && this.coreSnapshot?.sections.Ledger !== undefined;
++      this.preparedContent = content;
++      this.buildWorldRuntime();
++    } catch (error: unknown) { this.showCoreError(error); }
++  }
++
++  private loadJson(path: string): Promise<JsonAsset> {
++    return new Promise<JsonAsset>((resolve, reject) => resources.load(path, JsonAsset,
++      (error, asset) => error || !asset ? reject(error ?? new Error('资源缺失：' + path)) : resolve(asset)));
++  }
++
++  private showCoreError(error: unknown): void {
++    if (!isValid(this, true)) { return; }
++    const notice = document.createElement('p'); notice.id = 'world-core-error';
++    notice.textContent = '世界记忆未能恢复；原数据保留：' + (error instanceof Error ? error.message : String(error));
++    notice.style.cssText = 'position:fixed;inset:30% 15% auto;padding:25px;background:#172735;color:#ffd3ac;z-index:200;font:18px/1.6 system-ui';
++    document.body.appendChild(notice);
++  }
++
++  private buildWorldRuntime(): void {
+     // The component may be attached to Canvas or to a plain child node.
+     const rootTransform = this.node.getComponent(UITransform) ?? this.node.addComponent(UITransform);
+     const parentTransform = this.node.parent?.getComponent(UITransform);
+@@ -440,11 +529,13 @@ export class SceneBuilder extends Component {
+     sceneRoot.addChild(frameDriverNode);
+     frameDriverNode.layer = LAYER_DEFAULT_3D;
+     const frameDriver = frameDriverNode.addComponent(FrameDriver);
++    frameDriver.enabled = false; this.gameplayDriver = frameDriver;
+ 
+     const inputNode = new Node('InputCollector');
+     sceneRoot.addChild(inputNode);
+     inputNode.layer = LAYER_DEFAULT_3D;
+     const inputCollector = inputNode.addComponent(InputCollector);
++    inputCollector.enabled = false; this.gameplayInput = inputCollector;
+ 
+     // —— 3. 镜头装置 + 3D 主相机（相机为装置子节点，
+     //       保留俯视高度 / 前后偏移；父节点平移 / 旋转即
+@@ -649,10 +740,11 @@ export class SceneBuilder extends Component {
+     // 0.8×0.8×0.8、同灰盒占位色 (220,200,90)；不挂
+     // ElementEntityView、不注册可见性跟踪（常驻可见）。
+     // 触发不改层级 / 进度 / 账本 / 门控（INV-11）。
++    const puzzleSeed = this.coreSnapshot?.sections.PuzzleProgress?.[0];
+     const deepTrace = new DeepTrace({
+       lateral: DEEP_TRACE_LATERAL,
+       depth: DEEP_TRACE_DEPTH,
+-    });
++    }, puzzleSeed?.control.deepTraceTriggered ?? false);
+     const deepTraceNode = addBox(
+       worldRoot, 'DeepTrace',
+       { w: 0.8, h: 0.8, l: 0.8 }, new Color(220, 200, 90, 255),
+@@ -665,8 +757,8 @@ export class SceneBuilder extends Component {
+     // 两步解谜链（VERDICT-117）：进度只更新 PuzzleProgress，
+     // 不写账本；链终点结算由 director 执行（恰好一条
+     // NarrativeEvent + 防重复结算），同时标记深痕触发。
+-    const puzzleProgress = new PuzzleProgress();
+-    const puzzleChain = new PuzzleChain(puzzleProgress, BEAT_INTERVAL_MS);
++    const puzzleProgress = new PuzzleProgress(puzzleSeed?.chain.stage);
++    const puzzleChain = new PuzzleChain(puzzleProgress, BEAT_INTERVAL_MS, puzzleSeed?.chain);
+     this.puzzleProgress = puzzleProgress;
+     this.puzzleChain = puzzleChain;
+     this.graph.session.bindPuzzleChain(puzzleChain);
+@@ -712,6 +804,7 @@ export class SceneBuilder extends Component {
+     revealNode.layer = LAYER_DEFAULT_3D;
+     revealNode.setPosition(DEEP_TRACE_LATERAL, 0, DEEP_TRACE_DEPTH);
+     const revealSequence = revealNode.addComponent(DeepTraceRevealSequence);
++    revealSequence.enabled = false; this.revealSequence = revealSequence;
+     revealSequence.bindSource(deepTrace);
+     revealSequence.bindIntentPort(this.graph.session);
+     // 真实反色滤镜（PROTOCOL 指示尝试）：ScreenInvertRipple 经
+@@ -965,7 +1058,13 @@ export class SceneBuilder extends Component {
+     const worldPort: IntentPort = {
+       submitFrameIntents: (intents, dt) => {
+         const batch = [...intents, ...this.worldIntents.splice(0)];
+-        (this.worldClearSession ?? session).submitFrameIntents(batch, dt);
++        try {
++          (this.worldClearSession ?? session).submitFrameIntents(batch, dt);
++          this.saveStableCore();
++        } catch (error: unknown) {
++          this.coreBoundary = '保存未完成；原持久化保留：' + (error instanceof Error ? error.message : String(error));
++          this.coreView?.refresh();
++        }
+       },
+       getCurrentPerceptionMode: () => session.getCurrentPerceptionMode(),
+       getChartPlaybackState: () => (this.worldClearSession ?? session).getChartPlaybackState(),
+@@ -1152,6 +1251,8 @@ export class SceneBuilder extends Component {
+     this.worldClearView?.setVisible(!this.graph.session.isWorldMotionGated());
+     this.worldClearView?.onFrameRefresh();
+     this.worldChartView?.onFrameRefresh();
++    this.coreView?.setVisible(!this.graph.session.isWorldMotionGated() && !this.worldClearSession?.isWorldChartActive());
++    this.coreView?.refresh();
+     const worldChartActive = this.worldClearSession?.isWorldChartActive() === true;
+     if (this.worldRootNode && !this.chartEntered) { this.worldRootNode.active = !worldChartActive; }
+     if (this.debugLabelNode && !this.chartEntered) { this.debugLabelNode.active = !worldChartActive; }
+@@ -1210,6 +1311,7 @@ export class SceneBuilder extends Component {
+   onDestroy(): void {
+     this.worldClearView?.destroy();
+     this.worldChartView?.destroy();
++    this.coreView?.destroy(); document.getElementById('world-core-error')?.remove();
+     this.worldIntents.length = 0;
+     input.off(Input.EventType.MOUSE_DOWN, this.onAutoplayUnlock, this);
+     input.off(Input.EventType.KEY_DOWN, this.onAutoplayUnlock, this);
+@@ -1271,33 +1373,27 @@ export class SceneBuilder extends Component {
+     const legacy = this.graph?.session;
+     if (!identity || !legacy) { return; }
+     try {
+-      const contentAsset = await new Promise<JsonAsset>((resolve, reject) => {
+-        resources.load('world/primary-rain-dialogue', JsonAsset, (error, asset) => {
+-          if (error || !asset) { reject(error ?? new Error('正式世界内容缺失')); } else { resolve(asset); }
+-        });
+-      });
+-      if (!isValid(this, true)) { return; }
+-      const content = parseWorldNarrativeContent(contentAsset.json);
++      const content = this.preparedContent;
++      if (!content) { throw new Error('正式世界内容尚未通过恢复前校验'); }
++      this.ensureChartPremiere();
++      if (!this.chartPremiere || this.chartPremiere.getChartId() !== this.regularChartId) {
++        throw new Error('常规谱面装配身份与解谜快照不匹配');
++      }
+       const storage = new WorldClearStorage();
+       const milestones = new AccountMilestoneStorage();
+       const milestoneReader = Object.freeze({ getMilestoneSnapshot: () =>
+         createAccountMilestoneReader(identity.accountId, milestones.readProjection(identity.accountId)).getMilestoneSnapshot() });
+-      const world = new WorldClearSession({ ...identity, worldKind: content.worldKind,
++      const world = new WorldClearSession({ accountId: identity.accountId, worldId: identity.worldId, worldKind: content.worldKind,
+         protagonistCharacterId: content.protagonistCharacterId }, content, legacy, {
+-        commitRecord: async record => { await storage.commitRecord(record, milestones); },
++        commitRecord: record => {
++          const operation = storage.commitRecord(record, milestones);
++          identity.lease.retainUntil(operation);
++          return operation.then(() => undefined);
++        },
+         readRecords: () => storage.readWorldClearRecords(identity.accountId), now: () => Date.now(),
+-      });
+-      // Preserve any legacy event produced while resources were loading, then pair its read/write source.
+-      for (const event of legacy.getLedgerEvents()) { world.appendLegacyEvent(event); }
+-      legacy.bindLedgerSource(Object.freeze({
+-        append: (event: NarrativeEvent) => world.appendLegacyEvent(event),
+-        traverse: () => world.getLedgerEvents(),
+-        findById: (eventId: NarrativeEventId) => world.getLedgerEvents().find(event => event.eventId === eventId) ?? null,
+-      }));
+-      this.worldClearSession = world;
++        persistLedger: ledger => this.persistLedger(ledger),
++      }, this.coreSnapshot?.sections.Ledger ?? undefined);
+       const enqueue = (intent: PlayerIntent): void => { this.worldIntents.push(intent); };
+-      this.worldClearView = new WorldClearView(world, milestoneReader, enqueue);
+-      this.worldClearView.mount();
+       const source = content.worldBossChartSource;
+       const [chartAsset, visualAsset, mediaAsset] = await Promise.all([
+         new Promise<JsonAsset>((resolve, reject) => resources.load(source.chartResourcePath, JsonAsset,
+@@ -1319,9 +1415,27 @@ export class SceneBuilder extends Component {
+       const view = new WorldChartView(premiere, enqueue, world, milestoneReader);
+       view.bindChart(chart, this.keyboardLayout, visual);
+       view.bindMedia(mediaAsset.nativeUrl);
+-      this.worldChartView = view;
+-      view.mount();
+       world.bindWorldChart(premiere, () => view.readTimeMs(), () => view.getMediaStatus());
++      legacy.bindLedgerSource(Object.freeze({
++        append: (event: NarrativeEvent) => world.appendLegacyEvent(event),
++        traverse: () => world.getLedgerEvents(),
++        findById: (eventId: NarrativeEventId) => world.getLedgerEvents().find(event => event.eventId === eventId) ?? null,
++      }));
++      const puzzleSeed = this.coreSnapshot?.sections.PuzzleProgress?.[0];
++      if (puzzleSeed) {
++        legacy.hydratePuzzleControlState(puzzleSeed);
++        this.revealSequence!.hydrateTerminalPhase(puzzleSeed.control.revealPhase);
++      }
++      this.worldClearSession = world;
++      // Only genuine first activation establishes an empty Ledger/Puzzle baseline.
++      // A validated hydration publishes the seed without writes or intent replay.
++      if (!this.restoredCore) { this.saveStableCore(); }
++      this.worldClearView = new WorldClearView(world, milestoneReader, enqueue); this.worldClearView.mount();
++      this.worldChartView = view; view.mount();
++      this.coreView = new WorldCoreStateView(() => ({ snapshot: this.coreSnapshot,
++        restored: this.restoredCore, boundary: this.coreBoundary })); this.coreView.mount();
++      this.revealSequence!.enabled = true;
++      this.gameplayInput!.enabled = true; this.gameplayDriver!.enabled = true;
+     } catch (error: unknown) {
+       if (!isValid(this, true)) { return; }
+       console.error('[SceneBuilder] 正式世界内容装配失败', error);
+@@ -1340,6 +1454,59 @@ export class SceneBuilder extends Component {
+     }
+   }
+ 
++  /** Append transaction: Ledger durability precedes memory, crossing and account commit. */
++  private persistLedger(ledger: LedgerSnapshot): void {
++    const previous = this.coreSnapshot?.sections.Ledger;
++    const before = previous?.characters.find(character => character.characterId === ledger.protagonistCharacterId)?.events ?? [];
++    const after = ledger.characters.find(character => character.characterId === ledger.protagonistCharacterId)!.events;
++    const changedPuzzleFact = after.slice(before.length).some(event =>
++      event.eventId === 'T6_ENDPOINT_PLACEHOLDER' || event.eventId === 'T7_COMPLETION_PLACEHOLDER');
++    // A terminal append occurs before the old director publishes its control flags.
++    // Explicit absence is safer than persisting flags contradicted by the new fact.
++    this.persistCore(ledger, changedPuzzleFact ? null : this.coreSnapshot?.sections.PuzzleProgress ?? null);
++  }
++
++  private capturePuzzle(ledger: LedgerSnapshot): PuzzleProgressSnapshot {
++    const identity = this.worldIdentity!, session = this.graph!.session;
++    if (this.worldClearSession?.isWorldChartActive()) { throw new Error('UnsupportedBoundary: World 演奏中'); }
++    const raw = { schemaVersion: 1, accountId: identity.accountId, worldId: identity.worldId,
++      chainId: this.chainId, deepTraceId: this.deepTraceId, ruleVersion: 1, chartId: this.regularChartId,
++      chain: this.puzzleChain!.capturePrivateState(),
++      control: session.getPuzzleControlState(this.revealSequence!.getTerminalPhase()) };
++    const events = ledger.characters.find(character => character.characterId === ledger.protagonistCharacterId)!.events;
++    return validatePuzzleProgressSnapshot(raw, identity.accountId, identity.worldId,
++      this.chainId, this.deepTraceId, this.regularChartId, events);
++  }
++
++  /** Stable checkpoints do not serialize clock/media phases or clear active timers. */
++  private saveStableCore(): void {
++    if (!this.worldClearSession || !this.worldIdentity) { return; }
++    try {
++      const ledger = this.worldClearSession.getLedgerSnapshot();
++      const puzzle = this.capturePuzzle(ledger);
++      const sections = { Ledger: ledger, PuzzleProgress: [puzzle], FormatTime: this.coreSnapshot?.sections.FormatTime ?? null };
++      if (JSON.stringify(sections) !== JSON.stringify(this.coreSnapshot?.sections)) {
++        this.persistCore(ledger, [puzzle]);
++      }
++      this.coreBoundary = '稳定检查点';
++    } catch (error: unknown) {
++      const message = error instanceof Error ? error.message : String(error);
++      if (!message.includes('UnsupportedBoundary')) { throw error; }
++      this.coreBoundary = message;
++    }
++    this.coreView?.refresh();
++  }
++
++  private persistCore(ledger: LedgerSnapshot, puzzle: readonly PuzzleProgressSnapshot[] | null): void {
++    const identity = this.worldIdentity!;
++    const candidate: WorldCoreStateSnapshot = { schemaVersion: 1, kind: 'Core', accountId: identity.accountId,
++      worldId: identity.worldId, worldKind: 'Primary', shoreOrigin: null,
++      revision: this.coreSnapshot === null ? 0 : this.coreSnapshot.revision + 1, capturedAt: Date.now(),
++      sections: { Ledger: ledger, PuzzleProgress: puzzle, FormatTime: this.coreSnapshot?.sections.FormatTime ?? null } };
++    const saved = identity.coreStorage.saveCoreState(candidate, this.coreSnapshot);
++    this.coreSnapshot = saved;
++  }
++
+   /** 资源边界失败保持原谱面拒绝加载行为，不回退成另一张引导线谱面。 */
+   private showChartLoadError(parent: Node, error: unknown): void {
+     console.error('[SceneBuilder] 引导线谱面拒绝加载：', this.ChartResourcePath, error);
+diff --git a/assets/scripts/WorldFolderBuilder.ts b/assets/scripts/WorldFolderBuilder.ts
+index 814fbd6..aa3f211 100644
+--- a/assets/scripts/WorldFolderBuilder.ts
++++ b/assets/scripts/WorldFolderBuilder.ts
+@@ -1,4 +1,4 @@
+-import { _decorator, Component, Node, UITransform, Canvas, Camera, director, Director, isValid } from 'cc';
++import { _decorator, Component, Node, UITransform, Canvas, Camera, director, Director, isValid, resources, JsonAsset } from 'cc';
+ import { AccountStartupSession } from './src/director/AccountStartupSession';
+ import { WorldFolderSession } from './src/director/WorldFolderSession';
+ import { WorldLocalStorage } from './src/presentation/WorldLocalStorage';
+@@ -17,9 +17,28 @@ import { AccountMilestoneStorage } from './src/presentation/AccountMilestoneStor
+ import { WorldStateSession } from './src/director/WorldStateSession';
+ import { WorldStateStorage } from './src/presentation/WorldStateStorage';
+ import { WorldClearStorage } from './src/presentation/WorldClearStorage';
++import { WorldCoreStateStorage } from './src/presentation/WorldCoreStateStorage';
++import type { WorldStateLease } from './src/presentation/WorldCoreStateStorage';
++import { FormatTimeStorage } from './src/presentation/FormatTimeStorage';
++import { WorldStateCodec } from './src/director/WorldStateCodec';
++import type { WorldCoreStateSnapshot } from './src/director/WorldStateCodec';
++import { LedgerHydration } from './src/director/LedgerHydration';
++import type { LedgerSnapshot } from './src/director/LedgerHydration';
++import { validatePuzzleProgressSnapshot } from './src/director/PuzzleHydration';
++import { parseWorldNarrativeContent } from './src/director/WorldNarrativeContent';
++import { parseGuidanceChart } from './src/chart/GuidanceChart';
++import { createDefaultKeyboardPadLayout, CHART_KEY_IDS } from './src/chart/KeyboardPadLayout';
+ 
+ const { ccclass } = _decorator;
+ 
++/** Composition-only runtime identity; no mutable gameplay object crosses the view. */
++export interface WorldRuntimeIdentity {
++  readonly accountId: string;
++  readonly worldId: string;
++  readonly coreStorage: WorldCoreStateStorage;
++  readonly lease: WorldStateLease;
++}
++
+ /** Composition root for entry routing. No gameplay objects exist before world selection. */
+ @ccclass('WorldFolderBuilder')
+ export class WorldFolderBuilder extends Component {
+@@ -29,7 +48,7 @@ export class WorldFolderBuilder extends Component {
+   private folderView: WorldFolderView | null = null;
+   private catalogView: EditorFolderView | null = null;
+   private runtimeNode: Node | null = null;
+-  private worldFactory: ((node: Node, identity: { accountId: string; worldId: string }) => void) | null = null;
++  private worldFactory: ((node: Node, identity: WorldRuntimeIdentity) => void) | null = null;
+   private exitControl: HTMLButtonElement | null = null;
+   private retiring = false;
+   private folderPending = false;
+@@ -40,11 +59,28 @@ export class WorldFolderBuilder extends Component {
+   private milestoneReader: AccountMilestoneReader | null = null;
+   private readonly stateStorage = new WorldStateStorage();
+   private readonly stateSessions = new Map<string, WorldStateSession>();
++  private readonly creationIds = new Set<string>();
++  private readonly coreStorage = new WorldCoreStateStorage(undefined, undefined,
++    (raw, accountId, worldId) => new WorldStateCodec().parse(raw, accountId, worldId),
++    (accountId, worldId) => this.isWorldActive(accountId, worldId));
++  private readonly formatStorage = new FormatTimeStorage(this.coreStorage);
++  private runtimeLease: WorldStateLease | null = null;
++  private opening = false;
++  private directoryBusy = false;
++  private coreValidatorReady: Promise<void> | null = null;
++  private directoryCoreValidator: ((raw: unknown, accountId: string, worldId: string) => WorldCoreStateSnapshot) | null = null;
++  private regularChartUsesGuidance = true;
++  private regularChartResourcePath = 'chart/guidance_c';
+ 
+-  bindWorldFactory(factory: (node: Node, identity: { accountId: string; worldId: string }) => void): void {
++  bindWorldFactory(factory: (node: Node, identity: WorldRuntimeIdentity) => void): void {
+     this.worldFactory = factory;
+   }
+ 
++  bindRegularChartSource(useGuidanceChart: boolean, resourcePath: string): void {
++    this.regularChartUsesGuidance = useGuidanceChart;
++    this.regularChartResourcePath = resourcePath.trim();
++  }
++
+   start(): void {
+     this.startupView.showLogin(accountId => {
+       try {
+@@ -80,11 +116,16 @@ export class WorldFolderBuilder extends Component {
+     });
+   }
+ 
+-  private renderWorldFolder(): void {
++  private async renderWorldFolder(): Promise<void> {
+     const accountId = this.startup.getStartupSnapshot().accountId;
+     if (accountId === null) { return; }
+     let error: unknown = null;
+-    try { this.folderSession = this.loadFolderSession(accountId); }
++    try {
++      await this.initializeDirectory(accountId);
++      await this.prepareCoreValidator();
++      if (!isValid(this, true)) { return; }
++      this.folderSession = this.loadFolderSession(accountId);
++    }
+     catch (failure) { this.folderSession = null; error = failure; }
+     this.clearViews();
+     // Read the existing projection after the trusted account-record reconciliation boundary.
+@@ -96,7 +137,9 @@ export class WorldFolderBuilder extends Component {
+       entry => this.openWorld(entry), () => this.showEditorFolder(),
+       { submitWorldFolderIntent: intent => {
+         if (!this.folderSession) { throw new Error('世界目录尚未加载，请刷新后重试'); }
+-        this.folderSession.submitWorldFolderIntent(intent);
++        if (intent.kind === 'CreateWorld') {
++          void this.createWorld(accountId, intent.title, intent.description);
++        } else { this.folderSession.submitWorldFolderIntent(intent); }
+       } }, () => this.showWorldFolder(), this.milestoneReader,
+       worldId => this.getStateSession(accountId, worldId).captureWorldState(),
+       worldId => this.getStateSession(accountId, worldId).restoreWorldState(
+@@ -112,17 +155,125 @@ export class WorldFolderBuilder extends Component {
+     let session = this.stateSessions.get(worldId);
+     if (!session) {
+       session = new WorldStateSession(accountId, worldId);
++      session.bindCoreSource(() => this.coreStorage.readValidatedCoreState(accountId, worldId));
+       this.stateSessions.set(worldId, session);
+     }
+     return session;
+   }
+ 
+-  private loadFolderSession(accountId: string): WorldFolderSession {
++  private loadFolderSession(accountId: string, reservedWorldId?: string): WorldFolderSession {
+     let expected = this.worldStorage.readSnapshot(accountId);
+     return new WorldFolderSession(accountId, expected, snapshot => {
++      const previousIds = new Set((expected as { records?: readonly { worldId: string }[] } | null)?.records?.map(record => record.worldId) ?? []);
++      for (const record of snapshot.records) {
++        if (!previousIds.has(record.worldId)) { this.initializeCreatedWorld(accountId, record.worldId); }
++      }
+       this.worldStorage.saveSnapshot(snapshot, expected);
+       expected = snapshot;
+-    }, () => 'world-' + globalThis.crypto.randomUUID(), () => Date.now());
++    }, () => reservedWorldId ?? 'world-' + globalThis.crypto.randomUUID(), () => Date.now());
++  }
++
++  private isWorldActive(accountId: string, worldId: string): boolean {
++    if (this.creationIds.has(JSON.stringify([accountId, worldId]))) { return true; }
++    const raw = this.worldStorage.readSnapshot(accountId);
++    if (raw === null) { return false; }
++    const folder = new WorldFolderSession(accountId, raw, () => { throw new Error('目录读取不可写入'); },
++      () => { throw new Error('目录读取不可创建'); }, () => Date.now());
++    return folder.getSnapshot().records.some(record => record.worldId === worldId && record.deletedAt === null);
++  }
++
++  /** Only a newly allocated, leased directory identity can receive FormatTime. */
++  private initializeCreatedWorld(accountId: string, worldId: string): void {
++    if (!this.creationIds.has(JSON.stringify([accountId, worldId]))) {
++      throw new Error('世界创建协议缺少独占租约；未发布新目录');
++    }
++    const existing = this.coreStorage.readValidatedCoreState(accountId, worldId);
++    if (existing !== null) {
++      // Retry a failed directory publication without inventing another creation time.
++      if (existing.revision !== 0 || existing.worldKind !== 'Unavailable' || existing.sections.Ledger !== null ||
++          existing.sections.PuzzleProgress !== null || existing.sections.FormatTime === null) {
++        throw new Error('待创建世界已有其他状态；保留原始存储并拒绝覆盖');
++      }
++      return;
++    }
++    const epochMs = Date.now();
++    const snapshot: WorldCoreStateSnapshot = Object.freeze({ schemaVersion: 1, accountId, worldId,
++      worldKind: 'Unavailable', shoreOrigin: 'Unavailable', revision: 0, capturedAt: epochMs, kind: 'Core',
++      sections: Object.freeze({ Ledger: null, PuzzleProgress: null, FormatTime: Object.freeze({ epochMs }) }) });
++    this.formatStorage.initializeFormatTime(snapshot, true);
++  }
++
++  private async initializeDirectory(accountId: string): Promise<void> {
++    if (this.worldStorage.readSnapshot(accountId) !== null) { return; }
++    const lease = await this.coreStorage.acquireWorldLease(accountId, 'InitialWorld');
++    const creationId = JSON.stringify([accountId, 'InitialWorld']);
++    try {
++      if (this.worldStorage.readSnapshot(accountId) !== null) { return; }
++      this.creationIds.add(creationId);
++      this.loadFolderSession(accountId);
++    } finally { this.creationIds.delete(creationId); lease.release(); }
++  }
++
++  private async createWorld(accountId: string, title: string, description: string): Promise<void> {
++    if (this.directoryBusy || this.opening || this.runtimeNode) { return; }
++    this.directoryBusy = true;
++    const worldId = 'world-' + globalThis.crypto.randomUUID();
++    const creationId = JSON.stringify([accountId, worldId]);
++    let lease: WorldStateLease | null = null;
++    try {
++      lease = await this.coreStorage.acquireWorldLease(accountId, worldId);
++      if (!isValid(this, true)) { return; }
++      this.creationIds.add(creationId);
++      const session = this.loadFolderSession(accountId, worldId);
++      session.submitWorldFolderIntent({ kind: 'CreateWorld', title, description });
++      this.folderSession = session;
++      this.showWorldFolder();
++    } catch (error: unknown) {
++      if (isValid(this, true)) { this.folderView?.showStatus('世界未能创建：' + String(error)); }
++    } finally { this.creationIds.delete(creationId); lease?.release(); this.directoryBusy = false; }
++  }
++
++  private prepareCoreValidator(): Promise<void> {
++    if (this.coreValidatorReady !== null) { return this.coreValidatorReady.then(() => {
++      if (this.directoryCoreValidator) { this.coreStorage.bindValidator(this.directoryCoreValidator); }
++    }); }
++    const regularPath = this.regularChartUsesGuidance ? this.regularChartResourcePath : 'chart/chart_placeholder';
++    if (this.regularChartUsesGuidance && !/^chart\/[\p{L}\p{N}_-]+(?:\/[\p{L}\p{N}_-]+)*$/u.test(regularPath)) {
++      return Promise.reject(new Error('ChartResourcePath 须为 chart/ 下不含 .json 的资源路径'));
++    }
++    this.coreValidatorReady = Promise.all([
++      new Promise<JsonAsset>((resolve, reject) => resources.load('world/primary-rain-dialogue', JsonAsset,
++        (error, asset) => error || !asset ? reject(error ?? new Error('正式世界叙事内容缺失')) : resolve(asset))),
++      new Promise<JsonAsset | null>((resolve, reject) => resources.load(regularPath, JsonAsset,
++        (error, asset) => {
++          if (!error && asset) { resolve(asset); }
++          else if (this.regularChartUsesGuidance) { reject(error ?? new Error('正式常规谱面内容缺失')); }
++          else { resolve(null); }
++        })),
++    ]).then(([asset, regularAsset]) => {
++      const content = parseWorldNarrativeContent(asset.json);
++      const layout = createDefaultKeyboardPadLayout();
++      const regular = this.regularChartUsesGuidance ? parseGuidanceChart(regularAsset!.json, layout)
++        : parseRegularChartIdentity(regularAsset?.json, layout.layoutVersion) ??
++          { chartId: 'chart-placeholder-fallback', tier: 'Regular' };
++      if (regular.tier !== 'Regular') { throw new Error('目录状态检验需要已验证的常规谱面身份'); }
++      this.directoryCoreValidator = (raw, accountId, worldId) => {
++        let ledger: LedgerSnapshot | null = null;
++        const codec = new WorldStateCodec({
++          Ledger: value => {
++            ledger = new LedgerHydration({ accountId, worldId, worldKind: content.worldKind,
++              protagonistCharacterId: content.protagonistCharacterId }, content).validate(value);
++            return ledger;
++          },
++          PuzzleProgress: value => validatePuzzleProgressSnapshot(value, accountId, worldId,
++            'T6_MAIN_CHAIN', 'T6_MAIN_DEEP_TRACE', regular.chartId,
++            ledger?.characters.find(character => character.characterId === content.protagonistCharacterId)?.events ?? []),
++        });
++        return codec.parse(raw, accountId, worldId);
++      };
++      this.coreStorage.bindValidator(this.directoryCoreValidator);
++    }).catch((error: unknown) => { this.coreValidatorReady = null; throw error; });
++    return this.coreValidatorReady;
+   }
+ 
+   private showEditorFolder(): void {
+@@ -139,17 +290,23 @@ export class WorldFolderBuilder extends Component {
+     uiRoot.addChild(node); this.runtimeNode = node; return node;
+   }
+ 
+-  private openWorld(entry: WorldFolderEntry): void {
+-    if (this.retiring || this.runtimeNode) { return; }
++  private async openWorld(entry: WorldFolderEntry): Promise<void> {
++    if (this.retiring || this.runtimeNode || this.opening || this.directoryBusy) { return; }
+     const accountId = this.startup.getStartupSnapshot().accountId;
+     if (accountId === null) { return; }
++    this.opening = true;
++    let lease: WorldStateLease | null = null;
+     try {
++      lease = await this.coreStorage.acquireWorldLease(accountId, entry.worldId);
++      if (!isValid(this, true)) { lease.release(); return; }
+       // Never trust an old card: re-read the account metadata immediately before opening.
+       this.folderSession = this.loadFolderSession(accountId);
+       const record = this.folderSession.getWorldRecord(entry.worldId);
+       if (record.template === 'InitialWorld' && !this.worldFactory) { throw new Error('初始世界入口尚未接线'); }
+       const runtime = this.createRuntime(record.worldId);
+-      if (record.template === 'InitialWorld') { this.worldFactory!(runtime, { accountId, worldId: record.worldId }); }
++      this.runtimeLease = lease; lease = null;
++      if (record.template === 'InitialWorld') { this.worldFactory!(runtime, { accountId, worldId: record.worldId,
++        coreStorage: this.coreStorage, lease: this.runtimeLease }); }
+       else { runtime.addComponent(MinimalWorldBuilder).bindEntry(record); }
+       this.clearViews();
+     } catch (error) {
+@@ -160,7 +317,7 @@ export class WorldFolderBuilder extends Component {
+       }
+       this.folderView?.showStatus('世界未能打开：' + String(error));
+       return;
+-    }
++    } finally { lease?.release(); this.opening = false; }
+     this.showExitControl('退出世界 · 返回世界文件夹');
+   }
+ 
+@@ -194,6 +351,7 @@ export class WorldFolderBuilder extends Component {
+   private finishRetirement(): void {
+     // Creator performs deferred destruction after update and before draw.
+     this.retiring = false;
++    this.runtimeLease?.release(); this.runtimeLease = null;
+     const camera = this.node.getComponent(Canvas)?.cameraComponent ??
+       this.node.parent?.getComponent(Canvas)?.cameraComponent ??
+       this.node.getComponent(Camera) ?? this.node.parent?.getComponent(Camera);
+@@ -207,5 +365,24 @@ export class WorldFolderBuilder extends Component {
+     if (this.runtimeNode && isValid(this.runtimeNode, true)) {
+       this.runtimeNode.active = false; this.runtimeNode.destroy(); this.runtimeNode = null;
+     }
++    this.runtimeLease?.release(); this.runtimeLease = null;
++  }
++}
++
++/** Match SceneBuilder's legacy ChartData resource boundary without loading a runtime. */
++function parseRegularChartIdentity(raw: unknown, layoutVersion: string): { chartId: string; tier: string } | null {
++  if (typeof raw !== 'object' || raw === null) { return null; }
++  const source = raw as Record<string, unknown>;
++  if (typeof source.chartId !== 'string' || source.chartId.length === 0 ||
++      source.layoutVersion !== layoutVersion || !Array.isArray(source.notes)) { return null; }
++  const keyIds = new Set<string>(CHART_KEY_IDS);
++  for (const item of source.notes) {
++    if (typeof item !== 'object' || item === null) { return null; }
++    const note = item as Record<string, unknown>;
++    if (typeof note.timeMs !== 'number' || !Number.isFinite(note.timeMs) || note.timeMs < 0 ||
++        typeof note.keyId !== 'string' || !keyIds.has(note.keyId)) { return null; }
+   }
++  const tier = source.tier === 'Character' || source.tier === 'World' || source.tier === 'Final' ||
++    source.tier === 'Regular' ? source.tier : 'Regular';
++  return { chartId: source.chartId, tier };
+ }
+diff --git a/src/director/LedgerHydration.ts b/src/director/LedgerHydration.ts
+new file mode 100644
+--- /dev/null
++++ b/src/director/LedgerHydration.ts
+@@ -0,0 +1,237 @@
++// B2.2d-1: a validated Ledger section and its necessary append guards.
++// This is not a Complete WorldState producer and never replays gameplay effects.
++import { NarrativeDimension, VectorSchemaVersion } from '../../constants';
++import type { ChartRef } from '../../constants';
++import type { ChartEntry } from '../chart/ChartEntry';
++import { InputSource } from '../ledger/NarrativeEvent';
++import type { NarrativeEvent } from '../ledger/NarrativeEvent';
++import { deriveLedgerPosition, validateNarrativeVector } from '../ledger/deriveLedgerPosition';
++import type { WorldGameplayContext } from './WorldClearSession';
++import { parseWorldNarrativeContent } from './WorldNarrativeContent';
++import type { WorldNarrativeContent } from './WorldNarrativeContent';
++import { SphereCrossing } from './SphereCrossing';
++
++const dimensions = Object.values(NarrativeDimension)
++  .filter((value): value is NarrativeDimension => typeof value === 'number');
++
++export interface LedgerSnapshot {
++  readonly schemaVersion: 1;
++  readonly accountId: string;
++  readonly worldId: string;
++  readonly protagonistCharacterId: string;
++  readonly contentId: string;
++  readonly contentRevision: string;
++  readonly characters: readonly {
++    readonly characterId: string;
++    readonly events: readonly NarrativeEvent[];
++  }[];
++  readonly control: {
++    readonly selectedChoiceId: string | null;
++    readonly sphereCrossed: boolean;
++    readonly entry: ChartEntry | null;
++    readonly eventSequence: number;
++    readonly completionEventId: string | null;
++  };
++}
++
++export type LedgerHydrateResult =
++  | { readonly kind: 'Hydrated'; readonly snapshot: LedgerSnapshot }
++  | { readonly kind: 'Rejected'; readonly issues: readonly string[] };
++
++function ownFields(raw: unknown, names: readonly string[], label: string): Record<string, unknown> {
++  if (raw === null || typeof raw !== 'object' || Array.isArray(raw)) { throw new Error(`${label}格式无效`); }
++  const prototype: unknown = Object.getPrototypeOf(raw);
++  if (prototype !== Object.prototype && prototype !== null) { throw new Error(`${label}原型无效`); }
++  const descriptors = Object.getOwnPropertyDescriptors(raw);
++  if (Reflect.ownKeys(descriptors).length !== names.length) { throw new Error(`${label}字段无效`); }
++  const values: Record<string, unknown> = Object.create(null) as Record<string, unknown>;
++  for (const name of names) {
++    const descriptor = descriptors[name];
++    if (!descriptor || !Object.prototype.hasOwnProperty.call(descriptor, 'value')) {
++      throw new Error(`${label}字段不可安全读取`);
++    }
++    values[name] = descriptor.value;
++  }
++  return values;
++}
++
++function ownArray(raw: unknown, label: string): readonly unknown[] {
++  if (!Array.isArray(raw) || Object.getPrototypeOf(raw) !== Array.prototype) { throw new Error(`${label}数组格式无效`); }
++  const descriptors: PropertyDescriptorMap = Object.getOwnPropertyDescriptors(raw as object);
++  const length: unknown = descriptors.length?.value;
++  if (typeof length !== 'number' || !Number.isSafeInteger(length) || length < 0 ||
++      Reflect.ownKeys(descriptors).length !== length + 1) { throw new Error(`${label}数组结构无效`); }
++  const values: unknown[] = [];
++  for (let index = 0; index < length; index += 1) {
++    const descriptor = descriptors[String(index)];
++    if (!descriptor || !Object.prototype.hasOwnProperty.call(descriptor, 'value')) {
++      throw new Error(`${label}数组不可安全读取`);
++    }
++    values.push(descriptor.value);
++  }
++  return values;
++}
++
++function validId(raw: unknown, label: string, maximum = 128): asserts raw is string {
++  if (typeof raw !== 'string' || raw.length < 1 || raw.length > maximum || raw !== raw.trim()) {
++    throw new Error(`${label}标识无效`);
++  }
++  try { encodeURIComponent(raw); } catch { throw new Error(`${label}标识编码无效`); }
++}
++
++/** Complete event cloning is shared by live append and silent initial seeding. */
++export function validateLedgerNarrativeEvent(raw: unknown): NarrativeEvent {
++  const value = ownFields(raw, ['eventId', 'vector', 'VectorSchemaVersion', 'AppendedAt',
++    'InputSource', 'ChapterTag', 'ChartRef'], '账本事件');
++  validId(value.eventId, '账本事件');
++  const time = ownFields(value.AppendedAt, ['epochMs'], '追加时刻');
++  if (value.VectorSchemaVersion !== VectorSchemaVersion ||
++      (value.InputSource !== InputSource.Player && value.InputSource !== InputSource.Autopilot) ||
++      typeof time.epochMs !== 'number' || !Number.isSafeInteger(time.epochMs) || time.epochMs < 0) {
++    throw new Error('账本事件版本、来源或追加时刻无效');
++  }
++  ownFields(value.ChapterTag, [], '本批章节标记');
++  const hasState = !!value.ChartRef && Object.prototype.hasOwnProperty.call(value.ChartRef, 'state');
++  const chart = ownFields(value.ChartRef, hasState ? ['chartId', 'state'] : ['chartId'], '谱面引用');
++  validId(chart.chartId, '谱面');
++  if (hasState && chart.state !== 'Entry' && chart.state !== 'PremiereCompleted') { throw new Error('谱面引用状态无效'); }
++  if (chart.state === 'PremiereCompleted' && chart.chartId === 'CHART_NOT_BOUND') { throw new Error('未绑定谱面不能完成首演'); }
++  const ChartRef: ChartRef = hasState ? Object.freeze({ chartId: chart.chartId,
++    state: chart.state as 'Entry' | 'PremiereCompleted' }) : Object.freeze({ chartId: chart.chartId });
++  return Object.freeze({ eventId: value.eventId, vector: validateNarrativeVector(value.vector), VectorSchemaVersion,
++    AppendedAt: Object.freeze({ epochMs: time.epochMs }), InputSource: value.InputSource,
++    ChapterTag: Object.freeze({}), ChartRef });
++}
++
++function producerSequence(narrativeEvent: NarrativeEvent, prefix: string): number | null {
++  if (!narrativeEvent.eventId.startsWith(prefix)) { return null; }
++  const match = new RegExp('^' + prefix + '(0|[1-9][0-9]*):([1-9][0-9]*)$').exec(narrativeEvent.eventId);
++  if (!match) { throw new Error('制作内容账本事件标识无效'); }
++  const timestamp = Number(match[1]);
++  const sequence = Number(match[2]);
++  if (!Number.isSafeInteger(timestamp) || timestamp !== narrativeEvent.AppendedAt.epochMs ||
++      !Number.isSafeInteger(sequence)) { throw new Error('制作内容账本事件来源时间或序号不匹配'); }
++  return sequence;
++}
++
++/** All operations validate/clone only: no append sink, clock, storage or callbacks. */
++export class LedgerHydration {
++  private readonly context: WorldGameplayContext;
++  private readonly content: WorldNarrativeContent;
++
++  constructor(context: WorldGameplayContext, content: WorldNarrativeContent) {
++    validId(context.accountId, '账号', 64); validId(context.worldId, '世界');
++    validId(context.protagonistCharacterId, '主角');
++    if (context.worldKind !== 'Primary') { throw new Error('本批 Ledger 来源只接受已发布 Primary 内容'); }
++    this.context = Object.freeze({ ...context });
++    this.content = parseWorldNarrativeContent(content);
++    if (this.content.protagonistCharacterId !== context.protagonistCharacterId) { throw new Error('Ledger 制作内容主角不匹配'); }
++  }
++
++  hydrate(raw: unknown): LedgerHydrateResult {
++    try { return Object.freeze({ kind: 'Hydrated', snapshot: this.validate(raw) }); }
++    catch (error: unknown) { return Object.freeze({ kind: 'Rejected', issues: Object.freeze([
++      error instanceof Error ? error.message : 'Ledger 无法安全校验',
++    ]) }); }
++  }
++
++  validate(raw: unknown): LedgerSnapshot {
++    const value = ownFields(raw, ['schemaVersion', 'accountId', 'worldId', 'protagonistCharacterId',
++      'contentId', 'contentRevision', 'characters', 'control'], 'Ledger 快照');
++    if (value.schemaVersion !== 1 || value.accountId !== this.context.accountId || value.worldId !== this.context.worldId ||
++        value.protagonistCharacterId !== this.context.protagonistCharacterId || value.contentId !== this.content.contentId ||
++        value.contentRevision !== this.content.contentRevision) { throw new Error('Ledger 版本、身份或制作内容来源不匹配'); }
++    const control = ownFields(value.control, ['selectedChoiceId', 'sphereCrossed', 'entry', 'eventSequence', 'completionEventId'], 'Ledger 追加控制');
++    if (typeof control.sphereCrossed !== 'boolean' || typeof control.eventSequence !== 'number' ||
++        !Number.isSafeInteger(control.eventSequence) || control.eventSequence < 0) { throw new Error('Ledger 追加控制值无效'); }
++    if (control.selectedChoiceId !== null) { validId(control.selectedChoiceId, '叙事选择'); }
++    if (control.completionEventId !== null) { validId(control.completionEventId, '完成事件'); }
++    const characters: { readonly characterId: string; readonly events: readonly NarrativeEvent[] }[] = [];
++    const characterIds = new Set<string>();
++    for (const item of ownArray(value.characters, '角色账本')) {
++      const character = ownFields(item, ['characterId', 'events'], '角色账本');
++      validId(character.characterId, '账本角色');
++      if (characterIds.has(character.characterId)) { throw new Error('Ledger 角色索引重复'); }
++      characterIds.add(character.characterId);
++      const eventIds = new Set<string>();
++      const events = ownArray(character.events, '叙事事件').map(itemValue => validateLedgerNarrativeEvent(itemValue));
++      for (const narrativeEvent of events) {
++        if (eventIds.has(narrativeEvent.eventId)) { throw new Error('Ledger 同一角色事件标识重复'); }
++        eventIds.add(narrativeEvent.eventId);
++        if (character.characterId !== this.context.protagonistCharacterId &&
++            (narrativeEvent.eventId.startsWith('WORLD_NARRATIVE_CHOICE:') || narrativeEvent.eventId.startsWith('WORLD_PREMIERE_COMPLETED:'))) {
++          throw new Error('制作内容事件不能跨角色归属');
++        }
++      }
++      deriveLedgerPosition(events); // also rejects full-order accumulation overflow
++      characters.push(Object.freeze({ characterId: character.characterId, events: Object.freeze(events) }));
++    }
++    const protagonist = characters.find(character => character.characterId === this.context.protagonistCharacterId);
++    if (!protagonist) { throw new Error('Ledger 缺少正式主角载体，不能用空账本替代'); }
++    const geometry = new SphereCrossing(this.content.EventSpaceCenter, this.content.EventDistance);
++    let crossed = false;
++    let maximumSequence = 0;
++    let choiceEvent: NarrativeEvent | null = null;
++    let completionEvent: NarrativeEvent | null = null;
++    const prefix: NarrativeEvent[] = [];
++    for (const narrativeEvent of protagonist.events) {
++      const choiceSequence = producerSequence(narrativeEvent, 'WORLD_NARRATIVE_CHOICE:');
++      const completionSequence = producerSequence(narrativeEvent, 'WORLD_PREMIERE_COMPLETED:');
++      if (choiceSequence !== null || completionSequence !== null) {
++        const sequence = choiceSequence ?? completionSequence!;
++        if (sequence <= maximumSequence || narrativeEvent.InputSource !== InputSource.Player ||
++            narrativeEvent.ChartRef.chartId !== this.content.worldBossChartSource.chartId) {
++          throw new Error('制作内容事件的来源、谱面或序号不合法');
++        }
++        maximumSequence = sequence;
++      }
++      if (choiceSequence !== null) {
++        if (choiceEvent || completionEvent || narrativeEvent.ChartRef.state !== 'Entry') { throw new Error('叙事选择事实重复或引用状态无效'); }
++        choiceEvent = narrativeEvent;
++      }
++      if (completionSequence !== null) {
++        if (completionEvent || !crossed || narrativeEvent.ChartRef.state !== 'PremiereCompleted' ||
++            narrativeEvent.vector.some(component => component !== 0)) { throw new Error('World 完成事实重复、无穿越来源或向量不合法'); }
++        completionEvent = narrativeEvent;
++      }
++      if (narrativeEvent.ChartRef.chartId === this.content.worldBossChartSource.chartId &&
++          narrativeEvent.ChartRef.state === 'PremiereCompleted' && completionSequence === null) {
++        throw new Error('World 完成引用缺少已知合法生产者来源');
++      }
++      prefix.push(narrativeEvent);
++      if (narrativeEvent.InputSource === InputSource.Player && geometry.getDistance(deriveLedgerPosition(prefix)) >= this.content.EventDistance) {
++        crossed = true; // infer the persisted witness; never call the crossing trigger
++      }
++    }
++    if (control.eventSequence !== maximumSequence) { throw new Error('Ledger 制作事件序号与控制不匹配'); }
++    if (control.sphereCrossed !== crossed) { throw new Error('Ledger 穿越控制与 Player 历史前缀不匹配'); }
++    if ((completionEvent?.eventId ?? null) !== control.completionEventId) { throw new Error('Ledger 完成控制与唯一完成事实不匹配'); }
++    if (choiceEvent === null) {
++      if (control.selectedChoiceId !== null) { throw new Error('Ledger 叙事选择控制缺少真实选择事件'); }
++    } else {
++      const matches = this.content.interaction.choices.filter(choice =>
++        dimensions.every(dimension => choice.vector[dimension] === choiceEvent!.vector[dimension]));
++      if (matches.length !== 1 || matches[0].choiceId !== control.selectedChoiceId) {
++        throw new Error('Ledger 选择标识、内容向量不匹配或来源存在歧义');
++      }
++    }
++    let entry: ChartEntry | null = null;
++    if (control.entry !== null) {
++      const valueEntry = ownFields(control.entry, ['entryId', 'worldId', 'characterId', 'ChartRef', 'tier', 'source'], 'World 入口');
++      const ref = ownFields(valueEntry.ChartRef, ['chartId', 'state'], 'World 入口引用');
++      const entryId = JSON.stringify([this.context.accountId, this.context.worldId, this.context.protagonistCharacterId, 'SphereCrossing']);
++      if (!crossed || valueEntry.entryId !== entryId || valueEntry.worldId !== this.context.worldId ||
++          valueEntry.characterId !== this.context.protagonistCharacterId || valueEntry.tier !== 'World' ||
++          valueEntry.source !== 'SphereCrossing' || ref.chartId !== this.content.worldBossChartSource.chartId || ref.state !== 'Entry') {
++        throw new Error('Ledger World 入口身份、来源或唯一键不匹配');
++      }
++      entry = Object.freeze({ entryId, worldId: this.context.worldId, characterId: this.context.protagonistCharacterId,
++        ChartRef: Object.freeze({ chartId: this.content.worldBossChartSource.chartId, state: 'Entry' }), tier: 'World', source: 'SphereCrossing' });
++    } else if (crossed) { throw new Error('Ledger 已穿越却缺少原入口事实'); }
++    return Object.freeze({ schemaVersion: 1, accountId: this.context.accountId, worldId: this.context.worldId,
++      protagonistCharacterId: this.context.protagonistCharacterId, contentId: this.content.contentId,
++      contentRevision: this.content.contentRevision, characters: Object.freeze(characters),
++      control: Object.freeze({ selectedChoiceId: control.selectedChoiceId as string | null, sphereCrossed: crossed,
++        entry, eventSequence: maximumSequence, completionEventId: completionEvent?.eventId ?? null }) });
++  }
++}
+diff --git a/src/director/LedgerHydration.ts.meta b/src/director/LedgerHydration.ts.meta
+new file mode 100644
+--- /dev/null
++++ b/src/director/LedgerHydration.ts.meta
+@@ -0,0 +1,9 @@
++{
++  "ver": "4.0.24",
++  "importer": "typescript",
++  "imported": true,
++  "uuid": "9f33f462-05de-44c0-a6f0-45bdc43d0833",
++  "files": [],
++  "subMetas": {},
++  "userData": {}
++}
+diff --git a/src/director/PuzzleHydration.ts b/src/director/PuzzleHydration.ts
+new file mode 100644
+--- /dev/null
++++ b/src/director/PuzzleHydration.ts
+@@ -0,0 +1,133 @@
++// B2.2d-1 partial state: stable puzzle boundaries only, never a ChartSnapshot.
++import { InputSource } from '../ledger/NarrativeEvent';
++import type { NarrativeEvent } from '../ledger/NarrativeEvent';
++import { validateNarrativeVector } from '../ledger/deriveLedgerPosition';
++import type { PuzzleChainPrivateState } from '../trace/PuzzleChain';
++import { validatePuzzleChainPrivateState } from '../trace/PuzzleChain';
++import type { PerceptionMode } from './PlayerIntent';
++import { classifyChartReference } from './ChartReference';
++
++export interface PuzzleControlState {
++  readonly currentPerceptionMode: PerceptionMode;
++  readonly beatClockOffsetMs: number;
++  readonly endpointSettled: boolean;
++  readonly deepTraceTriggered: boolean;
++  readonly chartCompletionRecorded: boolean;
++  readonly revealPhase: 'Idle' | 'Finished';
++  readonly chartEntryScheduled: false;
++  readonly worldMotionGated: false;
++}
++
++export interface PuzzleProgressSnapshot {
++  readonly schemaVersion: 1;
++  readonly accountId: string;
++  readonly worldId: string;
++  readonly chainId: string;
++  readonly deepTraceId: string;
++  readonly ruleVersion: 1;
++  readonly chartId: string;
++  readonly chain: PuzzleChainPrivateState;
++  readonly control: PuzzleControlState;
++}
++
++function fields(raw: unknown, names: readonly string[], label: string): Record<string, unknown> {
++  if (!raw || typeof raw !== 'object' || Array.isArray(raw) ||
++      (Object.getPrototypeOf(raw) !== Object.prototype && Object.getPrototypeOf(raw) !== null)) {
++    throw new Error(`${label}须为普通对象`);
++  }
++  const descriptors = Object.getOwnPropertyDescriptors(raw);
++  if (Reflect.ownKeys(descriptors).length !== names.length) { throw new Error(`${label}字段无效`); }
++  const value: Record<string, unknown> = {};
++  for (const name of names) {
++    const descriptor = descriptors[name];
++    if (!descriptor || !Object.prototype.hasOwnProperty.call(descriptor, 'value')) {
++      throw new Error(`${label}字段不可安全读取`);
++    }
++    value[name] = descriptor.value;
++  }
++  return value;
++}
++
++function id(raw: unknown, label: string, maximum = 128): string {
++  if (typeof raw !== 'string' || !raw || raw !== raw.trim() || raw.length > maximum) {
++    throw new Error(`${label}标识无效`);
++  }
++  try { encodeURIComponent(raw); } catch { throw new Error(`${label}标识编码无效`); }
++  return raw;
++}
++
++/** Local shape validation; the full snapshot validator additionally checks the authoritative ledger. */
++export function validatePuzzleControlState(raw: unknown): PuzzleControlState {
++  const value = fields(raw, ['currentPerceptionMode', 'beatClockOffsetMs', 'endpointSettled',
++    'deepTraceTriggered', 'chartCompletionRecorded', 'revealPhase', 'chartEntryScheduled', 'worldMotionGated'], '解谜控制快照');
++  if (value.currentPerceptionMode !== 'Normal' && value.currentPerceptionMode !== 'Triggered' && value.currentPerceptionMode !== 'Rain') {
++    throw new Error('解谜感知模式无效');
++  }
++  if (typeof value.beatClockOffsetMs !== 'number' || !Number.isFinite(value.beatClockOffsetMs)) {
++    throw new Error('解谜拍点校准偏移须为有限数');
++  }
++  for (const key of ['endpointSettled', 'deepTraceTriggered', 'chartCompletionRecorded']) {
++    if (typeof value[key] !== 'boolean') { throw new Error('解谜事实须为布尔值'); }
++  }
++  if (value.chartEntryScheduled !== false || value.worldMotionGated !== false ||
++      (value.revealPhase !== 'Idle' && value.revealPhase !== 'Finished')) {
++    throw new Error('UnsupportedBoundary: 活动谱面或揭示不支持部分保存或恢复');
++  }
++  return Object.freeze({ currentPerceptionMode: value.currentPerceptionMode,
++    beatClockOffsetMs: value.beatClockOffsetMs, endpointSettled: value.endpointSettled as boolean,
++    deepTraceTriggered: value.deepTraceTriggered as boolean, chartCompletionRecorded: value.chartCompletionRecorded as boolean,
++    revealPhase: value.revealPhase, chartEntryScheduled: false, worldMotionGated: false });
++}
++
++/** Validates identity, complete private state, terminal lifecycle and exact T6/T7 facts before hydration. */
++export function validatePuzzleProgressSnapshot(
++  raw: unknown, accountId: string, worldId: string, chainId: string, deepTraceId: string,
++  chartId: string, ledgerEvents: readonly NarrativeEvent[],
++): PuzzleProgressSnapshot {
++  id(accountId, '账号', 64); id(worldId, '世界'); id(chainId, '解谜链'); id(deepTraceId, '深痕'); id(chartId, '常规谱面');
++  if (chartId === 'CHART_NOT_BOUND') { throw new Error('解谜快照要求已验证的常规谱面'); }
++  const value = fields(raw, ['schemaVersion', 'accountId', 'worldId', 'chainId', 'deepTraceId', 'ruleVersion',
++    'chartId', 'chain', 'control'], '解谜进度快照');
++  if (value.schemaVersion !== 1 || value.ruleVersion !== 1 || value.accountId !== accountId || value.worldId !== worldId ||
++      value.chainId !== chainId || value.deepTraceId !== deepTraceId || value.chartId !== chartId) {
++    throw new Error('解谜快照身份、规则或谱面引用不匹配');
++  }
++  // Production rule version 1 is the shipped 60 BPM, seven-second puzzle.
++  const chain = validatePuzzleChainPrivateState(value.chain, 1000);
++  const control = validatePuzzleControlState(value.control);
++  let endpointCount = 0, completionCount = 0;
++  const eventIds = new Set<string>();
++  for (const narrativeEvent of ledgerEvents) {
++    const classification = classifyChartReference(narrativeEvent, chartId);
++    const event = fields(narrativeEvent, ['eventId', 'vector', 'VectorSchemaVersion', 'AppendedAt',
++      'InputSource', 'ChapterTag', 'ChartRef'], '解谜关联账本事件');
++    const eventId = id(event.eventId, '账本事件');
++    if (eventIds.has(eventId)) { throw new Error('解谜关联账本有重复事件标识'); }
++    eventIds.add(eventId);
++    if (eventId !== 'T6_ENDPOINT_PLACEHOLDER' && eventId !== 'T7_COMPLETION_PLACEHOLDER') { continue; }
++    const vector = validateNarrativeVector(event.vector);
++    const reference = fields(event.ChartRef,
++      Object.prototype.hasOwnProperty.call(event.ChartRef, 'state') ? ['chartId', 'state'] : ['chartId'], '解谜关联谱面引用');
++    if (event.InputSource !== InputSource.Player || !vector.every(component => component === 0) || reference.chartId !== chartId) {
++      throw new Error('旧解谜终点或完成事件与生产者/绑定谱面不一致');
++    }
++    if (eventId === 'T6_ENDPOINT_PLACEHOLDER') {
++      if (classification !== 'Entry') { throw new Error('解谜终点必须是合法 Entry 引用'); }
++      endpointCount++;
++    } else {
++      if (classification !== 'PremiereCompleted') { throw new Error('常规谱面完成必须是合法首演完成引用'); }
++      completionCount++;
++    }
++  }
++  if (endpointCount > 1 || completionCount > 1 || control.endpointSettled !== (endpointCount === 1) ||
++      control.chartCompletionRecorded !== (completionCount === 1) || control.deepTraceTriggered !== control.endpointSettled) {
++    throw new Error('解谜终点、深痕或完成防重标志与权威账本不一致');
++  }
++  const completed = chain.stage === 'Completed';
++  if (control.endpointSettled !== completed || (control.chartCompletionRecorded && !completed) ||
++      control.revealPhase !== (completed ? 'Finished' : 'Idle')) {
++    throw new Error('解谜阶段、终点与揭示生命周期不一致');
++  }
++  return Object.freeze({ schemaVersion: 1, accountId, worldId, chainId, deepTraceId, ruleVersion: 1,
++    chartId, chain, control });
++}
+diff --git a/src/director/PuzzleHydration.ts.meta b/src/director/PuzzleHydration.ts.meta
+new file mode 100644
+--- /dev/null
++++ b/src/director/PuzzleHydration.ts.meta
+@@ -0,0 +1,9 @@
++{
++  "ver": "4.0.24",
++  "importer": "typescript",
++  "imported": true,
++  "uuid": "0a646efd-edcd-499b-a1bb-8be5d261791e",
++  "files": [],
++  "subMetas": {},
++  "userData": {}
++}
+diff --git a/src/director/WorldStateCodec.ts b/src/director/WorldStateCodec.ts
+new file mode 100644
+--- /dev/null
++++ b/src/director/WorldStateCodec.ts
+@@ -0,0 +1,173 @@
++import type { LedgerSnapshot } from './LedgerHydration';
++import type { PuzzleProgressSnapshot } from './PuzzleHydration';
++
++/** A three-section document is deliberately distinct from the seven-section brand. */
++export interface WorldCoreStateSnapshot {
++  readonly schemaVersion: 1;
++  readonly accountId: string;
++  readonly worldId: string;
++  readonly worldKind: 'Primary' | 'Shore' | 'Unavailable';
++  readonly shoreOrigin: 'BugShore' | 'FinalShore' | null | 'Unavailable';
++  readonly revision: number;
++  readonly capturedAt: number;
++  readonly kind: 'Core';
++  readonly sections: {
++    readonly Ledger: LedgerSnapshot | null;
++    readonly PuzzleProgress: readonly PuzzleProgressSnapshot[] | null;
++    readonly FormatTime: FormatTimeSnapshot | null;
++  };
++}
++
++export interface FormatTimeSnapshot { readonly epochMs: number }
++
++/** Bound domain validators carry the published content and reference context. */
++export class WorldStateCodec {
++  constructor(private readonly validators: {
++    readonly Ledger?: (raw: unknown) => LedgerSnapshot;
++    readonly PuzzleProgress?: (raw: unknown) => PuzzleProgressSnapshot;
++  } = {}) {}
++
++  parse(raw: unknown, expectedAccountId?: string, expectedWorldId?: string): WorldCoreStateSnapshot {
++    if (expectedAccountId !== undefined) { identity(expectedAccountId, 64, '账号'); }
++    if (expectedWorldId !== undefined) { identity(expectedWorldId, 128, '世界'); }
++    const data = fields(raw, ['schemaVersion', 'accountId', 'worldId', 'worldKind',
++      'shoreOrigin', 'revision', 'capturedAt', 'kind', 'sections']);
++    if (data.schemaVersion !== 1 || data.kind !== 'Core') { throw new Error('世界三项状态文档版本或种类不受支持'); }
++    identity(data.accountId, 64, '账号'); identity(data.worldId, 128, '世界');
++    if ((expectedAccountId !== undefined && data.accountId !== expectedAccountId) ||
++        (expectedWorldId !== undefined && data.worldId !== expectedWorldId)) { throw new Error('世界三项状态文档身份不匹配'); }
++    const worldKind = data.worldKind;
++    const shoreOrigin = data.shoreOrigin;
++    if ((worldKind === 'Primary' && shoreOrigin !== null) ||
++        (worldKind === 'Shore' && shoreOrigin !== 'BugShore' && shoreOrigin !== 'FinalShore') ||
++        (worldKind === 'Unavailable' && shoreOrigin !== 'Unavailable') ||
++        (worldKind !== 'Primary' && worldKind !== 'Shore' && worldKind !== 'Unavailable')) {
++      throw new Error('世界三项状态文档种类与彼岸来源不一致');
++    }
++    nonnegativeInteger(data.revision, '世界状态版本计数');
++    nonnegativeInteger(data.capturedAt, '世界状态捕获时刻');
++    const sections = fields(data.sections, ['Ledger', 'PuzzleProgress', 'FormatTime']);
++    let Ledger: LedgerSnapshot | null = null;
++    if (sections.Ledger !== null) {
++      if (this.validators.Ledger === undefined) { throw new Error('账本状态验证器尚未装配'); }
++      Ledger = cloneData(this.validators.Ledger(sections.Ledger)) as unknown as LedgerSnapshot;
++      const ledgerIdentity = fieldsContaining(Ledger, ['accountId', 'worldId']);
++      if (ledgerIdentity.accountId !== data.accountId || ledgerIdentity.worldId !== data.worldId) {
++        throw new Error('账本状态与世界文档身份不匹配');
++      }
++    }
++    let PuzzleProgress: readonly PuzzleProgressSnapshot[] | null = null;
++    if (sections.PuzzleProgress !== null) {
++      if (this.validators.PuzzleProgress === undefined) { throw new Error('解谜状态验证器尚未装配'); }
++      const puzzles: PuzzleProgressSnapshot[] = [];
++      const chainIds = new Set<string>();
++      for (const item of arrayData(sections.PuzzleProgress)) {
++        const puzzle = cloneData(this.validators.PuzzleProgress(item)) as unknown as PuzzleProgressSnapshot;
++        const puzzleIdentity = fieldsContaining(puzzle, ['accountId', 'worldId', 'chainId']);
++        identity(puzzleIdentity.chainId, 128, '解谜链');
++        if (puzzleIdentity.accountId !== data.accountId || puzzleIdentity.worldId !== data.worldId ||
++            chainIds.has(puzzleIdentity.chainId)) { throw new Error('解谜状态身份不匹配或链标识重复'); }
++        chainIds.add(puzzleIdentity.chainId); puzzles.push(puzzle);
++      }
++      PuzzleProgress = Object.freeze(puzzles);
++    }
++    let FormatTime: FormatTimeSnapshot | null = null;
++    if (sections.FormatTime !== null) {
++      const time = fields(sections.FormatTime, ['epochMs']);
++      nonnegativeInteger(time.epochMs, '世界创建时刻');
++      FormatTime = Object.freeze({ epochMs: time.epochMs });
++    }
++    return Object.freeze({ schemaVersion: 1, accountId: data.accountId, worldId: data.worldId,
++      worldKind, shoreOrigin: shoreOrigin as WorldCoreStateSnapshot['shoreOrigin'],
++      revision: data.revision, capturedAt: data.capturedAt, kind: 'Core',
++      sections: Object.freeze({ Ledger, PuzzleProgress, FormatTime }) });
++  }
++}
++
++function identity(raw: unknown, maximum: number, label: string): asserts raw is string {
++  if (typeof raw !== 'string' || raw.length < 1 || raw.length > maximum || raw !== raw.trim()) {
++    throw new Error(label + '标识无效');
++  }
++  try { encodeURIComponent(raw); } catch { throw new Error(label + '标识编码无效'); }
++}
++
++function nonnegativeInteger(raw: unknown, label: string): asserts raw is number {
++  if (typeof raw !== 'number' || !Number.isSafeInteger(raw) || raw < 0) { throw new Error(label + '必须为非负安全整数'); }
++}
++
++function descriptorsOf(raw: unknown): PropertyDescriptorMap {
++  try {
++    if (raw === null || typeof raw !== 'object' || Array.isArray(raw)) { throw new Error(); }
++    const prototype: unknown = Object.getPrototypeOf(raw);
++    if (prototype !== Object.prototype && prototype !== null) { throw new Error(); }
++    const descriptors = Object.getOwnPropertyDescriptors(raw);
++    if (Reflect.ownKeys(descriptors).some(key => typeof key !== 'string') ||
++        Object.values(descriptors).some(descriptor => !Object.prototype.hasOwnProperty.call(descriptor, 'value'))) {
++      throw new Error();
++    }
++    return descriptors;
++  } catch { throw new Error('世界三项状态文档字段无法安全读取'); }
++}
++
++function fieldsContaining(raw: unknown, names: readonly string[]): Record<string, unknown> {
++  const descriptors = descriptorsOf(raw);
++  const data = Object.create(null) as Record<string, unknown>;
++  for (const name of names) {
++    const descriptor = descriptors[name];
++    if (descriptor === undefined) { throw new Error('世界三项状态文档缺少自有字段'); }
++    data[name] = descriptor.value;
++  }
++  return data;
++}
++
++function fields(raw: unknown, names: readonly string[]): Record<string, unknown> {
++  const descriptors = descriptorsOf(raw);
++  if (Reflect.ownKeys(descriptors).length !== names.length) { throw new Error('世界三项状态文档字段无效'); }
++  const data = Object.create(null) as Record<string, unknown>;
++  for (const name of names) {
++    const descriptor = descriptors[name];
++    if (descriptor === undefined) { throw new Error('世界三项状态文档缺少自有字段'); }
++    data[name] = descriptor.value;
++  }
++  return data;
++}
++
++function arrayData(raw: unknown): readonly unknown[] {
++  try {
++    if (!Array.isArray(raw) || Object.getPrototypeOf(raw) !== Array.prototype) { throw new Error(); }
++    const descriptors: PropertyDescriptorMap = Object.getOwnPropertyDescriptors(raw as object);
++    const lengthDescriptor = descriptors.length;
++    if (lengthDescriptor === undefined || !Object.prototype.hasOwnProperty.call(lengthDescriptor, 'value')) { throw new Error(); }
++    const length: unknown = lengthDescriptor.value;
++    if (typeof length !== 'number' || !Number.isSafeInteger(length) || length < 0 ||
++        Reflect.ownKeys(descriptors).length !== length + 1) { throw new Error(); }
++    const data: unknown[] = [];
++    for (let index = 0; index < length; index++) {
++      const descriptor = descriptors[String(index)];
++      if (descriptor === undefined || !Object.prototype.hasOwnProperty.call(descriptor, 'value')) { throw new Error(); }
++      data.push(descriptor.value);
++    }
++    return Object.freeze(data);
++  } catch { throw new Error('世界三项状态文档数组无法安全读取'); }
++}
++
++/** Freeze a data-only clone of validated section output; no caller aliases survive. */
++function cloneData(raw: unknown, ancestors: Set<object> = new Set<object>()): unknown {
++  if (raw === null || typeof raw === 'string' || typeof raw === 'boolean') { return raw; }
++  if (typeof raw === 'number') {
++    if (!Number.isFinite(raw)) { throw new Error('世界三项状态文档包含非有限数值'); }
++    return raw;
++  }
++  if (typeof raw !== 'object') { throw new Error('世界三项状态文档包含非数据值'); }
++  if (ancestors.has(raw)) { throw new Error('世界三项状态文档包含循环引用'); }
++  ancestors.add(raw);
++  try {
++    if (Array.isArray(raw)) { return Object.freeze(arrayData(raw).map(value => cloneData(value, ancestors))); }
++    const descriptors = descriptorsOf(raw);
++    const data: Record<string, unknown> = {};
++    for (const name of Object.keys(descriptors)) {
++      Object.defineProperty(data, name, { value: cloneData(descriptors[name].value, ancestors), enumerable: true });
++    }
++    return Object.freeze(data);
++  } finally { ancestors.delete(raw); }
++}
+diff --git a/src/director/WorldStateCodec.ts.meta b/src/director/WorldStateCodec.ts.meta
+new file mode 100644
+--- /dev/null
++++ b/src/director/WorldStateCodec.ts.meta
+@@ -0,0 +1,9 @@
++{
++  "ver": "4.0.24",
++  "importer": "typescript",
++  "imported": true,
++  "uuid": "c3226ed6-873c-44a1-b725-3f1868f91353",
++  "files": [],
++  "subMetas": {},
++  "userData": {}
++}
+diff --git a/src/presentation/FormatTimeStorage.ts b/src/presentation/FormatTimeStorage.ts
+new file mode 100644
+--- /dev/null
++++ b/src/presentation/FormatTimeStorage.ts
+@@ -0,0 +1,22 @@
++import type { FormatTimeSnapshot, WorldCoreStateSnapshot } from '../director/IntentPort';
++import type { WorldCoreStateStorage } from './WorldCoreStateStorage';
++
++/** A section view over the one world document; never a second storage key. */
++export class FormatTimeStorage {
++  constructor(private readonly core: WorldCoreStateStorage) {}
++
++  /** Missing historical data stays null. This read never initializes a value. */
++  readFormatTime(accountId: string, worldId: string): FormatTimeSnapshot | null {
++    return this.core.readValidatedCoreState(accountId, worldId)?.sections.FormatTime ?? null;
++  }
++
++  /** Explicit new-world creation only; an existing document cannot be initialized. */
++  initializeFormatTime(snapshot: WorldCoreStateSnapshot, newWorldCreation: true): WorldCoreStateSnapshot {
++    if (newWorldCreation !== true) { throw new Error('格式化时间只能由明确的新世界创建协议初始化'); }
++    const candidate = this.core.validateCoreState(snapshot);
++    if (candidate.revision !== 0 || candidate.sections.FormatTime === null) {
++      throw new Error('世界创建协议必须提供初始版本与权威创建时刻');
++    }
++    return this.core.saveCoreState(candidate, null);
++  }
++}
+diff --git a/src/presentation/FormatTimeStorage.ts.meta b/src/presentation/FormatTimeStorage.ts.meta
+new file mode 100644
+--- /dev/null
++++ b/src/presentation/FormatTimeStorage.ts.meta
+@@ -0,0 +1,9 @@
++{
++  "ver": "4.0.24",
++  "importer": "typescript",
++  "imported": true,
++  "uuid": "8b322cd2-df52-4774-b177-529c277b7983",
++  "files": [],
++  "subMetas": {},
++  "userData": {}
++}
+diff --git a/src/presentation/WorldCoreStateStorage.ts b/src/presentation/WorldCoreStateStorage.ts
+new file mode 100644
+--- /dev/null
++++ b/src/presentation/WorldCoreStateStorage.ts
+@@ -0,0 +1,195 @@
++import type { WorldCoreStateSnapshot } from '../director/IntentPort';
++
++/** Browser capability; the callback must remain pending until its lease is released. */
++export interface WorldStateLock {
++  request<T>(name: string, operation: () => Promise<T>): Promise<T>;
++}
++
++export interface WorldStateLease {
++  release(): void;
++  /** A queued account commit must settle before its outer world lease is freed. */
++  retainUntil(operation: Promise<unknown>): void;
++}
++
++/**
++ * Three-section adapter, separate from the seven-section WorldStateStorage.
++ * A world lease must be held across graph activation, writes and World clear
++ * submission. Lock ordering is world lease first, then the existing account lock.
++ */
++export class WorldCoreStateStorage {
++  private readonly leases = new Map<string, { active: boolean; release: (() => void) | null }>();
++
++  constructor(
++    private readonly storage: Pick<Storage, 'getItem' | 'setItem'> = localStorage,
++    private readonly worldLock: WorldStateLock | null = browserWorldLock(),
++    private validateCore?: (
++      raw: unknown, accountId: string, worldId: string,
++    ) => WorldCoreStateSnapshot,
++    private readonly isActive?: (accountId: string, worldId: string) => boolean,
++  ) {}
++
++  /** Composition-root wiring only; no data is read or written by binding a codec. */
++  bindValidator(validator: (raw: unknown, accountId: string, worldId: string) => WorldCoreStateSnapshot): void {
++    this.validateCore = validator;
++  }
++
++  validateCoreState(raw: unknown): WorldCoreStateSnapshot {
++    const identity = snapshotIdentity(raw);
++    return this.validate(raw, identity.accountId, identity.worldId);
++  }
++
++  /** Unknown JSON is never a validated or complete world state. Reads do not migrate. */
++  readCoreState(accountId: string, worldId: string): unknown | null {
++    const raw = this.storage.getItem(this.key(accountId, worldId));
++    if (raw === null) { return null; }
++    let parsed: unknown;
++    try { parsed = JSON.parse(raw); }
++    catch { throw new Error('世界三项状态 JSON 损坏；原始数据已保留'); }
++    if (parsed === null || typeof parsed !== 'object' || Array.isArray(parsed)) {
++      throw new Error('世界三项状态存储格式无效；原始数据已保留');
++    }
++    return parsed;
++  }
++
++  readValidatedCoreState(accountId: string, worldId: string): WorldCoreStateSnapshot | null {
++    const raw = this.readCoreState(accountId, worldId);
++    return raw === null ? null : this.validate(raw, accountId, worldId);
++  }
++
++  /** Acquire once per runtime identity. A missing Web Locks capability rejects. */
++  async acquireWorldLease(accountId: string, worldId: string): Promise<WorldStateLease> {
++    const key = this.key(accountId, worldId);
++    if (this.worldLock === null) { throw new Error('当前环境没有世界独占锁；未激活世界或写入存储'); }
++    if (this.leases.has(key)) { throw new Error('本实例已持有或正在取得该世界独占锁'); }
++    const pending = { active: false, release: null as (() => void) | null };
++    this.leases.set(key, pending);
++    return new Promise<WorldStateLease>((resolve, reject) => {
++      const remove = (): void => { if (this.leases.get(key) === pending) { this.leases.delete(key); } };
++      let request: Promise<void>;
++      try { request = this.worldLock!.request('neurou-world-state:' + encodeURIComponent(accountId) + ':' +
++        encodeURIComponent(worldId), async () => {
++        pending.active = true;
++        await new Promise<void>(release => {
++          pending.release = release;
++          let retained = 0; let releaseRequested = false;
++          const finishRelease = (): void => {
++            if (!pending.active || !releaseRequested || retained > 0) { return; }
++            pending.active = false; remove(); release();
++          };
++          resolve(Object.freeze({
++            release: (): void => { releaseRequested = true; finishRelease(); },
++            retainUntil: (operation: Promise<unknown>): void => {
++              if (!pending.active || releaseRequested) { throw new Error('世界租约已请求释放，不能登记新账号提交'); }
++              retained++;
++              const settled = (): void => { retained--; finishRelease(); };
++              void Promise.resolve(operation).then(settled, settled);
++            },
++          }));
++        });
++        pending.active = false; remove();
++      }); } catch (error: unknown) { remove(); reject(error); return; }
++      // Keep the lock promise observed even after the acquired lease was returned.
++      void request.catch((error: unknown) => {
++        pending.active = false; pending.release?.(); remove(); reject(error);
++      });
++    });
++  }
++
++  /** Locked, re-read expected-state comparison plus monotonic revision; one key write. */
++  saveCoreState(snapshot: WorldCoreStateSnapshot, expected: unknown | null): WorldCoreStateSnapshot {
++    // Safely obtain identity before consulting a lease or invoking a validator.
++    const identity = snapshotIdentity(snapshot);
++    const key = this.key(identity.accountId, identity.worldId);
++    if (this.leases.get(key)?.active !== true) { throw new Error('世界三项状态保存须持有该世界独占租约'); }
++    if (this.isActive !== undefined && !this.isActive(identity.accountId, identity.worldId)) {
++      throw new Error('世界不存在或已删除；世界三项状态未写入');
++    }
++    const candidate = this.validate(snapshot, identity.accountId, identity.worldId);
++    const prior = expected === null ? null : this.validate(expected, identity.accountId, identity.worldId);
++    const current = this.readValidatedCoreState(identity.accountId, identity.worldId);
++    if (JSON.stringify(current) !== JSON.stringify(prior)) {
++      throw new Error('世界三项状态版本已变化；拒绝陈旧写入');
++    }
++    if (JSON.stringify(candidate) === JSON.stringify(current)) { return candidate; }
++    const nextRevision = prior === null ? 0 : prior.revision + 1;
++    if (!Number.isSafeInteger(nextRevision) || candidate.revision !== nextRevision) {
++      throw new Error('世界三项状态版本计数必须按持久版本递增');
++    }
++    if (prior !== null && JSON.stringify(candidate.sections.FormatTime) !== JSON.stringify(prior.sections.FormatTime)) {
++      // In particular, an old missing FormatTime cannot be fabricated on re-entry.
++      throw new Error('世界创建时刻不可修改或补写；历史缺失值保持不可用');
++    }
++    if (prior !== null) { preservePriorState(prior, candidate); }
++    this.storage.setItem(key, JSON.stringify(candidate));
++    return candidate;
++  }
++
++  private validate(raw: unknown, accountId: string, worldId: string): WorldCoreStateSnapshot {
++    if (this.validateCore === undefined) { throw new Error('世界三项状态完整验证器尚未装配；未写入存储'); }
++    const candidate = this.validateCore(raw, accountId, worldId);
++    if (candidate.accountId !== accountId || candidate.worldId !== worldId || candidate.kind !== 'Core') {
++      throw new Error('世界三项状态验证结果身份或文档种类不匹配');
++    }
++    return candidate;
++  }
++
++  private key(accountId: string, worldId: string): string {
++    validId(accountId, 64, '账号'); validId(worldId, 128, '世界');
++    return 'neurou-world-state-v1:' + encodeURIComponent(accountId) + ':' + encodeURIComponent(worldId);
++  }
++}
++
++function preservePriorState(prior: WorldCoreStateSnapshot, candidate: WorldCoreStateSnapshot): void {
++  if (prior.worldKind !== 'Unavailable' && (candidate.worldKind !== prior.worldKind || candidate.shoreOrigin !== prior.shoreOrigin)) {
++    throw new Error('已知世界种类与彼岸来源不可改写');
++  }
++  const previous = prior.sections.Ledger;
++  const next = candidate.sections.Ledger;
++  if (previous === null) { return; }
++  if (next === null || previous.protagonistCharacterId !== next.protagonistCharacterId ||
++      previous.contentId !== next.contentId || previous.contentRevision !== next.contentRevision) {
++    throw new Error('权威账本身份或正式内容版本不可改写');
++  }
++  for (const character of previous.characters) {
++    const updated = next.characters.find(item => item.characterId === character.characterId);
++    if (updated === undefined || updated.events.length < character.events.length ||
++        character.events.some((narrativeEvent, index) => JSON.stringify(narrativeEvent) !== JSON.stringify(updated.events[index]))) {
++      throw new Error('持久账本已有事件必须保持原顺序与原值，不可删除或改写');
++    }
++  }
++  if ((previous.control.selectedChoiceId !== null && next.control.selectedChoiceId !== previous.control.selectedChoiceId) ||
++      (previous.control.sphereCrossed && !next.control.sphereCrossed) ||
++      (previous.control.entry !== null && JSON.stringify(next.control.entry) !== JSON.stringify(previous.control.entry)) ||
++      next.control.eventSequence < previous.control.eventSequence ||
++      (previous.control.completionEventId !== null && next.control.completionEventId !== previous.control.completionEventId)) {
++    throw new Error('已产生的账本业务事实或防重序号不可回退');
++  }
++}
++
++function browserWorldLock(): WorldStateLock | null {
++  if (typeof navigator === 'undefined' || navigator.locks === undefined) { return null; }
++  return { request: <T>(name: string, operation: () => Promise<T>): Promise<T> =>
++    navigator.locks.request(name, { mode: 'exclusive' }, operation) };
++}
++
++function validId(raw: unknown, maximum: number, label: string): asserts raw is string {
++  if (typeof raw !== 'string' || !raw || raw.length > maximum || raw !== raw.trim()) { throw new Error(label + '标识无效'); }
++  try { encodeURIComponent(raw); } catch { throw new Error(label + '标识编码无效'); }
++}
++
++function snapshotIdentity(raw: unknown): { readonly accountId: string; readonly worldId: string } {
++  try {
++    if (raw === null || typeof raw !== 'object' || Array.isArray(raw)) { throw new Error(); }
++    const prototype: unknown = Object.getPrototypeOf(raw);
++    if (prototype !== Object.prototype && prototype !== null) { throw new Error(); }
++    const descriptors = Object.getOwnPropertyDescriptors(raw);
++    const account = descriptors.accountId; const world = descriptors.worldId;
++    if (account === undefined || world === undefined ||
++        !Object.prototype.hasOwnProperty.call(account, 'value') || !Object.prototype.hasOwnProperty.call(world, 'value')) {
++      throw new Error();
++    }
++    const accountId: unknown = account.value; const worldId: unknown = world.value;
++    validId(accountId, 64, '账号'); validId(worldId, 128, '世界');
++    return Object.freeze({ accountId, worldId });
++  } catch { throw new Error('世界三项状态身份无法安全读取'); }
++}
+diff --git a/src/presentation/WorldCoreStateStorage.ts.meta b/src/presentation/WorldCoreStateStorage.ts.meta
+new file mode 100644
+--- /dev/null
++++ b/src/presentation/WorldCoreStateStorage.ts.meta
+@@ -0,0 +1,9 @@
++{
++  "ver": "4.0.24",
++  "importer": "typescript",
++  "imported": true,
++  "uuid": "ab0b8d2b-a4a8-481f-80cd-3341ebdcf34d",
++  "files": [],
++  "subMetas": {},
++  "userData": {}
++}
+diff --git a/src/presentation/WorldCoreStateView.ts b/src/presentation/WorldCoreStateView.ts
+new file mode 100644
+--- /dev/null
++++ b/src/presentation/WorldCoreStateView.ts
+@@ -0,0 +1,40 @@
++import type { WorldCoreStateSnapshot } from '../director/IntentPort';
++
++/** Read-only persistence status. No event, vector or permission inputs. */
++export class WorldCoreStateView {
++  private root: HTMLElement | null = null;
++  constructor(private readonly read: () => {
++    readonly snapshot: WorldCoreStateSnapshot | null;
++    readonly restored: boolean;
++    readonly boundary: string;
++  }) {}
++
++  mount(): void {
++    if (this.root || typeof document === 'undefined') { return; }
++    const root = document.createElement('aside'); root.id = 'world-core-state';
++    root.setAttribute('aria-label', '世界记忆');
++    root.style.cssText = 'position:fixed;left:22px;bottom:24px;z-index:64;pointer-events:none;max-width:420px;padding:14px 18px;border:1px solid #647d86;border-radius:7px;background:#132734e8;color:#e0edf2;font:14px/1.6 system-ui,sans-serif;white-space:pre-line';
++    this.root = root; document.body.appendChild(root); this.refresh();
++  }
++
++  refresh(): void {
++    if (!this.root) { return; }
++    const state = this.read(), snapshot = state.snapshot;
++    const puzzle = snapshot?.sections.PuzzleProgress?.[0];
++    const count = snapshot?.sections.Ledger?.characters.reduce((sum, character) => sum + character.events.length, 0) ?? 0;
++    const time = snapshot?.sections.FormatTime;
++    const parts = Number(!!snapshot?.sections.Ledger) + Number(!!puzzle) + Number(!!time);
++    Object.assign(this.root.dataset, { restored: String(state.restored), ledgerCount: String(count),
++      revision: String(snapshot?.revision ?? 'Unavailable'), puzzleStage: puzzle?.chain.stage ?? 'Unavailable',
++      endpointSettled: String(puzzle?.control.endpointSettled ?? false), formatTime: String(time?.epochMs ?? 'Unavailable'),
++      capturedParts: String(parts), captureKind: 'Incomplete', boundary: state.boundary });
++    this.root.textContent = '世界记忆 · ' + (state.restored ? '已恢复' : '已保存') +
++      '\n账本：' + count + ' 条 · 版本 ' + (snapshot?.revision ?? 'Unavailable') +
++      '\n解谜：' + (puzzle?.chain.stage ?? '无稳定检查点') + (puzzle?.control.endpointSettled ? ' · 终点已结算' : '') +
++      '\nFormatTime：' + (time ? new Date(time.epochMs).toISOString() : 'Unavailable') +
++      '\n核心载荷 ' + parts + '/7 · Incomplete\n' + state.boundary;
++  }
++
++  setVisible(visible: boolean): void { if (this.root) { this.root.hidden = !visible; } }
++  destroy(): void { this.root?.remove(); this.root = null; }
++}
+diff --git a/src/presentation/WorldCoreStateView.ts.meta b/src/presentation/WorldCoreStateView.ts.meta
+new file mode 100644
+--- /dev/null
++++ b/src/presentation/WorldCoreStateView.ts.meta
+@@ -0,0 +1,9 @@
++{
++  "ver": "4.0.24",
++  "importer": "typescript",
++  "imported": true,
++  "uuid": "8e83117d-ba5c-4da5-8d47-418905affcd0",
++  "files": [],
++  "subMetas": {},
++  "userData": {}
++}

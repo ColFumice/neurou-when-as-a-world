@@ -1,0 +1,35 @@
+{
+  "timestamp": "2026-10-26T05:10:47.158Z",
+  "results": [
+    {
+      "name": "check-naming",
+      "exitCode": 0,
+      "errorCount": 0,
+      "warnCount": 0,
+      "output": "== check-naming-v4 ==\nA 类总数: 325\n已实现 A 类: 242\n未实现 A 类名：83 项（不报错）\n禁名命中: 0\n同名跨模块: 0\n扫描文件: 87 core + 10 adapters + 75 app\n汇总: 0 ERROR\n"
+    },
+    {
+      "name": "check-dependencies",
+      "exitCode": 0,
+      "errorCount": 0,
+      "warnCount": 0,
+      "output": "== check-dependencies-v4 ==\n扫描文件: 172\n依赖边: 402\n汇总: 0 ERROR\n"
+    },
+    {
+      "name": "check-zero-engine",
+      "exitCode": 0,
+      "errorCount": 0,
+      "warnCount": 0,
+      "output": "== check-zero-engine-v4 ==\n扫描文件: 50\n汇总: 0 ERROR\n"
+    },
+    {
+      "name": "check-ledger-single-writer",
+      "exitCode": 0,
+      "errorCount": 0,
+      "warnCount": 0,
+      "output": "== check-ledger-single-writer-v4 ==\n扫描文件: 172\n调用点: 2\n汇总: 0 ERROR\n"
+    }
+  ],
+  "totalErrors": 0,
+  "allPassed": true
+}

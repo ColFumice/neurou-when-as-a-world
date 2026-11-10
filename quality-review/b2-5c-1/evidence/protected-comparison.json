@@ -1,0 +1,65 @@
+{
+  "phase": "B2.5c-1 implementation protection",
+  "comparedUtc": "2026-10-11T04:51:23.968Z",
+  "baselineCapturedUtc": "2026-10-11T04:05:40.542Z",
+  "baselineSha256": "004da1c8a9f7d78e081f0d130e3401bb728d7240d581805427b1cd364a0047cb",
+  "beforeCount": 7070,
+  "afterCount": 7075,
+  "changed": [
+    "docs/NAMEBOOK.md",
+    "docs/spec/stage-1.md",
+    "src/director/IntentPort.ts"
+  ],
+  "removed": [],
+  "added": [
+    "src/director/SharedCanonicalBytes.ts",
+    "src/director/SharedCommitCodec.ts",
+    "src/director/SharedCommitContracts.ts",
+    "src/director/SharedCommitValidator.ts",
+    "src/director/SharedWorldReducer.ts"
+  ],
+  "intentOriginalPrefixPreserved": true,
+  "intentTypeOnlyAppend": true,
+  "intentTailBytes": 1425,
+  "allowedProduction": [
+    "src/director/SharedCommitContracts.ts",
+    "src/director/SharedCanonicalBytes.ts",
+    "src/director/SharedCommitCodec.ts",
+    "src/director/SharedCommitValidator.ts",
+    "src/director/SharedWorldReducer.ts"
+  ],
+  "authorizedAdded": [
+    "src/director/SharedCanonicalBytes.ts",
+    "src/director/SharedCommitCodec.ts",
+    "src/director/SharedCommitContracts.ts",
+    "src/director/SharedCommitValidator.ts",
+    "src/director/SharedWorldReducer.ts"
+  ],
+  "unauthorizedChanged": [
+    "docs/NAMEBOOK.md",
+    "docs/spec/stage-1.md"
+  ],
+  "unauthorizedAdded": [],
+  "pass": false,
+  "excludedDirectoryNames": [
+    "node_modules",
+    "library",
+    "temp",
+    "tmp",
+    "dist",
+    ".git",
+    ".local",
+    ".secret",
+    "secrets"
+  ],
+  "excludedPrefixes": [
+    "quality-review/b2-5c-1",
+    "quality-review/b2-real-auth/evidence/runtime/pgsql"
+  ],
+  "excludedFilePatterns": [
+    ".env",
+    "*.(pem|key|p12|pfx)",
+    "*.(zip|exe|dll|pdb|lib|o|obj|tar|gz|bz2|7z)"
+  ],
+  "limits": "All pre-existing non-excluded files are protected, including prior P3 and B2.5b evidence, docs/namebook/reference, archive/core/source, server source/package. IntentPort permits only original byte-prefix-preserved type-only export append. Exactly five new director files are allowed. Junction targets are hashed without traversal. Dependencies/caches/compiled outputs/private local data/keys/runtime binaries and this new delivery directory are excluded; private files are never read."
+}

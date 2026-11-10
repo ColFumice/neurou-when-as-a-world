@@ -1,0 +1,320 @@
+{
+  "phase": "B2.5c-2c final delivery document references and source stability",
+  "auditedUtc": "2026-10-11T09:48:51.369Z",
+  "checks": [
+    {
+      "path": "delivery-report.md",
+      "bytes": 15284,
+      "sha256": "b62b68a9b003f541ceb0788e8c51758b95766ccc9745f3b3ac31b0ede3f99d98",
+      "references": [
+        {
+          "reference": "evidence/code.diff",
+          "kind": "MarkdownLocalLink",
+          "exists": true,
+          "deferredUntilInventoryWrite": false
+        },
+        {
+          "reference": "evidence/changed-files.json",
+          "kind": "MarkdownLocalLink",
+          "exists": true,
+          "deferredUntilInventoryWrite": false
+        },
+        {
+          "reference": "evidence/validation-final-lineage.json",
+          "kind": "MarkdownLocalLink",
+          "exists": true,
+          "deferredUntilInventoryWrite": false
+        },
+        {
+          "reference": "protected-final-audit.json",
+          "kind": "MarkdownLocalLink",
+          "exists": true,
+          "deferredUntilInventoryWrite": false
+        },
+        {
+          "reference": "independent-final-review.md",
+          "kind": "MarkdownLocalLink",
+          "exists": true,
+          "deferredUntilInventoryWrite": false
+        },
+        {
+          "reference": "namebook-v3.21-appendix-proposal.md",
+          "kind": "MarkdownLocalLink",
+          "exists": true,
+          "deferredUntilInventoryWrite": false
+        },
+        {
+          "reference": "evidence/artifact-inventory-delivery.json",
+          "kind": "EvidencePathMention",
+          "exists": false,
+          "deferredUntilInventoryWrite": true
+        },
+        {
+          "reference": "evidence/code.diff",
+          "kind": "EvidencePathMention",
+          "exists": true,
+          "deferredUntilInventoryWrite": false
+        },
+        {
+          "reference": "evidence/changed-files.json",
+          "kind": "EvidencePathMention",
+          "exists": true,
+          "deferredUntilInventoryWrite": false
+        },
+        {
+          "reference": "evidence/validation-final-lineage.json",
+          "kind": "EvidencePathMention",
+          "exists": true,
+          "deferredUntilInventoryWrite": false
+        },
+        {
+          "reference": "evidence/gate-runs/final/results.json",
+          "kind": "EvidencePathMention",
+          "exists": true,
+          "deferredUntilInventoryWrite": false
+        },
+        {
+          "reference": "evidence/server-build-checks/final/results.json",
+          "kind": "EvidencePathMention",
+          "exists": true,
+          "deferredUntilInventoryWrite": false
+        },
+        {
+          "reference": "evidence/client-relay-contract/results.json",
+          "kind": "EvidencePathMention",
+          "exists": true,
+          "deferredUntilInventoryWrite": false
+        },
+        {
+          "reference": "evidence/p10-deadline-results.json",
+          "kind": "EvidencePathMention",
+          "exists": true,
+          "deferredUntilInventoryWrite": false
+        },
+        {
+          "reference": "evidence/server-relay-run-05/results.json",
+          "kind": "EvidencePathMention",
+          "exists": true,
+          "deferredUntilInventoryWrite": false
+        },
+        {
+          "reference": "evidence/server-relay-concurrency/results.json",
+          "kind": "EvidencePathMention",
+          "exists": true,
+          "deferredUntilInventoryWrite": false
+        },
+        {
+          "reference": "evidence/client-real-http-results.json",
+          "kind": "EvidencePathMention",
+          "exists": true,
+          "deferredUntilInventoryWrite": false
+        },
+        {
+          "reference": "evidence/runtime-readonly-facts.json",
+          "kind": "EvidencePathMention",
+          "exists": true,
+          "deferredUntilInventoryWrite": false
+        },
+        {
+          "reference": "evidence/relay-pull-metadata-inspection.json",
+          "kind": "EvidencePathMention",
+          "exists": true,
+          "deferredUntilInventoryWrite": false
+        },
+        {
+          "reference": "evidence/history-b24/",
+          "kind": "EvidencePathMention",
+          "exists": true,
+          "deferredUntilInventoryWrite": false
+        },
+        {
+          "reference": "evidence/history-c1/",
+          "kind": "EvidencePathMention",
+          "exists": true,
+          "deferredUntilInventoryWrite": false
+        },
+        {
+          "reference": "evidence/history-b-auth/",
+          "kind": "EvidencePathMention",
+          "exists": true,
+          "deferredUntilInventoryWrite": false
+        },
+        {
+          "reference": "evidence/history-c2b-pure/",
+          "kind": "EvidencePathMention",
+          "exists": true,
+          "deferredUntilInventoryWrite": false
+        },
+        {
+          "reference": "evidence/history-c2b-http/verified-results.json",
+          "kind": "EvidencePathMention",
+          "exists": true,
+          "deferredUntilInventoryWrite": false
+        },
+        {
+          "reference": "evidence/intent-type-erasure-final.json",
+          "kind": "EvidencePathMention",
+          "exists": true,
+          "deferredUntilInventoryWrite": false
+        },
+        {
+          "reference": "evidence/delivery-report-p10-paused.md",
+          "kind": "EvidencePathMention",
+          "exists": true,
+          "deferredUntilInventoryWrite": false
+        },
+        {
+          "reference": "evidence/implementation-plan-p11-paused.md",
+          "kind": "EvidencePathMention",
+          "exists": true,
+          "deferredUntilInventoryWrite": false
+        }
+      ],
+      "missing": [],
+      "pass": true
+    },
+    {
+      "path": "implementation-plan.md",
+      "bytes": 3958,
+      "sha256": "3588d5405124a457515f275f402dc5ddf77660e817134a15963fa0e67d4dbec4",
+      "references": [
+        {
+          "reference": "evidence/implementation-plan-p11-paused.md",
+          "kind": "EvidencePathMention",
+          "exists": true,
+          "deferredUntilInventoryWrite": false
+        }
+      ],
+      "missing": [],
+      "pass": true
+    },
+    {
+      "path": "namebook-v3.21-appendix-proposal.md",
+      "bytes": 7254,
+      "sha256": "927854537446eb44563b2371e11bda2773b103a6cb1410fa2d7686ec1a04d0b2",
+      "references": [
+        {
+          "reference": "evidence/new-names.json",
+          "kind": "EvidencePathMention",
+          "exists": true,
+          "deferredUntilInventoryWrite": false
+        }
+      ],
+      "missing": [],
+      "pass": true
+    },
+    {
+      "path": "verdicts-448-451.md",
+      "bytes": 4166,
+      "sha256": "a34d6efc51a52b37ab80cf177eabc56c3d703c2fade00a39a373fdb8501f6dac",
+      "references": [],
+      "missing": [],
+      "pass": true
+    },
+    {
+      "path": "independent-final-review.md",
+      "bytes": 1082,
+      "sha256": "403251fb241a4c16107a9d04ba7215eaf46d866fafcb8186de7bf0f0f48e7212",
+      "references": [
+        {
+          "reference": "evidence/independent-final-review.json",
+          "kind": "MarkdownLocalLink",
+          "exists": true,
+          "deferredUntilInventoryWrite": false
+        },
+        {
+          "reference": "evidence/independent-final-review.json",
+          "kind": "EvidencePathMention",
+          "exists": true,
+          "deferredUntilInventoryWrite": false
+        }
+      ],
+      "missing": [],
+      "pass": true
+    }
+  ],
+  "sourceChecks": [
+    {
+      "path": "server/src/RelayRoute.ts",
+      "deliveredSha256": "d15e6323479eb36b8f7ada83578c628d287db252e2eb78e6f27799236971bd6b",
+      "currentSha256": "d15e6323479eb36b8f7ada83578c628d287db252e2eb78e6f27799236971bd6b",
+      "unchanged": true
+    },
+    {
+      "path": "server/src/RelayService.ts",
+      "deliveredSha256": "55ffe45f60aeb69b9c32c1b4a3e498c8e184f921fdd4db23554f8baf85491549",
+      "currentSha256": "55ffe45f60aeb69b9c32c1b4a3e498c8e184f921fdd4db23554f8baf85491549",
+      "unchanged": true
+    },
+    {
+      "path": "server/src/RelayStorage.ts",
+      "deliveredSha256": "a5cbd6ea1635ca347aaa11fd9f3c2040fe16212739d2f78e277a0bbf0508e9e5",
+      "currentSha256": "a5cbd6ea1635ca347aaa11fd9f3c2040fe16212739d2f78e277a0bbf0508e9e5",
+      "unchanged": true
+    },
+    {
+      "path": "server/src/buildRelayServer.ts",
+      "deliveredSha256": "89f08e60c8c1a699c585384047bf003e981f19ba6b8043193712f10aa9798430",
+      "currentSha256": "89f08e60c8c1a699c585384047bf003e981f19ba6b8043193712f10aa9798430",
+      "unchanged": true
+    },
+    {
+      "path": "src/director/IntentPort.ts",
+      "deliveredSha256": "4348f4bdc950f1f9c6e224364fa77a80adeb0f2722c608e1dd961c0fe5a4e0a2",
+      "currentSha256": "4348f4bdc950f1f9c6e224364fa77a80adeb0f2722c608e1dd961c0fe5a4e0a2",
+      "unchanged": true
+    },
+    {
+      "path": "src/presentation/RealCommitRelayAdapter.ts",
+      "deliveredSha256": "ec4b5d8cb11caf06f499d65706a64cd880ce8c7f3ba849ff557225cebd9fd9a9",
+      "currentSha256": "ec4b5d8cb11caf06f499d65706a64cd880ce8c7f3ba849ff557225cebd9fd9a9",
+      "unchanged": true
+    },
+    {
+      "path": "src/presentation/RealSharedServiceSessionAdapter.ts",
+      "deliveredSha256": "8a1b8d778fc1d25e4c93855a2929b2c7fe3dded476599b250863a163edd2c452",
+      "currentSha256": "8a1b8d778fc1d25e4c93855a2929b2c7fe3dded476599b250863a163edd2c452",
+      "unchanged": true
+    },
+    {
+      "path": "server/shared-dist/src/buildRelayServer.js",
+      "deliveredSha256": "3be00b89204a779fbe9ebe20d825a1a5396ce6936db90f310c15adae31e3ced4",
+      "currentSha256": "3be00b89204a779fbe9ebe20d825a1a5396ce6936db90f310c15adae31e3ced4",
+      "unchanged": true
+    },
+    {
+      "path": "server/shared-dist/src/RelayRoute.js",
+      "deliveredSha256": "a1a99f9fd5da9c01d4b60096ae172ea50de9ff418bd135aa26b5227f6e3bfed2",
+      "currentSha256": "a1a99f9fd5da9c01d4b60096ae172ea50de9ff418bd135aa26b5227f6e3bfed2",
+      "unchanged": true
+    },
+    {
+      "path": "server/shared-dist/src/RelayService.js",
+      "deliveredSha256": "a7573043381d8a39597160f9aed3b9aaadd35858ba545e663f1b8c84eaf74f19",
+      "currentSha256": "a7573043381d8a39597160f9aed3b9aaadd35858ba545e663f1b8c84eaf74f19",
+      "unchanged": true
+    },
+    {
+      "path": "server/shared-dist/src/RelayStorage.js",
+      "deliveredSha256": "69d98143544dd557427ace6dc1251f9705a862244f2e3e5f6ca8314902b33c87",
+      "currentSha256": "69d98143544dd557427ace6dc1251f9705a862244f2e3e5f6ca8314902b33c87",
+      "unchanged": true
+    }
+  ],
+  "counts": {
+    "documents": 5,
+    "verifiedLocalReferences": 31,
+    "implementationAndGeneratedFiles": 11,
+    "publicTopLevelIncrement": 8,
+    "publicTopLevelCumulative": 72,
+    "protocolPublicTypes": 37
+  },
+  "deferredIndexReferences": [
+    {
+      "document": "delivery-report.md",
+      "reference": "evidence/artifact-inventory-delivery.json"
+    }
+  ],
+  "pass": true,
+  "scope": "Resolves explicit local Markdown links and evidence path mentions in final delivery documents, and rechecks hashes of the seven delivered implementation source files and four generated JS copies. If explicitly requested, the sole final inventory reference is deferred until its subsequent single creation; a read-only closure must verify this reference and the inventory hashes. Short prose references such as 同目录 or stage historical basenames are context, not blindly treated as absolute paths. Does not rewrite documents, tests, raw audits or implementation source."
+}

@@ -1,0 +1,140 @@
+[
+  {
+    "path": "assets/scripts/RealServiceBuilder.ts",
+    "change": "added",
+    "bytes": 714,
+    "sha256": "31e8ca5a05dbc365b6acf321b565de8eb1d9bd4b8d97b2599c2725c70a366f04"
+  },
+  {
+    "path": "server/.env.example",
+    "change": "added",
+    "bytes": 360,
+    "sha256": "f9c59192f289b72447cfd9f23f3ad81de2c5de39b77f518f35aab94d858e331c"
+  },
+  {
+    "path": "server/.gitignore",
+    "change": "added",
+    "bytes": 56,
+    "sha256": "ee7573c21a1fe28d7ff96c57fe186bc41b246014069553cc970947abb794f2b5"
+  },
+  {
+    "path": "server/README.md",
+    "change": "added",
+    "bytes": 6444,
+    "sha256": "9c7fe3d9b4e57b37a48cb9c5dc9f14daaca6ccf93082d39fd61b5a873981df47"
+  },
+  {
+    "path": "server/compose.yaml",
+    "change": "added",
+    "bytes": 495,
+    "sha256": "ef47117c9306ea7d6621db806a1428863e8fcd7183b9af442ed78a1ecfac94a2"
+  },
+  {
+    "path": "server/initialize-private-directory.ps1",
+    "change": "added",
+    "bytes": 1494,
+    "sha256": "71fded904adf92ee8891502899f062f8525def40e72fb76fbf9ea21142c57bb2"
+  },
+  {
+    "path": "server/migrations/001.sql",
+    "change": "added",
+    "bytes": 2326,
+    "sha256": "5468eb425557c8ca1be6c5fb969dbd5bb038e7715b10e9f4842ea15859a30d13"
+  },
+  {
+    "path": "server/package-lock.json",
+    "change": "added",
+    "bytes": 36131,
+    "sha256": "401b9338a84018d5e464a97aa6b4704eede1f42590a28ab8b620942a91e3881e"
+  },
+  {
+    "path": "server/package.json",
+    "change": "added",
+    "bytes": 667,
+    "sha256": "2599ae4a12a65e4e46650bea6405f9788b1f4a70a0ceed3f23c6e882b0488f7a"
+  },
+  {
+    "path": "server/src/app.ts",
+    "change": "added",
+    "bytes": 22201,
+    "sha256": "6dc85a8972825b42c9948133c0a27317aaa7393236cbdb215695cc7c1bc13562"
+  },
+  {
+    "path": "server/src/cli.ts",
+    "change": "added",
+    "bytes": 1410,
+    "sha256": "c49e19e4248dc3622faa4affb7c1f117f0a8648b2304c115d5632f7e25356487"
+  },
+  {
+    "path": "server/src/config.ts",
+    "change": "added",
+    "bytes": 1390,
+    "sha256": "95373f1f2921f2f7693f2c3bbbbb42124b6485364a051911499b7e8362c4ddcd"
+  },
+  {
+    "path": "server/src/contracts.ts",
+    "change": "added",
+    "bytes": 2253,
+    "sha256": "5b16a140736093879410c3d78d6389b019b8acc5ac2229e2fc3c1ef4bfe8de48"
+  },
+  {
+    "path": "server/src/crypto.ts",
+    "change": "added",
+    "bytes": 4431,
+    "sha256": "6fab4ce66d4a042f0b0b74ebda74af5a1e8a511e6a156a1b835095899eb8ac86"
+  },
+  {
+    "path": "server/src/db.ts",
+    "change": "added",
+    "bytes": 2135,
+    "sha256": "f6bb0704a84966a5676830465032657195e2203acd44dd3b8d4b74223f41067f"
+  },
+  {
+    "path": "server/src/main.ts",
+    "change": "added",
+    "bytes": 1148,
+    "sha256": "43c35003f60b0850435aef645857f3a9687832a9192d323535a83b21e319e93d"
+  },
+  {
+    "path": "server/src/strict-json.ts",
+    "change": "added",
+    "bytes": 1980,
+    "sha256": "c4f0a182e2e16511649dd19e55a0601bb152f292d801ff3800a98735f19b4e94"
+  },
+  {
+    "path": "server/test/http.test.ts",
+    "change": "added",
+    "bytes": 18838,
+    "sha256": "0ed0ba545af69d7789caf4328dbcaa5dca4e978fdd9bab5745c65f23ee3a3273"
+  },
+  {
+    "path": "server/test/main-process.test.ts",
+    "change": "added",
+    "bytes": 5991,
+    "sha256": "21c73df82f7db7dc1b0470add584f66af8bbf34e44ddeec14045b3a344e2d955"
+  },
+  {
+    "path": "server/tsconfig.json",
+    "change": "added",
+    "bytes": 352,
+    "sha256": "295c9c007e532ff44657232ec600efb4f27995fddf159c803b6fe6e451fe856a"
+  },
+  {
+    "path": "src/director/IntentPort.ts",
+    "change": "modified",
+    "bytes": 47617,
+    "sha256": "d82b84c6d6c5f82d36fcdcd23e53698dea20cb7f0719c666836fa28db44b6475"
+  },
+  {
+    "path": "src/director/RealServiceContracts.ts",
+    "change": "added",
+    "bytes": 4857,
+    "sha256": "9322048130afcfc1613e037d46a9b382ad25f645c8ae7a1ca31a4b2863120bb4"
+  },
+  {
+    "path": "src/presentation/RealAuthServiceAdapter.ts",
+    "change": "added",
+    "bytes": 28902,
+    "sha256": "18afa41f6d3f7a8f0fcaec62e21cfcd72d9c8d2b0bc0c406dcb2c8323c8f65bb"
+  }
+]

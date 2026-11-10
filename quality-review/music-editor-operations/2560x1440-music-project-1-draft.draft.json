@@ -1,0 +1,1202 @@
+{
+  "schemaVersion": 1,
+  "documentId": "music-project-1-draft",
+  "project": {
+    "schemaVersion": 1,
+    "projectId": "music-project-1",
+    "title": "雨若 · 音乐工程",
+    "ppq": 480,
+    "tempoMap": [
+      {
+        "tick": 0,
+        "bpm": 120
+      }
+    ],
+    "timeSignature": {
+      "numerator": 4,
+      "denominator": 4
+    },
+    "durationTicks": 15360,
+    "layoutVersion": "pad-layout-2",
+    "aspectRatio": 1.7777777777777777,
+    "mappingVersion": "music-mapping-1",
+    "tracks": [
+      {
+        "id": "track-1",
+        "title": "钢琴主旋律",
+        "lineId": "music-line-1",
+        "offsetMs": 0,
+        "color": {
+          "r": 110,
+          "g": 190,
+          "b": 255
+        },
+        "notes": [
+          {
+            "id": "music-note-1",
+            "tick": 1920,
+            "durationTicks": 240,
+            "pitch": 62,
+            "velocity": 90,
+            "position": {
+              "u": 0.045454545454545456,
+              "v": 0.375
+            }
+          },
+          {
+            "id": "music-note-2",
+            "tick": 1920,
+            "durationTicks": 240,
+            "pitch": 64,
+            "velocity": 90,
+            "position": {
+              "u": 0.3181818181818182,
+              "v": 0.375
+            }
+          },
+          {
+            "id": "music-note-3",
+            "tick": 2880,
+            "durationTicks": 240,
+            "pitch": 68,
+            "velocity": 90,
+            "position": {
+              "u": 0.5909090909090908,
+              "v": 0.375
+            }
+          }
+        ]
+      },
+      {
+        "id": "track-2",
+        "title": "伴奏音轨",
+        "lineId": "music-line-2",
+        "offsetMs": 0,
+        "color": {
+          "r": 230,
+          "g": 166,
+          "b": 96
+        },
+        "notes": [
+          {
+            "id": "music-note-4",
+            "tick": 2160,
+            "durationTicks": 240,
+            "pitch": 74,
+            "velocity": 90,
+            "position": {
+              "u": 0.038461538461538464,
+              "v": 0.625
+            }
+          },
+          {
+            "id": "music-note-5",
+            "tick": 2160,
+            "durationTicks": 240,
+            "pitch": 76,
+            "velocity": 90,
+            "position": {
+              "u": 0.34615384615384615,
+              "v": 0.625
+            }
+          },
+          {
+            "id": "music-note-6",
+            "tick": 3120,
+            "durationTicks": 240,
+            "pitch": 80,
+            "velocity": 90,
+            "position": {
+              "u": 0.7307692307692308,
+              "v": 0.625
+            }
+          },
+          {
+            "id": "music-note-1791615789044-1",
+            "tick": 6000,
+            "durationTicks": 240,
+            "pitch": 72,
+            "velocity": 90,
+            "position": {
+              "u": 0.045454545454545456,
+              "v": 0.375
+            }
+          },
+          {
+            "id": "music-note-1791615789044-2",
+            "tick": 6240,
+            "durationTicks": 240,
+            "pitch": 84,
+            "velocity": 90,
+            "position": {
+              "u": 0.038461538461538464,
+              "v": 0.625
+            }
+          },
+          {
+            "id": "music-note-1791615789044-3",
+            "tick": 6960,
+            "durationTicks": 240,
+            "pitch": 76,
+            "velocity": 90,
+            "position": {
+              "u": 0.3181818181818182,
+              "v": 0.375
+            }
+          },
+          {
+            "id": "music-note-1791615789044-4",
+            "tick": 7200,
+            "durationTicks": 240,
+            "pitch": 88,
+            "velocity": 90,
+            "position": {
+              "u": 0.34615384615384615,
+              "v": 0.625
+            }
+          },
+          {
+            "id": "music-note-1791615789044-5",
+            "tick": 7920,
+            "durationTicks": 240,
+            "pitch": 80,
+            "velocity": 90,
+            "position": {
+              "u": 0.5909090909090908,
+              "v": 0.375
+            }
+          },
+          {
+            "id": "music-note-1791615789044-6",
+            "tick": 8160,
+            "durationTicks": 240,
+            "pitch": 92,
+            "velocity": 90,
+            "position": {
+              "u": 0.7307692307692308,
+              "v": 0.625
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "history": {
+    "entries": [
+      {
+        "label": "PasteNotes",
+        "before": {
+          "schemaVersion": 1,
+          "projectId": "music-project-1",
+          "title": "雨若 · 音乐工程",
+          "ppq": 480,
+          "tempoMap": [
+            {
+              "tick": 0,
+              "bpm": 120
+            }
+          ],
+          "timeSignature": {
+            "numerator": 4,
+            "denominator": 4
+          },
+          "durationTicks": 15360,
+          "layoutVersion": "pad-layout-2",
+          "aspectRatio": 1.7777777777777777,
+          "mappingVersion": "music-mapping-1",
+          "tracks": [
+            {
+              "id": "track-1",
+              "title": "钢琴主旋律",
+              "lineId": "music-line-1",
+              "offsetMs": 0,
+              "color": {
+                "r": 110,
+                "g": 190,
+                "b": 255
+              },
+              "notes": [
+                {
+                  "id": "music-note-1",
+                  "tick": 960,
+                  "durationTicks": 240,
+                  "pitch": 60,
+                  "velocity": 90,
+                  "position": {
+                    "u": 0.045454545454545456,
+                    "v": 0.375
+                  }
+                },
+                {
+                  "id": "music-note-2",
+                  "tick": 1920,
+                  "durationTicks": 240,
+                  "pitch": 64,
+                  "velocity": 90,
+                  "position": {
+                    "u": 0.3181818181818182,
+                    "v": 0.375
+                  }
+                },
+                {
+                  "id": "music-note-3",
+                  "tick": 2880,
+                  "durationTicks": 240,
+                  "pitch": 68,
+                  "velocity": 90,
+                  "position": {
+                    "u": 0.5909090909090908,
+                    "v": 0.375
+                  }
+                }
+              ]
+            },
+            {
+              "id": "track-2",
+              "title": "伴奏音轨",
+              "lineId": "music-line-2",
+              "offsetMs": 0,
+              "color": {
+                "r": 230,
+                "g": 166,
+                "b": 96
+              },
+              "notes": [
+                {
+                  "id": "music-note-4",
+                  "tick": 1200,
+                  "durationTicks": 240,
+                  "pitch": 72,
+                  "velocity": 90,
+                  "position": {
+                    "u": 0.038461538461538464,
+                    "v": 0.625
+                  }
+                },
+                {
+                  "id": "music-note-5",
+                  "tick": 2160,
+                  "durationTicks": 240,
+                  "pitch": 76,
+                  "velocity": 90,
+                  "position": {
+                    "u": 0.34615384615384615,
+                    "v": 0.625
+                  }
+                },
+                {
+                  "id": "music-note-6",
+                  "tick": 3120,
+                  "durationTicks": 240,
+                  "pitch": 80,
+                  "velocity": 90,
+                  "position": {
+                    "u": 0.7307692307692308,
+                    "v": 0.625
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "after": {
+          "schemaVersion": 1,
+          "projectId": "music-project-1",
+          "title": "雨若 · 音乐工程",
+          "ppq": 480,
+          "tempoMap": [
+            {
+              "tick": 0,
+              "bpm": 120
+            }
+          ],
+          "timeSignature": {
+            "numerator": 4,
+            "denominator": 4
+          },
+          "durationTicks": 15360,
+          "layoutVersion": "pad-layout-2",
+          "aspectRatio": 1.7777777777777777,
+          "mappingVersion": "music-mapping-1",
+          "tracks": [
+            {
+              "id": "track-1",
+              "title": "钢琴主旋律",
+              "lineId": "music-line-1",
+              "offsetMs": 0,
+              "color": {
+                "r": 110,
+                "g": 190,
+                "b": 255
+              },
+              "notes": [
+                {
+                  "id": "music-note-1",
+                  "tick": 960,
+                  "durationTicks": 240,
+                  "pitch": 60,
+                  "velocity": 90,
+                  "position": {
+                    "u": 0.045454545454545456,
+                    "v": 0.375
+                  }
+                },
+                {
+                  "id": "music-note-2",
+                  "tick": 1920,
+                  "durationTicks": 240,
+                  "pitch": 64,
+                  "velocity": 90,
+                  "position": {
+                    "u": 0.3181818181818182,
+                    "v": 0.375
+                  }
+                },
+                {
+                  "id": "music-note-3",
+                  "tick": 2880,
+                  "durationTicks": 240,
+                  "pitch": 68,
+                  "velocity": 90,
+                  "position": {
+                    "u": 0.5909090909090908,
+                    "v": 0.375
+                  }
+                }
+              ]
+            },
+            {
+              "id": "track-2",
+              "title": "伴奏音轨",
+              "lineId": "music-line-2",
+              "offsetMs": 0,
+              "color": {
+                "r": 230,
+                "g": 166,
+                "b": 96
+              },
+              "notes": [
+                {
+                  "id": "music-note-4",
+                  "tick": 1200,
+                  "durationTicks": 240,
+                  "pitch": 72,
+                  "velocity": 90,
+                  "position": {
+                    "u": 0.038461538461538464,
+                    "v": 0.625
+                  }
+                },
+                {
+                  "id": "music-note-5",
+                  "tick": 2160,
+                  "durationTicks": 240,
+                  "pitch": 76,
+                  "velocity": 90,
+                  "position": {
+                    "u": 0.34615384615384615,
+                    "v": 0.625
+                  }
+                },
+                {
+                  "id": "music-note-6",
+                  "tick": 3120,
+                  "durationTicks": 240,
+                  "pitch": 80,
+                  "velocity": 90,
+                  "position": {
+                    "u": 0.7307692307692308,
+                    "v": 0.625
+                  }
+                },
+                {
+                  "id": "music-note-1791615789044-1",
+                  "tick": 6000,
+                  "durationTicks": 240,
+                  "pitch": 72,
+                  "velocity": 90,
+                  "position": {
+                    "u": 0.045454545454545456,
+                    "v": 0.375
+                  }
+                },
+                {
+                  "id": "music-note-1791615789044-2",
+                  "tick": 6240,
+                  "durationTicks": 240,
+                  "pitch": 84,
+                  "velocity": 90,
+                  "position": {
+                    "u": 0.038461538461538464,
+                    "v": 0.625
+                  }
+                },
+                {
+                  "id": "music-note-1791615789044-3",
+                  "tick": 6960,
+                  "durationTicks": 240,
+                  "pitch": 76,
+                  "velocity": 90,
+                  "position": {
+                    "u": 0.3181818181818182,
+                    "v": 0.375
+                  }
+                },
+                {
+                  "id": "music-note-1791615789044-4",
+                  "tick": 7200,
+                  "durationTicks": 240,
+                  "pitch": 88,
+                  "velocity": 90,
+                  "position": {
+                    "u": 0.34615384615384615,
+                    "v": 0.625
+                  }
+                },
+                {
+                  "id": "music-note-1791615789044-5",
+                  "tick": 7920,
+                  "durationTicks": 240,
+                  "pitch": 80,
+                  "velocity": 90,
+                  "position": {
+                    "u": 0.5909090909090908,
+                    "v": 0.375
+                  }
+                },
+                {
+                  "id": "music-note-1791615789044-6",
+                  "tick": 8160,
+                  "durationTicks": 240,
+                  "pitch": 92,
+                  "velocity": 90,
+                  "position": {
+                    "u": 0.7307692307692308,
+                    "v": 0.625
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "label": "MoveNotes",
+        "before": {
+          "schemaVersion": 1,
+          "projectId": "music-project-1",
+          "title": "雨若 · 音乐工程",
+          "ppq": 480,
+          "tempoMap": [
+            {
+              "tick": 0,
+              "bpm": 120
+            }
+          ],
+          "timeSignature": {
+            "numerator": 4,
+            "denominator": 4
+          },
+          "durationTicks": 15360,
+          "layoutVersion": "pad-layout-2",
+          "aspectRatio": 1.7777777777777777,
+          "mappingVersion": "music-mapping-1",
+          "tracks": [
+            {
+              "id": "track-1",
+              "title": "钢琴主旋律",
+              "lineId": "music-line-1",
+              "offsetMs": 0,
+              "color": {
+                "r": 110,
+                "g": 190,
+                "b": 255
+              },
+              "notes": [
+                {
+                  "id": "music-note-1",
+                  "tick": 960,
+                  "durationTicks": 240,
+                  "pitch": 60,
+                  "velocity": 90,
+                  "position": {
+                    "u": 0.045454545454545456,
+                    "v": 0.375
+                  }
+                },
+                {
+                  "id": "music-note-2",
+                  "tick": 1920,
+                  "durationTicks": 240,
+                  "pitch": 64,
+                  "velocity": 90,
+                  "position": {
+                    "u": 0.3181818181818182,
+                    "v": 0.375
+                  }
+                },
+                {
+                  "id": "music-note-3",
+                  "tick": 2880,
+                  "durationTicks": 240,
+                  "pitch": 68,
+                  "velocity": 90,
+                  "position": {
+                    "u": 0.5909090909090908,
+                    "v": 0.375
+                  }
+                }
+              ]
+            },
+            {
+              "id": "track-2",
+              "title": "伴奏音轨",
+              "lineId": "music-line-2",
+              "offsetMs": 0,
+              "color": {
+                "r": 230,
+                "g": 166,
+                "b": 96
+              },
+              "notes": [
+                {
+                  "id": "music-note-4",
+                  "tick": 1200,
+                  "durationTicks": 240,
+                  "pitch": 72,
+                  "velocity": 90,
+                  "position": {
+                    "u": 0.038461538461538464,
+                    "v": 0.625
+                  }
+                },
+                {
+                  "id": "music-note-5",
+                  "tick": 2160,
+                  "durationTicks": 240,
+                  "pitch": 76,
+                  "velocity": 90,
+                  "position": {
+                    "u": 0.34615384615384615,
+                    "v": 0.625
+                  }
+                },
+                {
+                  "id": "music-note-6",
+                  "tick": 3120,
+                  "durationTicks": 240,
+                  "pitch": 80,
+                  "velocity": 90,
+                  "position": {
+                    "u": 0.7307692307692308,
+                    "v": 0.625
+                  }
+                },
+                {
+                  "id": "music-note-1791615789044-1",
+                  "tick": 6000,
+                  "durationTicks": 240,
+                  "pitch": 72,
+                  "velocity": 90,
+                  "position": {
+                    "u": 0.045454545454545456,
+                    "v": 0.375
+                  }
+                },
+                {
+                  "id": "music-note-1791615789044-2",
+                  "tick": 6240,
+                  "durationTicks": 240,
+                  "pitch": 84,
+                  "velocity": 90,
+                  "position": {
+                    "u": 0.038461538461538464,
+                    "v": 0.625
+                  }
+                },
+                {
+                  "id": "music-note-1791615789044-3",
+                  "tick": 6960,
+                  "durationTicks": 240,
+                  "pitch": 76,
+                  "velocity": 90,
+                  "position": {
+                    "u": 0.3181818181818182,
+                    "v": 0.375
+                  }
+                },
+                {
+                  "id": "music-note-1791615789044-4",
+                  "tick": 7200,
+                  "durationTicks": 240,
+                  "pitch": 88,
+                  "velocity": 90,
+                  "position": {
+                    "u": 0.34615384615384615,
+                    "v": 0.625
+                  }
+                },
+                {
+                  "id": "music-note-1791615789044-5",
+                  "tick": 7920,
+                  "durationTicks": 240,
+                  "pitch": 80,
+                  "velocity": 90,
+                  "position": {
+                    "u": 0.5909090909090908,
+                    "v": 0.375
+                  }
+                },
+                {
+                  "id": "music-note-1791615789044-6",
+                  "tick": 8160,
+                  "durationTicks": 240,
+                  "pitch": 92,
+                  "velocity": 90,
+                  "position": {
+                    "u": 0.7307692307692308,
+                    "v": 0.625
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "after": {
+          "schemaVersion": 1,
+          "projectId": "music-project-1",
+          "title": "雨若 · 音乐工程",
+          "ppq": 480,
+          "tempoMap": [
+            {
+              "tick": 0,
+              "bpm": 120
+            }
+          ],
+          "timeSignature": {
+            "numerator": 4,
+            "denominator": 4
+          },
+          "durationTicks": 15360,
+          "layoutVersion": "pad-layout-2",
+          "aspectRatio": 1.7777777777777777,
+          "mappingVersion": "music-mapping-1",
+          "tracks": [
+            {
+              "id": "track-1",
+              "title": "钢琴主旋律",
+              "lineId": "music-line-1",
+              "offsetMs": 0,
+              "color": {
+                "r": 110,
+                "g": 190,
+                "b": 255
+              },
+              "notes": [
+                {
+                  "id": "music-note-1",
+                  "tick": 1920,
+                  "durationTicks": 240,
+                  "pitch": 62,
+                  "velocity": 90,
+                  "position": {
+                    "u": 0.045454545454545456,
+                    "v": 0.375
+                  }
+                },
+                {
+                  "id": "music-note-2",
+                  "tick": 1920,
+                  "durationTicks": 240,
+                  "pitch": 64,
+                  "velocity": 90,
+                  "position": {
+                    "u": 0.3181818181818182,
+                    "v": 0.375
+                  }
+                },
+                {
+                  "id": "music-note-3",
+                  "tick": 2880,
+                  "durationTicks": 240,
+                  "pitch": 68,
+                  "velocity": 90,
+                  "position": {
+                    "u": 0.5909090909090908,
+                    "v": 0.375
+                  }
+                }
+              ]
+            },
+            {
+              "id": "track-2",
+              "title": "伴奏音轨",
+              "lineId": "music-line-2",
+              "offsetMs": 0,
+              "color": {
+                "r": 230,
+                "g": 166,
+                "b": 96
+              },
+              "notes": [
+                {
+                  "id": "music-note-4",
+                  "tick": 2160,
+                  "durationTicks": 240,
+                  "pitch": 74,
+                  "velocity": 90,
+                  "position": {
+                    "u": 0.038461538461538464,
+                    "v": 0.625
+                  }
+                },
+                {
+                  "id": "music-note-5",
+                  "tick": 2160,
+                  "durationTicks": 240,
+                  "pitch": 76,
+                  "velocity": 90,
+                  "position": {
+                    "u": 0.34615384615384615,
+                    "v": 0.625
+                  }
+                },
+                {
+                  "id": "music-note-6",
+                  "tick": 3120,
+                  "durationTicks": 240,
+                  "pitch": 80,
+                  "velocity": 90,
+                  "position": {
+                    "u": 0.7307692307692308,
+                    "v": 0.625
+                  }
+                },
+                {
+                  "id": "music-note-1791615789044-1",
+                  "tick": 6000,
+                  "durationTicks": 240,
+                  "pitch": 72,
+                  "velocity": 90,
+                  "position": {
+                    "u": 0.045454545454545456,
+                    "v": 0.375
+                  }
+                },
+                {
+                  "id": "music-note-1791615789044-2",
+                  "tick": 6240,
+                  "durationTicks": 240,
+                  "pitch": 84,
+                  "velocity": 90,
+                  "position": {
+                    "u": 0.038461538461538464,
+                    "v": 0.625
+                  }
+                },
+                {
+                  "id": "music-note-1791615789044-3",
+                  "tick": 6960,
+                  "durationTicks": 240,
+                  "pitch": 76,
+                  "velocity": 90,
+                  "position": {
+                    "u": 0.3181818181818182,
+                    "v": 0.375
+                  }
+                },
+                {
+                  "id": "music-note-1791615789044-4",
+                  "tick": 7200,
+                  "durationTicks": 240,
+                  "pitch": 88,
+                  "velocity": 90,
+                  "position": {
+                    "u": 0.34615384615384615,
+                    "v": 0.625
+                  }
+                },
+                {
+                  "id": "music-note-1791615789044-5",
+                  "tick": 7920,
+                  "durationTicks": 240,
+                  "pitch": 80,
+                  "velocity": 90,
+                  "position": {
+                    "u": 0.5909090909090908,
+                    "v": 0.375
+                  }
+                },
+                {
+                  "id": "music-note-1791615789044-6",
+                  "tick": 8160,
+                  "durationTicks": 240,
+                  "pitch": 92,
+                  "velocity": 90,
+                  "position": {
+                    "u": 0.7307692307692308,
+                    "v": 0.625
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "label": "DeleteNotes",
+        "before": {
+          "schemaVersion": 1,
+          "projectId": "music-project-1",
+          "title": "雨若 · 音乐工程",
+          "ppq": 480,
+          "tempoMap": [
+            {
+              "tick": 0,
+              "bpm": 120
+            }
+          ],
+          "timeSignature": {
+            "numerator": 4,
+            "denominator": 4
+          },
+          "durationTicks": 15360,
+          "layoutVersion": "pad-layout-2",
+          "aspectRatio": 1.7777777777777777,
+          "mappingVersion": "music-mapping-1",
+          "tracks": [
+            {
+              "id": "track-1",
+              "title": "钢琴主旋律",
+              "lineId": "music-line-1",
+              "offsetMs": 0,
+              "color": {
+                "r": 110,
+                "g": 190,
+                "b": 255
+              },
+              "notes": [
+                {
+                  "id": "music-note-1",
+                  "tick": 1920,
+                  "durationTicks": 240,
+                  "pitch": 62,
+                  "velocity": 90,
+                  "position": {
+                    "u": 0.045454545454545456,
+                    "v": 0.375
+                  }
+                },
+                {
+                  "id": "music-note-2",
+                  "tick": 1920,
+                  "durationTicks": 240,
+                  "pitch": 64,
+                  "velocity": 90,
+                  "position": {
+                    "u": 0.3181818181818182,
+                    "v": 0.375
+                  }
+                },
+                {
+                  "id": "music-note-3",
+                  "tick": 2880,
+                  "durationTicks": 240,
+                  "pitch": 68,
+                  "velocity": 90,
+                  "position": {
+                    "u": 0.5909090909090908,
+                    "v": 0.375
+                  }
+                }
+              ]
+            },
+            {
+              "id": "track-2",
+              "title": "伴奏音轨",
+              "lineId": "music-line-2",
+              "offsetMs": 0,
+              "color": {
+                "r": 230,
+                "g": 166,
+                "b": 96
+              },
+              "notes": [
+                {
+                  "id": "music-note-4",
+                  "tick": 2160,
+                  "durationTicks": 240,
+                  "pitch": 74,
+                  "velocity": 90,
+                  "position": {
+                    "u": 0.038461538461538464,
+                    "v": 0.625
+                  }
+                },
+                {
+                  "id": "music-note-5",
+                  "tick": 2160,
+                  "durationTicks": 240,
+                  "pitch": 76,
+                  "velocity": 90,
+                  "position": {
+                    "u": 0.34615384615384615,
+                    "v": 0.625
+                  }
+                },
+                {
+                  "id": "music-note-6",
+                  "tick": 3120,
+                  "durationTicks": 240,
+                  "pitch": 80,
+                  "velocity": 90,
+                  "position": {
+                    "u": 0.7307692307692308,
+                    "v": 0.625
+                  }
+                },
+                {
+                  "id": "music-note-1791615789044-1",
+                  "tick": 6000,
+                  "durationTicks": 240,
+                  "pitch": 72,
+                  "velocity": 90,
+                  "position": {
+                    "u": 0.045454545454545456,
+                    "v": 0.375
+                  }
+                },
+                {
+                  "id": "music-note-1791615789044-2",
+                  "tick": 6240,
+                  "durationTicks": 240,
+                  "pitch": 84,
+                  "velocity": 90,
+                  "position": {
+                    "u": 0.038461538461538464,
+                    "v": 0.625
+                  }
+                },
+                {
+                  "id": "music-note-1791615789044-3",
+                  "tick": 6960,
+                  "durationTicks": 240,
+                  "pitch": 76,
+                  "velocity": 90,
+                  "position": {
+                    "u": 0.3181818181818182,
+                    "v": 0.375
+                  }
+                },
+                {
+                  "id": "music-note-1791615789044-4",
+                  "tick": 7200,
+                  "durationTicks": 240,
+                  "pitch": 88,
+                  "velocity": 90,
+                  "position": {
+                    "u": 0.34615384615384615,
+                    "v": 0.625
+                  }
+                },
+                {
+                  "id": "music-note-1791615789044-5",
+                  "tick": 7920,
+                  "durationTicks": 240,
+                  "pitch": 80,
+                  "velocity": 90,
+                  "position": {
+                    "u": 0.5909090909090908,
+                    "v": 0.375
+                  }
+                },
+                {
+                  "id": "music-note-1791615789044-6",
+                  "tick": 8160,
+                  "durationTicks": 240,
+                  "pitch": 92,
+                  "velocity": 90,
+                  "position": {
+                    "u": 0.7307692307692308,
+                    "v": 0.625
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "after": {
+          "schemaVersion": 1,
+          "projectId": "music-project-1",
+          "title": "雨若 · 音乐工程",
+          "ppq": 480,
+          "tempoMap": [
+            {
+              "tick": 0,
+              "bpm": 120
+            }
+          ],
+          "timeSignature": {
+            "numerator": 4,
+            "denominator": 4
+          },
+          "durationTicks": 15360,
+          "layoutVersion": "pad-layout-2",
+          "aspectRatio": 1.7777777777777777,
+          "mappingVersion": "music-mapping-1",
+          "tracks": [
+            {
+              "id": "track-1",
+              "title": "钢琴主旋律",
+              "lineId": "music-line-1",
+              "offsetMs": 0,
+              "color": {
+                "r": 110,
+                "g": 190,
+                "b": 255
+              },
+              "notes": [
+                {
+                  "id": "music-note-2",
+                  "tick": 1920,
+                  "durationTicks": 240,
+                  "pitch": 64,
+                  "velocity": 90,
+                  "position": {
+                    "u": 0.3181818181818182,
+                    "v": 0.375
+                  }
+                },
+                {
+                  "id": "music-note-3",
+                  "tick": 2880,
+                  "durationTicks": 240,
+                  "pitch": 68,
+                  "velocity": 90,
+                  "position": {
+                    "u": 0.5909090909090908,
+                    "v": 0.375
+                  }
+                }
+              ]
+            },
+            {
+              "id": "track-2",
+              "title": "伴奏音轨",
+              "lineId": "music-line-2",
+              "offsetMs": 0,
+              "color": {
+                "r": 230,
+                "g": 166,
+                "b": 96
+              },
+              "notes": [
+                {
+                  "id": "music-note-4",
+                  "tick": 2160,
+                  "durationTicks": 240,
+                  "pitch": 74,
+                  "velocity": 90,
+                  "position": {
+                    "u": 0.038461538461538464,
+                    "v": 0.625
+                  }
+                },
+                {
+                  "id": "music-note-5",
+                  "tick": 2160,
+                  "durationTicks": 240,
+                  "pitch": 76,
+                  "velocity": 90,
+                  "position": {
+                    "u": 0.34615384615384615,
+                    "v": 0.625
+                  }
+                },
+                {
+                  "id": "music-note-6",
+                  "tick": 3120,
+                  "durationTicks": 240,
+                  "pitch": 80,
+                  "velocity": 90,
+                  "position": {
+                    "u": 0.7307692307692308,
+                    "v": 0.625
+                  }
+                },
+                {
+                  "id": "music-note-1791615789044-1",
+                  "tick": 6000,
+                  "durationTicks": 240,
+                  "pitch": 72,
+                  "velocity": 90,
+                  "position": {
+                    "u": 0.045454545454545456,
+                    "v": 0.375
+                  }
+                },
+                {
+                  "id": "music-note-1791615789044-2",
+                  "tick": 6240,
+                  "durationTicks": 240,
+                  "pitch": 84,
+                  "velocity": 90,
+                  "position": {
+                    "u": 0.038461538461538464,
+                    "v": 0.625
+                  }
+                },
+                {
+                  "id": "music-note-1791615789044-3",
+                  "tick": 6960,
+                  "durationTicks": 240,
+                  "pitch": 76,
+                  "velocity": 90,
+                  "position": {
+                    "u": 0.3181818181818182,
+                    "v": 0.375
+                  }
+                },
+                {
+                  "id": "music-note-1791615789044-4",
+                  "tick": 7200,
+                  "durationTicks": 240,
+                  "pitch": 88,
+                  "velocity": 90,
+                  "position": {
+                    "u": 0.34615384615384615,
+                    "v": 0.625
+                  }
+                },
+                {
+                  "id": "music-note-1791615789044-5",
+                  "tick": 7920,
+                  "durationTicks": 240,
+                  "pitch": 80,
+                  "velocity": 90,
+                  "position": {
+                    "u": 0.5909090909090908,
+                    "v": 0.375
+                  }
+                },
+                {
+                  "id": "music-note-1791615789044-6",
+                  "tick": 8160,
+                  "durationTicks": 240,
+                  "pitch": 92,
+                  "velocity": 90,
+                  "position": {
+                    "u": 0.7307692307692308,
+                    "v": 0.625
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ],
+    "cursor": 2
+  },
+  "revision": 16
+}

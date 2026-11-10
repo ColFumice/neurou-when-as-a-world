@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "phase": "B2.4b",
+  "generatedAt": "2026-10-10T13:35:37.969Z",
+  "algorithm": "sha256",
+  "baselinePathCount": 587,
+  "finalPathCount": 595,
+  "changed": [
+    "assets/scripts/src/director/IntentPort.ts",
+    "src/director/IntentPort.ts"
+  ],
+  "added": [
+    "assets/scripts/src/director/WorldHomeRegistry.ts",
+    "assets/scripts/src/director/WorldHomeRegistry.ts.meta",
+    "assets/scripts/src/presentation/WorldHomeContractAdapter.ts",
+    "assets/scripts/src/presentation/WorldHomeContractAdapter.ts.meta",
+    "src/director/WorldHomeRegistry.ts",
+    "src/director/WorldHomeRegistry.ts.meta",
+    "src/presentation/WorldHomeContractAdapter.ts",
+    "src/presentation/WorldHomeContractAdapter.ts.meta"
+  ],
+  "removed": [],
+  "allowedChanged": [
+    "src/director/IntentPort.ts",
+    "assets/scripts/src/director/IntentPort.ts"
+  ],
+  "allowedAdded": [
+    "src/director/WorldHomeRegistry.ts",
+    "src/director/WorldHomeRegistry.ts.meta",
+    "src/presentation/WorldHomeContractAdapter.ts",
+    "src/presentation/WorldHomeContractAdapter.ts.meta",
+    "assets/scripts/src/director/WorldHomeRegistry.ts",
+    "assets/scripts/src/director/WorldHomeRegistry.ts.meta",
+    "assets/scripts/src/presentation/WorldHomeContractAdapter.ts",
+    "assets/scripts/src/presentation/WorldHomeContractAdapter.ts.meta"
+  ],
+  "unexpectedChanged": [],
+  "unexpectedAdded": [],
+  "missingNewFiles": [],
+  "oldIntentPrefixUnchanged": true,
+  "onlyExpectedTypeExports": true,
+  "linksUnchanged": true,
+  "unreadableBefore": [],
+  "unreadableAfter": [],
+  "scope": {
+    "directories": [
+      "src",
+      "constants",
+      "assets",
+      "scripts",
+      "types",
+      "docs",
+      "settings",
+      "profiles",
+      ".trae",
+      ".creator",
+      "archive"
+    ],
+    "rootFiles": [
+      "package.json",
+      "package-lock.json",
+      "tsconfig.json",
+      "雨若_Neurou_main_describe.docx",
+      "雨若_Neurou_core_gameplay.docx",
+      "big logo.png",
+      "small logo.png",
+      "641f3d33-4bab-4769-8f46-62a03315d1b1.jsonl"
+    ],
+    "excludedDirectoryNames": [
+      "node_modules",
+      ".git",
+      "library",
+      "temp",
+      "tmp"
+    ]
+  },
+  "pass": true,
+  "limitation": "Explicit protected scope, including archive references; evidence directory and generated dependencies excluded. No Git repository is present."
+}

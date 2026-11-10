@@ -1,0 +1,28 @@
+{
+  "startedAt": "2026-10-26T05:07:16.011Z",
+  "error": null,
+  "explore": {
+    "href": "http://localhost:1420/",
+    "hud": true,
+    "grid": false,
+    "start": false,
+    "score": false,
+    "text": "NEUROU / EXPLORE\n\nw1\n\nchart-w1 · 视差探索\n\n000.011\nTIME\n0\nTRACE\nIDLE\nFRAME\nReady\nLEDGER\n\nFRAME Idle / Unlocked · SHIFT + 方向键移动框 · SHIFT + ENTER 痕对齐"
+  },
+  "rhythm": {
+    "grid": true,
+    "hud": true,
+    "start": false
+  },
+  "result": "NEUROU / RESULT\n\nCHART COMPLETE\n\n000000\n\nPERFECT 0 · GOOD 0 · MISS 6 · MAX 0\n\n首演已写入账本\n\nRETURN TO EXPLORE",
+  "returned": {
+    "explore": true,
+    "grid": false,
+    "hud": false
+  },
+  "ledger": {
+    "lines": 1,
+    "valid": true
+  },
+  "finishedAt": "2026-10-26T05:07:45.286Z"
+}

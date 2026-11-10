@@ -1,0 +1,243 @@
+{
+  "passed": 14,
+  "failed": 0,
+  "results": [
+    {
+      "name": "caller-isolation-deep-freeze",
+      "passed": true
+    },
+    {
+      "name": "invalid-edit-atomic",
+      "passed": true
+    },
+    {
+      "name": "edit-undo-redo",
+      "passed": true
+    },
+    {
+      "name": "undo-branch-truncates-redo",
+      "passed": true
+    },
+    {
+      "name": "draft-history-roundtrip",
+      "passed": true
+    },
+    {
+      "name": "tempo-inverse",
+      "passed": true
+    },
+    {
+      "name": "real-consumer-schema3",
+      "passed": true
+    },
+    {
+      "name": "tiny-aspect-path-rejected",
+      "passed": true
+    },
+    {
+      "name": "source-fingerprint-different-import-same-id",
+      "passed": true
+    },
+    {
+      "name": "bar-emphasis",
+      "passed": true
+    },
+    {
+      "name": "oversize-duration-rejected",
+      "passed": true
+    },
+    {
+      "name": "ast-new-code-no-require-or-side-effect-import",
+      "passed": true
+    },
+    {
+      "name": "creator-junction-same-source",
+      "passed": true
+    },
+    {
+      "name": "pause-during-pending-resume",
+      "passed": true
+    }
+  ],
+  "astFiles": [
+    {
+      "file": "src/musicEditor/MusicProjectData.ts",
+      "sha256": "0cbf532438e377d80f4e3452e831e5769c0e5df6fea3e15455b24e53b7c0c424",
+      "imports": [
+        {
+          "specifier": "../chart/GuidanceChart",
+          "typeOnly": true
+        },
+        {
+          "specifier": "../chart/KeyboardPadLayout",
+          "typeOnly": true
+        },
+        {
+          "specifier": "../editor/GuidanceEditorSession",
+          "typeOnly": true
+        }
+      ]
+    },
+    {
+      "file": "src/musicEditor/MusicTiming.ts",
+      "sha256": "8bdc2f6ce19ab8b85ea4178f54329e3707c6b429a00872e6fbd409da13981ac1",
+      "imports": [
+        {
+          "specifier": "./MusicProjectData",
+          "typeOnly": true
+        },
+        {
+          "specifier": "./MusicProjectData",
+          "typeOnly": false
+        }
+      ]
+    },
+    {
+      "file": "src/musicEditor/MusicEditorSession.ts",
+      "sha256": "ed1824e4de15e711d39bfce770f63f1a7351ab10732d9511db1324b49fca379f",
+      "imports": [
+        {
+          "specifier": "../chart/KeyboardPadLayout",
+          "typeOnly": true
+        },
+        {
+          "specifier": "../editor/GuidanceEditorSession",
+          "typeOnly": true
+        },
+        {
+          "specifier": "./MusicProjectData",
+          "typeOnly": true
+        },
+        {
+          "specifier": "./MusicProjectData",
+          "typeOnly": false
+        },
+        {
+          "specifier": "./ChartSourceBuilder",
+          "typeOnly": false
+        },
+        {
+          "specifier": "./MusicTiming",
+          "typeOnly": false
+        }
+      ]
+    },
+    {
+      "file": "src/musicEditor/ChartSourceBuilder.ts",
+      "sha256": "2cbe0e42768a890745806a7c4edcd68ed8197ac88ad198982d7df60b6793221b",
+      "imports": [
+        {
+          "specifier": "../chart/KeyboardPadLayout",
+          "typeOnly": true
+        },
+        {
+          "specifier": "../chart/KeyboardPadLayout",
+          "typeOnly": false
+        },
+        {
+          "specifier": "../chart/GuidanceChart",
+          "typeOnly": false
+        },
+        {
+          "specifier": "../editor/GuidanceEditorSession",
+          "typeOnly": true
+        },
+        {
+          "specifier": "./MusicProjectData",
+          "typeOnly": true
+        },
+        {
+          "specifier": "./MusicProjectData",
+          "typeOnly": false
+        },
+        {
+          "specifier": "./MusicTiming",
+          "typeOnly": false
+        }
+      ]
+    },
+    {
+      "file": "src/presentation/MusicEditorView.ts",
+      "sha256": "2a39acfeb9d77ec6b0a149d7cb1f5705002faacd33a31419547dd288130e4128",
+      "imports": [
+        {
+          "specifier": "cc",
+          "typeOnly": false
+        },
+        {
+          "specifier": "../musicEditor/MusicEditorSession",
+          "typeOnly": true
+        },
+        {
+          "specifier": "../musicEditor/MusicProjectData",
+          "typeOnly": true
+        },
+        {
+          "specifier": "../editor/GuidanceEditorSession",
+          "typeOnly": true
+        },
+        {
+          "specifier": "./FolderTheme",
+          "typeOnly": false
+        },
+        {
+          "specifier": "./MusicPreviewAudio",
+          "typeOnly": false
+        }
+      ]
+    },
+    {
+      "file": "src/presentation/MusicPreviewAudio.ts",
+      "sha256": "95b2b483fc035031a56709c817d8da97498657b49d203d8bb2d368e507aad997",
+      "imports": [
+        {
+          "specifier": "../musicEditor/MusicEditorSession",
+          "typeOnly": true
+        }
+      ]
+    },
+    {
+      "file": "assets/scripts/MusicEditorBuilder.ts",
+      "sha256": "ee326b12bd4dcdac03779502d1fd39ba04d0e78bd21af943071a8fbc9851c124",
+      "imports": [
+        {
+          "specifier": "cc",
+          "typeOnly": false
+        },
+        {
+          "specifier": "./src/musicEditor/MusicEditorSession",
+          "typeOnly": false
+        },
+        {
+          "specifier": "./src/musicEditor/MusicProjectData",
+          "typeOnly": false
+        },
+        {
+          "specifier": "./src/presentation/MusicEditorView",
+          "typeOnly": false
+        },
+        {
+          "specifier": "./src/presentation/GuidanceEditorView",
+          "typeOnly": false
+        },
+        {
+          "specifier": "./src/editor/GuidanceEditorSession",
+          "typeOnly": false
+        },
+        {
+          "specifier": "./src/editor/GuidanceEditorSession",
+          "typeOnly": true
+        },
+        {
+          "specifier": "./src/chart/KeyboardPadLayout",
+          "typeOnly": false
+        },
+        {
+          "specifier": "./src/presentation/FolderTheme",
+          "typeOnly": false
+        }
+      ]
+    }
+  ],
+  "note": "Logic/AST/lifecycle checks only; Creator UI and audible output evidence are recorded separately."
+}

@@ -1,0 +1,800 @@
+[
+  {
+    "name": "noteIds",
+    "kind": "PropertySignature",
+    "file": "src/musicEditor/MusicEditorSession.ts",
+    "line": 37,
+    "exported": false
+  },
+  {
+    "name": "noteIds",
+    "kind": "PropertySignature",
+    "file": "src/musicEditor/MusicEditorSession.ts",
+    "line": 38,
+    "exported": false
+  },
+  {
+    "name": "deltaTick",
+    "kind": "PropertySignature",
+    "file": "src/musicEditor/MusicEditorSession.ts",
+    "line": 38,
+    "exported": false
+  },
+  {
+    "name": "deltaPitch",
+    "kind": "PropertySignature",
+    "file": "src/musicEditor/MusicEditorSession.ts",
+    "line": 38,
+    "exported": false
+  },
+  {
+    "name": "notes",
+    "kind": "PropertySignature",
+    "file": "src/musicEditor/MusicEditorSession.ts",
+    "line": 39,
+    "exported": false
+  },
+  {
+    "name": "totalAdded",
+    "kind": "VariableDeclaration",
+    "file": "src/musicEditor/MusicEditorSession.ts",
+    "line": 56,
+    "exported": false
+  },
+  {
+    "name": "totalDeleted",
+    "kind": "VariableDeclaration",
+    "file": "src/musicEditor/MusicEditorSession.ts",
+    "line": 56,
+    "exported": false
+  },
+  {
+    "name": "totalEdited",
+    "kind": "VariableDeclaration",
+    "file": "src/musicEditor/MusicEditorSession.ts",
+    "line": 56,
+    "exported": false
+  },
+  {
+    "name": "moveDelta",
+    "kind": "VariableDeclaration",
+    "file": "src/musicEditor/MusicEditorSession.ts",
+    "line": 57,
+    "exported": false
+  },
+  {
+    "name": "tick",
+    "kind": "PropertySignature",
+    "file": "src/musicEditor/MusicEditorSession.ts",
+    "line": 57,
+    "exported": false
+  },
+  {
+    "name": "previous",
+    "kind": "VariableDeclaration",
+    "file": "src/musicEditor/MusicEditorSession.ts",
+    "line": 73,
+    "exported": false
+  },
+  {
+    "name": "next",
+    "kind": "VariableDeclaration",
+    "file": "src/musicEditor/MusicEditorSession.ts",
+    "line": 74,
+    "exported": false
+  },
+  {
+    "name": "delta",
+    "kind": "VariableDeclaration",
+    "file": "src/musicEditor/MusicEditorSession.ts",
+    "line": 78,
+    "exported": false
+  },
+  {
+    "name": "selectedNoteIds",
+    "kind": "FunctionDeclaration",
+    "file": "src/musicEditor/MusicEditorSession.ts",
+    "line": 97,
+    "exported": false
+  },
+  {
+    "name": "project",
+    "kind": "Parameter",
+    "file": "src/musicEditor/MusicEditorSession.ts",
+    "line": 97,
+    "exported": false
+  },
+  {
+    "name": "known",
+    "kind": "VariableDeclaration",
+    "file": "src/musicEditor/MusicEditorSession.ts",
+    "line": 99,
+    "exported": false
+  },
+  {
+    "name": "selected",
+    "kind": "VariableDeclaration",
+    "file": "src/musicEditor/MusicEditorSession.ts",
+    "line": 99,
+    "exported": false
+  },
+  {
+    "name": "rawId",
+    "kind": "VariableDeclaration",
+    "file": "src/musicEditor/MusicEditorSession.ts",
+    "line": 100,
+    "exported": false
+  },
+  {
+    "name": "id",
+    "kind": "VariableDeclaration",
+    "file": "src/musicEditor/MusicEditorSession.ts",
+    "line": 101,
+    "exported": false
+  },
+  {
+    "name": "selected",
+    "kind": "VariableDeclaration",
+    "file": "src/musicEditor/MusicEditorSession.ts",
+    "line": 180,
+    "exported": false
+  },
+  {
+    "name": "deltaTick",
+    "kind": "VariableDeclaration",
+    "file": "src/musicEditor/MusicEditorSession.ts",
+    "line": 181,
+    "exported": false
+  },
+  {
+    "name": "deltaPitch",
+    "kind": "VariableDeclaration",
+    "file": "src/musicEditor/MusicEditorSession.ts",
+    "line": 182,
+    "exported": false
+  },
+  {
+    "name": "SelectedMusicNote",
+    "kind": "InterfaceDeclaration",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 12,
+    "exported": false
+  },
+  {
+    "name": "MusicPointerGesture",
+    "kind": "InterfaceDeclaration",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 13,
+    "exported": false
+  },
+  {
+    "name": "pointerId",
+    "kind": "PropertySignature",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 14,
+    "exported": false
+  },
+  {
+    "name": "startX",
+    "kind": "PropertySignature",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 14,
+    "exported": false
+  },
+  {
+    "name": "startY",
+    "kind": "PropertySignature",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 14,
+    "exported": false
+  },
+  {
+    "name": "control",
+    "kind": "PropertySignature",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 15,
+    "exported": false
+  },
+  {
+    "name": "shift",
+    "kind": "PropertySignature",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 15,
+    "exported": false
+  },
+  {
+    "name": "hit",
+    "kind": "PropertySignature",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 15,
+    "exported": false
+  },
+  {
+    "name": "plot",
+    "kind": "PropertySignature",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 16,
+    "exported": false
+  },
+  {
+    "name": "document",
+    "kind": "PropertySignature",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 16,
+    "exported": false
+  },
+  {
+    "name": "selectionBefore",
+    "kind": "PropertySignature",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 17,
+    "exported": false
+  },
+  {
+    "name": "anchorBefore",
+    "kind": "PropertySignature",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 17,
+    "exported": false
+  },
+  {
+    "name": "movedNotes",
+    "kind": "PropertySignature",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 18,
+    "exported": false
+  },
+  {
+    "name": "kind",
+    "kind": "PropertySignature",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 19,
+    "exported": false
+  },
+  {
+    "name": "deltaTick",
+    "kind": "PropertySignature",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 20,
+    "exported": false
+  },
+  {
+    "name": "deltaPitch",
+    "kind": "PropertySignature",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 20,
+    "exported": false
+  },
+  {
+    "name": "invalid",
+    "kind": "PropertySignature",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 20,
+    "exported": false
+  },
+  {
+    "name": "selectedNoteIds",
+    "kind": "PropertyDeclaration",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 34,
+    "exported": false
+  },
+  {
+    "name": "anchorNoteId",
+    "kind": "PropertyDeclaration",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 35,
+    "exported": false
+  },
+  {
+    "name": "clipboard",
+    "kind": "PropertyDeclaration",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 36,
+    "exported": false
+  },
+  {
+    "name": "pointerGesture",
+    "kind": "PropertyDeclaration",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 37,
+    "exported": false
+  },
+  {
+    "name": "pointerPosition",
+    "kind": "PropertyDeclaration",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 38,
+    "exported": false
+  },
+  {
+    "name": "target",
+    "kind": "VariableDeclaration",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 47,
+    "exported": false
+  },
+  {
+    "name": "control",
+    "kind": "VariableDeclaration",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 49,
+    "exported": false
+  },
+  {
+    "name": "blur",
+    "kind": "PropertyDeclaration",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 60,
+    "exported": false
+  },
+  {
+    "name": "selectedNotes",
+    "kind": "MethodDeclaration",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 183,
+    "exported": false
+  },
+  {
+    "name": "pruneSelection",
+    "kind": "MethodDeclaration",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 192,
+    "exported": false
+  },
+  {
+    "name": "ids",
+    "kind": "VariableDeclaration",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 193,
+    "exported": false
+  },
+  {
+    "name": "clearSelection",
+    "kind": "MethodDeclaration",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 198,
+    "exported": false
+  },
+  {
+    "name": "selectTrackNotes",
+    "kind": "MethodDeclaration",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 203,
+    "exported": false
+  },
+  {
+    "name": "notes",
+    "kind": "VariableDeclaration",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 205,
+    "exported": false
+  },
+  {
+    "name": "selectOnly",
+    "kind": "MethodDeclaration",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 210,
+    "exported": false
+  },
+  {
+    "name": "noteId",
+    "kind": "Parameter",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 210,
+    "exported": false
+  },
+  {
+    "name": "count",
+    "kind": "VariableDeclaration",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 218,
+    "exported": false
+  },
+  {
+    "name": "ids",
+    "kind": "VariableDeclaration",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 247,
+    "exported": false
+  },
+  {
+    "name": "nextNoteId",
+    "kind": "MethodDeclaration",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 251,
+    "exported": false
+  },
+  {
+    "name": "ids",
+    "kind": "VariableDeclaration",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 252,
+    "exported": false
+  },
+  {
+    "name": "copySelection",
+    "kind": "MethodDeclaration",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 258,
+    "exported": false
+  },
+  {
+    "name": "notes",
+    "kind": "VariableDeclaration",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 259,
+    "exported": false
+  },
+  {
+    "name": "a",
+    "kind": "Parameter",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 259,
+    "exported": false
+  },
+  {
+    "name": "b",
+    "kind": "Parameter",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 259,
+    "exported": false
+  },
+  {
+    "name": "pasteSelection",
+    "kind": "MethodDeclaration",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 265,
+    "exported": false
+  },
+  {
+    "name": "target",
+    "kind": "VariableDeclaration",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 267,
+    "exported": false
+  },
+  {
+    "name": "pointed",
+    "kind": "VariableDeclaration",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 268,
+    "exported": false
+  },
+  {
+    "name": "anchor",
+    "kind": "VariableDeclaration",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 269,
+    "exported": false
+  },
+  {
+    "name": "notes",
+    "kind": "VariableDeclaration",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 274,
+    "exported": false
+  },
+  {
+    "name": "localPointer",
+    "kind": "MethodDeclaration",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 281,
+    "exported": false
+  },
+  {
+    "name": "plotAt",
+    "kind": "MethodDeclaration",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 285,
+    "exported": false
+  },
+  {
+    "name": "x",
+    "kind": "Parameter",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 285,
+    "exported": false
+  },
+  {
+    "name": "y",
+    "kind": "Parameter",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 285,
+    "exported": false
+  },
+  {
+    "name": "tickAt",
+    "kind": "MethodDeclaration",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 289,
+    "exported": false
+  },
+  {
+    "name": "x",
+    "kind": "Parameter",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 289,
+    "exported": false
+  },
+  {
+    "name": "plot",
+    "kind": "Parameter",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 289,
+    "exported": false
+  },
+  {
+    "name": "project",
+    "kind": "Parameter",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 289,
+    "exported": false
+  },
+  {
+    "name": "pitchAt",
+    "kind": "MethodDeclaration",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 294,
+    "exported": false
+  },
+  {
+    "name": "y",
+    "kind": "Parameter",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 294,
+    "exported": false
+  },
+  {
+    "name": "plot",
+    "kind": "Parameter",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 294,
+    "exported": false
+  },
+  {
+    "name": "pointerDown",
+    "kind": "MethodDeclaration",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 299,
+    "exported": false
+  },
+  {
+    "name": "plot",
+    "kind": "VariableDeclaration",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 305,
+    "exported": false
+  },
+  {
+    "name": "selectionBefore",
+    "kind": "VariableDeclaration",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 306,
+    "exported": false
+  },
+  {
+    "name": "anchorBefore",
+    "kind": "VariableDeclaration",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 306,
+    "exported": false
+  },
+  {
+    "name": "control",
+    "kind": "VariableDeclaration",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 307,
+    "exported": false
+  },
+  {
+    "name": "notes",
+    "kind": "VariableDeclaration",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 312,
+    "exported": false
+  },
+  {
+    "name": "a",
+    "kind": "Parameter",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 312,
+    "exported": false
+  },
+  {
+    "name": "b",
+    "kind": "Parameter",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 312,
+    "exported": false
+  },
+  {
+    "name": "start",
+    "kind": "VariableDeclaration",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 313,
+    "exported": false
+  },
+  {
+    "name": "end",
+    "kind": "VariableDeclaration",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 313,
+    "exported": false
+  },
+  {
+    "name": "range",
+    "kind": "VariableDeclaration",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 314,
+    "exported": false
+  },
+  {
+    "name": "pointerMove",
+    "kind": "MethodDeclaration",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 330,
+    "exported": false
+  },
+  {
+    "name": "point",
+    "kind": "VariableDeclaration",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 332,
+    "exported": false
+  },
+  {
+    "name": "gesture",
+    "kind": "VariableDeclaration",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 333,
+    "exported": false
+  },
+  {
+    "name": "firstAllowedTick",
+    "kind": "VariableDeclaration",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 346,
+    "exported": false
+  },
+  {
+    "name": "pointerUp",
+    "kind": "MethodDeclaration",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 354,
+    "exported": false
+  },
+  {
+    "name": "gesture",
+    "kind": "VariableDeclaration",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 355,
+    "exported": false
+  },
+  {
+    "name": "bottom",
+    "kind": "VariableDeclaration",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 365,
+    "exported": false
+  },
+  {
+    "name": "hits",
+    "kind": "VariableDeclaration",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 366,
+    "exported": false
+  },
+  {
+    "name": "hit",
+    "kind": "Parameter",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 367,
+    "exported": false
+  },
+  {
+    "name": "hit",
+    "kind": "Parameter",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 367,
+    "exported": false
+  },
+  {
+    "name": "plot",
+    "kind": "VariableDeclaration",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 369,
+    "exported": false
+  },
+  {
+    "name": "releasePointer",
+    "kind": "MethodDeclaration",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 378,
+    "exported": false
+  },
+  {
+    "name": "pointerId",
+    "kind": "Parameter",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 378,
+    "exported": false
+  },
+  {
+    "name": "cancelPointer",
+    "kind": "MethodDeclaration",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 382,
+    "exported": false
+  },
+  {
+    "name": "restoreSelection",
+    "kind": "Parameter",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 382,
+    "exported": false
+  },
+  {
+    "name": "gesture",
+    "kind": "VariableDeclaration",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 383,
+    "exported": false
+  },
+  {
+    "name": "addNoteAt",
+    "kind": "MethodDeclaration",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 390,
+    "exported": false
+  },
+  {
+    "name": "x",
+    "kind": "Parameter",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 390,
+    "exported": false
+  },
+  {
+    "name": "y",
+    "kind": "Parameter",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 390,
+    "exported": false
+  },
+  {
+    "name": "plot",
+    "kind": "Parameter",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 390,
+    "exported": false
+  },
+  {
+    "name": "gesture",
+    "kind": "VariableDeclaration",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 410,
+    "exported": false
+  },
+  {
+    "name": "item",
+    "kind": "VariableDeclaration",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 450,
+    "exported": false
+  },
+  {
+    "name": "marqueeWidth",
+    "kind": "VariableDeclaration",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 472,
+    "exported": false
+  },
+  {
+    "name": "marqueeHeight",
+    "kind": "VariableDeclaration",
+    "file": "src/presentation/MusicEditorView.ts",
+    "line": 472,
+    "exported": false
+  }
+]

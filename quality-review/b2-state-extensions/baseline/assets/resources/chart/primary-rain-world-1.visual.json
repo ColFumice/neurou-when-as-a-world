@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "chartId": "primary-rain-world-1",
+  "nodes": [
+    {
+      "nodeId": "node-rain-note-2",
+      "color": {
+        "r": 146,
+        "g": 202,
+        "b": 219
+      }
+    },
+    {
+      "nodeId": "node-rain-note-3",
+      "color": {
+        "r": 146,
+        "g": 202,
+        "b": 219
+      }
+    },
+    {
+      "nodeId": "node-rain-note-4",
+      "color": {
+        "r": 146,
+        "g": 202,
+        "b": 219
+      }
+    },
+    {
+      "nodeId": "node-rain-note-5",
+      "color": {
+        "r": 146,
+        "g": 202,
+        "b": 219
+      }
+    },
+    {
+      "nodeId": "node-rain-note-6",
+      "color": {
+        "r": 146,
+        "g": 202,
+        "b": 219
+      }
+    }
+  ]
+}

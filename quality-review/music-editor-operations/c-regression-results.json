@@ -1,0 +1,187 @@
+{
+  "passed": 14,
+  "failed": 0,
+  "checks": [
+    {
+      "name": "01 v1/v2 parser, no hard upper limit, global IDs, deep freeze and strict fields",
+      "pass": true,
+      "evidence": {
+        "v1": 1,
+        "v2": 3,
+        "deepFrozen": true,
+        "globalUniqueIds": true
+      }
+    },
+    {
+      "name": "02 overlapping heads: spawn then line ID; fresh Space starts exactly one; early/repeated input rejected",
+      "pass": true,
+      "evidence": [
+        {
+          "id": "z",
+          "startedAtMs": 1020
+        },
+        {
+          "id": "a",
+          "startedAtMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "03 simultaneous Tap collision consumes one; array order irrelevant; repeat and wrong key cannot consume",
+      "pass": true,
+      "evidence": {
+        "firstWinner": "a",
+        "resolvedAfterRepeat": 1,
+        "totalResolved": 2
+      }
+    },
+    {
+      "name": "04 Tap ordering: absolute delta -> target time -> line ID -> node ID",
+      "pass": true,
+      "evidence": {
+        "earlierTarget": "z",
+        "nearestTarget": "b",
+        "sameLineTie": "a-node"
+      }
+    },
+    {
+      "name": "05 shared held key: two Drag plus two Hold independently succeed, while Tap consumes once",
+      "pass": true,
+      "evidence": {
+        "atDown": {
+          "dragPerfect": 2,
+          "tapPerfect": 1
+        },
+        "atTail": {
+          "holdPerfect": 2,
+          "unconsumedTapMiss": 1
+        }
+      }
+    },
+    {
+      "name": "06 exact boundaries: Up at Drag arrival fails, Up at Hold tail succeeds; both lines and frame jumps",
+      "pass": true,
+      "evidence": {
+        "dragAtUp": "Miss",
+        "holdAtTailUp": "Perfect",
+        "frameJumpHoldCount": 2
+      }
+    },
+    {
+      "name": "07 independent Head timeout settles only its nodes; remaining line completes; media gates completion",
+      "pass": true,
+      "evidence": {
+        "normalAndTimeout": [
+          [
+            "Perfect"
+          ],
+          [
+            "Miss"
+          ]
+        ],
+        "earlyMediaWaitsForFutureHead": true
+      }
+    },
+    {
+      "name": "08 two-line pause freezes all snapshots; paused Up locks both Holds; exit/reopen resets everything",
+      "pass": true,
+      "evidence": {
+        "frozenLines": 2,
+        "interruptedHolds": 2,
+        "reentryPerfect": 2,
+        "mediaFlagCleared": true
+      }
+    },
+    {
+      "name": "09 cross/overlap erasure and independent path progress do not affect input mapping at two resolutions",
+      "pass": true,
+      "evidence": [
+        {
+          "resolution": [
+            1920,
+            1080
+          ],
+          "tiers": [
+            [
+              "Perfect"
+            ],
+            [
+              "Perfect"
+            ]
+          ],
+          "score": 200,
+          "progress": [
+            0.125,
+            0.1125
+          ]
+        },
+        {
+          "resolution": [
+            2560,
+            1440
+          ],
+          "tiers": [
+            [
+              "Perfect"
+            ],
+            [
+              "Perfect"
+            ]
+          ],
+          "score": 200,
+          "progress": [
+            0.125,
+            0.1125
+          ]
+        }
+      ]
+    },
+    {
+      "name": "10 wrong key, stale and nonfinite input ignored globally; immutable snapshot arrays",
+      "pass": true,
+      "evidence": {
+        "staleIgnored": true,
+        "unknownKeyIgnored": true
+      }
+    },
+    {
+      "name": "11 existing media-unavailable fallback remains gated by all lines settled",
+      "pass": true,
+      "evidence": {
+        "fallbackMs": 30000
+      }
+    },
+    {
+      "name": "12 C resource has two independent paths and mixed node kinds; third line runtime supported",
+      "pass": true,
+      "evidence": {
+        "chartId": "guidance-c-1",
+        "lines": 2,
+        "thirdLineSupported": true
+      }
+    },
+    {
+      "name": "13 full T6 endpoint -> two-line chart -> early exit/reentry -> media completion: director appends exactly once",
+      "pass": true,
+      "evidence": {
+        "endpointRecords": 1,
+        "earlyExitRecords": 0,
+        "completedRecords": 1,
+        "multiLinePerfect": 2
+      }
+    },
+    {
+      "name": "14 live collector/frame-driver classes preserve cross-line arbitration and timestamped edges",
+      "pass": true,
+      "evidence": {
+        "headStartTimes": [
+          1000,
+          1020
+        ],
+        "oneTapPerDown": true,
+        "secondDownResolvedOtherLine": true,
+        "cc": "event-bus stub only"
+      }
+    }
+  ]
+}

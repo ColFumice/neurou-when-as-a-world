@@ -1,0 +1,23 @@
+======================================================================
+《雨若》重构 R1 · v2.2 补丁 01（DSH）
+======================================================================
+适用：quality-review/refactor-r1/R1-draft-v2.2-DSH.txt
+性质：补丁说明，不替代 v2.2 全文；A 类 271 / AC 44 不变。
+
+1. 补丁后的 AC4-31 完整正文（可直接替换）
+----------------------------------------------------------------------
+AC4-31 [新增] Logo 引导：提前 NoteLogoLeadTimeMs 出现；存活 NoteLogoLifetimeMs；
+         Hold 延长 NoteLogoHoldExtensionMs；Miss 触发 NoteLogoMiss；
+         BlindMode 隐藏引导但不改判定；GridLineVisibility 见 AC4-32；
+         NoteLogoGuide 仅用于 ChartLayerIndex ≤ 2（Layer 1 与 Layer 2）；
+         Layer 3+ 不生成 Logo，玩家在任意区域按判定时间点击即可。
+
+2. A.6.8 中 NoteLogoGuide 行的修正文字
+----------------------------------------------------------------------
+需要同步；不拆行、不改计数。将原行替换为：
+
+| NoteLogoGuide / NoteLogoAppearance / NoteLogoDisappear / NoteLogoMiss | 新增 | Logo 引导（NoteLogoGuide 仅 Layer 1/2）/ 出现 / 消失 / Miss |
+
+3. 基线确认
+----------------------------------------------------------------------
+v2.2 + 本补丁 = R1 冻结基线。

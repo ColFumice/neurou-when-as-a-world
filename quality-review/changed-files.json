@@ -1,0 +1,23 @@
+[
+  "assets/scripts/Bootstrap.ts",
+  "assets/scripts/SceneBuilder.ts",
+  "src/character/MoveSpeed.ts",
+  "src/character/Protagonist.ts",
+  "src/character/TrailLength.ts",
+  "src/chart/ChartPremiere.ts",
+  "src/chart/FrameLocator.ts",
+  "src/chart/VideoSyncTest.ts",
+  "src/director/IntentPort.ts",
+  "src/ledger/NarrativeEvent.ts",
+  "src/presentation/AudioOutputClock.ts",
+  "src/presentation/ChartPadView.ts",
+  "src/presentation/ChartPausePanel.ts",
+  "src/presentation/DeepTraceRevealSequence.ts",
+  "src/presentation/ElementEntityView.ts",
+  "src/presentation/FrameDriver.ts",
+  "src/presentation/InputCollector.ts",
+  "src/presentation/ScreenInvertRipple.ts",
+  "src/presentation/TrailRender.ts",
+  "src/trace/DeepTrace.ts",
+  "src/trace/PuzzleChain.ts"
+]

@@ -1,0 +1,91 @@
+{
+  "phase": "B2.5c-1 baseline",
+  "generatedUtc": "2026-10-11T04:06:09.326Z",
+  "pass": true,
+  "runs": [
+    {
+      "name": "check-naming",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "scripts/check-naming.js"
+      ],
+      "cwd": "D:\\Project\\A_New_Begin\\Neurou_official",
+      "startedUtc": "2026-10-11T04:06:07.292Z",
+      "completedUtc": "2026-10-11T04:06:07.424Z",
+      "exitCode": 0,
+      "pass": true,
+      "reportedErrors": 0,
+      "reportedWarnings": 22,
+      "warningLines": [
+        "WARN  src\\chart\\ChartPremiere.ts:31 [R7] 含 Window 的命名疑似用作界面窗口（界面窗口必须用 Panel / View） —— 命中: judgeTimeWindow（请人工复核语义）",
+        "WARN  src\\chart\\ChartPremiere.ts:323 [R7] 含 Window 的命名疑似用作界面窗口（界面窗口必须用 Panel / View） —— 命中: hasAnyCandidateInWindow（请人工复核语义）",
+        "WARN  src\\chart\\ChartScore.ts:63 [R7] 含 Window 的命名疑似用作界面窗口（界面窗口必须用 Panel / View） —— 命中: judgeTimeWindow（请人工复核语义）",
+        "WARN  src\\chart\\GuidanceLineRuntime.ts:8 [R7] 含 Window 的命名疑似用作界面窗口（界面窗口必须用 Panel / View） —— 命中: judgeTimeWindow（请人工复核语义）",
+        "WARN  src\\director\\IntentPort.ts:345 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: deepTraceTriggered（请人工复核语义）",
+        "WARN  src\\director\\IntentPort.ts:366 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: deepTraceId（请人工复核语义）",
+        "WARN  src\\director\\IntentPort.ts:392 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: bindDeepTrace（请人工复核语义）",
+        "WARN  src\\director\\IntentPort.ts:942 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: tracePosition（请人工复核语义）",
+        "WARN  src\\director\\PuzzleHydration.ts:14 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: deepTraceTriggered（请人工复核语义）",
+        "WARN  src\\director\\PuzzleHydration.ts:26 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: deepTraceId（请人工复核语义）",
+        "WARN  src\\presentation\\DeepTraceRevealSequence.ts:14 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: DeepTraceRevealSequence（请人工复核语义）",
+        "WARN  src\\trace\\TraceProximityVolume.ts:27 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: TraceProximityVolume（请人工复核语义）",
+        "WARN  assets\\scripts\\SceneBuilder.ts:130 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: DeepTraceRevealSequence（请人工复核语义）",
+        "WARN  assets\\scripts\\SceneBuilder.ts:139 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: TraceProximityVolume（请人工复核语义）",
+        "WARN  assets\\scripts\\SceneBuilder.ts:222 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: DEEP_TRACE_LATERAL（请人工复核语义）",
+        "WARN  assets\\scripts\\SceneBuilder.ts:223 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: DEEP_TRACE_DEPTH（请人工复核语义）",
+        "WARN  assets\\scripts\\SceneBuilder.ts:314 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: deepTraceId（请人工复核语义）",
+        "WARN  assets\\scripts\\SceneBuilder.ts:671 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: concealedTraceEntity（请人工复核语义）",
+        "WARN  assets\\scripts\\SceneBuilder.ts:757 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: deepTraceTriggered（请人工复核语义）",
+        "WARN  assets\\scripts\\SceneBuilder.ts:758 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: deepTraceNode（请人工复核语义）",
+        "WARN  assets\\scripts\\SceneBuilder.ts:775 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: bindDeepTrace（请人工复核语义）",
+        "WARN  assets\\scripts\\SceneBuilder.ts:1228 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: tracePos（请人工复核语义）"
+      ],
+      "log": "baseline-gates/check-naming.log",
+      "sha256": "a4d096b14413e0aeae14d1e11169b2e6af60d30403d1c70d954e9395128b2063",
+      "summary": [
+        "汇总: 0 ERROR / 22 WARN"
+      ]
+    },
+    {
+      "name": "check-dependencies",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "scripts/check-dependencies.js"
+      ],
+      "cwd": "D:\\Project\\A_New_Begin\\Neurou_official",
+      "startedUtc": "2026-10-11T04:06:07.307Z",
+      "completedUtc": "2026-10-11T04:06:07.442Z",
+      "exitCode": 0,
+      "pass": true,
+      "reportedErrors": 0,
+      "reportedWarnings": null,
+      "warningLines": [],
+      "log": "baseline-gates/check-dependencies.log",
+      "sha256": "fb826fecb706599abff46a51f038c973bdec61799bb09c77f252ebdf2cc5d984",
+      "summary": [
+        "扫描: 122 个 .ts 文件，约 425 条静态依赖子句",
+        "汇总: 0 ERROR"
+      ]
+    },
+    {
+      "name": "typecheck",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "cwd": "D:\\Project\\A_New_Begin\\Neurou_official",
+      "startedUtc": "2026-10-11T04:06:07.330Z",
+      "completedUtc": "2026-10-11T04:06:09.326Z",
+      "exitCode": 0,
+      "pass": true,
+      "reportedErrors": null,
+      "reportedWarnings": null,
+      "warningLines": [],
+      "log": "baseline-gates/typecheck.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "summary": []
+    }
+  ],
+  "scope": "Exactly the three existing repository gates; scripts and allowlists are not changed. Isolated shared-contract tests, checks and no-network evidence are separate."
+}

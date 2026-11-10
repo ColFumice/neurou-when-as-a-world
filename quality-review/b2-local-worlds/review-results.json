@@ -1,0 +1,148 @@
+{
+  "generatedAt": "2026-10-10T08:33:52.973Z",
+  "reviewer": "architecture_audit independent subagent",
+  "scope": "Independent final source/diff/protection review for authorized B2.1 scope A / VERDICT-201–210. No production edits by reviewer.",
+  "pass": true,
+  "checksPassed": 15,
+  "checksFailed": 0,
+  "findings": [],
+  "resolvedFindings": [
+    {
+      "id": "composition-error-recovery",
+      "status": "resolved before final review",
+      "detail": "Original catch could lose the folder view/leave a partially composed runtime. Root now retires it and preserves folder/error until destruction finishes."
+    },
+    {
+      "id": "minimal-hud-theme-order",
+      "status": "resolved before final refreshed evidence",
+      "detail": "Root visual QA found cssText had cleared theme CSS variables. MinimalWorldBuilder now assigns cssText first, then calls applyFolderTheme(this.info); reviewed final source confirms the theme variables survive."
+    }
+  ],
+  "checks": [
+    {
+      "id": "R01",
+      "pass": true,
+      "subject": "Pure director metadata authority",
+      "evidence": "WorldFolderSession imports no engine/platform/domain module; only creates immutable metadata snapshots and accepts CreateWorld/DeleteWorld/WorldFork intent variants."
+    },
+    {
+      "id": "R02",
+      "pass": true,
+      "subject": "Candidate persistence before publication",
+      "evidence": "Seed persists candidate before assigning snapshot; commit calls persist(candidate) before replacing this.snapshot; builder advances expected only after saveSnapshot returns."
+    },
+    {
+      "id": "R03",
+      "pass": true,
+      "subject": "Strict load and account isolation",
+      "evidence": "Snapshot/record fields, schema, owner, IDs, template, title/description and timestamps are validated; adapter uses encoded account namespace; bad JSON/foreign owner/storage errors propagate instead of reseeding."
+    },
+    {
+      "id": "R04",
+      "pass": true,
+      "subject": "Tombstone and identity integrity",
+      "evidence": "Delete retains the full record with deletedAt; getWorlds filters tombstones; parse does not seed an initialized empty list; generated IDs are checked against all active and deleted records."
+    },
+    {
+      "id": "R05",
+      "pass": true,
+      "subject": "Stale-card validation and conflict handling",
+      "evidence": "openWorld rereads current account storage and getWorldRecord immediately before composition; mutation persistence compares current storage with expected snapshot and rejects detected other-page changes."
+    },
+    {
+      "id": "R06",
+      "pass": true,
+      "subject": "Immutable narrow reading and intent UI",
+      "evidence": "Reader freezes a new array and exact three-field records; view only reads entries, sends type-only WorldFolderPort intents and issues navigation callbacks; no runtime/business state ownership."
+    },
+    {
+      "id": "R07",
+      "pass": true,
+      "subject": "Safe dynamic multi-card UI",
+      "evidence": "User-controlled account/title/description/confirmation/HUD text uses textContent; InitialWorld retains open-initial-world ID, other rows route data-world-id and data-action; new/delete/refresh feedback is visible. Minimal HUD assigns cssText before applyFolderTheme, preserving theme variables for visible panel/text/border styling."
+    },
+    {
+      "id": "R08",
+      "pass": true,
+      "subject": "No fake WorldFork",
+      "evidence": "WorldFork intent only validates an active world then throws 分叉尚未开放; no title-copy runtime, permission grant, WorldRegistry or full-state persistence implementation is added."
+    },
+    {
+      "id": "R09",
+      "pass": true,
+      "subject": "Global editor directory retained",
+      "evidence": "EditorCatalog definition from createEditorFolderEntry onward is byte-identical; editor modules/builders/drafts/export resources are protected and global routing stays independent of selected world."
+    },
+    {
+      "id": "R10",
+      "pass": true,
+      "subject": "Fresh minimal sandbox composition",
+      "evidence": "New MinimalWorldBuilder creates a fresh frozen Bootstrap runtime graph and uses existing InputCollector/FrameDriver/CameraRig/ProtagonistView; movement and jumping remain director/character authority."
+    },
+    {
+      "id": "R11",
+      "pass": true,
+      "subject": "No invented puzzle/chart/ledger behavior",
+      "evidence": "MinimalWorldBuilder assembles only ground/marker/guide/protagonist/camera/HUD; no DeepTrace, PuzzleChain, ChartPremiere, media asset or LedgerAppend wiring; InitialWorld retains unchanged actual factory."
+    },
+    {
+      "id": "R12",
+      "pass": true,
+      "subject": "Lifecycle retirement and visual cleanup",
+      "evidence": "exitRuntime synchronously deactivates runtime and schedules deferred destroy; retiring blocks reentry until EVENT_AFTER_DRAW; MinimalWorldBuilder onDisable deactivates sibling world root/removes HUD, onDestroy destroys root and owned mesh/material assets."
+    },
+    {
+      "id": "R13",
+      "pass": true,
+      "subject": "Composition failure recovery",
+      "evidence": "openWorld clears view only after successful synchronous component composition; catch retires partial runtime, preserves original folder/error and resets folderPending so the after-draw callback only restores camera/guard."
+    },
+    {
+      "id": "R14",
+      "pass": true,
+      "subject": "Frozen gameplay director unchanged",
+      "evidence": "IntentPort baseline prefix is exact; its only B2 delta is a comment and erased export type forwarding through the established narrow route."
+    },
+    {
+      "id": "R15",
+      "pass": true,
+      "subject": "Frozen source/dependency/gate boundary",
+      "evidence": "All 211 protected files match the fresh B2 baseline. Four authorized existing TS files changed; SceneBuilder unchanged. Three new TS files and their metadata are within existing modules, with no new dependency or gate relaxation."
+    }
+  ],
+  "reviewedSourceHashes": [
+    {
+      "path": "assets/scripts/WorldFolderBuilder.ts",
+      "sha256": "257b9e07a416bac089f3c5fa1845c028ecf3b56aa80198406a70514657581b6d"
+    },
+    {
+      "path": "src/director/IntentPort.ts",
+      "sha256": "4eba8835849c789636a67fc01ceb1ff27fd5c53c4c161bf25cb447f7aa17b21c"
+    },
+    {
+      "path": "src/presentation/FolderCatalog.ts",
+      "sha256": "930c65d034781192f8d7570ac6d4660ae348a5858469e1e15a4c02a5a41d101a"
+    },
+    {
+      "path": "src/presentation/WorldFolderView.ts",
+      "sha256": "27f77dd8d0bee09d7b872b10d27625f9746faa50593d00bc71a2325b04dcb05b"
+    },
+    {
+      "path": "assets/scripts/MinimalWorldBuilder.ts",
+      "sha256": "7b827cc11b2bdf5855ef7c2007a52f2149097aab32e2a7840542dba91b07cbf7"
+    },
+    {
+      "path": "src/director/WorldFolderSession.ts",
+      "sha256": "59777e43dccd7ad6d2d0767b28daf83e525a176ae391b1f60a9500d739ea0420"
+    },
+    {
+      "path": "src/presentation/WorldLocalStorage.ts",
+      "sha256": "25ac84d7c55b59c2e59ae8e30270c4b4c43c625f472132ef997de64e96d3ebf1"
+    }
+  ],
+  "limits": [
+    "This source review does not claim Cocos execution or two-resolution acceptance. Use the separate actual Creator preview evidence and three gate outputs.",
+    "Browser storage conflict detection refuses detected stale snapshots; localStorage getItem/setItem is not a cross-process atomic compare-and-swap and no transactional concurrency guarantee is claimed.",
+    "B2.1 persists directory metadata only; fresh gameplay runtime state and complete WorldFork remain out of scope."
+  ]
+}

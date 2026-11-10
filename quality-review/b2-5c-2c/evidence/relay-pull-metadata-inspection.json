@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "scope": "actual c2c_relay PostgreSQL read-only final inspection across isolated test worlds",
+  "pullRequestRows": 42,
+  "lightweightReferenceResults": 42,
+  "forbiddenPayloadCopies": 0,
+  "invalidInternalVersion": 0,
+  "pass": true
+}

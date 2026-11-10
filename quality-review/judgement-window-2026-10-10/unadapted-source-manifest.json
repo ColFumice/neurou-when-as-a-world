@@ -1,0 +1,30 @@
+[
+  {
+    "name": "b-regression",
+    "source": "quality-review/world-folder/b-regression.cjs",
+    "sourceSha256": "af5d63c60e4eba2ad6975deb82518d385ae5ebc7c6ab0559e2bb490c29722eaa",
+    "copiedHarnessSha256": "af5d63c60e4eba2ad6975deb82518d385ae5ebc7c6ab0559e2bb490c29722eaa",
+    "adapted": false
+  },
+  {
+    "name": "c-regression",
+    "source": "quality-review/world-folder/c-regression.cjs",
+    "sourceSha256": "5908118d03f7a65d64f412342d0ec80a4441f3545d327486e69ee1c0f4028abf",
+    "copiedHarnessSha256": "5908118d03f7a65d64f412342d0ec80a4441f3545d327486e69ee1c0f4028abf",
+    "adapted": false
+  },
+  {
+    "name": "pad-regression",
+    "source": "quality-review/world-folder/pad-regression.cjs",
+    "sourceSha256": "69c89d3619ba19589a46f3e7a1dd02dca9fb8a02c6b94332fe8c195a38017847",
+    "copiedHarnessSha256": "69c89d3619ba19589a46f3e7a1dd02dca9fb8a02c6b94332fe8c195a38017847",
+    "adapted": false
+  },
+  {
+    "name": "editor-regression",
+    "source": "quality-review/world-folder/editor-regression.cjs",
+    "sourceSha256": "59bf06796123ae374c69f6722fe397a213b7d476d60d08fcf828032822e204d6",
+    "copiedHarnessSha256": "59bf06796123ae374c69f6722fe397a213b7d476d60d08fcf828032822e204d6",
+    "adapted": false
+  }
+]

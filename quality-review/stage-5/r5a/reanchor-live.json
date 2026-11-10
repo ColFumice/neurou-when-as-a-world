@@ -1,0 +1,20 @@
+{
+  "date": "2026-10-25",
+  "seam": "window.__R4F_CLOCK_DRIFT_ONCE_MS__ = 60",
+  "observed": {
+    "reanchorCount": 1,
+    "hudLog": [
+      { "t": 17883, "className": "", "text": "" },
+      { "t": 19295, "className": "game-hud__clock is-error", "text": "CLOCK DRIFT" },
+      { "t": 19312, "className": "", "text": "" }
+    ],
+    "finalHud": null,
+    "countsDuringProbe": { "perfect": 0, "good": 0, "miss": 1 },
+    "note": "miss=1 来自探针期间未输入，不是 reanchor 造成；reanchor 单测验证 counts/pending 不变。"
+  },
+  "secondInjectionWithin2s": {
+    "reanchorCount": 1,
+    "expected": "suppressed by 2s gate"
+  },
+  "screenshot": "quality-review/stage-5/r5a/reanchor-clear.png"
+}

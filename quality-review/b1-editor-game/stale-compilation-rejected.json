@@ -1,0 +1,11 @@
+{
+  "creator": "3.8.8",
+  "url": "http://localhost:7457/",
+  "harnessSha256": "3e67452f9b1f5174ab0ab9c26a4ec8e9aa1769e755ad976959342e5f0b514f39",
+  "fixturePolicy": "No endpoint, judgement, ledger or clock fixture. UI clicks and change events edit project; browser download handler saves exact exported bytes and copies the pair to resources/chart. Fresh browser profile per resolution. Root SceneBuilder.ChartResourcePath assigned before world factory activation, equivalent to pre-run Inspector configuration; no .scene mutation. GameCanvas DOM keyboard edges enter actual Cocos input, InputCollector, FrameDriver and director. Read-only private component/state observation. Actual native video and AudioOutputClock/BGM, no media substitution. Hidden offscreen Electron BrowserWindow, native CDP screenshots, no image compositing.",
+  "resolutions": [],
+  "rendererErrors": [],
+  "downloads": [],
+  "pass": false,
+  "error": "AssertionError [ERR_ASSERTION]: Stale Creator assets/scripts/SceneBuilder.ts\n    at D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b1-editor-game\\creator-preview.cjs:20:751\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async Promise.all (index 0)\n    at async D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b1-editor-game\\creator-preview.cjs:29:55"
+}

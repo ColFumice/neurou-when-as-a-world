@@ -1,0 +1,182 @@
+{
+  "generatedAt": "2026-10-10T12:30:30.098Z",
+  "category": "ContractTest",
+  "scope": "B2.3 inherited premiere / genuine copy completion / replay / actual Chromium views",
+  "statement": "All clocks, account lock and storage are explicit contract adapters; no Creator production acceptance is claimed.",
+  "status": "PASS",
+  "total": 23,
+  "passed": 23,
+  "failed": 0,
+  "checks": [
+    {
+      "name": "I01 actual fork plan rekeys every world carrier while preserving events, chart content and premiere status",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "I02 inherited completion hydration is readonly and exposes Inherited without an account clear record or error",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "I03 inherited EnterWorldChart and RetryWorldClear are ignored while unrelated legacy intents retain their batch",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "I04 commit adapter remains guarded even if base public retry is invoked directly",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "I05 inherited snapshot survives JSON reload with the same completion witness and no writes",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "I06 a fork of a completed fork inherits its legal completion again without importing account records",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "I07 wrong account, target, protagonist or completion origin rejects before account, ledger or clock effects",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "I08 unfinished copy inherits no premiere witness and permits authored choice and actual first premiere",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "I09 unfinished copy exiting mid-premiere preserves entry and writes no new account clear",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "I10 genuine completion retry remains idempotent and never changes inherited witness from null",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "I11 failed own completion can explicitly retry after hydration; it is not mistaken for inherited completion",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "I12 inherited completed World chart replays exact archived content and updates only target score",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "I13 inherited replay exit before media completion changes neither score, Recall nor account records",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "I14 source and target are independent deeply immutable graphs with identical logical event values",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "D01 actual inherited view hides premiere/retry and exposes inherited fact separately from account permission",
+      "result": "PASS",
+      "category": "ContractTest",
+      "evidence": {
+        "status": "Inherited",
+        "recordCount": 0,
+        "CopyPermission": true,
+        "queuedIntents": 0
+      }
+    },
+    {
+      "name": "D02 unfinished view still submits only authored choice IDs and retains normal first-premiere display",
+      "result": "PASS",
+      "category": "ContractTest",
+      "evidence": {
+        "kind": "ChooseWorldNarrative",
+        "choiceId": "share-shelter"
+      }
+    },
+    {
+      "name": "D03 configured folder enables only permission plus Complete Primary and submits frozen WorldFork intent",
+      "result": "PASS",
+      "category": "ContractTest",
+      "evidence": {
+        "submitted": {
+          "kind": "WorldFork",
+          "worldId": "world-8d6e2487-da33-4843-a93c-0ecbc2933d6b"
+        },
+        "duplicateSuppressed": true,
+        "refreshed": true
+      }
+    },
+    {
+      "name": "D04 configured folder rejects permission absence, Incomplete, Shore, wrong identity and reader errors in UI",
+      "result": "PASS",
+      "category": "ContractTest",
+      "evidence": {
+        "blockedCases": 8,
+        "authoritativeDirectorStillRequired": true
+      }
+    },
+    {
+      "name": "D05 async fork failure is visible, leaves list intact and re-enables retry",
+      "result": "PASS",
+      "category": "ContractTest",
+      "evidence": {
+        "visibleError": true,
+        "sourceCards": 1,
+        "retryEnabled": true
+      }
+    },
+    {
+      "name": "D06 legacy folder without availability retains NotImplemented enabled click and diagnostic rejection",
+      "result": "PASS",
+      "category": "ContractTest",
+      "evidence": {
+        "availability": "NotImplemented",
+        "previousClickBehaviorRetained": true
+      }
+    },
+    {
+      "name": "D07-1920 actual Chromium inherited panel and fork card fit their viewport",
+      "result": "PASS",
+      "category": "ContractTest",
+      "evidence": {
+        "viewport": [
+          1920,
+          1080
+        ],
+        "inheritedRecord": "世界通关：记录未继承",
+        "forkHint": "保留这段世界记忆，分叉成一个新的世界。",
+        "noDuplicateIds": true,
+        "controlsWithinViewport": true
+      }
+    },
+    {
+      "name": "D07-2560 actual Chromium inherited panel and fork card fit their viewport",
+      "result": "PASS",
+      "category": "ContractTest",
+      "evidence": {
+        "viewport": [
+          2560,
+          1440
+        ],
+        "inheritedRecord": "世界通关：记录未继承",
+        "forkHint": "保留这段世界记忆，分叉成一个新的世界。",
+        "noDuplicateIds": true,
+        "controlsWithinViewport": true
+      }
+    },
+    {
+      "name": "D08 a root-replaced folder view does not start a second reload when its fork promise settles",
+      "result": "PASS",
+      "category": "ContractTest",
+      "evidence": {
+        "extraReloads": 0,
+        "destroyedViewStayedUnmounted": true
+      }
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-weather-resolve"
+description = "Enables the weather_resolve command without any pre-configured scope."
+commands.allow = ["weather_resolve"]
+
+[[permission]]
+identifier = "deny-weather-resolve"
+description = "Denies the weather_resolve command without any pre-configured scope."
+commands.deny = ["weather_resolve"]

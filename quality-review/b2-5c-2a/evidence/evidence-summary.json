@@ -1,0 +1,96 @@
+{
+  "phase": "B2.5c-2a freeze evidence summary",
+  "generatedUtc": "2026-10-11T06:52:02.891Z",
+  "pass": true,
+  "gates": [
+    {
+      "name": "check-naming",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "scripts/check-naming.js"
+      ],
+      "exitCode": 0,
+      "pass": true,
+      "reportedErrors": 0,
+      "reportedWarnings": 45,
+      "log": "baseline-gates/check-naming.log"
+    },
+    {
+      "name": "check-dependencies",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "scripts/check-dependencies.js"
+      ],
+      "exitCode": 0,
+      "pass": true,
+      "reportedErrors": 0,
+      "reportedWarnings": null,
+      "log": "baseline-gates/check-dependencies.log"
+    },
+    {
+      "name": "typecheck",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "exitCode": 0,
+      "pass": true,
+      "reportedErrors": null,
+      "reportedWarnings": null,
+      "log": "baseline-gates/typecheck.log"
+    }
+  ],
+  "namingWarningDeltaFromC1": 0,
+  "newWarningLines": [],
+  "removedWarningLines": [],
+  "protection": {
+    "baselineCapturedUtc": "2026-10-11T06:27:23.760Z",
+    "comparedUtc": "2026-10-11T06:51:35.420Z",
+    "baselineSha256": "f01d9bebb8dcf2efcc3ee250f70f795787da1121cf113691e5576000465526bc",
+    "beforeCount": 7154,
+    "afterCount": 7154,
+    "changed": [],
+    "removed": [],
+    "added": [],
+    "pass": true
+  },
+  "recorded": [
+    {
+      "path": "protected-baseline.json",
+      "bytes": 1481488,
+      "sha256": "f01d9bebb8dcf2efcc3ee250f70f795787da1121cf113691e5576000465526bc"
+    },
+    {
+      "path": "protected-comparison.json",
+      "bytes": 1314,
+      "sha256": "0d2d98bcc4164b475e6ae61f58f14bd9f24a135f625bf8dfbb0f42bd5e887989"
+    },
+    {
+      "path": "baseline-gates/results.json",
+      "bytes": 11767,
+      "sha256": "61dccc91026216b461dbd6cd22a70667026d5c612fb37ca0397981c572eb72b3"
+    },
+    {
+      "path": "baseline-gates/check-naming.log",
+      "bytes": 9190,
+      "sha256": "0fdbd75e7e1a750145776b57de17f1a67024613538b6fe294e6412bfcc2a0909"
+    },
+    {
+      "path": "baseline-gates/check-dependencies.log",
+      "bytes": 419,
+      "sha256": "fdfb2848f2e5e2c44be5931635b5ce17bf868f6e2fcd5d75beda9833213cdf74"
+    },
+    {
+      "path": "baseline-gates/typecheck.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "initial-state.json",
+      "bytes": 6629,
+      "sha256": "95588c0150d3f8e27d7adb906751e6448e9ac969909f4acf57e618033a7a134a"
+    }
+  ],
+  "scope": "Freeze round: zero production code changes, no implementation tests, no server or HTTP execution, no main-chain wiring. Exactly three existing gates executed once. Immutable baseline and raw comparison preserved; prior raw FAIL records remain unchanged."
+}

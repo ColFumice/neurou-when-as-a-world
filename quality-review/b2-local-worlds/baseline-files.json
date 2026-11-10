@@ -1,0 +1,1298 @@
+[
+  {
+    "path": "641f3d33-4bab-4769-8f46-62a03315d1b1.jsonl",
+    "sha256": "da503328305993c77ebe1e161504c066d8143808eb2278be1c2094d6b9ac100a",
+    "bytes": 1225969,
+    "role": "protected"
+  },
+  {
+    "path": "D:/Project/A_New_Begin/ColorMusic/THIRD_PARTY_DRUM_SAMPLES.md",
+    "sha256": "2bae632c1a7f8c4da1870a86f7a34c838ff2d9a0d8f44cf8dd03372b99251adc",
+    "bytes": 4234,
+    "role": "protected"
+  },
+  {
+    "path": "D:/Project/A_New_Begin/ColorMusic/assets/scripts/DrumLibrary.ts",
+    "sha256": "ae0326f0c8ebca627a4c1d4cba293548290c80330a3effb30fca3d258da99c7e",
+    "bytes": 66245,
+    "role": "protected"
+  },
+  {
+    "path": "D:/Project/A_New_Begin/ColorMusic/assets/scripts/Effects.ts",
+    "sha256": "c6b383ff647a5728d8d5ca66cd8c03cd6af24b13ed73b52a6796771f559b3e52",
+    "bytes": 20967,
+    "role": "protected"
+  },
+  {
+    "path": "D:/Project/A_New_Begin/ColorMusic/assets/scripts/FxUI.ts",
+    "sha256": "2ec28152174a61e5eb4f1b49b10ed9602116cfc97a5c7a9bbbc53b0dc7469e12",
+    "bytes": 44482,
+    "role": "protected"
+  },
+  {
+    "path": "D:/Project/A_New_Begin/ColorMusic/assets/scripts/GameManager.ts",
+    "sha256": "5bb44d36f643f59ee35f5622be694cdaef5092a113e63d03f4203c03bec23996",
+    "bytes": 472584,
+    "role": "protected"
+  },
+  {
+    "path": "D:/Project/A_New_Begin/ColorMusic/assets/scripts/GridSettings.ts",
+    "sha256": "32b57b37949d9bab5a03580ff795bb4956d5ffd953877e137f09451f2a7ac82d",
+    "bytes": 30010,
+    "role": "protected"
+  },
+  {
+    "path": "D:/Project/A_New_Begin/ColorMusic/assets/scripts/NativeBridge.ts",
+    "sha256": "7aa0c4869a672d8c547f59c6874deb9c76f77386f0f93c817d3020ba55f82553",
+    "bytes": 48522,
+    "role": "protected"
+  },
+  {
+    "path": "D:/Project/A_New_Begin/ColorMusic/assets/scripts/SynthMapping.ts",
+    "sha256": "83aa85a18579312054fcf2b62bacf78fa1224f3968f5318307ee1e6f76dd5a97",
+    "bytes": 8295,
+    "role": "protected"
+  },
+  {
+    "path": "D:/Project/A_New_Begin/ColorMusic/native/engine/android/app/src/com/colormusic/game/AudioSynth.java",
+    "sha256": "f4b2ce293e2f8e5b86323ed16f2ecadb0b4209dfb105b11e867fed07a4bc7ff8",
+    "bytes": 110091,
+    "role": "protected"
+  },
+  {
+    "path": "D:/Project/A_New_Begin/ColorMusic/native/engine/android/app/src/com/colormusic/game/NativeBridge.java",
+    "sha256": "e0056853787d343c47b60bc8993ccd83d8efbb3cda1d2296dc19320372a762e7",
+    "bytes": 104007,
+    "role": "protected"
+  },
+  {
+    "path": "D:/Project/A_New_Begin/ColorMusic/tools/build-drum-library.mjs",
+    "sha256": "a270c0c1690640651e99e9241df31e8d45326073871f573be7e1f43f66eda7f0",
+    "bytes": 9433,
+    "role": "protected"
+  },
+  {
+    "path": "D:/Project/A_New_Begin/colormusic_mode_code.txt",
+    "sha256": "5ba868183fb8b6454ab15823002071063057c8a04b7a1577431dfda860ed3c23",
+    "bytes": 302504,
+    "role": "protected"
+  },
+  {
+    "path": "assets/resources/chart/chart_placeholder.json",
+    "sha256": "3f1bb7c8dda04cafac444624e6c5c3f8152b1c1f2b76c160d0fbd7a231b158e0",
+    "bytes": 951,
+    "role": "protected"
+  },
+  {
+    "path": "assets/resources/chart/chart_placeholder.json.meta",
+    "sha256": "262ab1633b122e67eecafc704b6f11ea8a5681f1ed10f02f5fcda084d6e98d61",
+    "bytes": 179,
+    "role": "protected"
+  },
+  {
+    "path": "assets/resources/chart/guidance_a.json",
+    "sha256": "cd1ae543e8545ad7ad8ca13545341ab75dece5d17e396b0d8742ea1b79c97b55",
+    "bytes": 486,
+    "role": "protected"
+  },
+  {
+    "path": "assets/resources/chart/guidance_a.json.meta",
+    "sha256": "9a042e9c176076ae81f1de4d1686d3d19bb78fb8b218d719d05eea0ca3433622",
+    "bytes": 179,
+    "role": "protected"
+  },
+  {
+    "path": "assets/resources/chart/guidance_b.json",
+    "sha256": "df30bb3a1143be31a0783f557618005fa68326240baeffe2fcbcad63fe63ea9f",
+    "bytes": 1284,
+    "role": "protected"
+  },
+  {
+    "path": "assets/resources/chart/guidance_b.json.meta",
+    "sha256": "b1e3656c3cb918a33474ab8a307d6c3a69d6ae0effa6749e136c8f8dca3dc7c6",
+    "bytes": 179,
+    "role": "protected"
+  },
+  {
+    "path": "assets/resources/chart/guidance_c.json",
+    "sha256": "4c025a5b30346f175f4f007d8940b14abcc8088fd32181ad3d7c2a6b8f501e4b",
+    "bytes": 2663,
+    "role": "protected"
+  },
+  {
+    "path": "assets/resources/chart/guidance_c.json.meta",
+    "sha256": "f7a10624968e58fe62888bba32216c2c16481aa215737ea58ed31f72d8868b92",
+    "bytes": 178,
+    "role": "protected"
+  },
+  {
+    "path": "assets/resources/chart/music-project-1-chart.json",
+    "sha256": "74e30f25507b8939cd6a6cd2ffda3ccf7bae92ec590c4e5bd293e28975c8935c",
+    "bytes": 2307,
+    "role": "protected"
+  },
+  {
+    "path": "assets/resources/chart/music-project-1-chart.json.meta",
+    "sha256": "f43b2a4d563b702ae3195912123aa43f03fe099b7d87daf16e9f4f37109fcb89",
+    "bytes": 179,
+    "role": "protected"
+  },
+  {
+    "path": "assets/resources/chart/music-project-1-chart.visual.json",
+    "sha256": "664bb750567353b13d1d9fdaa6e5da11e6458be1b232dbe27339754eeefdc6ac",
+    "bytes": 589,
+    "role": "protected"
+  },
+  {
+    "path": "assets/resources/chart/music-project-1-chart.visual.json.meta",
+    "sha256": "c63da1a971a7fb202deace86e33374f20376399e70a7e323350d7c0a4abf0e86",
+    "bytes": 179,
+    "role": "protected"
+  },
+  {
+    "path": "assets/scenes/T2Graybox.scene",
+    "sha256": "e1f15b181d6e446184294c4102c7b99dca98f1540219be3c86557de3b5de74c8",
+    "bytes": 6006,
+    "role": "protected"
+  },
+  {
+    "path": "assets/scenes/T2Graybox.scene.meta",
+    "sha256": "daba0fe51bdfa66f38e43908342e09ec7ef67e9f348b1e8a7baa8425e008edab",
+    "bytes": 181,
+    "role": "protected"
+  },
+  {
+    "path": "assets/scripts/Bootstrap.ts",
+    "sha256": "28bb2b93faca15b3b513880fc4754d5f8fefc37ac5a700c8bbe870b03a09af50",
+    "bytes": 3100,
+    "role": "protected"
+  },
+  {
+    "path": "assets/scripts/Bootstrap.ts.meta",
+    "sha256": "510115d10d15eec6adb5b069693b8943516efe09810cd2555ac21b1acf302226",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "assets/scripts/GuidanceEditorBuilder.ts",
+    "sha256": "13f8210df2184d2f8dabaefeb2b16ed73cfa474f0812920c2d5990e3b15cbed2",
+    "bytes": 1570,
+    "role": "protected"
+  },
+  {
+    "path": "assets/scripts/GuidanceEditorBuilder.ts.meta",
+    "sha256": "a96d815a03c9ee3959006c67f7e063e10dbeb9093c5131fc3c17fa89251cc7d9",
+    "bytes": 170,
+    "role": "protected"
+  },
+  {
+    "path": "assets/scripts/MusicEditorBuilder.ts",
+    "sha256": "ee326b12bd4dcdac03779502d1fd39ba04d0e78bd21af943071a8fbc9851c124",
+    "bytes": 4360,
+    "role": "protected"
+  },
+  {
+    "path": "assets/scripts/MusicEditorBuilder.ts.meta",
+    "sha256": "10c680739941adbe8d18a87284b8ef7cd7aecccf61e70664ea85171cee01425f",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "assets/scripts/SceneBuilder.ts",
+    "sha256": "10371fdc3d2a1d66f63d87d019d8777d0bb8e80191788e65bf8eb2b6002c09c9",
+    "bytes": 64927,
+    "role": "authorized-existing-change"
+  },
+  {
+    "path": "assets/scripts/SceneBuilder.ts.meta",
+    "sha256": "16f0b66151e5d6ea34b1b799858d0892d0f5187b2e94ea130e5b3b47218f3da2",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "assets/scripts/WorldFolderBuilder.ts",
+    "sha256": "c0b7214d85a9eee4a244d870a369e366909734ea1ab5b0f0f6c5743d8430962b",
+    "bytes": 6539,
+    "role": "authorized-existing-change"
+  },
+  {
+    "path": "assets/scripts/WorldFolderBuilder.ts.meta",
+    "sha256": "d2575df9781d58e4c9de35b8e497a6dfac2db398a4f806ebfffa9e6611c16f74",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "assets/scripts/constants.meta",
+    "sha256": "0efb7a36b561a43da50bf877bc948c39b7f9aade4de95e2a20c1487cbcdfa604",
+    "bytes": 169,
+    "role": "protected"
+  },
+  {
+    "path": "assets/scripts/src.meta",
+    "sha256": "a0968124fb57fab6c10e533d6179070782c2c4944775cd06ed5f00e46b27c214",
+    "bytes": 169,
+    "role": "protected"
+  },
+  {
+    "path": "constants/index.ts",
+    "sha256": "ebc4b8b2fdaf25d4f0372458cf8e0245da4397a2de05cafc5ea59a3c70518674",
+    "bytes": 12341,
+    "role": "protected"
+  },
+  {
+    "path": "constants/index.ts.meta",
+    "sha256": "c5d95f92801eca1493881c89e333a4f2d6a6780652a48bb9134e74edf0a78b2b",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "docs/NAMEBOOK.md",
+    "sha256": "fe63b902b49ceb58c2cdbe2920c671769306f594987c7baf8c91e3218f359899",
+    "bytes": 42062,
+    "role": "protected"
+  },
+  {
+    "path": "docs/spec/stage-1-acceptance.md",
+    "sha256": "c08c7cbfb24876b56e0482559c578ad51d9c623e97ced7045907cba742e2bf59",
+    "bytes": 2781,
+    "role": "protected"
+  },
+  {
+    "path": "docs/spec/stage-1.md",
+    "sha256": "378eef5d485287228be46b7c715be85d1a034f6584f8d06c73ee960124277f95",
+    "bytes": 33587,
+    "role": "protected"
+  },
+  {
+    "path": "package-lock.json",
+    "sha256": "e6ffa70eb60ed8f8e88329a512256e8eaaad587e5728f7a153029996283b38a0",
+    "bytes": 742,
+    "role": "protected"
+  },
+  {
+    "path": "package.json",
+    "sha256": "60effb8caf406856d0f101802eccac7cb845654ee613b68887b97c978441bcf0",
+    "bytes": 687,
+    "role": "protected"
+  },
+  {
+    "path": "scripts/check-dependencies.js",
+    "sha256": "1decddbb7798523b91cc905b9f73bf6bd584058246bbde418f7a283da734043e",
+    "bytes": 22316,
+    "role": "protected"
+  },
+  {
+    "path": "scripts/check-naming.js",
+    "sha256": "bfe1a53af4e6cb79f0a4f33814b6052dbc3d4652eae9ff8b1f57c697d6c30191",
+    "bytes": 15976,
+    "role": "protected"
+  },
+  {
+    "path": "src/character.meta",
+    "sha256": "da8a3b57d0662b96f5a10c49004e73e4f9b266c024adfed03cf3467950ee24cf",
+    "bytes": 169,
+    "role": "protected"
+  },
+  {
+    "path": "src/character/DecorationPalette.ts",
+    "sha256": "f547e81d1af02bdb414af9396e975240660742cded8500b55849d59cb83c7ed0",
+    "bytes": 2185,
+    "role": "protected"
+  },
+  {
+    "path": "src/character/DecorationPalette.ts.meta",
+    "sha256": "0f198626b2410ca4ae1197313f3e9f31f678f9cb1715c2fc40e64bd38e748f6d",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "src/character/HairColor.ts",
+    "sha256": "95dfc12ae3212f13a601d41b30abf7a9550182c897d616311411eeffab8da26e",
+    "bytes": 2326,
+    "role": "protected"
+  },
+  {
+    "path": "src/character/HairColor.ts.meta",
+    "sha256": "7355ad1b66f9101627b1808116f1861d23c61cb40150542163c2737965e8741f",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "src/character/MoveSpeed.ts",
+    "sha256": "36f5806295d48cb7911e456129346c9aef5ad597f1097bc8ead2b88e67d56fc2",
+    "bytes": 5931,
+    "role": "protected"
+  },
+  {
+    "path": "src/character/MoveSpeed.ts.meta",
+    "sha256": "e4f071358b014f9773edba33db9c554dcafed09f3f3ae8e60c0f65259261d3d0",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "src/character/Protagonist.ts",
+    "sha256": "92bbc77a6f210d1763756cef51574347c96cfc12345302e7beadcc1679b7bb9b",
+    "bytes": 15281,
+    "role": "protected"
+  },
+  {
+    "path": "src/character/Protagonist.ts.meta",
+    "sha256": "dbcac8713119dfd1820ac44401624237899bc0b76c28f33e125ab46f6cefdb6f",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "src/character/TrailLength.ts",
+    "sha256": "f19ea1c0adb4871368ffc4e3b2471c11b0cdf195bfa8a4d56091a132055b5c52",
+    "bytes": 4277,
+    "role": "protected"
+  },
+  {
+    "path": "src/character/TrailLength.ts.meta",
+    "sha256": "d1c15558e20a56f737524a286c97ff46e780e13ff6a268c4961b52aaa04b0177",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "src/chart.meta",
+    "sha256": "8ce844880cb4986a0736ee45f363344565d20aec63ae5f42392af9df031094b7",
+    "bytes": 169,
+    "role": "protected"
+  },
+  {
+    "path": "src/chart/ChartPlaybackState.ts",
+    "sha256": "9dee861745d0214eb2a8b0c6222e63967d6b2a5a08b2ee2da684e20c16d7a2c4",
+    "bytes": 1012,
+    "role": "protected"
+  },
+  {
+    "path": "src/chart/ChartPlaybackState.ts.meta",
+    "sha256": "2096b246aab8cc063221e130f51af5dfe8e319b51e83a319a48be15da6ce5057",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "src/chart/ChartPremiere.ts",
+    "sha256": "50617d366ae7c5b8dd6b402389f1ef9e43822bf24e03f0687476e1558853eb6d",
+    "bytes": 17907,
+    "role": "protected"
+  },
+  {
+    "path": "src/chart/ChartPremiere.ts.meta",
+    "sha256": "9019c2928bb0e7728718b7f4c005026aff467a528a364a9bf59c3747553c5e36",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "src/chart/ChartScore.ts",
+    "sha256": "12329ce38b4c30d1e537d9652717c83770c137679fef330e56955da12fdac231",
+    "bytes": 4091,
+    "role": "protected"
+  },
+  {
+    "path": "src/chart/ChartScore.ts.meta",
+    "sha256": "638eb3406b87addd1e693a42a1b7593d342e12d75deae28d61395dc91e1dca2c",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "src/chart/FrameLocator.ts",
+    "sha256": "c1b52344168a824c5a110b7d6a4d61493b16ee1fc741c694b9535e276606a622",
+    "bytes": 3904,
+    "role": "protected"
+  },
+  {
+    "path": "src/chart/FrameLocator.ts.meta",
+    "sha256": "c296021147fa789c7fb5094d650d341aa2136e6d3451e5b15a7cf0711e2c4011",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "src/chart/GuidanceChart.ts",
+    "sha256": "a4e46b00d782f393b736ed6a71282caf24961df40feb503cbadce734b0d71faa",
+    "bytes": 17826,
+    "role": "protected"
+  },
+  {
+    "path": "src/chart/GuidanceChart.ts.meta",
+    "sha256": "3fc5d89d6a2d110f2504014d544a6430a0d6f989287a59331c218e8719ccab84",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "src/chart/GuidanceChartRuntime.ts",
+    "sha256": "b9b9f293760711aa30dc997d61ccf156c63ba7dbfcc2c7a1b71cf078781929f8",
+    "bytes": 3421,
+    "role": "protected"
+  },
+  {
+    "path": "src/chart/GuidanceChartRuntime.ts.meta",
+    "sha256": "44ea0756a2495c25b2f5372367cb26f349a9f0695c172160a62363229af2e271",
+    "bytes": 170,
+    "role": "protected"
+  },
+  {
+    "path": "src/chart/GuidanceLineRuntime.ts",
+    "sha256": "2560babe86a45d207cb7ed6f2a66713b50fc43a5c2e8a9764d5fc22d1b451204",
+    "bytes": 15995,
+    "role": "protected"
+  },
+  {
+    "path": "src/chart/GuidanceLineRuntime.ts.meta",
+    "sha256": "928a9eae95c8d77b16c942ac70536ccc7eb9a9afc07fbb92f24b9b2a9f2544e1",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "src/chart/GuidanceTiming.ts",
+    "sha256": "6c8b1a55fba9c64c7c70644b8bbd6985c3c5318086b13d1c9aab4dd4ebdbcd4a",
+    "bytes": 2460,
+    "role": "protected"
+  },
+  {
+    "path": "src/chart/GuidanceTiming.ts.meta",
+    "sha256": "d458506fa77c85a8e012edd2c85f657f1cab1f52f57f03047ddccfdb4ff74c85",
+    "bytes": 170,
+    "role": "protected"
+  },
+  {
+    "path": "src/chart/KeyboardPadLayout.ts",
+    "sha256": "73adc3efcb5e1311040385d63352ca3242536743b75505283954720dd545e992",
+    "bytes": 10221,
+    "role": "protected"
+  },
+  {
+    "path": "src/chart/KeyboardPadLayout.ts.meta",
+    "sha256": "5b9428b82b402d5126a8fcda9e403d9aec371968ba34131464b7b8eecff8b83f",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "src/chart/Note.ts",
+    "sha256": "b515eb95517e964de92435976378651891009c78ac08775b8fe1250908f5f674",
+    "bytes": 1598,
+    "role": "protected"
+  },
+  {
+    "path": "src/chart/Note.ts.meta",
+    "sha256": "cf329ca9537228380fdeacc1b3114bc835300e366a447efb0db3cefb02f57493",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "src/chart/Strike.ts",
+    "sha256": "5a78bd13c0ce661cd2605451cf7761bd7c686af2a2b9742e33c8f30c3a07ca19",
+    "bytes": 1028,
+    "role": "protected"
+  },
+  {
+    "path": "src/chart/Strike.ts.meta",
+    "sha256": "354870c67d9808002bf84b405ba3bb316426d8da9d5f88d8280386f59efdb5a2",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "src/chart/VideoSyncTest.ts",
+    "sha256": "0e4ec6f867f150cd65862278c69abf1f125d611c160dc5d941e025149caa0461",
+    "bytes": 10591,
+    "role": "protected"
+  },
+  {
+    "path": "src/chart/VideoSyncTest.ts.meta",
+    "sha256": "3d8e586a47e4a645cec561670ef0f7ce50f225dd6ee95f415ebefe9aea397686",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "src/director.meta",
+    "sha256": "2b04bea623048c6d2d524504e059da5f87b30e19e3835e20865a0254b1d5f8ad",
+    "bytes": 169,
+    "role": "protected"
+  },
+  {
+    "path": "src/director/AccountStartupSession.ts",
+    "sha256": "f376a9d618bbf3a4cdfebd57f615a855825d7149c1f33cae4f5b8ab5941684bb",
+    "bytes": 2271,
+    "role": "protected"
+  },
+  {
+    "path": "src/director/AccountStartupSession.ts.meta",
+    "sha256": "59ee840c06a6d65b678bd5921f17ad1a401b49ef3d93354c57a2a44fc377adba",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "src/director/Chapter.ts",
+    "sha256": "3d1df38c555a1e3d088a98eea0358b4c22026b32adc04b7e98659cc6fc385545",
+    "bytes": 651,
+    "role": "protected"
+  },
+  {
+    "path": "src/director/Chapter.ts.meta",
+    "sha256": "d2a8b723966bcb718c66dbde500b8a37fd847849f18b8b0ae2e2a1e83d3b4a9f",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "src/director/EndingWindow.ts",
+    "sha256": "053840e88285ec185f60abbff4723ab9f16b70db3b7eb42ca13ed28fe433bc11",
+    "bytes": 4405,
+    "role": "protected"
+  },
+  {
+    "path": "src/director/EndingWindow.ts.meta",
+    "sha256": "09a4ce2e9b6bd923a6d139f09f1978cf3ae415f23f39bac27d421b7d074d843a",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "src/director/IntentPort.ts",
+    "sha256": "f82126332e3caf1dafb640306d2d3d2fe3ad196ed18af1f0313b7a5e9dc095e2",
+    "bytes": 40217,
+    "role": "authorized-existing-change"
+  },
+  {
+    "path": "src/director/IntentPort.ts.meta",
+    "sha256": "705fe51ca8be48406e96307773729e8270e16579a89972c7e4c8736dc6e32b4f",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "src/director/PlayerIntent.ts",
+    "sha256": "731ae4eb2bf26729f028912b28401546da9fcdf80108a1bc7e5f21798105a3cd",
+    "bytes": 5275,
+    "role": "protected"
+  },
+  {
+    "path": "src/director/PlayerIntent.ts.meta",
+    "sha256": "f529e67eb9b1fcd1db179a034f825e80a8b7e87250480f681cba9fb3d41f4635",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "src/editor.meta",
+    "sha256": "38b15b50450b9188c9148f94bf96c96df054b76bac5adc7c18b8cf98993d7ca7",
+    "bytes": 168,
+    "role": "protected"
+  },
+  {
+    "path": "src/editor/GuidanceEditorSession.ts",
+    "sha256": "7be0662fcf921b04908ad4657b1ad066e35387fe7880d6acd9a1de9ec7e4eb8b",
+    "bytes": 22900,
+    "role": "protected"
+  },
+  {
+    "path": "src/editor/GuidanceEditorSession.ts.meta",
+    "sha256": "1f56274b857c28bd26db6ce228346d3dda84a309c1f67dbe055244c348e99eef",
+    "bytes": 170,
+    "role": "protected"
+  },
+  {
+    "path": "src/ledger.meta",
+    "sha256": "9a17f744f48b3fc6536aa6bf1948f9d696f3f2cf933c1b57e8cade7dedfd0427",
+    "bytes": 169,
+    "role": "protected"
+  },
+  {
+    "path": "src/ledger/LedgerAppend.ts",
+    "sha256": "e2a73908338c153ebf19846257ed86fcf0fb698b92b40ae29a43d360594556e9",
+    "bytes": 1670,
+    "role": "protected"
+  },
+  {
+    "path": "src/ledger/LedgerAppend.ts.meta",
+    "sha256": "a417e2ba2c784083b5f7598ac27a5a8ff595c9df1aaf947f0d66be76fc1c782b",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "src/ledger/LedgerPosition.ts",
+    "sha256": "7f8dbce4fc7541ee8524c0ec3915b0b4d7fd0cb8d5c47869d92d15614201a143",
+    "bytes": 2732,
+    "role": "protected"
+  },
+  {
+    "path": "src/ledger/LedgerPosition.ts.meta",
+    "sha256": "f6ac4efb19572e15b49717c48dc1825cfaf433cbe7342e47f9535dc1ed959e86",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "src/ledger/LedgerRead.ts",
+    "sha256": "6b104efed0d85259a3990372e4da13ce8346a352c4a02777247f0df5d34731e0",
+    "bytes": 1928,
+    "role": "protected"
+  },
+  {
+    "path": "src/ledger/LedgerRead.ts.meta",
+    "sha256": "b86b5646c4056b8bda3c51ac94599011f0f8dd5e64c1687f93c0af6a4f4e0608",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "src/ledger/MomentInfo.ts",
+    "sha256": "e26f7a95e194685b4bb6e9eebd92490057e43c636807adfab33507f3865018b9",
+    "bytes": 1767,
+    "role": "protected"
+  },
+  {
+    "path": "src/ledger/MomentInfo.ts.meta",
+    "sha256": "7be38484a784260d5a83c3657e90692daaf4322e64b598aec177b2ed3cbc8491",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "src/ledger/NarrativeEvent.ts",
+    "sha256": "1ef150d369693d6921be3ff9de60f53f699a148509139f820b8100e2a9dcb323",
+    "bytes": 5771,
+    "role": "protected"
+  },
+  {
+    "path": "src/ledger/NarrativeEvent.ts.meta",
+    "sha256": "11986bd1b4de27d5b08880c5d3ec43502b17de80946f5f25142a35dc1f6ee7cd",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "src/musicEditor.meta",
+    "sha256": "a15a347292e997bbe6ea2ad605b7cab2e80ca1ba2549a826ad2b10a289560a91",
+    "bytes": 169,
+    "role": "protected"
+  },
+  {
+    "path": "src/musicEditor/ChartSourceBuilder.ts",
+    "sha256": "2cbe0e42768a890745806a7c4edcd68ed8197ac88ad198982d7df60b6793221b",
+    "bytes": 4186,
+    "role": "protected"
+  },
+  {
+    "path": "src/musicEditor/ChartSourceBuilder.ts.meta",
+    "sha256": "27c60854074bf1b3efdb8a90956e622f6418aeebaacac2a55a075e4ea0db4d45",
+    "bytes": 180,
+    "role": "protected"
+  },
+  {
+    "path": "src/musicEditor/MusicEditorSession.ts",
+    "sha256": "ef6f514f37a34c715117ed871b4c1a8525e5a85c3d0c3d3a754bf17a7dbac97b",
+    "bytes": 13679,
+    "role": "protected"
+  },
+  {
+    "path": "src/musicEditor/MusicEditorSession.ts.meta",
+    "sha256": "4f784f2b095b19764f6c4bf2dde8b982c2107a4a806f714c456012eee8178e2c",
+    "bytes": 180,
+    "role": "protected"
+  },
+  {
+    "path": "src/musicEditor/MusicProjectData.ts",
+    "sha256": "0cbf532438e377d80f4e3452e831e5769c0e5df6fea3e15455b24e53b7c0c424",
+    "bytes": 9295,
+    "role": "protected"
+  },
+  {
+    "path": "src/musicEditor/MusicProjectData.ts.meta",
+    "sha256": "ec5c2336d81ac72af496ae533f567ad451627c7b11025ad016aff1edb6da1ce1",
+    "bytes": 180,
+    "role": "protected"
+  },
+  {
+    "path": "src/musicEditor/MusicTiming.ts",
+    "sha256": "8bdc2f6ce19ab8b85ea4178f54329e3707c6b429a00872e6fbd409da13981ac1",
+    "bytes": 1939,
+    "role": "protected"
+  },
+  {
+    "path": "src/musicEditor/MusicTiming.ts.meta",
+    "sha256": "e3cc91656e265f4f0e82ac8d5b5ecd63d7839e6d904f268282e9ce8b2d30cb9b",
+    "bytes": 180,
+    "role": "protected"
+  },
+  {
+    "path": "src/presentation.meta",
+    "sha256": "731f7838de50c529f18d17426ec7d14cd0a64d5a693e82abe241c74e3392d4a3",
+    "bytes": 169,
+    "role": "protected"
+  },
+  {
+    "path": "src/presentation/AudioOutputClock.ts",
+    "sha256": "16ea1319d3380bb82940ca85dfb06ede1f259bd509589f7b9b35a395c52c9414",
+    "bytes": 6271,
+    "role": "protected"
+  },
+  {
+    "path": "src/presentation/AudioOutputClock.ts.meta",
+    "sha256": "63082c20ac9cf3ea70b8ac9c25da384a77954cdacdd28f68ded66e7aeef39977",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "src/presentation/CameraRig.ts",
+    "sha256": "646e4876c4eb3e0943021c0a2cd987e776bfaf777400f8971634cc159c6ecba9",
+    "bytes": 6473,
+    "role": "protected"
+  },
+  {
+    "path": "src/presentation/CameraRig.ts.meta",
+    "sha256": "ca709c609d349d6ee1a7b4c46a601063a2a891fc6e21e3ed0fbf5be01fa4d987",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "src/presentation/ChartPadView.ts",
+    "sha256": "9f7286486c4672ad4359c7a2fb531e2f120af4ca0ffe507507761f07fa8e2818",
+    "bytes": 17798,
+    "role": "protected"
+  },
+  {
+    "path": "src/presentation/ChartPadView.ts.meta",
+    "sha256": "9ad24aede9b67e0cadab19e85cf11acb959c88207c4301ebb051535346664e0c",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "src/presentation/ChartPausePanel.ts",
+    "sha256": "99bb46fceaeed708c9b3ec22dac3574800088c1526088858a7cc22172ba75810",
+    "bytes": 7333,
+    "role": "protected"
+  },
+  {
+    "path": "src/presentation/ChartPausePanel.ts.meta",
+    "sha256": "f2a34ef4cc7eb400a792b958335c1411c715599d8582be3fa68ffc90bb1ab3dd",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "src/presentation/DebugPanel.ts",
+    "sha256": "8b2e26a55f1cb73408304bd9be8151a137bc59098d74926d33473fa78662ca15",
+    "bytes": 4478,
+    "role": "protected"
+  },
+  {
+    "path": "src/presentation/DebugPanel.ts.meta",
+    "sha256": "7f60f090adf125ba71e2d02a62c0c5d2e834ce4c28c8078a245fb1097bd89a7f",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "src/presentation/DeepTraceRevealSequence.ts",
+    "sha256": "5f5e87ca78973ca7453881cc5fbebc370c31dbfba813489b1d94751c106ed27c",
+    "bytes": 2595,
+    "role": "protected"
+  },
+  {
+    "path": "src/presentation/DeepTraceRevealSequence.ts.meta",
+    "sha256": "d68139c3969046a1385ff69cf41d637794f27d3fbcf5319c4141dbaf2027fc6f",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "src/presentation/EditorFolderView.ts",
+    "sha256": "68a69bdd8259f9444a99ad788dc4b181193ccbde37e132e9aceee932024127e2",
+    "bytes": 6408,
+    "role": "protected"
+  },
+  {
+    "path": "src/presentation/EditorFolderView.ts.meta",
+    "sha256": "44e46c752e75e9b1bc35aba544be14d0fc8f90de5abbc3216393c24ff5b6ed45",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "src/presentation/ElementEntityView.ts",
+    "sha256": "1f25c4cc415f1213f0ff252d72ce435c53ef5654c6248033832ef35f73ce790d",
+    "bytes": 3620,
+    "role": "protected"
+  },
+  {
+    "path": "src/presentation/ElementEntityView.ts.meta",
+    "sha256": "010c472e1bcd4dcdcff06ddca5a04a3b4a35831c9aaac18173646bc9b7e73291",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "src/presentation/FolderCatalog.ts",
+    "sha256": "96668acbc55d190e87b74779a51a2fb4584d685d6cf95820d32a6baaa93540c0",
+    "bytes": 2782,
+    "role": "authorized-existing-change"
+  },
+  {
+    "path": "src/presentation/FolderCatalog.ts.meta",
+    "sha256": "2bd8aafc960d65892062d3dac55d92be834a9877eacb6c59172c56a444e47b9d",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "src/presentation/FolderStartupView.ts",
+    "sha256": "50fa7afb3f2be26a78715a8916b8677ee6862dbe66e0dc14cab878ca78083988",
+    "bytes": 3985,
+    "role": "protected"
+  },
+  {
+    "path": "src/presentation/FolderStartupView.ts.meta",
+    "sha256": "4d879e1156c42069f5ad1978674bb0d41427c7aeb3d720afdf5d774d7c5e189b",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "src/presentation/FolderTheme.ts",
+    "sha256": "3d40411374946e9014a5f558837cfdaf0240c3074e627583061391244015f033",
+    "bytes": 1053,
+    "role": "protected"
+  },
+  {
+    "path": "src/presentation/FolderTheme.ts.meta",
+    "sha256": "3482b9ef4f3ca1707bfe0d44155403700c64e3e7c9a6cd3eee5d03cc4db0d15a",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "src/presentation/FrameDriver.ts",
+    "sha256": "e70232f3ef6f803bba02a6c2af1d40107aea95400dfd65e9845636a836faf3a6",
+    "bytes": 4125,
+    "role": "protected"
+  },
+  {
+    "path": "src/presentation/FrameDriver.ts.meta",
+    "sha256": "d516605f7ae1e4f5303de5123712c1ea261d6316dbf44440a16a48a685b33032",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "src/presentation/GuidanceEditorView.ts",
+    "sha256": "894e7dcccc9b071b016b7c8233952cdb6b9d19593868ccf80580154466738175",
+    "bytes": 24404,
+    "role": "protected"
+  },
+  {
+    "path": "src/presentation/GuidanceEditorView.ts.meta",
+    "sha256": "88e23b2963762e95c3c34b9a659bb17154266b1a9b5a4044e7b8d1ade1cf31b7",
+    "bytes": 170,
+    "role": "protected"
+  },
+  {
+    "path": "src/presentation/InputCollector.ts",
+    "sha256": "1cf85eb3e8de3621bc199a3e6e96cba92a1309fb6172ce1221ef692281b67420",
+    "bytes": 18145,
+    "role": "protected"
+  },
+  {
+    "path": "src/presentation/InputCollector.ts.meta",
+    "sha256": "c54c67fbbd9ef0a2a044d08b51eafe5dc5c672ada79f7b12fc37447fdcefd1c1",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "src/presentation/LineEraseEffect.ts",
+    "sha256": "dd236db85a35abe343477cdbfafead610ccb29ef709fc2c250e2c59a632c0697",
+    "bytes": 11140,
+    "role": "protected"
+  },
+  {
+    "path": "src/presentation/LineEraseEffect.ts.meta",
+    "sha256": "f4cc3f603b845d286876f30fcc9ea1bcc048ed9f50ff271b7704b224650dada0",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "src/presentation/MusicEditorView.ts",
+    "sha256": "fc5a6d4c774d841177b264d67fdac2658226f2df976cb5f95cef3d7fb50e425d",
+    "bytes": 46191,
+    "role": "protected"
+  },
+  {
+    "path": "src/presentation/MusicEditorView.ts.meta",
+    "sha256": "83e475b9ba7b97659385169c6a16dbf9ed15c82397f0feb257347d6a510a8780",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "src/presentation/MusicPreviewAudio.ts",
+    "sha256": "95b2b483fc035031a56709c817d8da97498657b49d203d8bb2d368e507aad997",
+    "bytes": 5488,
+    "role": "protected"
+  },
+  {
+    "path": "src/presentation/MusicPreviewAudio.ts.meta",
+    "sha256": "669bb91347096e72f6ca031f25b41ad052a73d4f7ddcdd03a4171273734f1b8a",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "src/presentation/PerceptionFilter.ts",
+    "sha256": "8e5d15d33542f965f64c05275550c6936459dbe3ad27c60c7def908649c5d2c1",
+    "bytes": 7296,
+    "role": "protected"
+  },
+  {
+    "path": "src/presentation/PerceptionFilter.ts.meta",
+    "sha256": "3fbf46f2addbe94b76241bb82f6573fb3cdd9f7018bcadb44df4207cce5f9043",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "src/presentation/ProtagonistView.ts",
+    "sha256": "0f8db6f43e81f0b00255a2486c5087fd72b1b30c769267274c811f6867dedfe3",
+    "bytes": 4876,
+    "role": "protected"
+  },
+  {
+    "path": "src/presentation/ProtagonistView.ts.meta",
+    "sha256": "63ee4aa0b19ca1b2ca9ced731cf21d2368e67d6b883e018ddf7c8b4cb661548c",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "src/presentation/ScreenInvertRipple.ts",
+    "sha256": "b528cc815597a01d01469f9e580c688a00b1cbd420ec065d6c8c1bab2f4ee264",
+    "bytes": 6099,
+    "role": "protected"
+  },
+  {
+    "path": "src/presentation/ScreenInvertRipple.ts.meta",
+    "sha256": "0d9fc361c7b8eced076f1e0c0c2100804c0ef423f98512b13053131ee4ac0547",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "src/presentation/TrailRender.ts",
+    "sha256": "ac21c5dea3cd09021972721708b4be9b6cfdbe4e55ad988241565ecaf70cfed6",
+    "bytes": 11526,
+    "role": "protected"
+  },
+  {
+    "path": "src/presentation/TrailRender.ts.meta",
+    "sha256": "925f4182b43bcbb4642bf9c32833d0e0e3702f48cd9c7067aa162eb22788d9d5",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "src/presentation/WorldFolderView.ts",
+    "sha256": "8e8d3b6a40e7e0b714ec004ed4177dfc258b40b64f7cf090f5773af4561471bc",
+    "bytes": 4615,
+    "role": "authorized-existing-change"
+  },
+  {
+    "path": "src/presentation/WorldFolderView.ts.meta",
+    "sha256": "c7747a57260319fc51a9411d21d45a8ae3ac3c852824f5a99997e74fb23c7610",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "src/trace.meta",
+    "sha256": "4c1316dd45d1a7d28f4c3dcf0f6f9b85aa4acd2766a7a58541f50fc73b6a7205",
+    "bytes": 169,
+    "role": "protected"
+  },
+  {
+    "path": "src/trace/DeepTrace.ts",
+    "sha256": "57416414e343a735915bcf7d70e1412cbf2a132f33b01bfe364d10631c6a8d44",
+    "bytes": 3479,
+    "role": "protected"
+  },
+  {
+    "path": "src/trace/DeepTrace.ts.meta",
+    "sha256": "05aece12674ca2642add4072226b9f6b39125486ee73089fc9b886ca06cc4f34",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "src/trace/EchoTrace.ts",
+    "sha256": "acb9b9d87cef559e9144c06ff0c0ff3c3c3ff793bbb5c9394bdbb42cebf8d70a",
+    "bytes": 744,
+    "role": "protected"
+  },
+  {
+    "path": "src/trace/EchoTrace.ts.meta",
+    "sha256": "e6cb67500cbd4c78dc6b54cdcca8e7f9cfcc18ae1e5b509575ae4153caef0f14",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "src/trace/ElementEntity.ts",
+    "sha256": "f907c498b8b2542a3b1204b720fe620d5a2d6186d4155ae869d04b0b69d89bf2",
+    "bytes": 5300,
+    "role": "protected"
+  },
+  {
+    "path": "src/trace/ElementEntity.ts.meta",
+    "sha256": "05001979814949a6b58b173b5a8f9957cce724813078072e30d5901c5da2c89c",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "src/trace/EmpathyScaling.ts",
+    "sha256": "b69da01576601c0e23c85dd1fd4f4f380145478e8ef82a13f0575db1e9b83f11",
+    "bytes": 3108,
+    "role": "protected"
+  },
+  {
+    "path": "src/trace/EmpathyScaling.ts.meta",
+    "sha256": "beba7c282302d70be740f76d70757be3206922045bfbd8a78468eed40693499c",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "src/trace/PuzzleChain.ts",
+    "sha256": "221d0ddb675c1ca07c61e48e73839fd93154f0258ccee69358f72f96d416f9e0",
+    "bytes": 10585,
+    "role": "protected"
+  },
+  {
+    "path": "src/trace/PuzzleChain.ts.meta",
+    "sha256": "76b9357f9881b01dac9668b147d198f34c2e574eb4b1ed503ef3388bac438730",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "src/trace/PuzzleProgress.ts",
+    "sha256": "9930df35b56d7e22faeee2cff6d80f24f2338996c0bc3500aa0ae5544f535411",
+    "bytes": 2758,
+    "role": "protected"
+  },
+  {
+    "path": "src/trace/PuzzleProgress.ts.meta",
+    "sha256": "72994ef1e08e0ca1e4e064f7c8bae0acdef31a65483e1680069d2143a23a8664",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "src/trace/RhythmStrike.ts",
+    "sha256": "428d6315b65d9cecfd32524b6aa68c8cd1d81ef56631c6c7173015858e6050a4",
+    "bytes": 2557,
+    "role": "protected"
+  },
+  {
+    "path": "src/trace/RhythmStrike.ts.meta",
+    "sha256": "9c3409375cc93700a4eaa51bc526e06a429f8bb095c7342041b278d6948d844b",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "src/trace/Trace.ts",
+    "sha256": "843295b12eb979404708c7c08543f7f900f86841d006d095b61552dabd709686",
+    "bytes": 646,
+    "role": "protected"
+  },
+  {
+    "path": "src/trace/Trace.ts.meta",
+    "sha256": "9915615ac6c3cb59a2a56ef045d1dea72775090316b2881d31657f96b4b468b7",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "src/trace/TraceOrigin.ts",
+    "sha256": "0bb0540235f6f1a5cc09567327ce31143420065553a9777fab3f70283c944348",
+    "bytes": 487,
+    "role": "protected"
+  },
+  {
+    "path": "src/trace/TraceOrigin.ts.meta",
+    "sha256": "19403260866de00226098d0f784c29a14aaca072a16048b884cddae4eb4b906a",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "src/trace/TraceProximityVolume.ts",
+    "sha256": "d689e7eae056339f81d850d0ff6a80db1773242423c5d64dc7243c42a578c053",
+    "bytes": 2487,
+    "role": "protected"
+  },
+  {
+    "path": "src/trace/TraceProximityVolume.ts.meta",
+    "sha256": "c6d3792b6a49ff60878324b586713c632b11fdabb905ef083e18b9f6c0ba82ea",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "src/trace/TraceTier.ts",
+    "sha256": "0af1275da6e47a1660e58d3fcd53af8b735bea0d23935b96c7abdab1c36b8b3e",
+    "bytes": 450,
+    "role": "protected"
+  },
+  {
+    "path": "src/trace/TraceTier.ts.meta",
+    "sha256": "829cc1138b6e22f1663911928760f1da36ef2de656f9a68c57d565d11a5a6c3f",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "src/trace/VisibilityState.ts",
+    "sha256": "8967aaa0098af6d4425a88f45beb961abd1b2eaa2d227da7074d730707fa67c9",
+    "bytes": 1127,
+    "role": "protected"
+  },
+  {
+    "path": "src/trace/VisibilityState.ts.meta",
+    "sha256": "024b19c7eb767554b30558df345ae5e147d46e8baa2eccb63195afe122b58500",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "src/trace/VisibilityTransition.ts",
+    "sha256": "db16e0bec6ac13468985dd6f1125f1d96c36a13dea5cfbc0f9542287196049ff",
+    "bytes": 3119,
+    "role": "protected"
+  },
+  {
+    "path": "src/trace/VisibilityTransition.ts.meta",
+    "sha256": "87177270493f9b8fc93e4ef102420eb10c6dbe6107ac21fa52dbe3c96f3378f4",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "src/world.meta",
+    "sha256": "5bdfe8494c7ddbdf48c6592385d4783d8d5931d9b9cb330b7108b25df4af6ba7",
+    "bytes": 169,
+    "role": "protected"
+  },
+  {
+    "path": "src/world/DepthAxis.ts",
+    "sha256": "d4b65989cb943b4c02d050d61cd9050b9362622b1192d53cc4eaeea1ae760768",
+    "bytes": 725,
+    "role": "protected"
+  },
+  {
+    "path": "src/world/DepthAxis.ts.meta",
+    "sha256": "85146a89d3ed02b8578e740d005371cec857afd65ae4379298f0fb1e30c588aa",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "src/world/LateralAxis.ts",
+    "sha256": "9c2e6fc570e2b656cbefff7f5030b01ea9b5671aaeda369c574ac0bbf9b3e1f0",
+    "bytes": 586,
+    "role": "protected"
+  },
+  {
+    "path": "src/world/LateralAxis.ts.meta",
+    "sha256": "d53a5f985c03abd3f206de0dc39c38dec474b8361865f3cc0a3f049904da5433",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "src/world/MapCenter.ts",
+    "sha256": "dc5171943a6a79f3655d25e0b0e1a5a526f8f8afe68e149d458228a793ca26be",
+    "bytes": 2419,
+    "role": "protected"
+  },
+  {
+    "path": "src/world/MapCenter.ts.meta",
+    "sha256": "aac2a4c01bc4dcce8a66b534417b153c863a920bd32a9ca6872f0562b64ad427",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "src/world/VerticalAxis.ts",
+    "sha256": "f4a59268e561036bcb4891c64fa6128780305a39b2d9c036d55eb99760bdc238",
+    "bytes": 1640,
+    "role": "protected"
+  },
+  {
+    "path": "src/world/VerticalAxis.ts.meta",
+    "sha256": "fe890b0d727d9c96e98a7efe97b46315e6f71303d3db83dddc7c232752604b37",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "src/world/WorldInstance.ts",
+    "sha256": "c77d3f044a773c72b9b27fd1d208bb0ba42de08a2e077da8212440d3e572954c",
+    "bytes": 2690,
+    "role": "protected"
+  },
+  {
+    "path": "src/world/WorldInstance.ts.meta",
+    "sha256": "7cd8b2309a396ee33815faeaf62546327afab9f6a56dffc96e2b08ca3e089a1b",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "src/world/WorldMap.ts",
+    "sha256": "89ee978b1ba328eaedfea7a6016aa5618cb22ea8de1c6a393ffa0e29d1bd133f",
+    "bytes": 886,
+    "role": "protected"
+  },
+  {
+    "path": "src/world/WorldMap.ts.meta",
+    "sha256": "9718f1b8a8cad7a8117334385c17b4ece27a13a9aed6c572a4bbad98e0f5b390",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "src/world/WorldMeter.ts",
+    "sha256": "f6bebb7130bc78a820df7ccca5ed34b4d63fe14ebf7f55fa29c16d974d317480",
+    "bytes": 899,
+    "role": "protected"
+  },
+  {
+    "path": "src/world/WorldMeter.ts.meta",
+    "sha256": "868e5941f934374a2605d47a8f9529dc616627eb78d73c493446d18352a43b78",
+    "bytes": 171,
+    "role": "protected"
+  },
+  {
+    "path": "tsconfig.json",
+    "sha256": "a59e509ab6304ed7cdb238ac1309c7f40c39c307e02cb90ff2de366060f41aa5",
+    "bytes": 1102,
+    "role": "protected"
+  },
+  {
+    "path": "编辑器/世界编辑器/谱面编辑器/引导线编辑器/mock_midi.json",
+    "sha256": "2fa3169f4f6d6af4c256ab488311f44ad7f9c5fc5cca65ec0cb08cfa4d9a9aa5",
+    "bytes": 3857,
+    "role": "protected"
+  },
+  {
+    "path": "编辑器/使用说明.md",
+    "sha256": "f26a3c86654389d26954d6975be077c5d5d8078b0da8cd05905e3a4b96ad23ec",
+    "bytes": 2092,
+    "role": "protected"
+  },
+  {
+    "path": "编辑器/启动引导线编辑器.ps1",
+    "sha256": "ac1d8cb40f76b9e59958c6d72d856355bed9b33d87c81ee172100a059b32fd51",
+    "bytes": 655,
+    "role": "protected"
+  },
+  {
+    "path": "编辑器/启动音乐编辑器.ps1",
+    "sha256": "9879012aa619addbd64b313cbd0c8fccf1890fe4a4efb3f4e901a7b097494f5c",
+    "bytes": 759,
+    "role": "protected"
+  },
+  {
+    "path": "编辑器/导出/引导线/editor-mock-1-chart.json",
+    "sha256": "7457a09b64d47ed35e94f9e8090926d4c86e51737c3afd469c2f3b6b0fad9671",
+    "bytes": 3163,
+    "role": "protected"
+  },
+  {
+    "path": "编辑器/导出/引导线/editor-mock-1-chart.visual.json",
+    "sha256": "5d7fd8e688df66fee5e08a7f1668b9ede9d89a31b21ea7bdb8c99cf93b1e6e08",
+    "bytes": 1013,
+    "role": "protected"
+  },
+  {
+    "path": "编辑器/打开引导线编辑器.cmd",
+    "sha256": "d03c626cf4a02761a7fe827672abc6f12f3f7eca6e94cb7a420b4182efa0d7c5",
+    "bytes": 121,
+    "role": "protected"
+  },
+  {
+    "path": "编辑器/打开音乐编辑器.cmd",
+    "sha256": "78f76f19b4e75aa327200d6986e34fcce5fa7613ba89ae76b8a69f66cd80cacc",
+    "bytes": 95,
+    "role": "protected"
+  },
+  {
+    "path": "雨若_Neurou_core_gameplay.docx",
+    "sha256": "3b87bb275b71bd0bd6b76ae66374644cca241524f3240cb97e7fe5998bec2026",
+    "bytes": 39221,
+    "role": "protected"
+  },
+  {
+    "path": "雨若_Neurou_main_describe.docx",
+    "sha256": "ebc48dd847891829d96a75ffc2e8e23cb73270b209555c46a603f7a8b6f68e92",
+    "bytes": 826458,
+    "role": "protected"
+  }
+]

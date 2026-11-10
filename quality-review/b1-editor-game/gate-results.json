@@ -1,0 +1,24 @@
+{
+  "generatedAt": "2026-10-10T07:25:01.907Z",
+  "pass": true,
+  "runs": [
+    {
+      "command": "npm run check:naming",
+      "exitCode": 0,
+      "pass": true,
+      "log": "gate-naming.log"
+    },
+    {
+      "command": "npm run typecheck",
+      "exitCode": 0,
+      "pass": true,
+      "log": "gate-typecheck.log"
+    },
+    {
+      "command": "npm run check:dependencies",
+      "exitCode": 0,
+      "pass": true,
+      "log": "gate-dependencies.log"
+    }
+  ]
+}

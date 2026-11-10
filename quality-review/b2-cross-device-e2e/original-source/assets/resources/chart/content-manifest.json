@@ -1,0 +1,98 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "author": "雨若制作方 / 既有内容与 B2.2c 正式世界内容",
+    "version": "chart-content-manifest-1",
+    "description": "由实际发布文件与既有回退函数生成身份索引；World 的编辑器制作链见 b2-world-clear/content-export-manifest.json。空视觉节点表示实际默认呈现规则，禁止据此补造历史首演。"
+  },
+  "media": [
+    {
+      "kind": "Audio",
+      "contentId": "primary-rain-world-1-audio",
+      "contentRevision": "1.0.0",
+      "resourcePath": "audio/primary-rain-world-1",
+      "sha256": "b4cde7512f630f9739dc6f6423bad7a1092914bf4fa2f72ff977f0226566943c",
+      "byteLength": 264644
+    },
+    {
+      "kind": "Video",
+      "contentId": "chart-video-placeholder",
+      "contentRevision": "legacy-published-1",
+      "resourcePath": "video/chart_video_placeholder",
+      "sha256": "ec035dd95460bb90509f063068058d7189aaed822a4546e7c4d6d74d5fdf55dd",
+      "byteLength": 1733586
+    }
+  ],
+  "charts": [
+    {
+      "chartId": "primary-rain-world-1",
+      "sourceKind": "Published",
+      "resourcePath": "chart/primary-rain-world-1",
+      "sourcePath": "assets/resources/chart/primary-rain-world-1.json",
+      "contentRevision": "1.0.0",
+      "chartDigest": "4607ff82c019ff312c417fe330f4cb3dc1c81264881a7802e6dd0cd25514c3ce",
+      "visualDigest": "050112f97d024c4ef545cb989eb87ba46a9051ce5e74ff970437431000c6b729",
+      "mediaContentId": "primary-rain-world-1-audio"
+    },
+    {
+      "chartId": "guidance-a-1",
+      "sourceKind": "Published",
+      "resourcePath": "chart/guidance_a",
+      "sourcePath": "assets/resources/chart/guidance_a.json",
+      "contentRevision": "legacy-published-1",
+      "chartDigest": "8f1d0dc75faf6c96dfbf3da6bef1735ed62452caf5acd24de6ce31333265f099",
+      "visualDigest": "1ab1e0437cfe17886c0ccf93f6477d5cb0afc5b6c81ae41434f8dbe265f8fbd7",
+      "mediaContentId": "chart-video-placeholder"
+    },
+    {
+      "chartId": "guidance-b-1",
+      "sourceKind": "Published",
+      "resourcePath": "chart/guidance_b",
+      "sourcePath": "assets/resources/chart/guidance_b.json",
+      "contentRevision": "legacy-published-1",
+      "chartDigest": "edb9510bd2f8993b5658d00168ba8d3dfda5d57b5fec44298b7d0532a67558db",
+      "visualDigest": "70607383f70c98b35816e3a994da9825e289045958df05c3691c6d13d614026e",
+      "mediaContentId": "chart-video-placeholder"
+    },
+    {
+      "chartId": "guidance-c-1",
+      "sourceKind": "Published",
+      "resourcePath": "chart/guidance_c",
+      "sourcePath": "assets/resources/chart/guidance_c.json",
+      "contentRevision": "legacy-published-1",
+      "chartDigest": "b065d1d127469ea8484113d528b457472df35703f2acf91b2662a03ec27cc0d8",
+      "visualDigest": "520a9b1f4ffe9be06c6bd5daff52a35f45800d6760365cb3d9d6a739d572ad37",
+      "mediaContentId": "chart-video-placeholder"
+    },
+    {
+      "chartId": "music-project-1-chart",
+      "sourceKind": "Published",
+      "resourcePath": "chart/music-project-1-chart",
+      "sourcePath": "assets/resources/chart/music-project-1-chart.json",
+      "contentRevision": "legacy-published-1",
+      "chartDigest": "0c609c675c81b756adb67c2dcdca894366f667abd4f6eb2c5c24c977f3e4d114",
+      "visualDigest": "a3bf59193d96f4594744207f697d92cb3cfb5036c4bfe99d82ab87e707d748ad",
+      "mediaContentId": "chart-video-placeholder"
+    },
+    {
+      "chartId": "chart-placeholder-1",
+      "sourceKind": "Published",
+      "resourcePath": "chart/chart_placeholder",
+      "sourcePath": "assets/resources/chart/chart_placeholder.json",
+      "contentRevision": "legacy-published-1",
+      "chartDigest": "96acf859e205a072daabefc892ee92096741796381e275241653c85cb8b24b38",
+      "visualDigest": "4e6bb26df69c407b87ab5dd0a85ab2e7528b3cc7bc7cebba2caa8640674124a3",
+      "mediaContentId": "chart-video-placeholder"
+    },
+    {
+      "chartId": "chart-placeholder-fallback",
+      "sourceKind": "LegacyFallback",
+      "resourcePath": null,
+      "sourcePath": "assets/scripts/SceneBuilder.ts#createFallbackChartData",
+      "contentRevision": "legacy-fallback-1",
+      "chartDigest": "7d68470725b271ac690adda94cffbf5ce6ca9a18aeb0997f135773f7953b26c0",
+      "visualDigest": "54908cd4a062a62ce35cdfa09dfc1e20a5fe4f903eae77d3b0ee57abd527e466",
+      "mediaContentId": "chart-video-placeholder"
+    }
+  ]
+}

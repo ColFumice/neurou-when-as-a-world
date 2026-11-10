@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "phase": "B2.4c",
+  "diff": "code.diff",
+  "canonicalSourceCount": 12,
+  "files": [
+    {
+      "path": "assets/scripts/CrossDevicePrototype.ts",
+      "kind": "added",
+      "originalLines": 0,
+      "finalLines": 269
+    },
+    {
+      "path": "assets/scripts/CrossDevicePrototype.ts.meta",
+      "kind": "added",
+      "originalLines": 0,
+      "finalLines": 9
+    },
+    {
+      "path": "assets/scripts/WorldFolderBuilder.ts",
+      "kind": "changed",
+      "originalLines": 545,
+      "finalLines": 579
+    },
+    {
+      "path": "src/director/CoreTransfer.ts",
+      "kind": "added",
+      "originalLines": 0,
+      "finalLines": 324
+    },
+    {
+      "path": "src/director/CoreTransfer.ts.meta",
+      "kind": "added",
+      "originalLines": 0,
+      "finalLines": 9
+    },
+    {
+      "path": "src/director/CoreTransferContent.ts",
+      "kind": "added",
+      "originalLines": 0,
+      "finalLines": 29
+    },
+    {
+      "path": "src/director/CoreTransferContent.ts.meta",
+      "kind": "added",
+      "originalLines": 0,
+      "finalLines": 9
+    },
+    {
+      "path": "src/director/IntentPort.ts",
+      "kind": "changed",
+      "originalLines": 1031,
+      "finalLines": 1036
+    },
+    {
+      "path": "src/presentation/CrossDeviceContractAdapter.ts",
+      "kind": "added",
+      "originalLines": 0,
+      "finalLines": 100
+    },
+    {
+      "path": "src/presentation/CrossDeviceContractAdapter.ts.meta",
+      "kind": "added",
+      "originalLines": 0,
+      "finalLines": 9
+    },
+    {
+      "path": "src/presentation/CrossDeviceImportStorage.ts",
+      "kind": "added",
+      "originalLines": 0,
+      "finalLines": 392
+    },
+    {
+      "path": "src/presentation/CrossDeviceImportStorage.ts.meta",
+      "kind": "added",
+      "originalLines": 0,
+      "finalLines": 9
+    }
+  ]
+}

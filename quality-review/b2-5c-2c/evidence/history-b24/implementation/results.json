@@ -1,0 +1,30 @@
+{
+  "phase": "B2.5c-2c B2.4e historical regression",
+  "runName": "implementation",
+  "startedUtc": "2026-10-11T08:52:51.979Z",
+  "completedUtc": "2026-10-11T08:53:12.527Z",
+  "nodeVersion": "v24.19.0",
+  "command": [
+    "C:\\Program Files\\nodejs\\node.exe",
+    "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-2c\\evidence\\history-b24\\implementation\\run-contract-regressions.cjs"
+  ],
+  "exitCode": 0,
+  "sourceCopy": {
+    "sourcePath": "quality-review/b2-cross-device-e2e/run-contract-regressions.cjs",
+    "sourceSha256": "5c62c912d3d09b3e93e71f2ee6f07f24aeff7d8c0ee3f15d716ff3f5d78543b5",
+    "currentSourceSha256": "5c62c912d3d09b3e93e71f2ee6f07f24aeff7d8c0ee3f15d716ff3f5d78543b5",
+    "copySha256": "0f4e54522c71b00d7da3ed7d85af83fac4cf46e6ad71a6872a4a4c453a8557bb",
+    "rewrite": "Only workspace root anchor; suite/assertions/report handling unchanged, all output in this new c-2c directory."
+  },
+  "log": "history-b24/implementation/regression.log",
+  "logSha256": "96c029ee5f48aaf3c5f8af148538ec0507e4813b9a12acfc87debb49ada33fe4",
+  "report": "history-b24/implementation/contract-regression-results.json",
+  "counts": {
+    "expected": 227,
+    "passed": 227
+  },
+  "originalScriptsAndReportsUnchanged": true,
+  "productionSourcesStableDuringRun": true,
+  "pass": true,
+  "limits": "ContractAdapter logical-device fixture regression, not real HTTP shared authority/network/client/physical-device acceptance. Existing source suites, assertions and accepted reports remain read-only."
+}

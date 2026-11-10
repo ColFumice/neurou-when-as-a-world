@@ -1,0 +1,51 @@
+{
+  "error": "Error: Script failed to execute, this normally means an error was thrown. Check the renderer console for the error.\n    at node:electron/js2c/sandbox_bundle:2:130545\n    at IpcRendererInternal.<anonymous> (node:electron/js2c/sandbox_bundle:2:124813)\n    at IpcRendererInternal.emit (node:electron/js2c/sandbox_bundle:2:45997)\n    at Object.onMessage (node:electron/js2c/sandbox_bundle:2:123872)",
+  "checks": [
+    {
+      "name": "seven-second deep trace trigger",
+      "pass": true
+    },
+    {
+      "name": "each non-space row fills width with uniform contiguous cells",
+      "pass": false
+    },
+    {
+      "name": "adjacent keyboard rows have no vertical gap",
+      "pass": false
+    },
+    {
+      "name": "pause freezes media time",
+      "pass": true
+    }
+  ],
+  "logs": [
+    {
+      "level": 2,
+      "message": "%cElectron Security Warning (Insecure Content-Security-Policy) font-weight: bold; This renderer process has either no Content Security\n  Policy set or a policy with \"unsafe-eval\" enabled. This exposes users of\n  this app to unnecessary security risks.\n\nFor more information and help, consult\nhttps://electronjs.org/docs/tutorial/security.\nThis warning will not show up\nonce the app is packaged."
+    },
+    {
+      "level": 0,
+      "message": "Init Base: 0.27001953125 ms"
+    },
+    {
+      "level": 0,
+      "message": "Init Infrastructure: 26.677978515625 ms"
+    },
+    {
+      "level": 0,
+      "message": "Init SubSystem: 111.697998046875 ms"
+    },
+    {
+      "level": 0,
+      "message": "Init Project: 75.656982421875 ms"
+    },
+    {
+      "level": 3,
+      "message": "[object ErrorEvent]"
+    },
+    {
+      "level": 3,
+      "message": "Uncaught SyntaxError: Unexpected token '}'"
+    }
+  ]
+}

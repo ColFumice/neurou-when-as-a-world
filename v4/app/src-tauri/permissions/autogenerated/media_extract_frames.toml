@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-media-extract-frames"
+description = "Enables the media_extract_frames command without any pre-configured scope."
+commands.allow = ["media_extract_frames"]
+
+[[permission]]
+identifier = "deny-media-extract-frames"
+description = "Denies the media_extract_frames command without any pre-configured scope."
+commands.deny = ["media_extract_frames"]

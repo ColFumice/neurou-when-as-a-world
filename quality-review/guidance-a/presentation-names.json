@@ -1,0 +1,1024 @@
+{
+  "scope": "仅本 agent 新增 LineEraseEffect.ts/.meta 和 ChartPadView.ts 的变更；既有 ChartPadView 标识符不重复列出。新组件内全部声明字段、方法、常量、参数与局部变量均记录，复用名与待追认名明确分开。",
+  "frozenType": "LineEraseEffect 已由 VERDICT-128 冻结，不列入待追认。",
+  "baseline": {
+    "file": "quality-review/guidance-a/baseline/src/presentation/ChartPadView.ts",
+    "method": "依据本轮读取的开工源码和已知全部变更精确逆向恢复；未使用旧 backup；保留原 CRLF。"
+  },
+  "entries": [
+    {
+      "name": "_decorator",
+      "kind": "import",
+      "status": "engine_api_reuse",
+      "note": "Cocos API / 生命周期既有名称，复用",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 4
+        }
+      ]
+    },
+    {
+      "name": "ageMs",
+      "kind": "local_or_constant",
+      "status": "pending_protocol",
+      "note": "本轮新引入的技术标识符，待 PROTOCOL 追认",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 138
+        },
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 172
+        }
+      ]
+    },
+    {
+      "name": "alpha",
+      "kind": "local_or_constant",
+      "status": "existing_identifier_reuse",
+      "note": "本项目已用标识符，在新组件内复用",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 115
+        }
+      ]
+    },
+    {
+      "name": "alpha",
+      "kind": "parameter",
+      "status": "existing_identifier_reuse",
+      "note": "本项目已用标识符，在新组件内复用",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 162
+        }
+      ]
+    },
+    {
+      "name": "aspectRatio",
+      "kind": "local_or_constant",
+      "status": "pending_protocol",
+      "note": "本轮新引入的技术标识符，待 PROTOCOL 追认",
+      "locations": [
+        {
+          "file": "src/presentation/ChartPadView.ts",
+          "line": 261
+        }
+      ]
+    },
+    {
+      "name": "aspectRatio",
+      "kind": "parameter",
+      "status": "pending_protocol",
+      "note": "本轮新引入的技术标识符，待 PROTOCOL 追认",
+      "locations": [
+        {
+          "file": "src/presentation/ChartPadView.ts",
+          "line": 443
+        }
+      ]
+    },
+    {
+      "name": "bindContentSize",
+      "kind": "method",
+      "status": "pending_protocol",
+      "note": "本轮新引入的技术标识符，待 PROTOCOL 追认",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 47
+        }
+      ]
+    },
+    {
+      "name": "bindHeadLogo",
+      "kind": "method",
+      "status": "pending_protocol",
+      "note": "本轮新引入的技术标识符，待 PROTOCOL 追认",
+      "locations": [
+        {
+          "file": "src/presentation/ChartPadView.ts",
+          "line": 111
+        },
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 33
+        }
+      ]
+    },
+    {
+      "name": "bindHeadPosition",
+      "kind": "method",
+      "status": "pending_protocol",
+      "note": "本轮新引入的技术标识符，待 PROTOCOL 追认",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 41
+        }
+      ]
+    },
+    {
+      "name": "bindPremiere",
+      "kind": "method",
+      "status": "existing_identifier_reuse",
+      "note": "本项目已用标识符，在新组件内复用",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 27
+        }
+      ]
+    },
+    {
+      "name": "ccclass",
+      "kind": "local_or_constant",
+      "status": "engine_api_reuse",
+      "note": "Cocos API / 生命周期既有名称，复用",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 10
+        }
+      ]
+    },
+    {
+      "name": "ChartPremiereReader",
+      "kind": "import",
+      "status": "existing_identifier_reuse",
+      "note": "本项目已用标识符，在新组件内复用",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 7
+        }
+      ]
+    },
+    {
+      "name": "clearVisuals",
+      "kind": "method",
+      "status": "pending_protocol",
+      "note": "本轮新引入的技术标识符，待 PROTOCOL 追认",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 66
+        }
+      ]
+    },
+    {
+      "name": "Color",
+      "kind": "import",
+      "status": "engine_api_reuse",
+      "note": "Cocos API / 生命周期既有名称，复用",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 4
+        }
+      ]
+    },
+    {
+      "name": "Component",
+      "kind": "import",
+      "status": "engine_api_reuse",
+      "note": "Cocos API / 生命周期既有名称，复用",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 4
+        }
+      ]
+    },
+    {
+      "name": "contentW",
+      "kind": "local_or_constant",
+      "status": "pending_protocol",
+      "note": "本轮新引入的技术标识符，待 PROTOCOL 追认",
+      "locations": [
+        {
+          "file": "src/presentation/ChartPadView.ts",
+          "line": 446
+        }
+      ]
+    },
+    {
+      "name": "drawHead",
+      "kind": "method",
+      "status": "pending_protocol",
+      "note": "本轮新引入的技术标识符，待 PROTOCOL 追认",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 159
+        }
+      ]
+    },
+    {
+      "name": "drawSnapshot",
+      "kind": "method",
+      "status": "pending_protocol",
+      "note": "本轮新引入的技术标识符，待 PROTOCOL 追认",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 103
+        }
+      ]
+    },
+    {
+      "name": "ensureBuilt",
+      "kind": "method",
+      "status": "existing_identifier_reuse",
+      "note": "本项目已用标识符，在新组件内复用",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 51
+        }
+      ]
+    },
+    {
+      "name": "fadeProgress",
+      "kind": "local_or_constant",
+      "status": "pending_protocol",
+      "note": "本轮新引入的技术标识符，待 PROTOCOL 追认",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 142
+        }
+      ]
+    },
+    {
+      "name": "FrameRefreshable",
+      "kind": "import",
+      "status": "existing_identifier_reuse",
+      "note": "本项目已用标识符，在新组件内复用",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 6
+        }
+      ]
+    },
+    {
+      "name": "graphics",
+      "kind": "field",
+      "status": "existing_identifier_reuse",
+      "note": "本项目已用标识符，在新组件内复用",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 22
+        }
+      ]
+    },
+    {
+      "name": "graphics",
+      "kind": "local_or_constant",
+      "status": "existing_identifier_reuse",
+      "note": "本项目已用标识符，在新组件内复用",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 105
+        }
+      ]
+    },
+    {
+      "name": "Graphics",
+      "kind": "import",
+      "status": "engine_api_reuse",
+      "note": "Cocos API / 生命周期既有名称，复用",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 4
+        }
+      ]
+    },
+    {
+      "name": "GuidanceChart",
+      "kind": "import",
+      "status": "frozen_reuse",
+      "note": "VERDICT-127 冻结独立谱面类型；只读复用",
+      "locations": [
+        {
+          "file": "src/presentation/ChartPadView.ts",
+          "line": 28
+        }
+      ]
+    },
+    {
+      "name": "GuidanceHeadLogo",
+      "kind": "runtime_node",
+      "status": "pending_protocol",
+      "note": "本轮新增 Cocos 子节点名，待 PROTOCOL 追认",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts"
+        }
+      ]
+    },
+    {
+      "name": "GuidanceLineSnapshot",
+      "kind": "import",
+      "status": "readonly_type_reuse",
+      "note": "其他模块只读类型接口，非本 agent 新定义",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 8
+        }
+      ]
+    },
+    {
+      "name": "GuidanceLineVisuals",
+      "kind": "runtime_node",
+      "status": "pending_protocol",
+      "note": "本轮新增 Cocos 子节点名，待 PROTOCOL 追认",
+      "locations": [
+        {
+          "file": "src/presentation/ChartPadView.ts"
+        }
+      ]
+    },
+    {
+      "name": "HEAD_SIZE_RATIO",
+      "kind": "local_or_constant",
+      "status": "pending_protocol",
+      "note": "本轮新引入的技术标识符，待 PROTOCOL 追认",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 16
+        }
+      ]
+    },
+    {
+      "name": "headLogo",
+      "kind": "field",
+      "status": "pending_protocol",
+      "note": "本轮新引入的技术标识符，待 PROTOCOL 追认",
+      "locations": [
+        {
+          "file": "src/presentation/ChartPadView.ts",
+          "line": 58
+        },
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 24
+        }
+      ]
+    },
+    {
+      "name": "headNode",
+      "kind": "local_or_constant",
+      "status": "pending_protocol",
+      "note": "本轮新引入的技术标识符，待 PROTOCOL 追认",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 56
+        }
+      ]
+    },
+    {
+      "name": "headPosition",
+      "kind": "field",
+      "status": "pending_protocol",
+      "note": "本轮新引入的技术标识符，待 PROTOCOL 追认",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 25
+        }
+      ]
+    },
+    {
+      "name": "headSprite",
+      "kind": "field",
+      "status": "pending_protocol",
+      "note": "本轮新引入的技术标识符，待 PROTOCOL 追认",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 23
+        }
+      ]
+    },
+    {
+      "name": "height",
+      "kind": "local_or_constant",
+      "status": "existing_identifier_reuse",
+      "note": "本项目已用标识符，在新组件内复用",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 112
+        }
+      ]
+    },
+    {
+      "name": "height",
+      "kind": "parameter",
+      "status": "existing_identifier_reuse",
+      "note": "本项目已用标识符，在新组件内复用",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 47
+        },
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 163
+        }
+      ]
+    },
+    {
+      "name": "i",
+      "kind": "local_or_constant",
+      "status": "existing_identifier_reuse",
+      "note": "本项目已用标识符，在新组件内复用",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 130
+        }
+      ]
+    },
+    {
+      "name": "item",
+      "kind": "local_or_constant",
+      "status": "existing_identifier_reuse",
+      "note": "本项目已用标识符，在新组件内复用",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 137
+        }
+      ]
+    },
+    {
+      "name": "lineEraseEffect",
+      "kind": "field",
+      "status": "pending_protocol",
+      "note": "本轮新引入的技术标识符，待 PROTOCOL 追认",
+      "locations": [
+        {
+          "file": "src/presentation/ChartPadView.ts",
+          "line": 57
+        }
+      ]
+    },
+    {
+      "name": "LineEraseEffect",
+      "kind": "class",
+      "status": "frozen_reuse",
+      "note": "VERDICT-128 冻结的 presentation 类型；复用冻结名，不待追认",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 19
+        }
+      ]
+    },
+    {
+      "name": "LineEraseEffect",
+      "kind": "import",
+      "status": "frozen_reuse",
+      "note": "VERDICT-128 冻结的 presentation 类型；复用冻结名，不待追认",
+      "locations": [
+        {
+          "file": "src/presentation/ChartPadView.ts",
+          "line": 25
+        }
+      ]
+    },
+    {
+      "name": "lineNode",
+      "kind": "local_or_constant",
+      "status": "pending_protocol",
+      "note": "本轮新引入的技术标识符，待 PROTOCOL 追认",
+      "locations": [
+        {
+          "file": "src/presentation/ChartPadView.ts",
+          "line": 167
+        }
+      ]
+    },
+    {
+      "name": "logo",
+      "kind": "parameter",
+      "status": "pending_protocol",
+      "note": "本轮新引入的技术标识符，待 PROTOCOL 追认",
+      "locations": [
+        {
+          "file": "src/presentation/ChartPadView.ts",
+          "line": 111
+        },
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 33
+        }
+      ]
+    },
+    {
+      "name": "mapX",
+      "kind": "local_or_constant",
+      "status": "existing_identifier_reuse",
+      "note": "本项目已用标识符，在新组件内复用",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 113
+        }
+      ]
+    },
+    {
+      "name": "mapX",
+      "kind": "parameter",
+      "status": "existing_identifier_reuse",
+      "note": "本项目已用标识符，在新组件内复用",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 164
+        }
+      ]
+    },
+    {
+      "name": "mapY",
+      "kind": "local_or_constant",
+      "status": "existing_identifier_reuse",
+      "note": "本项目已用标识符，在新组件内复用",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 114
+        }
+      ]
+    },
+    {
+      "name": "mapY",
+      "kind": "parameter",
+      "status": "existing_identifier_reuse",
+      "note": "本项目已用标识符，在新组件内复用",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 165
+        }
+      ]
+    },
+    {
+      "name": "Node",
+      "kind": "import",
+      "status": "engine_api_reuse",
+      "note": "Cocos API / 生命周期既有名称，复用",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 4
+        }
+      ]
+    },
+    {
+      "name": "NODE_EXPAND_RATIO",
+      "kind": "local_or_constant",
+      "status": "pending_protocol",
+      "note": "本轮新引入的技术标识符，待 PROTOCOL 追认",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 17
+        }
+      ]
+    },
+    {
+      "name": "NODE_FADE_MS",
+      "kind": "local_or_constant",
+      "status": "pending_protocol",
+      "note": "本轮新引入的技术标识符，待 PROTOCOL 追认",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 13
+        }
+      ]
+    },
+    {
+      "name": "NODE_SIZE_RATIO",
+      "kind": "local_or_constant",
+      "status": "pending_protocol",
+      "note": "本轮新引入的技术标识符，待 PROTOCOL 追认",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 14
+        }
+      ]
+    },
+    {
+      "name": "nodeAlpha",
+      "kind": "local_or_constant",
+      "status": "pending_protocol",
+      "note": "本轮新引入的技术标识符，待 PROTOCOL 追认",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 144
+        }
+      ]
+    },
+    {
+      "name": "nowMs",
+      "kind": "local_or_constant",
+      "status": "pending_protocol",
+      "note": "本轮新引入的技术标识符，待 PROTOCOL 追认",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 119
+        }
+      ]
+    },
+    {
+      "name": "nowMs",
+      "kind": "parameter",
+      "status": "pending_protocol",
+      "note": "本轮新引入的技术标识符，待 PROTOCOL 追认",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 161
+        }
+      ]
+    },
+    {
+      "name": "onDestroy",
+      "kind": "method",
+      "status": "engine_api_reuse",
+      "note": "Cocos API / 生命周期既有名称，复用",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 78
+        }
+      ]
+    },
+    {
+      "name": "onDisable",
+      "kind": "method",
+      "status": "engine_api_reuse",
+      "note": "Cocos API / 生命周期既有名称，复用",
+      "locations": [
+        {
+          "file": "src/presentation/ChartPadView.ts",
+          "line": 116
+        },
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 74
+        }
+      ]
+    },
+    {
+      "name": "onFrameRefresh",
+      "kind": "method",
+      "status": "existing_identifier_reuse",
+      "note": "本项目已用标识符，在新组件内复用",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 86
+        }
+      ]
+    },
+    {
+      "name": "point",
+      "kind": "local_or_constant",
+      "status": "pending_protocol",
+      "note": "本轮新引入的技术标识符，待 PROTOCOL 追认",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 131
+        }
+      ]
+    },
+    {
+      "name": "POINT_RADIUS_RATIO",
+      "kind": "local_or_constant",
+      "status": "pending_protocol",
+      "note": "本轮新引入的技术标识符，待 PROTOCOL 追认",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 15
+        }
+      ]
+    },
+    {
+      "name": "position",
+      "kind": "local_or_constant",
+      "status": "pending_protocol",
+      "note": "本轮新引入的技术标识符，待 PROTOCOL 追认",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 152
+        },
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 168
+        }
+      ]
+    },
+    {
+      "name": "position",
+      "kind": "parameter",
+      "status": "pending_protocol",
+      "note": "本轮新引入的技术标识符，待 PROTOCOL 追认",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 41
+        }
+      ]
+    },
+    {
+      "name": "premiere",
+      "kind": "field",
+      "status": "existing_identifier_reuse",
+      "note": "本项目已用标识符，在新组件内复用",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 21
+        }
+      ]
+    },
+    {
+      "name": "premiere",
+      "kind": "local_or_constant",
+      "status": "existing_identifier_reuse",
+      "note": "本项目已用标识符，在新组件内复用",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 106
+        }
+      ]
+    },
+    {
+      "name": "progress",
+      "kind": "local_or_constant",
+      "status": "existing_identifier_reuse",
+      "note": "本项目已用标识符，在新组件内复用",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 176
+        }
+      ]
+    },
+    {
+      "name": "reader",
+      "kind": "parameter",
+      "status": "existing_identifier_reuse",
+      "note": "本项目已用标识符，在新组件内复用",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 27
+        }
+      ]
+    },
+    {
+      "name": "scale",
+      "kind": "local_or_constant",
+      "status": "pending_protocol",
+      "note": "本轮新引入的技术标识符，待 PROTOCOL 追认",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 180
+        }
+      ]
+    },
+    {
+      "name": "size",
+      "kind": "local_or_constant",
+      "status": "pending_protocol",
+      "note": "本轮新引入的技术标识符，待 PROTOCOL 追认",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 143
+        },
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 177
+        }
+      ]
+    },
+    {
+      "name": "snapshot",
+      "kind": "local_or_constant",
+      "status": "pending_protocol",
+      "note": "本轮新引入的技术标识符，待 PROTOCOL 追认",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 92
+        }
+      ]
+    },
+    {
+      "name": "snapshot",
+      "kind": "parameter",
+      "status": "pending_protocol",
+      "note": "本轮新引入的技术标识符，待 PROTOCOL 追认",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 103
+        },
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 160
+        }
+      ]
+    },
+    {
+      "name": "sprite",
+      "kind": "local_or_constant",
+      "status": "pending_protocol",
+      "note": "本轮新引入的技术标识符，待 PROTOCOL 追认",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 167
+        }
+      ]
+    },
+    {
+      "name": "Sprite",
+      "kind": "import",
+      "status": "engine_api_reuse",
+      "note": "Cocos API / 生命周期既有名称，复用",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 4
+        }
+      ]
+    },
+    {
+      "name": "SpriteFrame",
+      "kind": "import",
+      "status": "engine_api_reuse",
+      "note": "Cocos API / 生命周期既有名称，复用",
+      "locations": [
+        {
+          "file": "src/presentation/ChartPadView.ts",
+          "line": 23
+        },
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 4
+        }
+      ]
+    },
+    {
+      "name": "state",
+      "kind": "local_or_constant",
+      "status": "existing_identifier_reuse",
+      "note": "本项目已用标识符，在新组件内复用",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 91
+        }
+      ]
+    },
+    {
+      "name": "transform",
+      "kind": "local_or_constant",
+      "status": "existing_identifier_reuse",
+      "note": "本项目已用标识符，在新组件内复用",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 104
+        }
+      ]
+    },
+    {
+      "name": "u",
+      "kind": "parameter",
+      "status": "frozen_reuse",
+      "note": "冻结归一化横坐标成员，复用",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 113
+        },
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 164
+        }
+      ]
+    },
+    {
+      "name": "u",
+      "kind": "type_member",
+      "status": "frozen_reuse",
+      "note": "冻结归一化横坐标成员，复用",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 25
+        },
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 41
+        }
+      ]
+    },
+    {
+      "name": "UITransform",
+      "kind": "import",
+      "status": "engine_api_reuse",
+      "note": "Cocos API / 生命周期既有名称，复用",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 4
+        }
+      ]
+    },
+    {
+      "name": "v",
+      "kind": "parameter",
+      "status": "frozen_reuse",
+      "note": "冻结归一化纵坐标成员，复用",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 114
+        },
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 165
+        }
+      ]
+    },
+    {
+      "name": "v",
+      "kind": "type_member",
+      "status": "frozen_reuse",
+      "note": "冻结归一化纵坐标成员，复用",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 25
+        },
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 41
+        }
+      ]
+    },
+    {
+      "name": "width",
+      "kind": "local_or_constant",
+      "status": "existing_identifier_reuse",
+      "note": "本项目已用标识符，在新组件内复用",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 111
+        }
+      ]
+    },
+    {
+      "name": "width",
+      "kind": "parameter",
+      "status": "existing_identifier_reuse",
+      "note": "本项目已用标识符，在新组件内复用",
+      "locations": [
+        {
+          "file": "src/presentation/LineEraseEffect.ts",
+          "line": 47
+        }
+      ]
+    }
+  ]
+}

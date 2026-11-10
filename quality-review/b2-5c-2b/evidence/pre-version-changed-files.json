@@ -1,0 +1,197 @@
+{
+  "generatedUtc": "2026-10-11T08:04:36.996Z",
+  "files": [
+    {
+      "path": "assets/scripts/SharedRelayPrototypeBuilder.ts",
+      "change": "added",
+      "bytes": 1795,
+      "sha256": "65e9636369f66dec87b36da94beea0c79f998ef3946b72875312da77ea3840bf",
+      "beforeBytes": null,
+      "beforeSha256": null
+    },
+    {
+      "path": "server/SharedBuild.mjs",
+      "change": "added",
+      "bytes": 1616,
+      "sha256": "a3cc9d9073be378093e0969b1b3bdbf6a61db96e6668ca3eb815183540db9c01",
+      "beforeBytes": null,
+      "beforeSha256": null
+    },
+    {
+      "path": "server/sql/002_shared_authority.sql",
+      "change": "added",
+      "bytes": 8358,
+      "sha256": "8891dc04fc4c9c6aa35eabcfc2c3241176a6c6960fc9aef52edb1f4a288a2a59",
+      "beforeBytes": null,
+      "beforeSha256": null
+    },
+    {
+      "path": "server/src/AuthorityRoute.ts",
+      "change": "added",
+      "bytes": 3208,
+      "sha256": "4f087bdb0c076e6c7f8d5aa5a329766847419152be1bad6a90bd111216117c0f",
+      "beforeBytes": null,
+      "beforeSha256": null
+    },
+    {
+      "path": "server/src/RealAuthorityClock.ts",
+      "change": "added",
+      "bytes": 4143,
+      "sha256": "ef385ef705626a7269dd171e6491ee3523819d515427effb25ec70bfa657efda",
+      "beforeBytes": null,
+      "beforeSha256": null
+    },
+    {
+      "path": "server/src/SharedCryptoProof.ts",
+      "change": "added",
+      "bytes": 1958,
+      "sha256": "6a1a49343276bd2651548c1c0dc815601182eaa17d4011da8d8ab01eff208f97",
+      "beforeBytes": null,
+      "beforeSha256": null
+    },
+    {
+      "path": "server/src/SharedMigrationRunner.ts",
+      "change": "added",
+      "bytes": 4001,
+      "sha256": "ca334b3a0d9239be218881d9a9ed53c3144e614bfad5b24474040c32f915cc43",
+      "beforeBytes": null,
+      "beforeSha256": null
+    },
+    {
+      "path": "server/src/SharedReceiptSigner.ts",
+      "change": "added",
+      "bytes": 3253,
+      "sha256": "4d32c01fd861f7dd68b817da12a10f3a9b4b99858a1d503fab25e60fde3cd9ef",
+      "beforeBytes": null,
+      "beforeSha256": null
+    },
+    {
+      "path": "server/src/SharedServerConfig.ts",
+      "change": "added",
+      "bytes": 3901,
+      "sha256": "aee3d526e2af6c4b7682b49ddd0e0e3e80deee73f456c7b5c2045b9cdf30c87f",
+      "beforeBytes": null,
+      "beforeSha256": null
+    },
+    {
+      "path": "server/src/SharedSessionVerifier.ts",
+      "change": "added",
+      "bytes": 3402,
+      "sha256": "674b5411364bfaa42728885d94453c1468564690b81aa519e7b40a7f6f1439b9",
+      "beforeBytes": null,
+      "beforeSha256": null
+    },
+    {
+      "path": "server/src/WorldAuthorityService.ts",
+      "change": "added",
+      "bytes": 49772,
+      "sha256": "99eabb1a7f2549af482d8a3cd619774173235b31fcf9dcc085c54e3313b9df88",
+      "beforeBytes": null,
+      "beforeSha256": null
+    },
+    {
+      "path": "server/src/WorldAuthorityStorage.ts",
+      "change": "added",
+      "bytes": 1156,
+      "sha256": "69958b263668dbe315b1787b29a1c451a1f489f7e5e009ab6dac19d0574fe8ad",
+      "beforeBytes": null,
+      "beforeSha256": null
+    },
+    {
+      "path": "server/src/buildSharedServer.ts",
+      "change": "added",
+      "bytes": 2043,
+      "sha256": "60f30f111909739bceb2be4135b0a1f4b49c31b0061859a334ae2c7b88194733",
+      "beforeBytes": null,
+      "beforeSha256": null
+    },
+    {
+      "path": "server/src/shared-cli.ts",
+      "change": "added",
+      "bytes": 476,
+      "sha256": "ab4e9a0d87950fa859cd99fd8c35533935ed33195d188772e7d2e7f9014a0116",
+      "beforeBytes": null,
+      "beforeSha256": null
+    },
+    {
+      "path": "server/src/shared-main.ts",
+      "change": "added",
+      "bytes": 1114,
+      "sha256": "db867cb126915f1652313f21c009d178d25fd528cdd5e48e7780e4630d284df2",
+      "beforeBytes": null,
+      "beforeSha256": null
+    },
+    {
+      "path": "server/test/shared-clock-migration.test.ts",
+      "change": "added",
+      "bytes": 3504,
+      "sha256": "1a045ff129e8a68142c20af04cadcca55ec62de1d1c07e9cdbcd4d1249c58d95",
+      "beforeBytes": null,
+      "beforeSha256": null
+    },
+    {
+      "path": "server/test/shared-http.test.ts",
+      "change": "added",
+      "bytes": 38111,
+      "sha256": "cee2817577f0df4c106b5062fa47c5b56a6edc224b4f50a871a71b5b8b702a6b",
+      "beforeBytes": null,
+      "beforeSha256": null
+    },
+    {
+      "path": "server/tsconfig.shared.json",
+      "change": "added",
+      "bytes": 192,
+      "sha256": "7a152e46c1d4c92f15e5e0f8b1dd776315223e3f1b8c5274446f6671b26fb031",
+      "beforeBytes": null,
+      "beforeSha256": null
+    },
+    {
+      "path": "src/director/IntentPort.ts",
+      "change": "modified",
+      "bytes": 50175,
+      "sha256": "1e29ebc8f7cf1bfef700eea7fc1bae8a09e6cdb4e1f39d9e2ef07549991649a3",
+      "beforeBytes": 49042,
+      "beforeSha256": "bac79e9b627a75b6ff911a4cdf1950a3da5df7ec908439119e092fb45269d0e5"
+    },
+    {
+      "path": "src/director/SharedServiceProtocolCodec.ts",
+      "change": "added",
+      "bytes": 17678,
+      "sha256": "22bb5e8139f8323388bcb2129d021471c48b97c0ede4a25cbea1285629400fea",
+      "beforeBytes": null,
+      "beforeSha256": null
+    },
+    {
+      "path": "src/director/SharedServiceProtocolContracts.ts",
+      "change": "added",
+      "bytes": 18711,
+      "sha256": "e74f48e14ded771db56cb1890c24a19490e52e2a9b8d96a9c3a9a9bad33b4a80",
+      "beforeBytes": null,
+      "beforeSha256": null
+    },
+    {
+      "path": "src/presentation/RealSharedServiceSessionAdapter.ts",
+      "change": "added",
+      "bytes": 44370,
+      "sha256": "46238bab2bd3d082622d0b22ba2e3cb82f0330b40f77d70c4de6b229b8af1f8e",
+      "beforeBytes": null,
+      "beforeSha256": null
+    },
+    {
+      "path": "src/presentation/RealWorldAuthorityAdapter.ts",
+      "change": "added",
+      "bytes": 6187,
+      "sha256": "fa51d3cc028601f3506bcdee6ce53e5288ebeb3cb98f6fd2a94e1092aac8db39",
+      "beforeBytes": null,
+      "beforeSha256": null
+    }
+  ],
+  "sourceFileCount": 23,
+  "addedFiles": 22,
+  "modifiedFiles": 1,
+  "codeDiffBytes": 226812,
+  "codeDiffSha256": "83d168f74ff3fe4a611778e1df06219662c7855dbf30a3b32a8d2532154cd364",
+  "finalProtectionAuditSha256": "629b848997114d34cf9065859871405ab3ffebbe3c44e1aa4136d39550e1df02",
+  "pass": true,
+  "scope": "Full implementation source/config/migration/test diff. Approved generated build caches are reported by protection audit but omitted from source diff; private runtime data/secrets and c-2b delivery evidence are not implementation source."
+}

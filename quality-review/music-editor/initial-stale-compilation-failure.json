@@ -1,0 +1,10 @@
+{
+  "creator": "3.8.8",
+  "url": "http://localhost:7457/",
+  "inputPolicy": "DOM click/change + BrowserWindow native mouse. No session write helpers, fabricated sources, playback clocks, scores or renderer images. File API fixtures are valid JSON input at browser import boundary, clearly labelled.",
+  "resolutions": [],
+  "rendererErrors": [],
+  "downloads": [],
+  "pass": false,
+  "error": "AssertionError [ERR_ASSERTION]: Stale Creator compilation src/presentation/MusicEditorView.ts\n    at compilation (D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\music-editor\\creator-preview.cjs:28:12)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\music-editor\\creator-preview.cjs:118:22"
+}

@@ -1,0 +1,88 @@
+{
+  "phase": "B2.5c-2c copied historical c-2b pure contracts",
+  "generatedUtc": "2026-10-11T08:58:42.620Z",
+  "nodeVersion": "v24.19.0",
+  "runs": [
+    {
+      "name": "protocol-build",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "node_modules/typescript/bin/tsc",
+        "-p",
+        "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-2c\\evidence\\history-c2b-pure\\tsconfig-protocol.json"
+      ],
+      "startedUtc": "2026-10-11T08:58:41.958Z",
+      "completedUtc": "2026-10-11T08:58:42.559Z",
+      "exitCode": 0,
+      "pass": true,
+      "log": "history-c2b-pure/protocol-build.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "client-contract",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-2c\\evidence\\history-c2b-pure\\client-contract-tests.cjs"
+      ],
+      "startedUtc": "2026-10-11T08:58:41.964Z",
+      "completedUtc": "2026-10-11T08:58:42.341Z",
+      "exitCode": 0,
+      "pass": true,
+      "log": "history-c2b-pure/client-contract.log",
+      "sha256": "003ff7c28d1e42b33ca17896c461934e2a66a9d4fce260c2176a544f055f5b9c"
+    },
+    {
+      "name": "protocol-contract",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-2c\\evidence\\history-c2b-pure\\protocol-contract-tests.cjs"
+      ],
+      "startedUtc": "2026-10-11T08:58:42.559Z",
+      "completedUtc": "2026-10-11T08:58:42.619Z",
+      "exitCode": 0,
+      "pass": true,
+      "log": "history-c2b-pure/protocol-contract.log",
+      "sha256": "264637e475903cc63ae51199bb7dba85f588e3f943ca3b8abb8c91e6a80dedea"
+    }
+  ],
+  "counts": {
+    "protocolChecks": 32,
+    "clientContractChecks": 18,
+    "total": 50
+  },
+  "sources": [
+    {
+      "path": "quality-review/b2-5c-2b/client-contract-tests.cjs",
+      "sha256": "c10847c7616e0eff30a16f3fbc9c6f113797bf90c749c79e1f57ab157e4f9786",
+      "finalSha256": "c10847c7616e0eff30a16f3fbc9c6f113797bf90c749c79e1f57ab157e4f9786"
+    },
+    {
+      "path": "quality-review/b2-5c-2b/protocol-contract-tests.cjs",
+      "sha256": "dbb244372130e250d262d8fae1ef1b884e5f47d6a3550f0b0765acfc8d081dac",
+      "finalSha256": "dbb244372130e250d262d8fae1ef1b884e5f47d6a3550f0b0765acfc8d081dac"
+    },
+    {
+      "path": "quality-review/b2-5c-2b/evidence/protocol/tsconfig.json",
+      "sha256": "4d09aac199e8c27db802641e38dc4953b2ab03317e75985f711c3a6efcbe151a",
+      "finalSha256": "4d09aac199e8c27db802641e38dc4953b2ab03317e75985f711c3a6efcbe151a"
+    }
+  ],
+  "copies": [
+    {
+      "source": "quality-review/b2-5c-2b/client-contract-tests.cjs",
+      "copySha256": "7c7d886a8233ca5786855aa65c44cdb032e8f4956e6d4ae2b6da82288a3a5ff8",
+      "rewrite": "Only exact workspace-root anchor; cases, assertions and isolated output behavior unchanged."
+    },
+    {
+      "source": "quality-review/b2-5c-2b/protocol-contract-tests.cjs",
+      "copySha256": "dbb244372130e250d262d8fae1ef1b884e5f47d6a3550f0b0765acfc8d081dac",
+      "exactBytes": true
+    },
+    {
+      "source": "quality-review/b2-5c-2b/evidence/protocol/tsconfig.json",
+      "rewrite": "Only compiler output directory into this new round; source file list/options unchanged."
+    }
+  ],
+  "pass": true,
+  "scope": "32 pure canonical/schema cases plus 18 transport contract oracle cases against current implementation. These are not actual HTTP/PG or Relay acceptance. Historical scripts and output directories remain read-only; all compilation/output is in the new c-2c evidence tree."
+}

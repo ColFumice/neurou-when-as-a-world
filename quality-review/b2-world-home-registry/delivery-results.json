@@ -1,0 +1,25 @@
+{
+  "phase": "B2.4a frozen and B2.4b contract closure",
+  "sourceDigests": [
+    {
+      "path": "src/director/WorldHomeRegistry.ts",
+      "match": true
+    },
+    {
+      "path": "src/presentation/WorldHomeContractAdapter.ts",
+      "match": true
+    },
+    {
+      "path": "src/director/WorldFolderSession.ts",
+      "match": true
+    }
+  ],
+  "namingWarningsUnchanged": true,
+  "contractTests": {
+    "total": 34,
+    "passed": 34,
+    "failed": 0
+  },
+  "finalGates": true,
+  "protection": true
+}

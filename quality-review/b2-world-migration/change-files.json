@@ -1,0 +1,136 @@
+{
+  "schemaVersion": 1,
+  "phase": "B2.4d",
+  "diff": "code.diff",
+  "canonicalSourceCount": 16,
+  "files": [
+    {
+      "path": "assets/scripts/CrossDevicePrototype.ts",
+      "kind": "changed",
+      "originalLines": 269,
+      "finalLines": 300,
+      "originalSha256": "25612b4ab35cf03b4b9667c3e6a1245f90f9f7c0bcd8ad71d82ce0cec8c5fa4a",
+      "finalSha256": "b192b335960ce6ba5f56a6df9daadee5697d294606ef991295aeba95d19a11ce"
+    },
+    {
+      "path": "assets/scripts/SceneBuilder.ts",
+      "kind": "changed",
+      "originalLines": 1876,
+      "finalLines": 1913,
+      "originalSha256": "6ab0d26731fbd69127580f87de76d778d0409b1001aba718aaf160d1f6328c8f",
+      "finalSha256": "6f0903e6af74187ec2d611607084f736552de7f1ad1bfe80cd3a3310a43f1499"
+    },
+    {
+      "path": "assets/scripts/WorldFolderBuilder.ts",
+      "kind": "changed",
+      "originalLines": 579,
+      "finalLines": 655,
+      "originalSha256": "978dfce0652bee29777c8e13229d63bb75dc5a308675968961a80c02f0a53040",
+      "finalSha256": "837b75c0355dc595fae1e872d8bcfc85dc914659a5f99e92416cc9231f1caae9"
+    },
+    {
+      "path": "assets/scripts/WorldMigrationPrototype.ts",
+      "kind": "added",
+      "originalLines": 0,
+      "finalLines": 404,
+      "originalSha256": null,
+      "finalSha256": "dd647ffef7acd25debed4a65a9c61747384cda947ab4f4dd509760e076910abe"
+    },
+    {
+      "path": "assets/scripts/WorldMigrationPrototype.ts.meta",
+      "kind": "added",
+      "originalLines": 0,
+      "finalLines": 9,
+      "originalSha256": null,
+      "finalSha256": "364186b75f024e2ab6b71cad7cdc3c44e85a748401fb03cddaf250e0dfb29dbe"
+    },
+    {
+      "path": "src/director/IntentPort.ts",
+      "kind": "changed",
+      "originalLines": 1036,
+      "finalLines": 1042,
+      "originalSha256": "b2aa2235f6e9dde9988db48c9c9f1b3207c403707237e6421a7b31b12b4e2d53",
+      "finalSha256": "44a60728428514b25bfed380f680db2637cf13d57343b7e84ef91eadd48de09c"
+    },
+    {
+      "path": "src/director/RealityPauseBoundary.ts",
+      "kind": "added",
+      "originalLines": 0,
+      "finalLines": 13,
+      "originalSha256": null,
+      "finalSha256": "322c77afaa6084c1cd1492bd5f69710823c1c5c32ab474cea91a5360fa117099"
+    },
+    {
+      "path": "src/director/RealityPauseBoundary.ts.meta",
+      "kind": "added",
+      "originalLines": 0,
+      "finalLines": 9,
+      "originalSha256": null,
+      "finalSha256": "fda4e1919cbdc710f6c46f6b745b41eeda6d48a1924afeb472ccbc5574d242d6"
+    },
+    {
+      "path": "src/director/WorldMigration.ts",
+      "kind": "added",
+      "originalLines": 0,
+      "finalLines": 315,
+      "originalSha256": null,
+      "finalSha256": "43006e243f11ac2589895bbd1851df5ee5f249734f787fe6b48049a7b8b836c4"
+    },
+    {
+      "path": "src/director/WorldMigration.ts.meta",
+      "kind": "added",
+      "originalLines": 0,
+      "finalLines": 9,
+      "originalSha256": null,
+      "finalSha256": "dfc884d93e61a869a6b6807bc6fdac90b41c2b8bb277b09f2915194423d5f6cd"
+    },
+    {
+      "path": "src/presentation/SafePointDrainStorage.ts",
+      "kind": "added",
+      "originalLines": 0,
+      "finalLines": 154,
+      "originalSha256": null,
+      "finalSha256": "76fb9391a9aabc553ade293c31bc6aba66e1e2aec986b679151a8068b5c4ea3d"
+    },
+    {
+      "path": "src/presentation/SafePointDrainStorage.ts.meta",
+      "kind": "added",
+      "originalLines": 0,
+      "finalLines": 9,
+      "originalSha256": null,
+      "finalSha256": "66ffe6c0d80f7a703ff1fe9b9fec8c0b699a4bc6b85da1b0f9665ffd9641dc06"
+    },
+    {
+      "path": "src/presentation/WorldMigrationContractAdapter.ts",
+      "kind": "added",
+      "originalLines": 0,
+      "finalLines": 471,
+      "originalSha256": null,
+      "finalSha256": "a37a069880e5eb88e1f04c426573df96ccf266bc08ecfa7a9d8b755ddaec0a47"
+    },
+    {
+      "path": "src/presentation/WorldMigrationContractAdapter.ts.meta",
+      "kind": "added",
+      "originalLines": 0,
+      "finalLines": 9,
+      "originalSha256": null,
+      "finalSha256": "9f18fb47a3d65a82e3fa47f88a69fb933ffddb5c2b52a6da8bff12f490f783b9"
+    },
+    {
+      "path": "src/presentation/WorldMigrationStorage.ts",
+      "kind": "added",
+      "originalLines": 0,
+      "finalLines": 442,
+      "originalSha256": null,
+      "finalSha256": "bfea840ae818b6b4e443a9a77092b9cfa3f7f96a43014f7bef704ff2551d1d3f"
+    },
+    {
+      "path": "src/presentation/WorldMigrationStorage.ts.meta",
+      "kind": "added",
+      "originalLines": 0,
+      "finalLines": 9,
+      "originalSha256": null,
+      "finalSha256": "3118d5772f16e6d092ba5827e3f368f4f638e24606e53dd7c51a5e6a01cd6b92"
+    }
+  ]
+}

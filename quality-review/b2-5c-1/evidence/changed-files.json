@@ -1,0 +1,61 @@
+{
+  "generatedUtc": "2026-10-11T04:54:49.329Z",
+  "files": [
+    {
+      "path": "src/director/IntentPort.ts",
+      "change": "modified",
+      "bytes": 49042,
+      "sha256": "bac79e9b627a75b6ff911a4cdf1950a3da5df7ec908439119e092fb45269d0e5",
+      "beforeBytes": 47617,
+      "beforeSha256": "d82b84c6d6c5f82d36fcdcd23e53698dea20cb7f0719c666836fa28db44b6475"
+    },
+    {
+      "path": "src/director/SharedCanonicalBytes.ts",
+      "change": "added",
+      "bytes": 13285,
+      "sha256": "1cd132ab68ee3a5c30989cd4e5464743c4223ba3141ae7dc16dd4e27c2fbe27c",
+      "beforeBytes": null,
+      "beforeSha256": null
+    },
+    {
+      "path": "src/director/SharedCommitCodec.ts",
+      "change": "added",
+      "bytes": 43479,
+      "sha256": "ed55c2ba48857b7a75c45f2e887b541ebf2fb68fb50cd48233f64dd343ee77cd",
+      "beforeBytes": null,
+      "beforeSha256": null
+    },
+    {
+      "path": "src/director/SharedCommitContracts.ts",
+      "change": "added",
+      "bytes": 22261,
+      "sha256": "e0682252df74a4767cdeac5a79bebb33dbdd88343af0d0f4ebb362a1e41cd291",
+      "beforeBytes": null,
+      "beforeSha256": null
+    },
+    {
+      "path": "src/director/SharedCommitValidator.ts",
+      "change": "added",
+      "bytes": 32121,
+      "sha256": "8443e792b9f4c2b12c9a8f053240d3d15bc47303cec993438ff4d9466588b31a",
+      "beforeBytes": null,
+      "beforeSha256": null
+    },
+    {
+      "path": "src/director/SharedWorldReducer.ts",
+      "change": "added",
+      "bytes": 27557,
+      "sha256": "cb9449c0160eea3aae1217f17125d23538ec202a9340e49eee4ff469684fa6d9",
+      "beforeBytes": null,
+      "beforeSha256": null
+    }
+  ],
+  "protectedComparisonUtc": "2026-10-11T04:51:23.968Z",
+  "codeDiffSha256": "84eff5735e5932a91feed62162c3ba48cb5973ec10563554e4d1be4aabb18373",
+  "originalIntentPrefixPreserved": true,
+  "intentTypeOnlyAppend": true,
+  "rawProtectionPass": false,
+  "reviewedClosurePass": true,
+  "attributionPending": false,
+  "scope": "Only the authorized six source changes are exported. Externally attributed docs changes are omitted from this source diff; raw SHA protection failure remains preserved and distinct from reviewed attribution closure."
+}

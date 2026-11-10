@@ -1,0 +1,41 @@
+{
+  "task": "B2.1 local multi-worlds",
+  "status": "Read-only planning; implementation interfaces pending root/architect verdict.",
+  "existingState": {
+    "worldCatalog": "FolderCatalog.WorldFolderEntry accepts only InitialWorld and createWorldFolderReader returns a frozen static singleton list.",
+    "worldView": "WorldFolderView uses the same open-initial-world DOM ID for every catalog item; safe textContent for labels.",
+    "routing": "WorldFolderBuilder.openWorld refuses IDs other than InitialWorld; runtime is deactivated/destroyed before deferred after-draw return.",
+    "accountStorage": "AccountStartupStorage persists only PrologueCompleted under neurou-account-milestone-v1: plus encodeURIComponent(accountId).",
+    "worldShape": "WorldInstance currently holds only id/kind/formatTime/themeColor; it is not a directory registry/persistence implementation.",
+    "permissions": "WorldFork/CopyPermission frozen names exist in NAMEBOOK; no corresponding production implementation exists.",
+    "ledger": "DirectorSession owns an in-memory append-only ledgerEvents list. World runtime destruction currently discards that session."
+  },
+  "recommendedBoundaries": [
+    "Account-specific local registry key, independent of account milestone and global editor draft keys.",
+    "Pure registry state and strict immutable reader snapshots separated from browser localStorage adapter.",
+    "Create candidate then persist successfully before publishing candidate state.",
+    "Unique durable world ID rather than title or list index; never reuse IDs retained by tombstones.",
+    "Delete marks a tombstone and active list excludes it; full registry snapshot retains record metadata and existing payload.",
+    "Opening a card revalidates current account, requested world ID and active/nondeleted state; a stale card is not authorization.",
+    "Keep WorldFork/CopyPermission and completion-derived permissions frozen without adding routes or granting capabilities.",
+    "Preserve InitialWorld routing and B1 chart Inspector settings for every actual gameplay runtime.",
+    "Explicitly settle whether ledger preservation is just no mutation of existing records or new actual gameplay persistence; current ledger is not durable."
+  ],
+  "plannedChecks": [
+    { "id": "W01", "scenario": "Empty account startup loads InitialWorld exactly once and only after PrologueCompleted; startup milestone key unchanged." },
+    { "id": "W02", "scenario": "Create two distinct local worlds; live reader and fresh/reloaded registry list display both with safe titles and stable identities." },
+    { "id": "W03", "scenario": "Accounts A and B cannot read/open/create/delete one another's worlds; encoded account storage keys avoid delimiter collisions." },
+    { "id": "W04", "scenario": "World IDs stay unique across repeated calls, title reuse, reload and retained tombstones; injected collision or exhausted source rejects without replacing records." },
+    { "id": "W05", "scenario": "Invalid IDs/titles/unknown schema fields/duplicate IDs/owner mismatch/illegal tombstones reject transactionally and preserve prior snapshots." },
+    { "id": "W06", "scenario": "Storage read/write/JSON parse failures show a recoverable error and never silently invent an empty registry, ghost world or successful deletion." },
+    { "id": "W07", "scenario": "Delete leaves tombstoned record and existing associated record payload byte-identical except deletion fact; active list drops it and reload preserves tombstone." },
+    { "id": "W08", "scenario": "Unknown ID, stale card, already deleted world, InitialWorld deletion (if protected by verdict), and cross-account entry refuse without runtime creation." },
+    { "id": "W09", "scenario": "Repeated deletion is idempotent, does not reset deletion time or reduce/rewrite events; failed delete persistence leaves world active." },
+    { "id": "W10", "scenario": "Dynamic view IDs and data-world-id route exact records; malicious HTML title/account strings render text only." },
+    { "id": "W11", "scenario": "Leaving world/editor deactivates input and frame driver immediately, retires runtime once, and refreshes current registry after actual after-draw destruction." },
+    { "id": "W12", "scenario": "Opening each world carries same B1 UseGuidanceChart/ChartResourcePath/GuideTransparency config; director completes v3 with baseline T6 +1 and completion exactly +1." },
+    { "id": "W13", "scenario": "No WorldFork/copy permission routes, no creation/deletion ledger append and no unintended account milestone or editor draft modification." },
+    { "id": "W14", "scenario": "Fresh browser instance reload persistence and account isolation under actual Creator preview; actual two-resolution UI evidence is separate from pure logic." }
+  ],
+  "scriptPolicy": "Tests only in quality-review/b2-local-worlds. Pure logic loads actual TypeScript in memory; cc/storage mocks simulate only declared environmental boundaries. No production files, docs, NAMEBOOK, references or editor core modifications by this agent."
+}

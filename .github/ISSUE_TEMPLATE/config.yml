@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security / private data
+    url: https://github.com/ColFumice
+    about: 请不要在公开 Issue 中粘贴 Key、私有媒体或账本内容。
+  - name: Online demo
+    url: https://colfumice.github.io/neurou-when-as-a-world/
+    about: GitHub Pages 静态演示。

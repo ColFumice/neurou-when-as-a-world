@@ -1,0 +1,75 @@
+{
+  "configuration": {
+    "rhythmStrikeWindowMs": 100,
+    "perfectWindowMs": 100,
+    "goodWindowMs": 200,
+    "syncToleranceMs": 30
+  },
+  "allPassed": false,
+  "runs": [
+    {
+      "name": "b-regression",
+      "command": "node quality-review/judgement-window-2026-10-10/b-regression.cjs",
+      "exitCode": 1,
+      "passed": 30,
+      "failed": 1,
+      "failures": [
+        {
+          "name": "Drag / Hold arrival checks are autonomous and do not consume the one Tap allowed for a Down",
+          "error": "AssertionError [ERR_ASSERTION]: 3200 != 3120\n    at near (D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\judgement-window-2026-10-10\\b-regression.cjs:25:58)\n    at verdict (D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\judgement-window-2026-10-10\\b-regression.cjs:47:134)\n    at D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\judgement-window-2026-10-10\\b-regression.cjs:245:40\n    at test (D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\judgement-window-2026-10-10\\b-regression.cjs:21:51)\n    at Object.<anonymous> (D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\judgement-window-2026-10-10\\b-regression.cjs:241:1)\n    at Module._compile (node:internal/modules/cjs/loader:1872:14)\n    at Object..js (node:internal/modules/cjs/loader:2003:10)\n    at Module.load (node:internal/modules/cjs/loader:1594:32)\n    at Module._load (node:internal/modules/cjs/loader:1396:12)\n    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)"
+        }
+      ],
+      "scriptSha256": "af5d63c60e4eba2ad6975deb82518d385ae5ebc7c6ab0559e2bb490c29722eaa"
+    },
+    {
+      "name": "c-regression",
+      "command": "node quality-review/judgement-window-2026-10-10/c-regression.cjs",
+      "exitCode": 1,
+      "passed": 13,
+      "failed": 1,
+      "failures": [
+        {
+          "name": "04 Tap ordering: absolute delta -> target time -> line ID -> node ID",
+          "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    [\n      null\n    ],\n    [\n+     'Perfect'\n-     'Good'\n    ]\n  ]\n\n    at D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\judgement-window-2026-10-10\\c-regression.cjs:44:123\n    at test (D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\judgement-window-2026-10-10\\c-regression.cjs:7:82)\n    at Object.<anonymous> (D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\judgement-window-2026-10-10\\c-regression.cjs:43:1)\n    at Module._compile (node:internal/modules/cjs/loader:1872:14)\n    at Object..js (node:internal/modules/cjs/loader:2003:10)\n    at Module.load (node:internal/modules/cjs/loader:1594:32)\n    at Module._load (node:internal/modules/cjs/loader:1396:12)\n    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)\n    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)\n    at node:internal/main/run_main_module:33:47"
+        }
+      ],
+      "scriptSha256": "5908118d03f7a65d64f412342d0ec80a4441f3545d327486e69ee1c0f4028abf"
+    },
+    {
+      "name": "pad-regression",
+      "command": "node quality-review/judgement-window-2026-10-10/pad-regression.cjs",
+      "exitCode": 1,
+      "passed": 25,
+      "failed": 3,
+      "failures": [
+        {
+          "name": "Tap accepts diagonal neighbor and rejects remote or Space keys",
+          "error": "AssertionError [ERR_ASSERTION]: tap\n\nnull !== 'Miss'\n\n    at verdict (D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\judgement-window-2026-10-10\\pad-regression.cjs:48:77)\n    at D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\judgement-window-2026-10-10\\pad-regression.cjs:124:121\n    at test (D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\judgement-window-2026-10-10\\pad-regression.cjs:23:51)\n    at Object.<anonymous> (D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\judgement-window-2026-10-10\\pad-regression.cjs:121:1)\n    at Module._compile (node:internal/modules/cjs/loader:1872:14)\n    at Object..js (node:internal/modules/cjs/loader:2003:10)\n    at Module.load (node:internal/modules/cjs/loader:1594:32)\n    at Module._load (node:internal/modules/cjs/loader:1396:12)\n    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)\n    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)"
+        },
+        {
+          "name": "Tap temporal windows are unchanged by neighbor tolerance, including endpoints and timeout",
+          "error": "AssertionError [ERR_ASSERTION]: tap\n\n'Good' !== 'Miss'\n\n    at verdict (D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\judgement-window-2026-10-10\\pad-regression.cjs:48:77)\n    at D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\judgement-window-2026-10-10\\pad-regression.cjs:157:5\n    at test (D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\judgement-window-2026-10-10\\pad-regression.cjs:23:51)\n    at Object.<anonymous> (D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\judgement-window-2026-10-10\\pad-regression.cjs:153:1)\n    at Module._compile (node:internal/modules/cjs/loader:1872:14)\n    at Object..js (node:internal/modules/cjs/loader:2003:10)\n    at Module.load (node:internal/modules/cjs/loader:1594:32)\n    at Module._load (node:internal/modules/cjs/loader:1396:12)\n    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)\n    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)"
+        },
+        {
+          "name": "Legacy adjacent candidate ranking retains time ordering when one key matches multiple Note targets",
+          "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n0 !== 1\n\n    at D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\judgement-window-2026-10-10\\pad-regression.cjs:291:104\n    at test (D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\judgement-window-2026-10-10\\pad-regression.cjs:23:51)\n    at Object.<anonymous> (D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\judgement-window-2026-10-10\\pad-regression.cjs:289:1)\n    at Module._compile (node:internal/modules/cjs/loader:1872:14)\n    at Object..js (node:internal/modules/cjs/loader:2003:10)\n    at Module.load (node:internal/modules/cjs/loader:1594:32)\n    at Module._load (node:internal/modules/cjs/loader:1396:12)\n    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)\n    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)\n    at node:internal/main/run_main_module:33:47"
+        }
+      ],
+      "scriptSha256": "69c89d3619ba19589a46f3e7a1dd02dca9fb8a02c6b94332fe8c195a38017847"
+    },
+    {
+      "name": "editor-regression",
+      "command": "node quality-review/judgement-window-2026-10-10/editor-regression.cjs",
+      "exitCode": 1,
+      "passed": 17,
+      "failed": 1,
+      "failures": [
+        {
+          "name": "18 v3 Tap absolute-time inclusive Perfect/Good boundaries and final-media-end unresolved timeout",
+          "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n'Good' !== 'Miss'\n\n    at D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\judgement-window-2026-10-10\\editor-regression.cjs:85:436\n    at test (D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\judgement-window-2026-10-10\\editor-regression.cjs:10:66)\n    at Object.<anonymous> (D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\judgement-window-2026-10-10\\editor-regression.cjs:84:1)\n    at Module._compile (node:internal/modules/cjs/loader:1872:14)\n    at Object..js (node:internal/modules/cjs/loader:2003:10)\n    at Module.load (node:internal/modules/cjs/loader:1594:32)\n    at Module._load (node:internal/modules/cjs/loader:1396:12)\n    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)\n    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)\n    at node:internal/main/run_main_module:33:47"
+        }
+      ],
+      "scriptSha256": "59bf06796123ae374c69f6722fe397a213b7d476d60d08fcf828032822e204d6"
+    }
+  ]
+}

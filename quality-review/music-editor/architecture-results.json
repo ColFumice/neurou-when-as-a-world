@@ -1,0 +1,68 @@
+{
+  "pass": true,
+  "checks": [
+    {
+      "name": "ME-10 dependency gate rejects forbidden new-domain edges and admits type-only intent boundary",
+      "pass": true,
+      "evidence": [
+        {
+          "file": "src/musicEditor/Probe.ts",
+          "source": "import { Component } from 'cc';",
+          "expected": "E8",
+          "exit": 1
+        },
+        {
+          "file": "src/musicEditor/Probe.ts",
+          "source": "import { View } from '../presentation/View';",
+          "expected": "E1",
+          "exit": 1
+        },
+        {
+          "file": "src/musicEditor/Probe.ts",
+          "source": "import { parse } from '../editor/Read';",
+          "expected": "E2",
+          "exit": 1
+        },
+        {
+          "file": "src/director/Probe.ts",
+          "source": "import type { MusicEditorReader } from '../musicEditor/Read';",
+          "expected": "E1",
+          "exit": 1
+        },
+        {
+          "file": "src/chart/Probe.ts",
+          "source": "import type { MusicEditorReader } from '../musicEditor/Read';",
+          "expected": "E1",
+          "exit": 1
+        },
+        {
+          "file": "src/presentation/Probe.ts",
+          "source": "import { MusicEditorSession } from '../musicEditor/Read';",
+          "expected": "E3",
+          "exit": 1
+        },
+        {
+          "file": "src/presentation/Probe.ts",
+          "source": "import type { MusicEditorReader, MusicEditorPort } from '../musicEditor/Read';",
+          "expected": "PASS",
+          "exit": 0
+        },
+        {
+          "file": "src/musicEditor/Probe.ts",
+          "source": "import type { Source } from '../editor/Read';",
+          "expected": "PASS",
+          "exit": 0
+        }
+      ]
+    },
+    {
+      "name": "ME-10 all protected gameplay/editor/world/startup cores and references unchanged",
+      "pass": true,
+      "evidence": {
+        "unchangedExistingCoreFiles": 147,
+        "unchangedDocsArchiveReferences": 31,
+        "unchangedExternalColorMusicReferences": 12
+      }
+    }
+  ]
+}

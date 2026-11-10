@@ -1,0 +1,10 @@
+{
+  "pendingProtocol": [
+    "GRID_CONTACT_EPSILON",
+    "isMatchingGridKey",
+    "hasHeldGridKey",
+    "rebuildSlotLabels"
+  ],
+  "layoutVersion": "pad-layout-2",
+  "authorization": "User requested full-screen 47-key grid and immediate neighboring-key tolerance including diagonals"
+}

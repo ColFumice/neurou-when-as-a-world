@@ -1,0 +1,124 @@
+--- accepted/docs/spec/stage-1.md
++++ trae-later/docs/spec/stage-1.md
+@@ -19,6 +19,8 @@
+ > 本文件最近更新：B2.2d-1 完整状态恢复前置（核心机制），纳入 VERDICT-241 ~ 255。
+ 
+ > 本文件最近更新：B2.2d 完整状态恢复前置（核心 + 扩展），纳入 VERDICT-241 ~ 270。
++
++> 本文件最近更新：B2.3 WorldFork 实装，纳入 VERDICT-271 ~ 285。
+ 
+ 
+ 
+@@ -175,6 +177,12 @@
+ 
+ - 授权范围：七项（Ledger / PuzzleProgress / FormatTime / RecallCount / WorldLink / ChartSnapshot / ChartScore）全部持久化；Complete / Restored 可产出（七项全非空且通过内容绑定引用校验的运行时认证后）
+ - 明确排除：WorldFork（实装仍延后）；B2.3 身份 rebasing；FileCarryPayload
++  > （本批次时点口径；WorldFork 已由 v3.11 / VERDICT-271~285 实装，见下）
++
++**v3.11 / VERDICT-271 ~ 285 纳入的有限范围（B2.3 WorldFork 实装）**
++
++- 授权范围：WorldFork 实装（同账号权限校验、Complete Primary 来源检验、七项精确继承与实例身份重键、短期日志提交/回滚/恢复）
++- 明确排除：FileCarryPayload / WorldRegistry / 跨设备 / 观察者同步 / 服务 / AccessCode / BugShore 生产入口
+ 
+ 
+ 
+@@ -609,6 +617,36 @@
+ ### B2.2d-2-08 七项完整认证与 Complete/Restored 产出
+ WorldStateCodec.parseComplete 只有在七项全非空、权威身份/版本/归属/结构/跨项引用全部通过并由内容绑定 Complete 验证器认证后才产生 WorldStateSnapshot；WorldStatePreparedRestore.publish() 成功才返回 Restored；活动演奏/揭示/七秒仍 UnsupportedBoundary。
+ 
++### B2.3-01 CopyPermission 权限门槛
++WorldForkSession.prepareWorldFork 要求同账号合法只读里程碑，CopyPermission === FirstWorldCleared === true；未知账号、错误投影、未取得权限均拒绝。
++
++### B2.3-02 Complete Primary 来源校验
++来源必须属于当前目录且未删除，必须是 WorldStateCodec.parseComplete 认证的同账号七项完整检查点，并经正式 Primary 内容绑定验证器再次验证；FinalShore 禁止分叉，BugShore 本批不支持。
++
++### B2.3-03 七项精确继承与身份重键
++Core 头、Ledger、PuzzleProgress、RecallCount、WorldLink、ChartSnapshot、ChartScore 的 account/world 复合身份统一重键到新 worldId；accountId 保持；characterId / chainId / traceId / eventId / chartId 保持；FormatTime 保留来源 immutable epochMs。
++
++### B2.3-04 WorldForkOrigin 永久见证
++WorldForkOrigin 是 Core 可选头，不是第八项玩法状态；非 null 的 inheritedCompletionEventId 必须匹配主角账本控制事实以及合法 Player World 首演完成事件；创建后普通保存不得补写、改写或删除。
++
++### B2.3-05 继承完成后阻断再次首演
++ForkWorldClearSession 扩展既有 WorldClearSession；继承完成时 completionStatus=Inherited、record=null；过滤 EnterWorldChart 与 RetryWorldClear，避免基类恢复产生的待重试候选被写成新世界通关记录。
++
++### B2.3-06 未完成副本的真实新通关
++来源尚未 World 首演完成时，目标见证 inheritedCompletionEventId=null，后续仍沿用正式制作选择 ID、非零向量追加、SphereCrossing、World 首演与 WorldClearStorage 提交流程；真正完成产生目标自己的合法 WorldClearRecord。
++
++### B2.3-07 独立记忆、成绩与冻结内容
++每个世界具有独立账本、解谜、回忆计数、链接配置、冻结谱面与成绩载体；分叉后目标自己的合法 Recall / ReplayTrace 只改目标 RecallCount；ReplayChart 只使用目标已继承的实际首演内容；重演不会追加完成账本、生成 WorldClearRecord、增加 RecallCount 或改账号投影。
++
++### B2.3-08 目录追加唯一提交点 + 回滚
++WorldForkStorage 使用短期日志桥接目标 Core key 与账号目录 key；顺序为：验证日志/计划及目录预期值 → 写 PendingWorldFork 日志 → 持目标租约写完整目标 Core → 回读确认 → 再比较目录 → 追加目标目录记录 → 清理日志；目录追加是唯一提交点；已发布目标不回滚，清理失败保留日志并重试。
++
++### B2.3-09 租约 + 目录锁顺序
++组合根先取得来源世界租约，再取得新目标世界租约，最后取得同账号目录独占锁；Web Locks 的 ifAvailable 检查使活动来源立即拒绝；缺少锁能力不采用无锁写入；目录锁回调内不等待世界租约。
++
++### B2.3-10 两档分辨率 + 三条门禁
++1920×1080 / 2560×1440 双档真实 Cocos 预览通过，共 54 张原始截图；check:naming / check:dependencies / typecheck 三条门禁独立通过；renderer/runtime 错误 0；外部请求 0。
++
+ 
+ 
+ \## 9. 20 维向量顺序（已冻结）
+--- accepted/docs/NAMEBOOK.md
++++ trae-later/docs/NAMEBOOK.md
+@@ -1082,3 +1082,60 @@
+ 
+ ### 明确不冻结
+ - B2.3 身份 rebasing、WorldFork、FileCarryPayload 结构
++
++---
++
++## 名库 v3.11 附录 · VERDICT-271~285 B2.3 WorldFork 实装
++
++### 新增公开名称（12 个顶层公开导出，按归属）
++- WorldForkOrigin / validateWorldForkOrigin（director / WorldForkOrigin.ts）：目标实例永久且不可补写/改写/删除的分叉来源头；严格身份、时序、结构和继承完成见证校验
++- WorldForkPlan / WorldForkBindings / WorldForkSession / rebaseWorldState / validateWorldForkPlan（director / WorldForkSession.ts）
++- ForkWorldClearSession（director / ForkWorldClearSession.ts）：扩展旧 WorldClearSession，将继承完成与目标真实新完成分开
++- WorldForkStorageBindings / WorldForkCommitResult / WorldForkRecoveryResult / WorldForkStorage（presentation / WorldForkStorage.ts）
++- WorldForkOrigin 与 WorldForkPlan 经 IntentPort 的 export type 转发；presentation 不 value-import director 验证器
++- 既有 WorldFork 是意图名，不新增 DuplicateWorld、WorldRegistry 或另一分叉意图
++
++### 数据结构
++- WorldForkOrigin：schemaVersion=1 / accountId / sourceWorldId / sourceRevision / sourceCapturedAt / targetWorldId / protagonistCharacterId / transactionId / forkedAt / inheritedCompletionEventId:string或null
++- WorldForkPlan：schemaVersion=1 / accountId / transactionId / sourceWorldId / targetWorldId / sourceRevision / sourceDigest / targetRecord / targetState
++- WorldForkBindings：createWorldId():string / createTransactionId():string / now():number / validateComplete(raw,accountId,worldId):WorldStateSnapshot
++- WorldForkStorageBindings：validatePlan / validateFolder / validateSource / assertTargetLease / writeTarget / deleteTargetExpected；所有 void 注入操作同步完成，拒绝 Promise/thenable
++- WorldForkCommitResult.Committed：kind=Committed / transactionId / targetWorldId / cleanupPending:boolean / error:string或null；目录发布后清理失败仍为 Committed
++- WorldForkCommitResult.Pending：kind=Pending / transactionId / targetWorldId / phase=Rollback / error:string；未发布且回滚尚未完成
++- WorldForkRecoveryResult：WorldForkCommitResult 或 {kind:'NoPending'} 或 {kind:'RolledBack',transactionId,targetWorldId}
++- WorldForkJournal（非导出，由 readPending 公开读取返回的短期存储结构名）：schemaVersion=1 / kind=PendingWorldFork / accountId / plan:WorldForkPlan；与永久 forkOrigin 不同，成功提交或回滚完成后删除；不是长期世界注册表；未知版本与坏日志不清空、不吞错误
++- sourceDigest 为规范 Core 数据的 SHA256，来源版本与摘要在提交时重新验证
++- 目标 worldId 使用 world- + 正式 UUID v4，transactionId 由组合根独立工厂产生（当前 fork- + UUID）；业务逻辑不自行调用 UUID 或平台时钟
++
++### 继承身份与首演语义
++- 世界 ID 是实例隔离边界；characterId、chainId、traceId、chartId、eventId 为世界内 ID
++- 继承事件所有值与次序保持，只有七项载体的 worldId、Core 头、SphereCrossing entry.worldId 与 entryId 重键；入口唯一键沿用 JSON.stringify([accountId,worldId,protagonistCharacterId,'SphereCrossing'])
++- FormatTime 的来源 epochMs 保留；目标 Core revision=0 / capturedAt=forkedAt；原 ChartSnapshot / ChartScore records、媒体身份和内容摘要保持；目标对象图独立深冻结，不与源实例共享可变状态
++- inheritedCompletionEventId 非 null 表示目标已经继承合法 World 首演事实，必须匹配主角 Ledger.control.completionEventId 和实际完成事件；公开状态为 Inherited，WorldClearRecord 不继承、不补造；该 World 谱面允许 ReplayChart 更新目标自己的成绩，禁止再次首演和 RetryWorldClear；初始未完成分叉的 null 见证永久不变；目标随后自己的真实完成仍可生成自己的账号记录
++
++### 既有结构与公开方法增量
++- WorldCoreStateSnapshot / WorldStateSnapshot：可选头 forkOrigin?:WorldForkOrigin；schemaVersion=1 / kind=Core / 七项 sections 与品牌保持；旧无头文档不补写
++- WorldStateCodec：parse 与 parseComplete 校验可选 origin；origin 要求非 null Ledger、Primary/null 与合法完成见证
++- WorldClearCompletionStatus：原 NotCleared / Pending / Failed / Completed 增加 Inherited
++- WorldForkAvailability：原 NotImplemented 增加 Implemented
++- WorldStateSession：constructor 第四参数 readonly worldForkAvailability，默认 NotImplemented；B2.3 组合根显式 Implemented
++- WorldStateLock：可选 requestIfAvailable<T>(name,operation):Promise<T>；占用或能力缺失拒绝，不无锁降级
++- WorldCoreStateStorage.acquireWorldLease：第三可选参数 ifAvailable=false；分叉使用 true 检查源/目标是否可立即取得
++- WorldCoreStateStorage.hasWorldLease：新公开 hasWorldLease(accountId,worldId):boolean；只读检查本适配器当前是否持有指定世界租约，不取得锁、不写存储
++- WorldCoreStateStorage.removeUnpublishedCoreState(expected,expectedRaw):void：只可回滚持租约、revision=0、未发布且精确匹配日志的目标 Core
++- WorldCoreStateStorage.saveCoreState：已存 origin 在普通保存中严格 immutable，不得新增/变更/移除
++- WorldFolderView：最后可选 constructor 参数 forkAvailability 读取器；已配置路径异步等待分叉、pending 禁重、按权限与 Complete Primary 启用；无参数旧行为保留
++- WorldClearView：Inherited 显示继承事实与账号权限，隐藏首演/保存重试，recordCount=0
++- 新类主要公开行为：WorldForkSession.prepareWorldFork；ForkWorldClearSession 覆盖 getWorldClearSnapshot / submitFrameIntents，其余沿用 WorldClearSession；WorldForkStorage.withDirectoryLock / readPending / assertNoPending / commitWorldFork / recoverWorldFork
++- WorldFolderIntent、PlayerIntent 没有新增变体；WorldFolderPort.submitWorldFolderIntent 的既有 void 签名保持；分叉按钮 payload 仍严格仅 kind/worldId
++
++### 存储 key 与锁
++- 新增短期日志 key：neurou-world-fork-journal-v1:<encodeURIComponent(accountId)>
++- 新增账号目录锁名：neurou-world-folder:<encodeURIComponent(accountId)>
++- 既有 key 不变：目录 neurou-world-folder-v1:、目标七项状态 neurou-world-state-v1:、世界租约 neurou-world-state:、账号通关与首次通关投影 key
++- 提交顺序：journal → 同步 target Core → directory → journal cleanup；目录追加为唯一 commit point；首个原子日志写失败不调用 writeTarget、不写目标或目录；日志清理失败仍按 Committed/cleanupPending 处理；回滚仅删除精确未发布目标，已发布目标不回滚；普通新建/删除/再次分叉共享目录锁与 pending guard，不覆盖未恢复日志；打开目标先完成日志恢复，目录读取与只读状态诊断不因 pending 被禁止
++
++### 沿用范围与未实现内容
++- 正式 Primary 副本通过已有内容和 SceneBuilder 恢复，普通新建 EmptyWorld 仍走原最小世界；不新增世界内容或改编辑器核心；七项核心归属没有变化，forkOrigin 是实例头，账号事实仍不进入世界快照
++- 没有新增模块，依赖矩阵方向不扩展；director 零 cc/DOM/Storage/平台时钟，presentation 只通过 IntentPort 读取 director 类型，assets/scripts 为组合根
++- B2.3 只开放正式 Primary 来源；不新增 BugShore/FinalShore 内容或入口、不实现 FileCarryPayload、WorldRegistry、跨设备、观察者同步、服务接入、AccessCode

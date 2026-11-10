@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-media-import-stereo"
+description = "Enables the media_import_stereo command without any pre-configured scope."
+commands.allow = ["media_import_stereo"]
+
+[[permission]]
+identifier = "deny-media-import-stereo"
+description = "Denies the media_import_stereo command without any pre-configured scope."
+commands.deny = ["media_import_stereo"]

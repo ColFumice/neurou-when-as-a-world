@@ -1,0 +1,397 @@
+diff --git a/assets/scripts/SceneBuilder.ts b/assets/scripts/SceneBuilder.ts
+index b798b57..2afe6ef 100644
+--- a/assets/scripts/SceneBuilder.ts
++++ b/assets/scripts/SceneBuilder.ts
+@@ -141,6 +141,7 @@ import { createDefaultKeyboardPadLayout, CHART_KEY_IDS } from './src/chart/Keybo
+ import { ChartPremiere, CHART_MEDIA_END_TIMEOUT_MS } from './src/chart/ChartPremiere';
+ import { parseGuidanceChart } from './src/chart/GuidanceChart';
+ import type { GuidanceChart } from './src/chart/GuidanceChart';
++import { parseGuidanceVisualData } from './src/editor/GuidanceEditorSession';
+ import { WorldFolderBuilder } from './WorldFolderBuilder';
+ import type { RhythmStrike } from './src/trace/RhythmStrike';
+ import type { ChartData, Note } from './src/chart/Note';
+@@ -252,9 +253,12 @@ export class SceneBuilder extends Component {
+   /** AC-18：演奏开始前在 Creator 属性面板调整，保持演奏中不变。 */
+   @property({ min: 0, max: 100, step: 1, slide: true, tooltip: '引导透明度（百分比），演奏开始前配置' })
+   GuideTransparency = 0;
+-  /** 保留旧 T7 资源入口；默认加载 B 步混合引导线谱面。 */
+-  @property({ tooltip: '使用 B 步 Tap / Drag / Hold 谱面；关闭可运行原 T7' })
++  /** 保留旧 T7 资源入口；默认加载 C 步引导线谱面。 */
++  @property({ tooltip: '使用 v1/v2/v3 引导线谱面；关闭可运行原 T7' })
+   UseGuidanceChart = true;
++  /** B1：resources 相对路径，不含 .json；进入世界前由 Inspector 配置。 */
++  @property({ tooltip: '引导线谱面资源路径，如 chart/guidance_c 或 chart/我的谱面；不含 .json' })
++  ChartResourcePath = 'chart/guidance_c';
+   private readonly createdVisualAssets: Array<Mesh | Material> = [];
+   /** 组合根组装出的运行时对象图（start 后置非空） */
+   private graph: RuntimeGraph | null = null;
+@@ -351,6 +355,7 @@ export class SceneBuilder extends Component {
+         const world = node.addComponent(SceneBuilder);
+         world.folderWorld = true;
+         world.UseGuidanceChart = this.UseGuidanceChart;
++        world.ChartResourcePath = this.ChartResourcePath;
+         world.GuideTransparency = this.GuideTransparency;
+       });
+       this.enabled = false;
+@@ -879,47 +884,60 @@ export class SceneBuilder extends Component {
+     this.loadHitClip('audio/hit_heavy', 'heavy');
+ 
+     // —— 独立谱面 JSON：引导线严格拒绝非法/超范围数据；旧 T7 保留 ——
+-    resources.load(
+-      this.UseGuidanceChart ? 'chart/guidance_c' : 'chart/chart_placeholder',
+-      JsonAsset,
+-      (err: Error | null, asset: JsonAsset | null) => {
+-        if (!isValid(this, true)) { return; }
+-        if (this.UseGuidanceChart) {
+-          try {
+-            if (err || !asset) { throw err ?? new Error('GuidanceChart 资源缺失'); }
+-            this.chartData = parseGuidanceChart(asset.json, this.keyboardLayout);
+-            this.chartDataResolved = true;
+-          } catch (error) {
+-            console.error('[SceneBuilder] B 步谱面拒绝加载', error);
+-            const errorNode = new Node('GuidanceLoadError');
+-            errorNode.layer = chartLayerNode.layer;
+-            chartLayerNode.addChild(errorNode);
+-            errorNode.addComponent(UITransform).setContentSize(800, 120);
+-            const errorLabel = errorNode.addComponent(Label);
+-            errorLabel.fontSize = 22;
+-            errorLabel.color = new Color(255, 100, 100);
+-            errorLabel.string = `谱面拒绝加载：${String(error)}\n按 Esc 返回世界`;
+-          }
+-          return;
+-        }
+-        if (err == null && asset != null && asset.json != null) {
+-          const parsed = parseChartData(
+-            asset.json,
+-            this.keyboardLayout.layoutVersion,
+-          );
+-          if (parsed !== null) {
+-            this.chartData = parsed;
+-            this.chartDataResolved = true;
++    const chartResourcePath = this.UseGuidanceChart ? this.ChartResourcePath.trim() : 'chart/chart_placeholder';
++    if (this.UseGuidanceChart && !/^chart\/[\p{L}\p{N}_-]+(?:\/[\p{L}\p{N}_-]+)*$/u.test(chartResourcePath)) {
++      this.showChartLoadError(chartLayerNode, new Error('ChartResourcePath 须为 chart/ 下不含 .json 的资源路径'));
++    } else {
++      resources.load(
++        chartResourcePath,
++        JsonAsset,
++        (err: Error | null, asset: JsonAsset | null) => {
++          if (!isValid(this, true)) { return; }
++          if (this.UseGuidanceChart) {
++            try {
++              if (err || !asset) { throw err ?? new Error('GuidanceChart 资源缺失'); }
++              this.chartData = parseGuidanceChart(asset.json, this.keyboardLayout);
++              this.chartDataResolved = true;
++              // 先绑定首演和谱面，避免颜色先到后被 bindChart 的清理覆盖。
++              this.ensureChartPremiere();
++              // 可选颜色只流向表现层；玩法数据与首演判定不含 RGB。
++              const chart = this.chartData;
++              if (resources.getInfoWithPath(chartResourcePath + '.visual', JsonAsset)) {
++                resources.load(chartResourcePath + '.visual', JsonAsset, (visualError, visualAsset) => {
++                  if (!isValid(this, true)) { return; }
++                  if (visualError || !visualAsset) { return; }
++                  try {
++                    const visual = parseGuidanceVisualData(visualAsset.json, chart);
++                    this.chartPadView?.bindNodeColors(visual.nodes);
++                  } catch (error) {
++                    console.warn('[SceneBuilder] 颜色伴随文件无效，使用默认颜色：', chartResourcePath, error);
++                  }
++                });
++              }
++            } catch (error) {
++              this.showChartLoadError(chartLayerNode, error);
++            }
+             return;
+           }
+-          console.warn('[SceneBuilder] 谱面 JSON 形状无效，使用回退谱面');
+-        } else {
+-          console.warn('[SceneBuilder] 谱面 JSON 缺失，使用回退谱面：', err);
+-        }
+-        this.chartData = createFallbackChartData(this.keyboardLayout.layoutVersion);
+-        this.chartDataResolved = true;
+-      },
+-    );
++          if (err == null && asset != null && asset.json != null) {
++            const parsed = parseChartData(
++              asset.json,
++              this.keyboardLayout.layoutVersion,
++            );
++            if (parsed !== null) {
++              this.chartData = parsed;
++              this.chartDataResolved = true;
++              return;
++            }
++            console.warn('[SceneBuilder] 谱面 JSON 形状无效，使用回退谱面');
++          } else {
++            console.warn('[SceneBuilder] 谱面 JSON 缺失，使用回退谱面：', err);
++          }
++          this.chartData = createFallbackChartData(this.keyboardLayout.layoutVersion);
++          this.chartDataResolved = true;
++        },
++      );
++    }
+ 
+     // —— 7. 帧驱动固定三步接线 ——
+     // ① InputCollector；② session（IntentPort）；③ refreshables
+@@ -1205,6 +1223,19 @@ export class SceneBuilder extends Component {
+   // T7 谱面（视频 / 击音 / 首演 / 回收）
+   // ----------------------------------------------------------
+ 
++  /** 资源边界失败保持原谱面拒绝加载行为，不回退成另一张引导线谱面。 */
++  private showChartLoadError(parent: Node, error: unknown): void {
++    console.error('[SceneBuilder] 引导线谱面拒绝加载：', this.ChartResourcePath, error);
++    const errorNode = new Node('GuidanceLoadError');
++    errorNode.layer = parent.layer;
++    parent.addChild(errorNode);
++    errorNode.addComponent(UITransform).setContentSize(800, 120);
++    const errorLabel = errorNode.addComponent(Label);
++    errorLabel.fontSize = 22;
++    errorLabel.color = new Color(255, 100, 100);
++    errorLabel.string = `谱面拒绝加载：${this.ChartResourcePath}\n${String(error)}\n按 Esc 返回世界`;
++  }
++
+   /** 加载一个可替换击音到指定类别槽位（缺失静默）。 */
+   private loadHitClip(path: string, slot: 'regular' | 'drum' | 'heavy'): void {
+     resources.load(
+diff --git a/src/presentation/ChartPadView.ts b/src/presentation/ChartPadView.ts
+index 7a0b2a9..af18bb3 100644
+--- a/src/presentation/ChartPadView.ts
++++ b/src/presentation/ChartPadView.ts
+@@ -26,6 +26,7 @@ import { LineEraseEffect } from './LineEraseEffect';
+ import type { ChartPremiereReader } from '../chart/ChartPremiere';
+ import type { ChartData } from '../chart/Note';
+ import type { GuidanceChart } from '../chart/GuidanceChart';
++import type { GuidanceVisualData } from '../editor/GuidanceEditorSession';
+ import type {
+   ChartKeyId,
+   ChartPadKind,
+@@ -56,6 +57,7 @@ export class ChartPadView extends Component implements FrameRefreshable {
+   private layout: KeyboardPadLayout | null = null;
+   private lineEraseEffect: LineEraseEffect | null = null;
+   private headLogo: SpriteFrame | null = null;
++  private nodeColors: GuidanceVisualData['nodes'] = [];
+ 
+   private graphics: Graphics | null = null;
+   private infoLabel: Label | null = null;
+@@ -84,6 +86,7 @@ export class ChartPadView extends Component implements FrameRefreshable {
+   /** 接线谱面数据与布局（引导显示坐标从布局派生）。 */
+   bindChart(data: ChartData | GuidanceChart, layout: KeyboardPadLayout): void {
+     this.data = data;
++    this.bindNodeColors([]);
+     this.lastContainerW = 0;
+     this.lastContainerH = 0;
+     this.lineEraseEffect?.clearVisuals();
+@@ -94,6 +97,12 @@ export class ChartPadView extends Component implements FrameRefreshable {
+     if (this.built) { this.rebuildSlotLabels(); }
+   }
+ 
++  /** 可选伴随颜色；缓存支持资源在视图创建前或后完成加载。 */
++  bindNodeColors(items: GuidanceVisualData['nodes']): void {
++    this.nodeColors = items;
++    this.lineEraseEffect?.bindNodeColors(items);
++  }
++
+   /** 可替换 Head LOGO 资源入口，由组合根提供 SpriteFrame。 */
+   bindHeadLogo(logo: SpriteFrame): void {
+     this.headLogo = logo;
+@@ -143,6 +152,7 @@ export class ChartPadView extends Component implements FrameRefreshable {
+     this.node.addChild(lineNode);
+     lineNode.addComponent(UITransform);
+     this.lineEraseEffect = lineNode.addComponent(LineEraseEffect);
++    this.lineEraseEffect.bindNodeColors(this.nodeColors);
+     if (this.premiere !== null) {
+       this.lineEraseEffect.bindPremiere(this.premiere);
+     }
+diff --git a/assets/resources/chart/music-project-1-chart.json b/assets/resources/chart/music-project-1-chart.json
+new file mode 100644
+index 0000000..7cdb6b9
+--- /dev/null
++++ b/assets/resources/chart/music-project-1-chart.json
+@@ -0,0 +1,107 @@
++{
++  "schemaVersion": 3,
++  "chartId": "music-project-1-chart",
++  "tier": "Regular",
++  "layoutVersion": "pad-layout-2",
++  "aspectRatio": 1.7777777777777777,
++  "lines": [
++    {
++      "id": "line-music-line-1",
++      "head": {
++        "id": "head-music-note-1",
++        "spawnTimeMs": 750,
++        "targetTimeMs": 750
++      },
++      "path": {
++        "kind": "Polyline",
++        "points": [
++          {
++            "u": 0.045454545454545456,
++            "v": 0.375
++          },
++          {
++            "u": 0.3181818181818182,
++            "v": 0.375
++          },
++          {
++            "u": 0.5909090909090908,
++            "v": 0.375
++          }
++        ]
++      },
++      "nodes": [
++        {
++          "id": "node-music-note-2",
++          "kind": "Hold",
++          "pathDistance": 0.4848484848484848,
++          "endPathDistance": 0.9696969696969695,
++          "keyId": "KeyF"
++        },
++        {
++          "id": "node-music-note-3",
++          "kind": "Tap",
++          "pathDistance": 0.9696969696969695
++        }
++      ],
++      "timing": [
++        {
++          "nodeId": "node-music-note-2",
++          "targetTimeMs": 1500,
++          "endTargetTimeMs": 2250
++        },
++        {
++          "nodeId": "node-music-note-3",
++          "targetTimeMs": 2250
++        }
++      ]
++    },
++    {
++      "id": "line-music-line-2",
++      "head": {
++        "id": "head-music-note-4",
++        "spawnTimeMs": 937.5,
++        "targetTimeMs": 937.5
++      },
++      "path": {
++        "kind": "Polyline",
++        "points": [
++          {
++            "u": 0.038461538461538464,
++            "v": 0.625
++          },
++          {
++            "u": 0.34615384615384615,
++            "v": 0.625
++          },
++          {
++            "u": 0.7307692307692308,
++            "v": 0.625
++          }
++        ]
++      },
++      "nodes": [
++        {
++          "id": "node-music-note-5",
++          "kind": "Drag",
++          "pathDistance": 0.5470085470085471,
++          "keyId": "KeyT"
++        },
++        {
++          "id": "node-music-note-6",
++          "kind": "Tap",
++          "pathDistance": 1.2307692307692308
++        }
++      ],
++      "timing": [
++        {
++          "nodeId": "node-music-note-5",
++          "targetTimeMs": 1687.5
++        },
++        {
++          "nodeId": "node-music-note-6",
++          "targetTimeMs": 2437.5
++        }
++      ]
++    }
++  ]
++}
+\ No newline at end of file
+diff --git a/assets/resources/chart/music-project-1-chart.json.meta b/assets/resources/chart/music-project-1-chart.json.meta
+new file mode 100644
+index 0000000..cffd8df
+--- /dev/null
++++ b/assets/resources/chart/music-project-1-chart.json.meta
+@@ -0,0 +1,11 @@
++{
++  "ver": "2.0.1",
++  "importer": "json",
++  "imported": true,
++  "uuid": "63863f1e-7eac-4fc4-b99a-f20879882563",
++  "files": [
++    ".json"
++  ],
++  "subMetas": {},
++  "userData": {}
++}
+diff --git a/assets/resources/chart/music-project-1-chart.visual.json b/assets/resources/chart/music-project-1-chart.visual.json
+new file mode 100644
+index 0000000..060cfe5
+--- /dev/null
++++ b/assets/resources/chart/music-project-1-chart.visual.json
+@@ -0,0 +1,38 @@
++{
++  "schemaVersion": 1,
++  "chartId": "music-project-1-chart",
++  "nodes": [
++    {
++      "nodeId": "node-music-note-2",
++      "color": {
++        "r": 110,
++        "g": 190,
++        "b": 255
++      }
++    },
++    {
++      "nodeId": "node-music-note-3",
++      "color": {
++        "r": 110,
++        "g": 190,
++        "b": 255
++      }
++    },
++    {
++      "nodeId": "node-music-note-5",
++      "color": {
++        "r": 230,
++        "g": 166,
++        "b": 96
++      }
++    },
++    {
++      "nodeId": "node-music-note-6",
++      "color": {
++        "r": 230,
++        "g": 166,
++        "b": 96
++      }
++    }
++  ]
++}
+\ No newline at end of file
+diff --git a/assets/resources/chart/music-project-1-chart.visual.json.meta b/assets/resources/chart/music-project-1-chart.visual.json.meta
+new file mode 100644
+index 0000000..6dea7ef
+--- /dev/null
++++ b/assets/resources/chart/music-project-1-chart.visual.json.meta
+@@ -0,0 +1,11 @@
++{
++  "ver": "2.0.1",
++  "importer": "json",
++  "imported": true,
++  "uuid": "c1b81c0d-bc48-4434-982d-8224e0885fda",
++  "files": [
++    ".json"
++  ],
++  "subMetas": {},
++  "userData": {}
++}

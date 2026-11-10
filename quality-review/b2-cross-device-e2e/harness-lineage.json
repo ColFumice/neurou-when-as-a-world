@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "phase": "B2.4e",
+  "parent": "../b2-world-migration/creator-preview.cjs",
+  "parentAcceptedStage": "B2.4d",
+  "productionSourceChanges": 0,
+  "extensions": [
+    "c successful restricted Core copy before same-ID migration",
+    "shared authority and independent import/migration journals",
+    "existing B copy also refused during account pause",
+    "copy preserved through migration, client rebuild and natural peer retirement"
+  ],
+  "generatedAt": "2026-10-10T16:05:45.654Z"
+}

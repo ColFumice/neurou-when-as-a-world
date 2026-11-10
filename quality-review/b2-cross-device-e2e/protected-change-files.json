@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "phase": "B2.4e",
+  "expectedProductionMutationCount": 0,
+  "productionFileCount": 0,
+  "productionFiles": [],
+  "productionCodeDiff": "production-code.diff",
+  "authorizedDocsDiff": "authorized-docs.diff",
+  "files": [
+    {
+      "path": "docs/NAMEBOOK.md",
+      "kind": "Changed",
+      "textDiffAvailable": true,
+      "attribution": "TraeAuthorized",
+      "originalLines": 1263,
+      "finalLines": 1335,
+      "baselineSha256": "27b6ae1dac6daca720382a9bc86a160034708477af61b0314836a01ea24f8bed",
+      "finalSha256": "7bb54b1885ba2d342afc01069f6c404ce5faab9a738c71dacfa1f489dc86641c"
+    },
+    {
+      "path": "docs/spec/stage-1.md",
+      "kind": "Changed",
+      "textDiffAvailable": true,
+      "attribution": "TraeAuthorized",
+      "originalLines": 905,
+      "finalLines": 942,
+      "baselineSha256": "19fb77c3d9ee971d4bf2978636b2171d5de367ecf4ab3d0099b69ed1e8a2d0a9",
+      "finalSha256": "435196137d80fbc7dc9b68c3fb1587ad1e9b92e8cc62ca698aca205632c93496"
+    }
+  ]
+}

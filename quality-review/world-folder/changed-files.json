@@ -1,0 +1,92 @@
+[
+  {
+    "path": "src/director/AccountStartupSession.ts",
+    "kind": "Added",
+    "sha256": "f376a9d618bbf3a4cdfebd57f615a855825d7149c1f33cae4f5b8ab5941684bb"
+  },
+  {
+    "path": "src/director/AccountStartupSession.ts.meta",
+    "kind": "Added",
+    "sha256": "59ee840c06a6d65b678bd5921f17ad1a401b49ef3d93354c57a2a44fc377adba"
+  },
+  {
+    "path": "src/director/IntentPort.ts",
+    "kind": "Modified",
+    "sha256": "f82126332e3caf1dafb640306d2d3d2fe3ad196ed18af1f0313b7a5e9dc095e2"
+  },
+  {
+    "path": "src/presentation/EditorFolderView.ts",
+    "kind": "Added",
+    "sha256": "68a69bdd8259f9444a99ad788dc4b181193ccbde37e132e9aceee932024127e2"
+  },
+  {
+    "path": "src/presentation/EditorFolderView.ts.meta",
+    "kind": "Added",
+    "sha256": "44e46c752e75e9b1bc35aba544be14d0fc8f90de5abbc3216393c24ff5b6ed45"
+  },
+  {
+    "path": "src/presentation/FolderCatalog.ts",
+    "kind": "Added",
+    "sha256": "bdb513808e6971c55296941676008f8ff3af0c3d0447117a9337ddacc8d14a6e"
+  },
+  {
+    "path": "src/presentation/FolderCatalog.ts.meta",
+    "kind": "Added",
+    "sha256": "2bd8aafc960d65892062d3dac55d92be834a9877eacb6c59172c56a444e47b9d"
+  },
+  {
+    "path": "src/presentation/FolderStartupView.ts",
+    "kind": "Added",
+    "sha256": "50fa7afb3f2be26a78715a8916b8677ee6862dbe66e0dc14cab878ca78083988"
+  },
+  {
+    "path": "src/presentation/FolderStartupView.ts.meta",
+    "kind": "Added",
+    "sha256": "4d879e1156c42069f5ad1978674bb0d41427c7aeb3d720afdf5d774d7c5e189b"
+  },
+  {
+    "path": "src/presentation/FolderTheme.ts",
+    "kind": "Added",
+    "sha256": "3d40411374946e9014a5f558837cfdaf0240c3074e627583061391244015f033"
+  },
+  {
+    "path": "src/presentation/FolderTheme.ts.meta",
+    "kind": "Added",
+    "sha256": "3482b9ef4f3ca1707bfe0d44155403700c64e3e7c9a6cd3eee5d03cc4db0d15a"
+  },
+  {
+    "path": "src/presentation/GuidanceEditorView.ts",
+    "kind": "Modified",
+    "sha256": "894e7dcccc9b071b016b7c8233952cdb6b9d19593868ccf80580154466738175"
+  },
+  {
+    "path": "src/presentation/WorldFolderView.ts",
+    "kind": "Added",
+    "sha256": "8e8d3b6a40e7e0b714ec004ed4177dfc258b40b64f7cf090f5773af4561471bc"
+  },
+  {
+    "path": "src/presentation/WorldFolderView.ts.meta",
+    "kind": "Added",
+    "sha256": "c7747a57260319fc51a9411d21d45a8ae3ac3c852824f5a99997e74fb23c7610"
+  },
+  {
+    "path": "assets/scripts/GuidanceEditorBuilder.ts",
+    "kind": "Modified",
+    "sha256": "13f8210df2184d2f8dabaefeb2b16ed73cfa474f0812920c2d5990e3b15cbed2"
+  },
+  {
+    "path": "assets/scripts/SceneBuilder.ts",
+    "kind": "Modified",
+    "sha256": "dfe11a79b24c2b2738bf6b45291650cf6dabb6d1560410401967f78edce1227c"
+  },
+  {
+    "path": "assets/scripts/WorldFolderBuilder.ts",
+    "kind": "Added",
+    "sha256": "cc612ef44296aa423eff2b5150f9a33f7442145784334fd6f02a3c95e905f31b"
+  },
+  {
+    "path": "assets/scripts/WorldFolderBuilder.ts.meta",
+    "kind": "Added",
+    "sha256": "d2575df9781d58e4c9de35b8e497a6dfac2db398a4f806ebfffa9e6611c16f74"
+  }
+]

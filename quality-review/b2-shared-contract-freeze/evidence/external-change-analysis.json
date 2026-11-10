@@ -1,0 +1,276 @@
+{
+  "observedUtc": "2026-10-11T03:39:08.132Z",
+  "attribution": "UnknownExternal; markers establish content subject, not actor identity. Original baseline and first FAIL remain unchanged.",
+  "files": [
+    {
+      "path": "docs/NAMEBOOK.md",
+      "baseline": {
+        "bytes": 95006,
+        "sha256": "a5fd832266894f62ccdde073c028ed3deb5726087802e940311981235278b094"
+      },
+      "observed": {
+        "bytes": 101742,
+        "sha256": "cf1e686fcf56e1f05c9b897a94872da1195390694a7a31b4c1da16cea159850e",
+        "lastWriteUtc": "2026-10-11T03:29:44.092Z"
+      },
+      "appendBytes": 6736,
+      "originalBytePrefixMatches": false,
+      "originalBytePrefixSha256": "005f4bbd500fe449ba3f95dbfb8ae992720aa8d06914d8013f9e28a62b1905ab",
+      "markers": [
+        {
+          "line": 1205,
+          "text": "- CoreTransferProof：schemaVersion=1、accountId、worldId、sourceDeviceId、transferId、sourceHomeRevision=1、sourceDigest；同一共享权威对精确已发布载荷的证明，是 ContractAdapter fixture 证明，不是加密签名或真实认证凭证"
+        },
+        {
+          "line": 1363,
+          "text": "## 名库 v3.16 附录 · VERDICT-376~390 B2.5a 冻结 + B2.5b 真实认证服务"
+        },
+        {
+          "line": 1365,
+          "text": "依据 VERDICT-376～390（补充上一轮 356～375）与《名库 v3.16 最终附录提案》落盘，2026-10-11（Asia/Shanghai）。P1/P2 已闭合；下列 b 名称已冻结并已用于 b 源码；RealWorldAuthorityPort / RealCommitRelayPort 为保留端口，**边界冻结/机制未实施**；c/d/e 内部结构仅登记于本附录候选区，**未冻结**，完成各补冻轮前不得转为已实施契约。旧 a 附录的“P1～P6全部待裁、b停止”仅为历史状态。"
+        },
+        {
+          "line": 1387,
+          "text": "| RealAuthServicePort | 新异步真实认证端口 | login/logout/verify/refresh/fetchServerTime/readServerTime/readAccountFacts |"
+        }
+      ],
+      "appendFirst60Lines": [
+        "1 或 first FAIL，不改旧 SHA 记录，不把授权等同 SHA 相等",
+        "- 本附录不冻结完整 FileCarry 共享 codec / 本人媒体 / 账号加密 suite、真实外部服务、平台 OfflineGrace、非 Primary 生产迁移、WorldRegistry 本机位置、AccessCode / ObserverSync 的实施名称；这些留 B2.5 或后续范围",
+        "",
+        "## 名库 v3.16 附录 · VERDICT-376~390 B2.5a 冻结 + B2.5b 真实认证服务",
+        "",
+        "依据 VERDICT-376～390（补充上一轮 356～375）与《名库 v3.16 最终附录提案》落盘，2026-10-11（Asia/Shanghai）。P1/P2 已闭合；下列 b 名称已冻结并已用于 b 源码；RealWorldAuthorityPort / RealCommitRelayPort 为保留端口，**边界冻结/机制未实施**；c/d/e 内部结构仅登记于本附录候选区，**未冻结**，完成各补冻轮前不得转为已实施契约。旧 a 附录的“P1～P6全部待裁、b停止”仅为历史状态。",
+        "",
+        "### 已冻结并用于 b 源码",
+        "",
+        "| 逐字名称 | 归属/职责 | 冻结范围 |",
+        "|---|---|---|",
+        "| RealServiceMode / ExternalService | director纯数据类型/唯一真实mode字面值 | 不扩旧ContractAdapter联合，不冒用旧标签 |",
+        "| RegisteredDeviceAssurance / RegisteredCredential | Web凭据持有保证 | 不含PhysicalDevice |",
+        "| ServicePublicKey | EC/P-256公开JWK四字段 | kty/crv/x/y，不带私钥或可执行值 |",
+        "| AuthorityTrustAnchor | 带外安装的keyId/publicKeyJwk/jwkSha256 | RFC7638 SHA-256无填充base64url；取代旧a候选的hex编码 |",
+        "| RealServiceEnvironment | mode/serviceInstanceId/apiOrigin/authorityTrustAnchor | 不来自FileCarry；不含storageDomain或fixture配置 |",
+        "| RealAccountFact | accountId/accountName身份 | 不含通关、CopyPermission或其他游戏事实 |",
+        "| RealRegisteredDeviceFact | deviceId/generation/keyFingerprint/assurance/label/status | 注册ID属于凭据；b世代为1，status允许Active/Revoked而无客户端撤销API |",
+        "| AuthenticatedServiceContext | 服务验证的账号/设备/会话/过期/实例投影 | 普通JSON快照不是世界准入能力或物理品牌 |",
+        "| AccountLoginRequest | accountName/password/deviceLabel短暂输入 | 不持久化密码 |",
+        "| ServiceFault / ServiceReply | 明确拒绝/Accepted结果 | 九类客户端错误；无失败fixture fallback |",
+        "| ServiceReceiptPurpose | 六种receipt用途 | DeviceChallenge/Authentication/Logout/ServerTime/AccountFacts/DeviceFacts |",
+        "| SignedServiceReceipt | schemaVersion/instance/purpose/receiptId/keyId/issuedAt/payload/signature | ES256(P1363)，nonce在各payload内绑定 |",
+        "| DeviceChallenge | 一次LoginDevice/RegisterDevice挑战 | 服务nonce、账号、公钥指纹、设备ID/世代、到期、实例及请求nonce |",
+        "| ServiceAuthenticationPayload | 会话/CSRF/身份/过期签名载荷 | 不含访问或刷新token，token只在HttpOnly cookie中 |",
+        "| ServerTimeSample | 已验收Trusted时间投影 | serverEpochMs/clockGeneration/clockStatus/requestNonce；服务器wire也可为Untrusted，adapter拒绝投影 |",
+        "| RealAccountFacts | 本人身份、设备列表、requestNonce、revision | revision固定0，不是世界revision或CAS |",
+        "| RealAuthServicePort | 新异步真实认证端口 | login/logout/verify/refresh/fetchServerTime/readServerTime/readAccountFacts |",
+        "| RealAuthServiceAdapter | presentation网络/WebCrypto适配 | 同源、pinning、内存凭据；forLoopbackHttpTest仅实测传输入口 |",
+        "| buildRealAuthService / RealServiceBuilder | assets独立组合函数/源文件 | 新真实链装配，不改旧场景/UI/WorldFolderBuilder |",
+        "",
+        "RealServiceContracts为新增director文件名；IntentPort只追加上述类型的type-only导出。server独立包内的ServiceConfig、ReceiptSigner、AuthenticationFact、AccountIdentity、RegisteredDeviceFact、AccountFacts、P256PublicJwk等是内部镜像/实现名称，不另造游戏层名义权威。API、签名字节及错误集合见本目录contracts-and-security.md；完整字段以源码为准。",
+        "",
+        "### 保留端口（边界冻结/机制未实施）",
+        "",
+        "下列两个 port 仅冻结端口边界，**内部 schema 待补冻、机制未实施**；源码中只有类型定义，没有实现。",
+        "",
+        "| 名称 | 现在允许 | 未批准实施 |",
+        "|---|---|---|",
+        "| RealWorldAuthorityPort | ExternalService、context、只读轻量readAccountFacts的保留接口 | 归属/暂停/release/claim/drain完整结构；没有readMigrationPayload |",
+        "| RealCommitRelayPort | 泛型异步relay边界，真实mode | WorldCommit实际wire schema、成员准入、cursor/长轮询、共享日志 |",
+        "",
+        "这两个port在源码只有类型定义，没有实现；并不把b认证适配器当世界权威。旧同步AuthService.login/logout/verify、CommitRelay.relay原样保留。旧名fetchServerTime继续逐字使用，新真实端口返回Promise<number>，失败拒绝。",
+        "",
+        "### 候选区（c/d/e，未冻结）",
+        "",
+        "以下候选名称与结构为**未冻结**状态，不进已实施冻结表；必须先完成对应补冻轮，才得转冻结。",
+        "",
+        "| 阶段 | 候选名称/结构 | 必须先完成 |",
+        "|---|---|---|",
+        "| c/P3 | WorldCommitIdentity、RelayCommitEnvelope、RelayCursor、RelayPullReply、WorldRelayKey、WrappedRelayDataKey | AppendedAt与同序冲突、三类正文精确字段、多设备作者序号/离线段、开发者权限、成员与密钥交接、TraceTouch、检查点覆盖/迟到、有界延迟 |",
+        "| d/P2/P4 | DrainChallenge、SignedDrainStatement、RealDrainAcceptance、RealMigrationReleaseRequest/ClaimRequest/Receipt | 源本地live drain消费和持锁至release、服务一次challenge/摘要/凭据签名、纯轻量幂等/恢复结构 |",
+        "| d/P3/P4 | FileCarryEnvelope、FileCarryPersonalLayer、FileCarryArtifact、EncryptedPersonalLayer、EncryptedMediaEntry、WrappedAccountDataKey、AccountKey、AccountRecoverySecret | 完整共享codec、媒体实字节、账号加密suite与密钥恢复、异步加密耐久提交、旧明文一次迁移 |",
+        "| e/P5 | DeviceAssurance、DeviceUptimeSample、DeviceUptimePort、OfflineGrant、PhysicalDevice、bootId | 批准的原生host/硬件attestation、TPM/清安装/重装/休眠边界、可信设备uptime和严格暂停绑定 |",
+        "",
+        "沿用FileCarryPayload，不新增FullFileCarryPayload；CoreTransferPayload保持受限Core范围。历史ProcessedMomentImage保留，EntryVideo及NotCaptured的完整媒体结构仍待d前冻结。候选AES-256-GCM-HKDF-SHA256-v1不因b使用ES256而获得文件加密验收。AccessCode/ObserverSync没有在b或Relay保留接口中开放。",
+        "",
+        "### 保留规则",
+        "",
+        "不改旧key、锁、Core结构/版本、migration phase或B2.4 guard。INV-10/12/13、七项同主key、持lease/无Web Locks拒绝、目录追加唯一本地发布点、RealityPause≥OfflineGrace、源主动排空、发起设备账号绑定、VERDICT-046均继续。"
+      ],
+      "appendLast20Lines": [
+        "",
+        "这两个port在源码只有类型定义，没有实现；并不把b认证适配器当世界权威。旧同步AuthService.login/logout/verify、CommitRelay.relay原样保留。旧名fetchServerTime继续逐字使用，新真实端口返回Promise<number>，失败拒绝。",
+        "",
+        "### 候选区（c/d/e，未冻结）",
+        "",
+        "以下候选名称与结构为**未冻结**状态，不进已实施冻结表；必须先完成对应补冻轮，才得转冻结。",
+        "",
+        "| 阶段 | 候选名称/结构 | 必须先完成 |",
+        "|---|---|---|",
+        "| c/P3 | WorldCommitIdentity、RelayCommitEnvelope、RelayCursor、RelayPullReply、WorldRelayKey、WrappedRelayDataKey | AppendedAt与同序冲突、三类正文精确字段、多设备作者序号/离线段、开发者权限、成员与密钥交接、TraceTouch、检查点覆盖/迟到、有界延迟 |",
+        "| d/P2/P4 | DrainChallenge、SignedDrainStatement、RealDrainAcceptance、RealMigrationReleaseRequest/ClaimRequest/Receipt | 源本地live drain消费和持锁至release、服务一次challenge/摘要/凭据签名、纯轻量幂等/恢复结构 |",
+        "| d/P3/P4 | FileCarryEnvelope、FileCarryPersonalLayer、FileCarryArtifact、EncryptedPersonalLayer、EncryptedMediaEntry、WrappedAccountDataKey、AccountKey、AccountRecoverySecret | 完整共享codec、媒体实字节、账号加密suite与密钥恢复、异步加密耐久提交、旧明文一次迁移 |",
+        "| e/P5 | DeviceAssurance、DeviceUptimeSample、DeviceUptimePort、OfflineGrant、PhysicalDevice、bootId | 批准的原生host/硬件attestation、TPM/清安装/重装/休眠边界、可信设备uptime和严格暂停绑定 |",
+        "",
+        "沿用FileCarryPayload，不新增FullFileCarryPayload；CoreTransferPayload保持受限Core范围。历史ProcessedMomentImage保留，EntryVideo及NotCaptured的完整媒体结构仍待d前冻结。候选AES-256-GCM-HKDF-SHA256-v1不因b使用ES256而获得文件加密验收。AccessCode/ObserverSync没有在b或Relay保留接口中开放。",
+        "",
+        "### 保留规则",
+        "",
+        "不改旧key、锁、Core结构/版本、migration phase或B2.4 guard。INV-10/12/13、七项同主key、持lease/无Web Locks拒绝、目录追加唯一本地发布点、RealityPause≥OfflineGrace、源主动排空、发起设备账号绑定、VERDICT-046均继续。",
+        ""
+      ]
+    },
+    {
+      "path": "docs/spec/stage-1.md",
+      "baseline": {
+        "bytes": 68444,
+        "sha256": "24e89f2dfe80d7769151720269bcdc03c7863f5b917ee1a00dcde9b3a564fecb"
+      },
+      "observed": {
+        "bytes": 75156,
+        "sha256": "a11d5be896857a7586d59c3f9dcd6feb1e13861b1a7c279972cc968f23f25aaf",
+        "lastWriteUtc": "2026-10-11T03:38:28.844Z"
+      },
+      "appendBytes": 6712,
+      "originalBytePrefixMatches": false,
+      "originalBytePrefixSha256": "d545af670418916a3767456e79046bc059f0ce609472467aaa8ac696c23e85fe",
+      "markers": [
+        {
+          "line": 33,
+          "text": "> 本文件最近更新：B2.5a 冻结 + B2.5b 真实认证服务，纳入 VERDICT-376 ~ 390。"
+        },
+        {
+          "line": 219,
+          "text": "**v3.16 / VERDICT-376 ~ 390 纳入的有限范围（B2.5a 冻结 + B2.5b 真实认证服务）**"
+        },
+        {
+          "line": 808,
+          "text": "### B2.5b-01 阶段恢复与 b 授权边界"
+        },
+        {
+          "line": 809,
+          "text": "P1/P2 已正式闭合，B2.5b 在仅 b 授权范围准入：允许新增契约、type-only 导出、独立组合根与模式分流，不放宽旧 guard、不冒用旧标签、不在失败时切 fixture；b 的真实认证闭环不自动构成 c/d/e/f 或完整跨设备/文件/物理验收（VERDICT-376）。"
+        },
+        {
+          "line": 811,
+          "text": "### B2.5b-02 P6 外部报告归因闭合"
+        },
+        {
+          "line": 814,
+          "text": "### B2.5b-03 真实端口与 ExternalService"
+        },
+        {
+          "line": 817,
+          "text": "### B2.5b-04 真实权威不承载世界 payload"
+        },
+        {
+          "line": 820,
+          "text": "### B2.5b-05 独立 server 包与真实运行时"
+        },
+        {
+          "line": 823,
+          "text": "### B2.5b-06 认证与注册设备凭据"
+        },
+        {
+          "line": 826,
+          "text": "### B2.5b-07 会话、刷新与登出"
+        },
+        {
+          "line": 829,
+          "text": "### B2.5b-08 签名服务器时间"
+        },
+        {
+          "line": 832,
+          "text": "### B2.5b-09 轻量账号/设备事实与组合根窄边"
+        },
+        {
+          "line": 835,
+          "text": "### B2.5b-10 三门禁、真实证据与延期项"
+        }
+      ],
+      "appendFirst60Lines": [
+        "�� | Black | 情感 |",
+        "",
+        "| 5 | 白 | White | 情感 |",
+        "",
+        "| 6 | 灰 | Grey | 情感 |",
+        "",
+        "| 7 | 物 | Initial | 元素 |",
+        "",
+        "| 8 | 生 | Process | 元素 |",
+        "",
+        "| 9 | 痕 | Trace | 元素 |",
+        "",
+        "| 10 | 明 | Highlight | 元素 |",
+        "",
+        "| 11 | 形 | Commented | 元素 |",
+        "",
+        "| 12 | 雨 | Residue | 元素 |",
+        "",
+        "| 13 | 信任 | Trust | 关系 |",
+        "",
+        "| 14 | 亲近 | Closeness | 关系 |",
+        "",
+        "| 15 | 理解 | Understanding | 关系 |",
+        "",
+        "| 16 | 冲突 | Conflict | 关系 |",
+        "",
+        "| 17 | 揭示程度 | TruthLevel | 真相 |",
+        "",
+        "| 18 | 时间位置 | NarrativeTime | 时间 |",
+        "",
+        "| 19 | 影响半径 | InfluenceRadius | 空间 |",
+        "",
+        "| 20 | 玩家共情程度 | PlayerEmpathy | 共情 |",
+        "",
+        "",
+        "",
+        "\\- 枚举名：`NarrativeDimension`",
+        "",
+        "\\- 取值范围：每个维度都是非负实数",
+        "",
+        "\\- 存储格式：按上表顺序存为一个 20 位有序数组，附带 `VectorSchemaVersion = 1`",
+        "",
+        "\\- 代码中一律通过枚举名访问维度，禁止直接写数字下标",
+        "",
+        "",
+        "",
+        "\\*\\*v3 时间模型说明（VERDICT-147 ~ 157；七项补充详见 quality-review/guidance-editor/VERDICT-147-157.md §v3 七项补充时间裁定）\\*\\*",
+        "",
+        "\\- `GuidanceChart.schemaVersion = 1 | 2 | 3`",
+        "",
+        "\\- v1 恰一条线；v2 至少一条线、固定速度；v3 至少一条线、采用绝对媒体时间表，线数无硬上限",
+        "",
+        "\\- v3 使用 `TimedGuidanceLine`（不携带 `speed`）与 `GuidanceNodeTiming`（普通节点 `targetTimeMs`，Hold 专有 `endTargetTimeMs`，以 `nodeId` 关联）；`targetTimeMs` 以视频/音轨开始为 0，暂停时媒体与谱面一起冻结，恢复不改变目标值",
+        "",
+        "\\- 时间—距离锚点为 Head（T0, 0）、普通节点起点（Ti, si）、Hold 尾端（Te, se），距离为 `aspectRatio` 加权弧长；时间升序、距离非递减。在 Ti ≤ t ≤ Ti+1 且 Ti+1 > Ti 时，位置函数分段插值：",
+        "",
+        "  `s(t) = si + (si+1 − si) × (t − Ti) / (Ti+1 − Ti)`",
+        "",
+        "  Head 以前 s=0，最后锚点以后 s=L；判定点位置仍由 `positionAtPathDistance(path, aspectRatio, s(t))` 给出，每线独立按 s(t) 擦除。",
+        ""
+      ],
+      "appendLast20Lines": [
+        "",
+        "## 18. T0 同步验证记录（SyncVerificationRecord）",
+        "",
+        "- 运行环境：桌面 Chromium 142（Electron 内核）",
+        "- 分辨率与最大偏差：1920×1080 → 16.87ms；2560×1440 → 16.53ms",
+        "- 样本数：各 10/10",
+        "- 素材规格：H.264/30fps/180帧/6.0s",
+        "- 判定圈编码对齐误差：0ms",
+        "- 容差：100ms，通过",
+        "- 结论：T0 通过，但仅对已测环境有效。正式发布用的运行环境必须做过同步验证。",
+        "",
+        "## 19. 阶段 1 的 PC 构建目标（PROTOCOL 确认）",
+        "",
+        "- 构建方式：**Web 桌面版 / 用 Electron 打包**",
+        "- 视频播放底层：浏览器内核的视频元素",
+        "- T0 覆盖情况：**已覆盖**，T0 结果直接生效，不需要在原生构建上补测。",
+        "- 新增规则：正式发布用的运行环境必须做过同步验证。每增加一个目标平台（包括以后的移动端），都要补一份同步验证记录（SyncVerificationRecord）。",
+        "",
+        "- **Electron 版本锁定（Claude 补充）**：阶段 1 的 Electron 版本必须锁定为 T0 测试时使用的那个版本，在工程配置中写死，不允许宽松的版本范围。以后升级 Electron 大版本，算作\"换了一个运行环境\"，按 VERDICT-093 的规则补一份同步验证记录（SyncVerificationRecord）。",
+        ""
+      ]
+    }
+  ]
+}

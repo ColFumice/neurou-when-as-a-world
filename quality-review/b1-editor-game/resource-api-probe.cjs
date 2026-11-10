@@ -1,0 +1,6 @@
+const {app,BrowserWindow}=require('electron'),fs=require('fs'),path=require('path');
+app.setPath('userData',path.join(require('os').tmpdir(),'neurou-resource-probe-'+Date.now()));
+app.whenReady().then(async()=>{const win=new BrowserWindow({show:false,webPreferences:{offscreen:true}});try{await win.loadURL('http://localhost:7457/');const result=await win.webContents.executeJavaScript(`(async()=>{const cc=await System.import('cc');for(let i=0;i<100&&!document.querySelector('#folder-login-form');i++)await new Promise(r=>setTimeout(r,50));return{getInfoWithPath:typeof cc.resources.getInfoWithPath,guidanceC:JSON.parse(JSON.stringify(cc.resources.getInfoWithPath?.('chart/guidance_c',cc.JsonAsset)??null)),musicV3:JSON.parse(JSON.stringify(cc.resources.getInfoWithPath?.('chart/music-project-1-chart',cc.JsonAsset)??null)),musicVisual:JSON.parse(JSON.stringify(cc.resources.getInfoWithPath?.('chart/music-project-1-chart.visual',cc.JsonAsset)??null)),absentVisual:JSON.parse(JSON.stringify(cc.resources.getInfoWithPath?.('chart/guidance_c.visual',cc.JsonAsset)??null))};})()`);fs.writeFileSync(path.join(__dirname,'resource-api-probe.json'),JSON.stringify(result,null,2));}catch(e){fs.writeFileSync(path.join(__dirname,'resource-api-probe.json'),JSON.stringify({error:e.stack},null,2));}finally{win.destroy();app.exit();}});
+
+
+

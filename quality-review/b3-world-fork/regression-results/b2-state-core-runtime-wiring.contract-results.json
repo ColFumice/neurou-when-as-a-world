@@ -1,0 +1,7 @@
+{
+  "category": "ContractTest",
+  "passed": 0,
+  "failed": 1,
+  "results": [],
+  "error": "Error: 谱面快照验证器尚未装配\n    at WorldStateCodec.parse (D:\\Project\\A_New_Begin\\Neurou_official\\src\\director\\WorldStateCodec.ts:128:27)\n    at WorldCoreStateStorage.validator [as validateCore] (D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-state-core\\runtime-wiring.contract.cjs:64:74)\n    at WorldCoreStateStorage.validate (D:\\Project\\A_New_Begin\\Neurou_official\\src\\presentation\\WorldCoreStateStorage.ts:216:32)\n    at WorldCoreStateStorage.saveCoreState (D:\\Project\\A_New_Begin\\Neurou_official\\src\\presentation\\WorldCoreStateStorage.ts:141:32)\n    at SceneBuilder.persistCore (D:\\Project\\A_New_Begin\\Neurou_official\\assets\\scripts\\SceneBuilder.ts:1569:44)\n    at SceneBuilder.saveStableCore (D:\\Project\\A_New_Begin\\Neurou_official\\assets\\scripts\\SceneBuilder.ts:1548:22)\n    at D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-state-core\\runtime-wiring.contract.cjs:102:40\n    at async test (D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-state-core\\runtime-wiring.contract.cjs:55:40)\n    at async D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-state-core\\runtime-wiring.contract.cjs:101:3"
+}

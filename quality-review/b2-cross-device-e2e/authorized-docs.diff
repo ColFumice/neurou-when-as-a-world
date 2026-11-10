@@ -1,0 +1,140 @@
+--- a/docs/NAMEBOOK.md
++++ b/docs/NAMEBOOK.md
+@@ -1261,3 +1261,75 @@
+ - B2.5：完整 FileCarry 共享层 codec、个人媒体、账号加密与密钥 suite、真实 AuthService/CommitRelay/fetchServerTime 服务实现尚未冻结
+ - WorldRegistry 本机位置 API、AccessCode/ObserverSync、本机账号切换执行端口均未在本轮新增
+ - 沿用 INV-10/12/13、活动状态 UnsupportedBoundary、七项主 key、目录追加唯一本地发布点、持真实 lease 才写/无 Web Locks 显式拒绝；服务登记与本地目录是两个存储域，以独立 journal 协调，不宣称全局单一原子点；损坏/碰撞/未知身份保留原值，不删除已发布世界伪装回滚
++
++## 名库 v3.14 附录 · VERDICT-326~345 B2.4d WorldMigration + RealityPause
++
++依据 VERDICT-326～345。v3.13 中 c 已冻结名称与语义保持；下列 d 候选本轮正式冻结，候选身份结束。B2.4d 的“已冻结”仅表示本轮代码、契约与验收使用该精确名称，不表示已接真实外部服务。
++
++### 历史名与语义补登
++- WorldMigration：历史名，d 语义冻结；同账号、同 worldId 转移 HomeDevice；不分叉、不重键、不要求 CopyPermission
++- MigrationRelease / MigrationClaim：历史名，d 执行契约冻结；Release 接受源主动排空并开始账号冷静期；冷静期结束发布 Released；另设备 Claim
++- RealityPause：历史名，d 机制冻结；全账号、全部设备与世界关闭新准入；已在活动边界只允许真实自然排空
++- HomeState / Homed / Released：历史名，沿用；PauseActive 时仍 Homed；实际 Released 与 Claim 各递增一次 homeRevision
++- Migrated：历史名，d 准入结果冻结；当前 HomeDevice 已转往其他设备的服务归属诊断，不写源墓碑
++- SafePoint / OfflineGrace：历史名，沿用；源排空确认不是计时替代；RealityPause ≥ OfflineGrace；本轮不实现平台离线累计运行时长
++
++### 领域导出名（src/director/WorldMigration.ts，逻辑层零 cc）
++- SafePointDrainWorld：排空世界索引；worldId、revision、coreDigest
++- SafePointDrainConfirmation：排空数据声明；账号、源设备、drainId、目录摘要及全部未删世界
++- SafePointDrainCapability：仅当前持真实 lease 的 composition 能力，含 confirmation / assertCurrent / revoke；不序列化
++- SafePointDrainAcceptance：服务接受确认与服务时间 30 秒寿命；不是客户端授权缓存
++- SafePointDrainPort：withDrain 回调执行端口，保留真实世界/账号锁直到 Release 操作结束
++- MigrationReleaseRequest：schemaVersion / migrationId / worldId / expectedHomeRevision / drainId；账号设备来自绑定端口
++- MigrationClaimRequest：schemaVersion / migrationId / worldId / expectedHomeRevision（Released 版本）
++- RealityPauseRecord：全账号服务暂停记录；起止均为服务器 epoch 毫秒
++- DeviceAccountBinding：服务持久发起设备账号绑定；活动暂停中不能绑定其他账号
++- RestrictedMigrationCorePayload：受限同 ID、七项 Core 载荷，不是 FileCarryPayload
++- MigrationReceipt：kind = PauseActive / Released / Claimed；保留原期望归属版本及服务证据
++- MigrationAdmission：Allowed / PauseActive / Released / Migrated，鲜读服务当前归属
++- MigrationAuthorityPort：扩展 WorldHomeAuthorityPort 的独立 d 端口，不修改旧 b/c 边界
++- WorldMigrationPhase：Prepared / PauseActive / Released / Claimed / LocalPublished
++- WorldMigrationEntry：role = Source / Target，phase、冻结载荷、服务 receipt
++- WorldMigrationJournal：设备账号 entries 日志；历史同世界多迁移可留存，migrationId 唯一
++- WorldMigrationStorageReceipt：本地执行结果；Pending / PauseActive / Released / LocalPublished，含 phase 与 error
++- MigrationCompleteValidator：接收端 parseComplete 与正式内容验证器能力类型
++- WorldMigrationCodec：严格 data-only、身份/版本/引用/phase 一致性解码器
++- RealityPauseBoundary：director 新增意图准入策略；既有自然活动必要输入与新活动分离
++
++### 平台与组合根导出名
++- SafePointDrainAccountFacts：d 已冻结；presentation 排空所读受信通关记录与 FirstWorldCleared
++- SafePointDrainBindings：d 已冻结；排空读口、验证器、真实 leases、准入世代及共享协调锁
++- isLiveSafePointDrainCapability：d 已冻结；WeakSet 签发验证；阻止自造 noop assertCurrent 冒充排空
++- SafePointDrainStorage：d 已冻结；真实排序 lease、账号事实锁与最终目录同步验证的执行适配器
++- WorldMigrationAuthorityLock：d 已冻结；ContractAdapter 权威独占锁能力
++- WorldMigrationContractBindings：d 已冻结；服务 fixture 时间、持久域、严格 codecs 与排空能力验证
++- WorldMigrationContractAdapter：d 已冻结；持久共享契约权威，原子保存归属 / pause / device binding；不是真实 AuthService
++- WorldMigrationStorageBindings：d 已冻结；独立迁移日志与同 ID 原版本 target CAS 窄口
++- WorldMigrationRecoveryResult：d 已冻结；WorldMigrationStorageReceipt 或 NoPending
++- WorldMigrationStorage：d 已冻结；双存储域恢复与目录追加发布，源文件不写
++- WorldMigrationPrototypeBindings：d 已冻结，组合内部；Cocos 组合根接线、目录 / Core / account 读口及准入
++- WorldMigrationPrototype：d 已冻结，受限原型；A / B 两逻辑设备共享权威的生产组合与演示
++- ContractServiceClock：ContractAdapter 内部名；可控测试服务时钟；推进服务 fixture，禁止解释为真实服务器或客户端一小时授权
++
++### key、锁与判别值
++- 迁移 journal key：neurou-migration-v1: + encodeURIComponent(accountId)；d 已冻结，WorldMigrationJournal v1；不同设备由注入存储域隔离
++- pause 缓存前缀：neurou-reality-pause-v1: + encodeURIComponent(accountId)；历史前缀，d 缓存用途冻结；仅诊断缓存，不能授予准入或解除暂停
++- 协调锁：neurou-cross-device: + encodeURIComponent(accountId)；d 已冻结；源排空 / 迁移 / 当前新增准入的设备账号协调锁
++- 既有 lease 锁：neurou-world-state: + encoded account + : + encoded world；沿用，不新增独立 section key
++- 既有账号事实锁：neurou-world-clear: + encodeURIComponent(accountId)；排空沿用
++- 既有最终目录锁：neurou-world-folder: + encodeURIComponent(accountId)；本地发布最后取得
++- neurou-migration-contract-authority-v1：ContractAdapter 内部 fixture key；独立权威持久快照，不进入世界 Core 或完整服务命名
++- neurou-migration-authority：ContractAdapter 内部全局权威锁；服务不反取世界 / 目录锁
++- neurou-contract-service-clock-v1：ContractAdapter 内部可控时钟 key；不作产品服务器时间协议
++- neurou-contract-device-b:：沿用 c 的逻辑 B 存储 / 锁隔离 fixture 前缀，不声称物理设备认证
++- RestrictedMigrationCore：d 载荷 kind
++- WorldMigrationJournal：d journal kind
++- ContractMigrationAuthority：ContractAdapter 内部持久权威快照 kind
++- Prepared / PauseActive / Released / Claimed / LocalPublished：d 全部 journal phase；不使用 CleanupPending
++- Source / Target：d journal role
++- Allowed / PauseActive / Released / Migrated：d 当前服务准入 kind
++- NoPending：d 恢复无在途日志结果
++
++### 后续范围
++- B2.4e 不另造迁移协议，只在本轮受限 Core、共享 ContractAdapter、双逻辑设备及自然安全点范围整体验收
++- 真实 AuthService / CommitRelay、完整 FileCarry 的共享 codec / 个人媒体 / 加密 suite、平台 OfflineGrace、非 Primary 迁移、WorldRegistry 本机位置、AccessCode / ObserverSync 未在本轮冻结实施结构；按后续阶段另行冻结
+
+--- a/docs/spec/stage-1.md
++++ b/docs/spec/stage-1.md
+@@ -25,6 +25,8 @@
+ > 本文件最近更新：B2.4a 冻结 + B2.4b 契约级最小闭环，纳入 VERDICT-301 ~ 310。
+ 
+ > 本文件最近更新：B2.4c CrossDeviceDuplicate 受限 Core 原型，纳入 VERDICT-311 ~ 325。
++
++> 本文件最近更新：B2.4d WorldMigration + RealityPause，纳入 VERDICT-326 ~ 345。
+ 
+ 
+ 
+@@ -198,6 +200,11 @@
+ 
+ - 授权范围：受限 Core 传输原型 / CrossDeviceDuplicate 处理（CoreTransferPayload data-only 七项载荷与接收端重新 parseComplete + 正式内容引用核验、六路分流、CopyPermission 校验、新 UUID 七项重键、服务先登记、本地目录追加发布、独立 journal 崩溃恢复与打开门控）
+ - 明确排除：d（WorldMigration + RealityPause）/ e（端到端与双档 Cocos）；完整 FileCarry 留 B2.5；真实外部服务
++
++**v3.14 / VERDICT-326 ~ 345 纳入的有限范围（B2.4d WorldMigration + RealityPause）**
++
++- 授权范围：同账号同 worldId 的 HomeDevice 转移（WorldMigration，不分叉/不重键/不要求 CopyPermission）；源账号主动 SafePoint 排空确认（覆盖全部未删世界，含 InitialWorld/空世界）、Release/Claim 请求与 receipt、全账号 RealityPause 冷静期（max(3600000, OFFLINE_GRACE_HOURS×3600000)，仅服务时钟判定）与 DeviceAccountBinding、独立 WorldMigrationJournal 五阶段（Prepared/PauseActive/Released/Claimed/LocalPublished）、目标同 ID 目录追加唯一新本地发布点、逐 phase 崩溃恢复与迁回/碰撞规则（共享持久 ContractAdapter、A/B 两逻辑设备）
++- 明确排除：e（端到端与双档 Cocos 整体验收，不另造迁移协议）；完整 FileCarry 留 B2.5；真实外部服务（AuthService/CommitRelay）、平台 OfflineGrace 离线累计计时、非 Primary 生产迁移、WorldRegistry 本机位置 API、AccessCode/ObserverSync
+ 
+ 
+ 
+@@ -722,6 +729,36 @@
+ ### B2.4c-10 三门禁、契约与保护
+ check:naming 0 ERROR / 22 WARN 无新增、check:dependencies 115 TS / 407 依赖 0 ERROR、typecheck 0 诊断；契约测试 87/87 PASS（领域/导入/存储 59 + 包装/内容 22 + 组合根 6），Creator 双逻辑设备 A→B 两档各 11 张截图；保护路径 603→621 SHA256 全保持。
+ 
++### B2.4d-01 同 ID 迁移边界
++WorldMigration 转移同账号同 worldId 的 HomeDevice；不用 rebaseWorldState、不重键、不新 forkOrigin、不改变 revision/capturedAt/FormatTime/七项；不要求 CopyPermission；InitialWorld 不迁移，非 Primary 生产迁移拒绝。
++
++### B2.4d-02 独立 d 权威端口与旧契约保护
++新增 MigrationAuthorityPort / WorldMigrationContractAdapter，不扩大旧 b/c 首次归属契约；d 参与的全部准入读同一持久权威；旧 c 操作额外受 d 准入/归属 guard，迁移后 homeRevision>1 仍不走 c 复制。
++
++### B2.4d-03 SafePoint 排空确认全集合
++SafePointDrainConfirmation 含 schemaVersion/accountId/sourceDeviceId/drainId/directoryDigest/worlds（worldId/revision/coreDigest），覆盖源设备账号全部未删世界（含 InitialWorld/空世界）；仅迁移世界必须 Primary 七项 Complete，其他世界严格 Core 及安全边界验证；排空不得只看磁盘旧值而忽略活动图（drain 契约 20/20 PASS）。
++
++### B2.4d-04 活动自然排空与能力世代
++SafePointDrainPort 持单次当前排空世代能力：关闭源新准入后取得按 worldId 排序的真实 leases，排尽在途世界/账号事实并重读目录/Core；Pending/Failed/缺失非继承通关记录、活动演奏/重演/揭示/七秒计时/排队入口/未恢复发布事务均未排空；不强制结束谱面、不跳过揭示、不清计时伪造安全点（boundary 契约 8/8 PASS）。
++
++### B2.4d-05 确认失效与 30 秒服务寿命
++确认随 lease 世代失效、集合变化、恢复写入或显式撤销立即永久无效；服务接收确认后另给服务时间 30 秒有效期，Release 原子消费；服务调用失败/响应丢失可用 migrationId 查询；不能重用确认启动第二迁移；无 bootId 要求。
++
++### B2.4d-06 Release/Claim 请求与 receipt
++MigrationReleaseRequest（schemaVersion/migrationId/worldId/expectedHomeRevision/drainId）与 MigrationClaimRequest（schemaVersion/migrationId/worldId/expectedHomeRevision）严格版本化；绑定账号/device 来自端口不得自报覆盖；MigrationReceipt.kind=PauseActive/Released/Claimed，含归属、pause、服务观察时间、source/claim device 证据。
++
++### B2.4d-07 RealityPause 记录、版本递增与服务时钟
++RealityPauseRecord 含 schemaVersion/accountId/migrationId/initiatingDeviceId/startedAtServerEpochMs/resumeNotBeforeServerEpochMs/endedAtServerEpochMs；Release 与 pause/绑定同一权威事务产生，期间 Home 仍 Homed，结束发布 Released、Claim 再 Homed；homeRevision 每次实际释放/认领 +1（Released +1 / Claimed +2），registryRevision 同步递增；冷静期 max(3600000, OFFLINE_GRACE_HOURS×3600000) 只由服务时钟判定，客户端无解除/缩短端口，墙钟/倒计时不参与资格（authority 契约 32/32 PASS）。
++
++### B2.4d-08 全账号暂停准入与设备绑定
++全账号所有设备/世界立即拒绝新进入、创建/删除/分叉/导入/迁移/新演奏/新叙事活动；已在活动边界仅保留必要输入与自然媒体时序，真实 Complete 且账号事实结算后安全退至只读目录，不强退活动，InitialWorld 同暂停，服务不明时拒绝新准入；DeviceAccountBinding 由服务持久保存，暂停中发起 device 登录/切换另一账号拒绝（含其他窗口/客户端重建），删本地缓存不能解除，只服务结束才解绑。
++
++### B2.4d-09 受限载荷、journal、锁序、源字节与恢复
++RestrictedMigrationCorePayload data-only 七项，接收端重新 parseComplete + 正式内容引用验证，WorldClearRecord/FirstWorldCleared 继续同账号受信读口、不进载荷；WorldMigrationJournal v1 按设备账号保存 entries，phase=Prepared/PauseActive/Released/Claimed/LocalPublished（不使用 CleanupPending），Claim 成功先日志再目标 Core、目录追加唯一新本地发布点、LocalPublished receipt 永久留；独立 key neurou-migration-v1:<account>、协调锁 neurou-cross-device:<account>，pause 缓存 neurou-reality-pause-v1: 仅诊断；源锁序=协调→排序所有世界 leases→账号事实锁→目录，目标=协调→目标 lease→目录，服务 await 不持最终目录锁，权威锁不反取世界/目录锁；源文件/Core/目录字节不改不删不写墓碑，Migrated 仅来自鲜读服务归属诊断；迁回须新事务，同值幂等/原值可迁回，异值/墓碑拒绝不复活；逐 phase 同 migrationId/期望版本恢复，不删除已发布世界伪装回滚，无 WebLocks 明确拒绝（storage 契约 34/34、prototype 契约 12/12 PASS）。
++
++### B2.4d-10 三门禁、契约回归与双档验收
++check:naming 0 ERROR / 22 既有 WARN 无新增、check:dependencies 120 TS / 约 423 依赖 0 ERROR、typecheck exit 0；新增契约 106/106 PASS（drain 20 + boundary 8 + authority 32 + storage 34 + prototype 12），B2.4c 回归 65/65 PASS（59 + 6）；Creator 双逻辑设备 A 排空→Release→暂停拒入→服务 fixture 时钟推进一小时→B 同 ID Claim→正式恢复，1920×1080/2560×1440 两档各 17 张截图（共 34 张），renderer/runtime 错误与外部请求均 0；测试推进的是服务 fixture 时钟（realElapsedHour:false），非真实等待/真实服务器；e 与完整 FileCarry、真实 AuthService/CommitRelay 留后续。
++
+ 
+ 
+ \## 9. 20 维向量顺序（已冻结）
+

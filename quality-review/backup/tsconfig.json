@@ -1,0 +1,36 @@
+{
+  // ============================================================
+  // TypeScript 检查配置（HANDOFF-ROUND-11 / T1）
+  //
+  // Cocos Creator 3.8.8 对接说明（依据官方 3.8 tsconfig 文档）：
+  // - Cocos 编译资产脚本（assets/ 下）时自行管理编译选项，
+  //   不读取本文件的编译结果；
+  // - 用 Cocos Dashboard 3.8.8 首次打开/导入本工程后，编辑器
+  //   会生成 temp/tsconfig.cocos.json（target / module / cc 类型
+  //   声明由其管理），届时如需让 IDE 检查与编辑器完全一致，
+  //   可在 PROTOCOL 授权后改为 { "extends": "./temp/tsconfig.cocos.json" }；
+  // - temp/ library/ build/ local/ 等编辑器生成目录不入库。
+  //
+  // 当前 src/ 为零 cc 依赖的纯逻辑层，本文件为 tsc / IDE 的
+  // 自包含检查配置；选项与 Cocos 隐含约束对齐：
+  // module=ES2015、experimentalDecorators、isolatedModules、
+  // forceConsistentCasingInFileNames（官方明示，勿擅自改 target/module）。
+  // ============================================================
+  "compilerOptions": {
+    "target": "ES2015",
+    "module": "ES2015",
+    "moduleResolution": "node",
+    "lib": ["ES2020", "DOM"],
+    "strict": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "experimentalDecorators": true,
+    "isolatedModules": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "types": []
+  },
+  "include": ["src/**/*.ts", "constants/**/*.ts", "types/**/*.d.ts"],
+  "exclude": ["node_modules", "assets", "temp", "tmp", "library", "local", "build", "scripts"]
+}

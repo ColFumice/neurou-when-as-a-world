@@ -1,0 +1,68 @@
+{
+  "category": "ContractTest",
+  "note": "Real aggregation with strict content-bound codec and controlled storage/clock fixtures. Three-part hydration never produces a Complete WorldState or successful full restore.",
+  "passed": 12,
+  "failed": 0,
+  "results": [
+    {
+      "name": "ownership exposes exactly three implemented sections, four unfinished sections, and frozen no-fork contract",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "unbound source retains B2b unknown identity/revision, empty parts and ten diagnostics",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "strict bound three-part core aggregates real parts while remaining Incomplete with four explicit missing mechanisms",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "bound codec clones and freezes nested input before aggregation; later raw mutation cannot edit capture",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "complete restore remains Rejected for a valid header and never reads core source or changes last capture",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "missing historical creation time stays absent with AuthorityUnavailable; capture never invents current time",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "intermediate durable Ledger plus null Puzzle is explicit UnsupportedBoundary and not default puzzle reconstruction",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "absent core source emits unavailable section/identity diagnostics without fabricating an empty payload",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "corrupt bound source yields InvalidSnapshot and no parts while preserving raw stored data",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "source identity mismatch does not aggregate foreign account/world parts",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "failed capture clock leaves previous published capture untouched",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "strict storage reader and aggregation perform no writes; rejected save preserves previous persisted capture",
+      "result": "PASS",
+      "category": "ContractTest"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "createdUtc": "2026-10-11T07:58:55.0596928Z",
+  "database": "c2b_client_authority",
+  "privateConnectionFile": "runtime/.local/connection-client.json",
+  "oldDatabasePreserved": true,
+  "serverFinalDatabasePreserved": true,
+  "schemaChecksumBypass": false
+}

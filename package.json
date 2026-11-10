@@ -1,0 +1,28 @@
+{
+    "name":  "neurou_official",
+    "version":  "4.0.0",
+    "private":  true,
+    "description":  "neurou : when as a world — 雨若：当世界成为世界。程序化现象学世界、编辑器与实时游戏。",
+    "type":  "commonjs",
+    "scripts":  {
+                    "check:naming":  "node scripts/check-naming.js",
+                    "check:naming:selftest":  "node scripts/check-naming.js --selftest",
+                    "check:dependencies":  "node scripts/check-dependencies.js",
+                    "typecheck":  "tsc --noEmit",
+                    "verify":  "node scripts/check-naming.js \u0026\u0026 tsc --noEmit",
+                    "typecheck:v4":  "tsc -p v4/tsconfig.json",
+                    "build:v4:test":  "tsc -p v4/tsconfig.test.json",
+                    "test:v4":  "npm run build:v4:test \u0026\u0026 node --test \"v4/.dist/tests/*.test.js\" \"v4/.dist/tests/r3/*.test.js\" \"v4/.dist/tests/r4/*.test.js\" \"v4/.dist/tests/r4b/*.test.js\" \"v4/.dist/tests/r4c/*.test.js\" \"v4/.dist/tests/r4d/*.test.js\" \"v4/.dist/tests/r4e/*.test.js\" \"v4/.dist/tests/r4f/*.test.js\" \"v4/.dist/tests/r5a/*.test.js\" \"v4/.dist/tests/r5b2/*.test.js\" \"v4/.dist/tests/r5c/*.test.js\"",
+                    "check:v4":  "node tools/check-all-v4.cjs",
+                    "verify:v4":  "npm run typecheck:v4 \u0026\u0026 npm run check:v4 \u0026\u0026 npm run test:v4"
+                },
+    "devDependencies":  {
+                            "electron":  "39.0.0",
+                            "typescript":  "~5.5.4",
+                            "@types/node":  "22.20.5"
+                        },
+    "creator":  {
+                    "version":  "3.8.8"
+                },
+    "uuid":  "2612b3bc-7c54-4dd1-887c-03dded7f6004"
+}

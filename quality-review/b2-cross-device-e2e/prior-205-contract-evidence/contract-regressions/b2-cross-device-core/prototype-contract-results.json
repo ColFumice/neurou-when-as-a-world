@@ -1,0 +1,59 @@
+{
+  "evidenceKind": "ContractTest",
+  "adapterMode": "ContractAdapter",
+  "pass": true,
+  "total": 6,
+  "passed": 6,
+  "cases": [
+    {
+      "name": "P01 B initialization acquires import→InitialWorld lease→directory and writes only the B namespace",
+      "result": "PASS",
+      "mode": "ContractAdapter"
+    },
+    {
+      "name": "P02 Core success then initial directory failure recovers in a fresh composition without changing FormatTime or bytes",
+      "result": "PASS",
+      "mode": "ContractAdapter"
+    },
+    {
+      "name": "P03 disposing while the Cocos manifest resource is pending prevents every storage, lock and runtime side effect",
+      "result": "PASS",
+      "mode": "ContractAdapter"
+    },
+    {
+      "name": "P04 absent Web Locks explicitly rejects B initialization without writing keys or opening a world",
+      "result": "PASS",
+      "mode": "ContractAdapter"
+    },
+    {
+      "name": "P05 disposal during service replay with an existing staged Core preserves the journal/Core and prevents local publication",
+      "result": "PASS",
+      "mode": "ContractAdapter"
+    },
+    {
+      "name": "P06 disposal during current-home open verification releases the genuine target lease and never calls the runtime factory",
+      "result": "PASS",
+      "mode": "ContractAdapter"
+    }
+  ],
+  "capturedAt": "2026-10-10T16:06:10.036Z",
+  "sources": [
+    {
+      "file": "assets/scripts/CrossDevicePrototype.ts",
+      "sha256": "b192b335960ce6ba5f56a6df9daadee5697d294606ef991295aeba95d19a11ce"
+    },
+    {
+      "file": "assets/scripts/WorldFolderBuilder.ts",
+      "sha256": "837b75c0355dc595fae1e872d8bcfc85dc914659a5f99e92416cc9231f1caae9"
+    },
+    {
+      "file": "src/director/CoreTransfer.ts",
+      "sha256": "f8af59dc687e605fc7640ae15d8c57857e49d31708ebaead858913cce30fdcc7"
+    },
+    {
+      "file": "src/presentation/CrossDeviceImportStorage.ts",
+      "sha256": "15b16c12daae586a6f7a8bdffbc6289fe42307c4a62140fb91617e2b0a94c4c2"
+    }
+  ],
+  "policy": "Actual additive composition, production codecs and world leases; Cocos resource callback, browser locks/storage and source fixture are controlled test seams. No production preview data or actual Cocos acceptance."
+}

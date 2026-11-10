@@ -1,0 +1,27 @@
+{
+  "baselineMethod": "无 Git 仓库，C 步实现前逐字节备份；git diff --no-index 生成完整差异",
+  "changed": [
+    "src/chart/GuidanceChart.ts",
+    "src/chart/GuidanceLineRuntime.ts",
+    "src/chart/ChartPremiere.ts",
+    "src/presentation/LineEraseEffect.ts",
+    "assets/scripts/SceneBuilder.ts"
+  ],
+  "added": [
+    "src/chart/GuidanceChartRuntime.ts",
+    "src/chart/GuidanceChartRuntime.ts.meta",
+    "assets/resources/chart/guidance_c.json",
+    "assets/resources/chart/guidance_c.json.meta"
+  ],
+  "hashes": {
+    "src/chart/GuidanceChart.ts": "eed83b9009caae37378677035f0b0b6be0b1199f919aadda4b962c7582fbdfd0",
+    "src/chart/GuidanceLineRuntime.ts": "6914099af15ffcab0a2a0f46c826a42fd2d98da46360a851b7e3e56a3957f886",
+    "src/chart/ChartPremiere.ts": "50617d366ae7c5b8dd6b402389f1ef9e43822bf24e03f0687476e1558853eb6d",
+    "src/presentation/LineEraseEffect.ts": "a42ce3672dc4557922c7bea2233bd85b1733455639cf70dfd3e5000e4108a7c3",
+    "assets/scripts/SceneBuilder.ts": "626fb47307b2526e7cddbaf9aaddbbfd32e7d26e3866bc6849e3c5fe61c9e75f",
+    "src/chart/GuidanceChartRuntime.ts": "b9b9f293760711aa30dc997d61ccf156c63ba7dbfcc2c7a1b71cf078781929f8",
+    "src/chart/GuidanceChartRuntime.ts.meta": "44ea0756a2495c25b2f5372367cb26f349a9f0695c172160a62363229af2e271",
+    "assets/resources/chart/guidance_c.json": "4c025a5b30346f175f4f007d8940b14abcc8088fd32181ad3d7c2a6b8f501e4b",
+    "assets/resources/chart/guidance_c.json.meta": "f7a10624968e58fe62888bba32216c2c16481aa215737ea58ed31f72d8868b92"
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "creatorVersion": "3.8.8",
+  "target": "preview",
+  "compile": [
+    {
+      "file": "SceneBuilder.ts",
+      "chunk": "./chunks/8b/8b7eae5ef325431fd5924802b2c0ea4b14e61744.js",
+      "sha256": "d5a7fed59a61c5d329479d67c4e8797c2e13ec8693fa2e56f774df0c1b7f1322",
+      "currentSourceMarkers": [
+        {
+          "marker": "puzzleLabel.node.active",
+          "pass": true
+        },
+        {
+          "marker": "createdVisualAssets",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "file": "ChartPadView.ts",
+      "chunk": "./chunks/71/71f207c3b1aa9851200fbcd518cfb45a40b58131.js",
+      "sha256": "bb54b6be0c29015adab66044afcade83ef438f03994ea559dc7876fb38a29ccb",
+      "currentSourceMarkers": [
+        {
+          "marker": "fontSize = 10",
+          "pass": true
+        },
+        {
+          "marker": "transform.height / 2 - 12",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "file": "TrailRender.ts",
+      "chunk": "./chunks/83/83145f3980e5585e01630a60a81ceb0645f07171.js",
+      "sha256": "c71f53a7c461593a930d648abc76df133ff30b89ab834fa3b5d163ee5468478b",
+      "currentSourceMarkers": [
+        {
+          "marker": "createdVisualAssets",
+          "pass": true
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "pass": true,
+  "sourcePolicy": "Exact copies of latest accepted post-window harnesses. Original sources/results unchanged.",
+  "runs": [
+    {
+      "name": "b-regression",
+      "source": "quality-review\\judgement-window-2026-10-10\\b-regression.cjs",
+      "sha256": "8c539b47ff98873eab8b1f7b858b4d322f76a2d6979d004c3ce3db2bcf2d6d8c",
+      "exactCopy": true,
+      "exitCode": 0
+    },
+    {
+      "name": "c-regression",
+      "source": "quality-review\\judgement-window-2026-10-10\\c-regression.cjs",
+      "sha256": "449321db3746cc3e8301c561aeb9bdedb34841f69f11ec0edecbcdb19182c93a",
+      "exactCopy": true,
+      "exitCode": 0
+    },
+    {
+      "name": "pad-regression",
+      "source": "quality-review\\judgement-window-2026-10-10\\pad-regression.cjs",
+      "sha256": "00bcf951b4b2c068c2ba5cbf6646b7fcefb7ef5c07951361573f3a77c3df08b2",
+      "exactCopy": true,
+      "exitCode": 0
+    },
+    {
+      "name": "editor-regression",
+      "source": "quality-review\\judgement-window-2026-10-10\\editor-regression.cjs",
+      "sha256": "b90f6970ba886e086d88496d704359652de5a307d526e554acc0f241143484ca",
+      "exactCopy": true,
+      "exitCode": 0
+    },
+    {
+      "name": "window-boundaries",
+      "source": "quality-review\\judgement-window-2026-10-10\\window-boundaries.cjs",
+      "sha256": "840f57a84a2ab699bc935a12cbdef07290c2575c239950d3cee87e6191dd6566",
+      "exactCopy": true,
+      "exitCode": 0
+    }
+  ]
+}

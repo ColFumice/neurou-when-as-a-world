@@ -1,0 +1,430 @@
+{
+  "phase": "B2.5c-2c final validation after Relay old-generation retention fix",
+  "generatedUtc": "2026-10-11T10:11:06.374Z",
+  "nodeVersion": "v24.19.0",
+  "finalRealHttpPgRuns": [
+    {
+      "name": "FullServerRelay",
+      "actualExitCode": 0,
+      "executionEvidenceSource": "Server agent supplied completed actual command/exit0; preserved raw results/log and source snapshot independently linked here.",
+      "observedExecSession": 8621,
+      "command": [
+        "node",
+        "quality-review/b2-5c-2c/server-relay-tests.mjs",
+        "quality-review/b2-5c-2c/evidence/runtime/.local/connection.json",
+        "quality-review/b2-5c-2c/evidence/after-retention-fix/server-relay-results.json"
+      ],
+      "cwd": "D:\\Project\\A_New_Begin\\Neurou_official",
+      "shellRedirection": "> quality-review/b2-5c-2c/evidence/after-retention-fix/server-relay.log 2>&1",
+      "result": {
+        "path": "evidence/after-retention-fix/server-relay-results.json",
+        "sha256": "85e63c837cf2dc2bb857b9ae981bbcc1aae158265d35218b16977d842901171f"
+      },
+      "log": {
+        "path": "evidence/after-retention-fix/server-relay.log",
+        "bytes": 1878,
+        "sha256": "7dc4590f4a1ee105c2d321bdbc228c9034dd35cc495a15713adea02298c2b43d"
+      },
+      "harness": {
+        "path": "server-relay-tests.mjs",
+        "bytes": 44634,
+        "sha256": "cf326ef6c033e8867ad1a9f124d7a21864cdbef741e2d4bc1c0961187ce61872"
+      },
+      "counts": {
+        "passed": 20,
+        "failed": 0,
+        "total": 20
+      },
+      "clockCategories": {
+        "productionRealWall": 17,
+        "explicitlyIsolatedClock": 3
+      },
+      "expectedCount": 20,
+      "pass": true
+    },
+    {
+      "name": "FirstEnqueueConcurrency",
+      "actualExitCode": 0,
+      "executionEvidenceSource": "Server agent supplied completed actual command/exit0; preserved raw results/log and source snapshot independently linked here.",
+      "observedExecSession": null,
+      "command": [
+        "node",
+        "quality-review/b2-5c-2c/server-relay-tests.mjs",
+        "quality-review/b2-5c-2c/evidence/runtime/.local/connection.json",
+        "quality-review/b2-5c-2c/evidence/after-retention-fix/server-relay-concurrency-results.json",
+        "--concurrency-only"
+      ],
+      "cwd": "D:\\Project\\A_New_Begin\\Neurou_official",
+      "shellRedirection": "> quality-review/b2-5c-2c/evidence/after-retention-fix/server-relay-concurrency.log 2>&1",
+      "result": {
+        "path": "evidence/after-retention-fix/server-relay-concurrency-results.json",
+        "sha256": "21ea5cfceddde7da0cb983b8623c32baba3e63f64d82328c995af0df6f97d692"
+      },
+      "log": {
+        "path": "evidence/after-retention-fix/server-relay-concurrency.log",
+        "bytes": 199,
+        "sha256": "273e20b74f302c726c5407b8f69e03002e255f4191a2b7ecb1e520f30117d7fd"
+      },
+      "harness": {
+        "path": "server-relay-tests.mjs",
+        "bytes": 44634,
+        "sha256": "cf326ef6c033e8867ad1a9f124d7a21864cdbef741e2d4bc1c0961187ce61872"
+      },
+      "counts": {
+        "passed": 2,
+        "failed": 0,
+        "total": 2
+      },
+      "clockCategories": {
+        "productionRealWall": 2,
+        "explicitlyIsolatedClock": 0
+      },
+      "expectedCount": 2,
+      "pass": true
+    },
+    {
+      "name": "OldGenerationRetention",
+      "actualExitCode": 0,
+      "executionEvidenceSource": "Server agent supplied completed actual command/exit0; preserved raw results/log and source snapshot independently linked here.",
+      "observedExecSession": null,
+      "command": [
+        "node",
+        "quality-review/b2-5c-2c/server-relay-tests.mjs",
+        "quality-review/b2-5c-2c/evidence/runtime/.local/connection.json",
+        "quality-review/b2-5c-2c/evidence/after-retention-fix/server-old-generation-retention-results.json",
+        "--old-generation-retention-only"
+      ],
+      "cwd": "D:\\Project\\A_New_Begin\\Neurou_official",
+      "shellRedirection": "> quality-review/b2-5c-2c/evidence/after-retention-fix/server-old-generation-retention.log 2>&1",
+      "result": {
+        "path": "evidence/after-retention-fix/server-old-generation-retention-results.json",
+        "sha256": "008364993b0ecdd99d44a970fc742a555e47638524ba8f472c107bf04951fde1"
+      },
+      "log": {
+        "path": "evidence/after-retention-fix/server-old-generation-retention.log",
+        "bytes": 215,
+        "sha256": "58c41d032f91b3094b41bfa834119083f76a4f88b755b3d9fa5d22ab25a0cea7"
+      },
+      "harness": {
+        "path": "server-relay-tests.mjs",
+        "bytes": 44634,
+        "sha256": "cf326ef6c033e8867ad1a9f124d7a21864cdbef741e2d4bc1c0961187ce61872"
+      },
+      "counts": {
+        "passed": 2,
+        "failed": 0,
+        "total": 2
+      },
+      "clockCategories": {
+        "productionRealWall": 1,
+        "explicitlyIsolatedClock": 1
+      },
+      "expectedCount": 2,
+      "pass": true
+    },
+    {
+      "name": "ProductionRelayAdapterRealLoopbackHttpPgWithIsolatedCryptoAndHostCache",
+      "execution": {
+        "path": "evidence/after-retention-fix/client-run-lineage.json",
+        "bytes": 2596,
+        "sha256": "2d4834dfa6e1d54833476aa6a44baa8d1fd362c7df2b3b2ab354d6582480ebd6",
+        "data": {
+          "command": [
+            "C:\\Program Files\\nodejs\\node.exe",
+            "quality-review/b2-5c-2c/client-real-http-retention-final.cjs"
+          ],
+          "cwd": "D:\\Project\\A_New_Begin\\Neurou_official",
+          "actualExitCode": 0,
+          "startedUtc": "2026-10-11T10:09:39.901Z",
+          "completedUtc": "2026-10-11T10:09:55.024Z",
+          "sourceBefore": [
+            {
+              "path": "server/src/RelayStorage.ts",
+              "sha256": "78ad6663951c166c16eb74dee259f62d8fde58484f0d778162c2f1dd3cb4e0d7"
+            },
+            {
+              "path": "server/shared-dist/src/RelayStorage.js",
+              "sha256": "e53d008671c4f6c2575a7c05440a4af674202bd32779ae31387be6a203624eaf"
+            },
+            {
+              "path": "src/presentation/RealCommitRelayAdapter.ts",
+              "sha256": "ec4b5d8cb11caf06f499d65706a64cd880ce8c7f3ba849ff557225cebd9fd9a9"
+            },
+            {
+              "path": "src/presentation/RealSharedServiceSessionAdapter.ts",
+              "sha256": "8a1b8d778fc1d25e4c93855a2929b2c7fe3dded476599b250863a163edd2c452"
+            }
+          ],
+          "sourceAfter": [
+            {
+              "path": "server/src/RelayStorage.ts",
+              "sha256": "78ad6663951c166c16eb74dee259f62d8fde58484f0d778162c2f1dd3cb4e0d7"
+            },
+            {
+              "path": "server/shared-dist/src/RelayStorage.js",
+              "sha256": "e53d008671c4f6c2575a7c05440a4af674202bd32779ae31387be6a203624eaf"
+            },
+            {
+              "path": "src/presentation/RealCommitRelayAdapter.ts",
+              "sha256": "ec4b5d8cb11caf06f499d65706a64cd880ce8c7f3ba849ff557225cebd9fd9a9"
+            },
+            {
+              "path": "src/presentation/RealSharedServiceSessionAdapter.ts",
+              "sha256": "8a1b8d778fc1d25e4c93855a2929b2c7fe3dded476599b250863a163edd2c452"
+            }
+          ],
+          "harness": {
+            "path": "quality-review/b2-5c-2c/client-real-http-retention-final.cjs",
+            "sha256": "3c1394d2b479deaf040efa03ab2514c4cd6e8b1182e1f165297540e3e4698e13"
+          },
+          "originalHarness": {
+            "path": "quality-review/b2-5c-2c/client-real-http.cjs",
+            "sha256": "bb413efa3cc6614159361ca651e8b2b836581a77d63f597456769a0b9e0d488f"
+          },
+          "harnessDifference": "Exactly three output/cache path substitutions; all case bodies and assertions unchanged.",
+          "log": {
+            "path": "quality-review/b2-5c-2c/evidence/after-retention-fix/client-real-http.log",
+            "sha256": "bb290f956b757cd103e6295c6fb0825542f34253bb5a0a70c673bf8e743d7b6a"
+          },
+          "result": {
+            "path": "quality-review/b2-5c-2c/evidence/after-retention-fix/client-real-http-results.json",
+            "sha256": "28f280fbcc185c74089a44c625432838f0265ebdb87feb8db8631a2a46fee9c1"
+          },
+          "limits": "Actual production adapters with real loopback HTTP/PG; test-only crypto/WAL cache capabilities. No production key delivery, full dual replay or LAN certification."
+        }
+      },
+      "result": {
+        "path": "evidence/after-retention-fix/client-real-http-results.json",
+        "sha256": "28f280fbcc185c74089a44c625432838f0265ebdb87feb8db8631a2a46fee9c1"
+      },
+      "counts": {
+        "passed": 22,
+        "failed": 0
+      },
+      "pass": true,
+      "limits": "Final source real HTTP/PG run with production adapters and c-1 validator; native crypto oracle and isolated WAL cache injected. No full key-delivery, dual-client product replay, platform durability or LAN TLS certification."
+    }
+  ],
+  "finalTestedServerSource": {
+    "path": "evidence/after-retention-fix/server-source-generated-sha256.json",
+    "sha256": "444a3a8d3314ee93ca27aedfa159e636e471dd0ff8d28d2f228ec990010ee788"
+  },
+  "finalThreeGates": {
+    "path": "evidence/gate-runs/retention-final/results.json",
+    "sha256": "a10371f73cafe59b07620d35adb25995cb6512d23a935ecb53f6452c64926803",
+    "pass": true
+  },
+  "finalIndependentBuildNoEmit": {
+    "path": "evidence/server-build-checks/retention-final/results.json",
+    "sha256": "1857be32ceb46f1e279fa38b977d4cb8fc557be9b455eca5e6216ac1503b425f",
+    "pass": true,
+    "runs": [
+      {
+        "name": "build",
+        "command": [
+          "C:\\Program Files\\nodejs\\node.exe",
+          "SharedBuild.mjs"
+        ],
+        "cwd": "D:\\Project\\A_New_Begin\\Neurou_official\\server",
+        "startedUtc": "2026-10-11T10:10:44.990Z",
+        "completedUtc": "2026-10-11T10:10:47.076Z",
+        "exitCode": 0,
+        "pass": true,
+        "log": "server-build-checks/retention-final/build.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "typecheck",
+        "command": [
+          "C:\\Program Files\\nodejs\\node.exe",
+          "node_modules/typescript/bin/tsc",
+          "-p",
+          "tsconfig.shared.json",
+          "--noEmit"
+        ],
+        "cwd": "D:\\Project\\A_New_Begin\\Neurou_official\\server",
+        "startedUtc": "2026-10-11T10:10:47.076Z",
+        "completedUtc": "2026-10-11T10:10:48.265Z",
+        "exitCode": 0,
+        "pass": true,
+        "log": "server-build-checks/retention-final/typecheck.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ]
+  },
+  "sourceLineage": [
+    {
+      "path": "server/src/RelayRoute.ts",
+      "deliveredSha256": "d15e6323479eb36b8f7ada83578c628d287db252e2eb78e6f27799236971bd6b",
+      "currentSha256": "d15e6323479eb36b8f7ada83578c628d287db252e2eb78e6f27799236971bd6b",
+      "exactFinalBytes": true
+    },
+    {
+      "path": "server/src/RelayService.ts",
+      "deliveredSha256": "55ffe45f60aeb69b9c32c1b4a3e498c8e184f921fdd4db23554f8baf85491549",
+      "currentSha256": "55ffe45f60aeb69b9c32c1b4a3e498c8e184f921fdd4db23554f8baf85491549",
+      "exactFinalBytes": true
+    },
+    {
+      "path": "server/src/RelayStorage.ts",
+      "deliveredSha256": "78ad6663951c166c16eb74dee259f62d8fde58484f0d778162c2f1dd3cb4e0d7",
+      "currentSha256": "78ad6663951c166c16eb74dee259f62d8fde58484f0d778162c2f1dd3cb4e0d7",
+      "exactFinalBytes": true
+    },
+    {
+      "path": "server/src/buildRelayServer.ts",
+      "deliveredSha256": "89f08e60c8c1a699c585384047bf003e981f19ba6b8043193712f10aa9798430",
+      "currentSha256": "89f08e60c8c1a699c585384047bf003e981f19ba6b8043193712f10aa9798430",
+      "exactFinalBytes": true
+    },
+    {
+      "path": "src/director/IntentPort.ts",
+      "deliveredSha256": "4348f4bdc950f1f9c6e224364fa77a80adeb0f2722c608e1dd961c0fe5a4e0a2",
+      "currentSha256": "4348f4bdc950f1f9c6e224364fa77a80adeb0f2722c608e1dd961c0fe5a4e0a2",
+      "exactFinalBytes": true
+    },
+    {
+      "path": "src/presentation/RealCommitRelayAdapter.ts",
+      "deliveredSha256": "ec4b5d8cb11caf06f499d65706a64cd880ce8c7f3ba849ff557225cebd9fd9a9",
+      "currentSha256": "ec4b5d8cb11caf06f499d65706a64cd880ce8c7f3ba849ff557225cebd9fd9a9",
+      "exactFinalBytes": true
+    },
+    {
+      "path": "src/presentation/RealSharedServiceSessionAdapter.ts",
+      "deliveredSha256": "8a1b8d778fc1d25e4c93855a2929b2c7fe3dded476599b250863a163edd2c452",
+      "currentSha256": "8a1b8d778fc1d25e4c93855a2929b2c7fe3dded476599b250863a163edd2c452",
+      "exactFinalBytes": true
+    },
+    {
+      "path": "server/shared-dist/src/buildRelayServer.js",
+      "deliveredSha256": "3be00b89204a779fbe9ebe20d825a1a5396ce6936db90f310c15adae31e3ced4",
+      "currentSha256": "3be00b89204a779fbe9ebe20d825a1a5396ce6936db90f310c15adae31e3ced4",
+      "exactFinalBytes": true
+    },
+    {
+      "path": "server/shared-dist/src/RelayRoute.js",
+      "deliveredSha256": "a1a99f9fd5da9c01d4b60096ae172ea50de9ff418bd135aa26b5227f6e3bfed2",
+      "currentSha256": "a1a99f9fd5da9c01d4b60096ae172ea50de9ff418bd135aa26b5227f6e3bfed2",
+      "exactFinalBytes": true
+    },
+    {
+      "path": "server/shared-dist/src/RelayService.js",
+      "deliveredSha256": "a7573043381d8a39597160f9aed3b9aaadd35858ba545e663f1b8c84eaf74f19",
+      "currentSha256": "a7573043381d8a39597160f9aed3b9aaadd35858ba545e663f1b8c84eaf74f19",
+      "exactFinalBytes": true
+    },
+    {
+      "path": "server/shared-dist/src/RelayStorage.js",
+      "deliveredSha256": "e53d008671c4f6c2575a7c05440a4af674202bd32779ae31387be6a203624eaf",
+      "currentSha256": "e53d008671c4f6c2575a7c05440a4af674202bd32779ae31387be6a203624eaf",
+      "exactFinalBytes": true
+    }
+  ],
+  "serverFinalVersionChecks": [
+    {
+      "path": "server/src/RelayStorage.ts",
+      "sha256": "78ad6663951c166c16eb74dee259f62d8fde58484f0d778162c2f1dd3cb4e0d7",
+      "currentSha256": "78ad6663951c166c16eb74dee259f62d8fde58484f0d778162c2f1dd3cb4e0d7",
+      "equalsFinalTestSnapshot": true
+    },
+    {
+      "path": "server/shared-dist/src/RelayStorage.js",
+      "sha256": "e53d008671c4f6c2575a7c05440a4af674202bd32779ae31387be6a203624eaf",
+      "currentSha256": "e53d008671c4f6c2575a7c05440a4af674202bd32779ae31387be6a203624eaf",
+      "equalsFinalTestSnapshot": true
+    },
+    {
+      "path": "server/src/RelayService.ts",
+      "sha256": "55ffe45f60aeb69b9c32c1b4a3e498c8e184f921fdd4db23554f8baf85491549",
+      "currentSha256": "55ffe45f60aeb69b9c32c1b4a3e498c8e184f921fdd4db23554f8baf85491549",
+      "equalsFinalTestSnapshot": true
+    },
+    {
+      "path": "server/shared-dist/src/RelayService.js",
+      "sha256": "a7573043381d8a39597160f9aed3b9aaadd35858ba545e663f1b8c84eaf74f19",
+      "currentSha256": "a7573043381d8a39597160f9aed3b9aaadd35858ba545e663f1b8c84eaf74f19",
+      "equalsFinalTestSnapshot": true
+    },
+    {
+      "path": "server/src/RelayRoute.ts",
+      "sha256": "d15e6323479eb36b8f7ada83578c628d287db252e2eb78e6f27799236971bd6b",
+      "currentSha256": "d15e6323479eb36b8f7ada83578c628d287db252e2eb78e6f27799236971bd6b",
+      "equalsFinalTestSnapshot": true
+    },
+    {
+      "path": "server/shared-dist/src/RelayRoute.js",
+      "sha256": "a1a99f9fd5da9c01d4b60096ae172ea50de9ff418bd135aa26b5227f6e3bfed2",
+      "currentSha256": "a1a99f9fd5da9c01d4b60096ae172ea50de9ff418bd135aa26b5227f6e3bfed2",
+      "equalsFinalTestSnapshot": true
+    },
+    {
+      "path": "server/src/buildRelayServer.ts",
+      "sha256": "89f08e60c8c1a699c585384047bf003e981f19ba6b8043193712f10aa9798430",
+      "currentSha256": "89f08e60c8c1a699c585384047bf003e981f19ba6b8043193712f10aa9798430",
+      "equalsFinalTestSnapshot": true
+    },
+    {
+      "path": "server/shared-dist/src/buildRelayServer.js",
+      "sha256": "3be00b89204a779fbe9ebe20d825a1a5396ce6936db90f310c15adae31e3ced4",
+      "currentSha256": "3be00b89204a779fbe9ebe20d825a1a5396ce6936db90f310c15adae31e3ced4",
+      "equalsFinalTestSnapshot": true
+    }
+  ],
+  "retentionFixVersionChanges": [
+    {
+      "path": "server/src/RelayStorage.ts",
+      "beforeRetentionFixSha256": "a5cbd6ea1635ca347aaa11fd9f3c2040fe16212739d2f78e277a0bbf0508e9e5",
+      "finalSha256": "78ad6663951c166c16eb74dee259f62d8fde58484f0d778162c2f1dd3cb4e0d7"
+    },
+    {
+      "path": "server/shared-dist/src/RelayStorage.js",
+      "beforeRetentionFixSha256": "69d98143544dd557427ace6dc1251f9705a862244f2e3e5f6ca8314902b33c87",
+      "finalSha256": "e53d008671c4f6c2575a7c05440a4af674202bd32779ae31387be6a203624eaf"
+    }
+  ],
+  "unchangedContractOracles": {
+    "client": {
+      "path": "evidence/client-relay-contract/results.json",
+      "sha256": "ee95a7d478f9f0adc4b3995b751b6a9042e391a29ac40306d653da2edd106aee",
+      "passed": 32,
+      "realHttp": false
+    },
+    "deadline": {
+      "path": "evidence/p10-deadline-results.json",
+      "sha256": "8788459a9c62b16504883173266b180b993da9a355f3296fe9ad782fe10801c8",
+      "passed": 13,
+      "simulatedElapsedClock": true
+    },
+    "rerunAfterFix": false,
+    "justification": "RelayStorage-only correction leaves adapter, session, request-deadline logic and pure codec/validator unchanged; targeted server and client real-network suites were rerun against final generated Storage."
+  },
+  "historicalRegression": {
+    "path": "evidence/paused-evidence-summary.json",
+    "sha256": "664ae6abeca0056f6644a719a5cd404304e0872f22d453cbfd2bf45e1dbaf369",
+    "passedTotal": 508,
+    "rerunAfterFix": false,
+    "justification": "No prior core source or test logic changed. Historical regressions remain immutable before-retention-fix evidence, separately identified from final Relay runs."
+  },
+  "beforeRetentionFixValidationSnapshot": {
+    "path": "evidence/validation-final-lineage.json",
+    "sha256": "33c4d4bc5b405679501d43f593e95c6de08ce784ec7d8f20834b033c2d96eef9",
+    "finalAtOriginalRecording": true,
+    "currentFinalVersionClaim": false,
+    "note": "Original server20/first-enqueue2/client22 used the prior RelayStorage version. New after-retention-fix suites establish final Storage behavior; original records remain unchanged."
+  },
+  "protection": {
+    "path": "evidence/protected-retention-final-audit.json",
+    "sha256": "83ddecdfdc72ac39aec95579374fd7b01cb654438593b46d78cadff5ba399485",
+    "pass": true,
+    "intentPrefixPreserved": true,
+    "exactP10Bytes": true,
+    "protectedKernelChanges": 0
+  },
+  "runtimeStop": {
+    "path": "evidence/after-retention-fix/runtime-stop.log",
+    "bytes": 137,
+    "sha256": "140787733b82669caf4a86e92d54ef0598c2241ba3f5d27a1a52511a8408063d"
+  },
+  "pass": true,
+  "limits": "Actual final server and client executions are linked to immutable raw logs/results and delivered source hashes; review statements are evidence attribution rather than reconstructed terminal execution. Expiry advances use explicitly isolated clocks, not a claim of waiting 24 hours. The retention cleanup is lazy request-triggered cleanup, not a background wall-clock erasure guarantee. This record does not certify excluded c-2d/c-2e/c-2f or product stages."
+}

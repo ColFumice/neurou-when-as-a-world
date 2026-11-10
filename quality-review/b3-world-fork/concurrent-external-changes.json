@@ -1,0 +1,43 @@
+{
+  "category": "ProtocolAuthorizedConcurrentLanding",
+  "editedByB23": false,
+  "evidenceScope": "OriginalAcceptedB23State",
+  "confirmedAttribution": {
+    "kind": "ProtocolAuthorizedConcurrentLanding",
+    "executor": "Trae",
+    "authorizedBy": "PROTOCOL",
+    "confirmedByUser": true,
+    "files": [
+      {
+        "path": "docs/spec/stage-1.md",
+        "authorizedWork": "Append section 4 B2.2d-1/B2.2d-2 scope and section 8 B2.2d-2-01 through B2.2d-2-08 evidence labels",
+        "observedB23ConcurrentDiff": "Section 8 evidence labels; section 4 scope already existed in the B2.3 baseline"
+      },
+      {
+        "path": "scripts/check-naming.js",
+        "authorizedWork": "Add traceBindings, t6TraceId and bindT6Trace to the R4 trace-domain whitelist for v3.10"
+      }
+    ],
+    "preservation": "Keep the authorized concurrent landing and its original diff and hashes",
+    "legacyEvidenceFileNames": "concurrent-external-changes.json and concurrent-external.diff are retained for continuity; attribution is confirmed"
+  },
+  "note": "PROTOCOL confirmed authorized Trae d2 spec additions and v3.10 naming whitelist. Original file names, diff and observed hashes are retained for continuity. The earlier baseline checker result remains historical supplemental evidence.",
+  "files": [
+    {
+      "path": "docs/spec/stage-1.md",
+      "status": "Modified",
+      "beforeSha256": "ebc90280f9930b45653154802440ec7f003fa7cbdb4f142a8c4210b8ec02fa47",
+      "afterSha256": "86be27d38426bb6e8483a90979fc193deafe336240c93c01833031c895c296ea",
+      "bytes": 43022,
+      "matchesObservedExternalBytes": true
+    },
+    {
+      "path": "scripts/check-naming.js",
+      "status": "Modified",
+      "beforeSha256": "bfe1a53af4e6cb79f0a4f33814b6052dbc3d4652eae9ff8b1f57c697d6c30191",
+      "afterSha256": "73dec0e7d35b52b07d55d40cc26fa5ce2f59f20c0408faed42d74790e56499b8",
+      "bytes": 16151,
+      "matchesObservedExternalBytes": true
+    }
+  ]
+}

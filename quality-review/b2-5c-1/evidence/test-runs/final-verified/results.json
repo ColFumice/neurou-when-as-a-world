@@ -1,0 +1,192 @@
+{
+  "runName": "final-verified",
+  "generatedUtc": "2026-10-11T04:51:04.124Z",
+  "nodeVersion": "v24.19.0",
+  "isolatedCompiler": {
+    "lib": [
+      "ES2020"
+    ],
+    "types": [],
+    "noDOM": true,
+    "noEngineDeclarations": true
+  },
+  "sources": [
+    {
+      "path": "src/director/SharedCommitContracts.ts",
+      "bytes": 22261,
+      "sha256": "e0682252df74a4767cdeac5a79bebb33dbdd88343af0d0f4ebb362a1e41cd291"
+    },
+    {
+      "path": "src/director/SharedCanonicalBytes.ts",
+      "bytes": 13285,
+      "sha256": "1cd132ab68ee3a5c30989cd4e5464743c4223ba3141ae7dc16dd4e27c2fbe27c"
+    },
+    {
+      "path": "src/director/SharedCommitCodec.ts",
+      "bytes": 43479,
+      "sha256": "ed55c2ba48857b7a75c45f2e887b541ebf2fb68fb50cd48233f64dd343ee77cd"
+    },
+    {
+      "path": "src/director/SharedCommitValidator.ts",
+      "bytes": 32121,
+      "sha256": "8443e792b9f4c2b12c9a8f053240d3d15bc47303cec993438ff4d9466588b31a"
+    },
+    {
+      "path": "src/director/SharedWorldReducer.ts",
+      "bytes": 27557,
+      "sha256": "cb9449c0160eea3aae1217f17125d23538ec202a9340e49eee4ff469684fa6d9"
+    }
+  ],
+  "sourceStability": [
+    {
+      "path": "src/director/SharedCommitContracts.ts",
+      "beforeSha256": "e0682252df74a4767cdeac5a79bebb33dbdd88343af0d0f4ebb362a1e41cd291",
+      "afterSha256": "e0682252df74a4767cdeac5a79bebb33dbdd88343af0d0f4ebb362a1e41cd291"
+    },
+    {
+      "path": "src/director/SharedCanonicalBytes.ts",
+      "beforeSha256": "1cd132ab68ee3a5c30989cd4e5464743c4223ba3141ae7dc16dd4e27c2fbe27c",
+      "afterSha256": "1cd132ab68ee3a5c30989cd4e5464743c4223ba3141ae7dc16dd4e27c2fbe27c"
+    },
+    {
+      "path": "src/director/SharedCommitCodec.ts",
+      "beforeSha256": "ed55c2ba48857b7a75c45f2e887b541ebf2fb68fb50cd48233f64dd343ee77cd",
+      "afterSha256": "ed55c2ba48857b7a75c45f2e887b541ebf2fb68fb50cd48233f64dd343ee77cd"
+    },
+    {
+      "path": "src/director/SharedCommitValidator.ts",
+      "beforeSha256": "8443e792b9f4c2b12c9a8f053240d3d15bc47303cec993438ff4d9466588b31a",
+      "afterSha256": "8443e792b9f4c2b12c9a8f053240d3d15bc47303cec993438ff4d9466588b31a"
+    },
+    {
+      "path": "src/director/SharedWorldReducer.ts",
+      "beforeSha256": "cb9449c0160eea3aae1217f17125d23538ec202a9340e49eee4ff469684fa6d9",
+      "afterSha256": "cb9449c0160eea3aae1217f17125d23538ec202a9340e49eee4ff469684fa6d9"
+    }
+  ],
+  "sourceStable": true,
+  "testInputStability": [
+    {
+      "path": "quality-review/b2-5c-1/evidence/validator-tests.cjs",
+      "beforeSha256": "95977c043fddd391f3a760794dad5c0da880acffacb408a25796761cd2d602c2",
+      "afterSha256": "95977c043fddd391f3a760794dad5c0da880acffacb408a25796761cd2d602c2"
+    },
+    {
+      "path": "quality-review/b2-5c-1/tests/codec-tests.cjs",
+      "beforeSha256": "c4d3e7fd37cdf3d7db60d7fbc0331cc5da40387827d756b05ff7865f62960166",
+      "afterSha256": "c4d3e7fd37cdf3d7db60d7fbc0331cc5da40387827d756b05ff7865f62960166"
+    },
+    {
+      "path": "quality-review/b2-5c-1/tests/replay-tests.cjs",
+      "beforeSha256": "b3157f0b0feb71e16bc49cd31a9bfcb8c1317def367823344be0638ca7aa8df7",
+      "afterSha256": "b3157f0b0feb71e16bc49cd31a9bfcb8c1317def367823344be0638ca7aa8df7"
+    },
+    {
+      "path": "quality-review/b2-5c-1/evidence/fixtures.cjs",
+      "beforeSha256": "1926c37fcfac3ed12b76c3335148d041961161f606046bc2cbf5575fd1959bbe",
+      "afterSha256": "1926c37fcfac3ed12b76c3335148d041961161f606046bc2cbf5575fd1959bbe"
+    },
+    {
+      "path": "quality-review/b2-5c-1/evidence/no-network.cjs",
+      "beforeSha256": "304106476c3437e8366b0419a7fd22fa8a8f217b69696a81c29de123c5934ff4",
+      "afterSha256": "304106476c3437e8366b0419a7fd22fa8a8f217b69696a81c29de123c5934ff4"
+    },
+    {
+      "path": "quality-review/b2-5c-1/evidence/run-tests.cjs",
+      "beforeSha256": "f8c94893f2f571e60b2056d1b770929e1af29ebe866a57157cba0e1cf40409bc",
+      "afterSha256": "f8c94893f2f571e60b2056d1b770929e1af29ebe866a57157cba0e1cf40409bc"
+    },
+    {
+      "path": "quality-review/b2-5c-1/evidence/tsconfig-isolated.json",
+      "beforeSha256": "6878f49ee67fe276afb971ab8139fcdeaa0b335a9ca91a3773ce0aeaf7b55063",
+      "afterSha256": "6878f49ee67fe276afb971ab8139fcdeaa0b335a9ca91a3773ce0aeaf7b55063"
+    }
+  ],
+  "testInputsStable": true,
+  "tests": [
+    {
+      "path": "quality-review/b2-5c-1/evidence/validator-tests.cjs",
+      "sha256": "95977c043fddd391f3a760794dad5c0da880acffacb408a25796761cd2d602c2"
+    },
+    {
+      "path": "quality-review/b2-5c-1/tests/codec-tests.cjs",
+      "sha256": "c4d3e7fd37cdf3d7db60d7fbc0331cc5da40387827d756b05ff7865f62960166"
+    },
+    {
+      "path": "quality-review/b2-5c-1/tests/replay-tests.cjs",
+      "sha256": "b3157f0b0feb71e16bc49cd31a9bfcb8c1317def367823344be0638ca7aa8df7"
+    }
+  ],
+  "helperFiles": [
+    {
+      "path": "fixtures.cjs",
+      "sha256": "1926c37fcfac3ed12b76c3335148d041961161f606046bc2cbf5575fd1959bbe"
+    },
+    {
+      "path": "no-network.cjs",
+      "sha256": "304106476c3437e8366b0419a7fd22fa8a8f217b69696a81c29de123c5934ff4"
+    },
+    {
+      "path": "run-tests.cjs",
+      "sha256": "f8c94893f2f571e60b2056d1b770929e1af29ebe866a57157cba0e1cf40409bc"
+    },
+    {
+      "path": "tsconfig-isolated.json",
+      "sha256": "6878f49ee67fe276afb971ab8139fcdeaa0b335a9ca91a3773ce0aeaf7b55063"
+    }
+  ],
+  "compile": {
+    "name": "isolated-typecheck-build",
+    "startedUtc": "2026-10-11T04:51:02.741Z",
+    "completedUtc": "2026-10-11T04:51:03.226Z",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "node_modules/typescript/bin/tsc",
+      "--project",
+      "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-1\\evidence\\tsconfig-isolated.json"
+    ],
+    "exitCode": 0,
+    "pass": true,
+    "rawSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "testRun": {
+    "name": "contract-tests",
+    "startedUtc": "2026-10-11T04:51:03.226Z",
+    "completedUtc": "2026-10-11T04:51:04.123Z",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "--require",
+      "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-1\\evidence\\no-network.cjs",
+      "--test",
+      "--test-reporter=tap",
+      "--test-reporter-destination=stdout",
+      "--test-reporter=junit",
+      "--test-reporter-destination=D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-1\\evidence\\test-runs\\final-verified\\junit.xml",
+      "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-1\\evidence\\validator-tests.cjs",
+      "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-1\\tests\\codec-tests.cjs",
+      "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-1\\tests\\replay-tests.cjs"
+    ],
+    "exitCode": 0,
+    "pass": true,
+    "rawSha256": "df4e868155323526d7dc55e194e107d79311a5bf66c9c53a15cd282839d22966"
+  },
+  "counts": {
+    "tests": 154,
+    "suites": 0,
+    "pass": 154,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  "networkAttempts": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "noNetwork": true,
+  "networkInstrumentation": "deny HTTP/HTTPS/HTTP2/net/tls/dns/dgram/undici imports, getBuiltinModule, global fetch/WebSocket; per-process blocked-attempt counters emitted to raw log. Only exercised code evidence; not an OS sandbox.",
+  "cryptographicBackend": "Native in-memory Node EC ES256/P1363, AES-256-GCM, HMAC-SHA256 RFC5869 HKDF (verified standard vector), SHA256; no persisted secret/private key/cookie/database.",
+  "pass": true
+}

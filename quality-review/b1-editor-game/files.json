@@ -1,0 +1,38 @@
+{
+  "productionFiles": [
+    {
+      "path": "assets/scripts/SceneBuilder.ts",
+      "change": "modified",
+      "beforeSha256": "221d6069895058358d3b70774377e0336332a1e628cfb540eb13ab674b89294b",
+      "afterSha256": "10371fdc3d2a1d66f63d87d019d8777d0bb8e80191788e65bf8eb2b6002c09c9"
+    },
+    {
+      "path": "src/presentation/ChartPadView.ts",
+      "change": "modified",
+      "beforeSha256": "426f0888c6bbb7e3cfc1d609bc942e353ee6503af54d27c9942e7d83db9b2160",
+      "afterSha256": "9f7286486c4672ad4359c7a2fb531e2f120af4ca0ffe507507761f07fa8e2818"
+    },
+    {
+      "path": "assets/resources/chart/music-project-1-chart.json",
+      "change": "added",
+      "sha256": "74e30f25507b8939cd6a6cd2ffda3ccf7bae92ec590c4e5bd293e28975c8935c"
+    },
+    {
+      "path": "assets/resources/chart/music-project-1-chart.json.meta",
+      "change": "added",
+      "sha256": "f43b2a4d563b702ae3195912123aa43f03fe099b7d87daf16e9f4f37109fcb89"
+    },
+    {
+      "path": "assets/resources/chart/music-project-1-chart.visual.json",
+      "change": "added",
+      "sha256": "664bb750567353b13d1d9fdaa6e5da11e6458be1b232dbe27339754eeefdc6ac"
+    },
+    {
+      "path": "assets/resources/chart/music-project-1-chart.visual.json.meta",
+      "change": "added",
+      "sha256": "c63da1a971a7fb202deace86e33374f20376399e70a7e323350d7c0a4abf0e86"
+    }
+  ],
+  "evidenceDirectory": "quality-review/b1-editor-game",
+  "metadataPolicy": "New stable source UUIDs authored as imported:false; Creator subsequently performed actual JSON import and set imported:true/files:[.json]. No library or preview bundle mutation by harness."
+}

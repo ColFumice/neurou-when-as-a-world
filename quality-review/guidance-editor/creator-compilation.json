@@ -1,0 +1,106 @@
+{
+  "creator": "3.8.8",
+  "entries": [
+    {
+      "name": "SceneBuilder.ts",
+      "source": "assets/scripts/SceneBuilder.ts",
+      "chunk": "./chunks/8b/8b7eae5ef325431fd5924802b2c0ea4b14e61744.js",
+      "sourceSha256": "6566b98d17dfbf48bd248b24ae3a11cb967664ceea515caf99c95a6d3462b37d",
+      "chunkSha256": "b211bca43a30f2a7bd6872728d471168956af6676c0beda67ea883cbf5b6659a",
+      "servedEqualsCompilerOutput": true,
+      "sourceMapMatchesFinalSource": true
+    },
+    {
+      "name": "GuidanceEditorBuilder.ts",
+      "source": "assets/scripts/GuidanceEditorBuilder.ts",
+      "chunk": "./chunks/20/20cffb6810c18c411679af610e581e17729dd61e.js",
+      "sourceSha256": "d583d29348d70b5d94eb5bbc36ba8a4b17584a691f516a8ff114a780a61b970c",
+      "chunkSha256": "9563993a31a80ed40f220bf3f0d83e120ce0d95c0a1da1f5a6cc01bf97de0b13",
+      "servedEqualsCompilerOutput": true,
+      "sourceMapMatchesFinalSource": true
+    },
+    {
+      "name": "GuidanceEditorSession.ts",
+      "source": "src/editor/GuidanceEditorSession.ts",
+      "chunk": "./chunks/6b/6b0e686b2149de9b44817212eb72309d605056b8.js",
+      "sourceSha256": "7be0662fcf921b04908ad4657b1ad066e35387fe7880d6acd9a1de9ec7e4eb8b",
+      "chunkSha256": "e6523e5d73310b21b3da6ff5c4b2faf76db43e2aded8ab64fcedccfef3a6167e",
+      "servedEqualsCompilerOutput": true,
+      "sourceMapMatchesFinalSource": true
+    },
+    {
+      "name": "GuidanceEditorView.ts",
+      "source": "src/presentation/GuidanceEditorView.ts",
+      "chunk": "./chunks/1d/1d45d95d307a8efeb57a54ab2ee6a665d72c20d6.js",
+      "sourceSha256": "96d85356ec9951b2a1376816c792ff8db96d5d9db1486a400de2b2a1b3806ac6",
+      "chunkSha256": "da682deff93d8029c8102bc24a7c1abbeb781ff5b11006888dfed83b6008d387",
+      "servedEqualsCompilerOutput": true,
+      "sourceMapMatchesFinalSource": true
+    },
+    {
+      "name": "GuidanceChart.ts",
+      "source": "src/chart/GuidanceChart.ts",
+      "chunk": "./chunks/2a/2afd45e8bed9e5259eefe439197fb98067934fc2.js",
+      "sourceSha256": "a4e46b00d782f393b736ed6a71282caf24961df40feb503cbadce734b0d71faa",
+      "chunkSha256": "4ac03fb9199f63c49c8b1832245c111d59fd24baa9cd4a6b5369c4700375068f",
+      "servedEqualsCompilerOutput": true,
+      "sourceMapMatchesFinalSource": true
+    },
+    {
+      "name": "GuidanceTiming.ts",
+      "source": "src/chart/GuidanceTiming.ts",
+      "chunk": "./chunks/38/38f4422350f87053cbb288ed7b5f7451d49da311.js",
+      "sourceSha256": "6c8b1a55fba9c64c7c70644b8bbd6985c3c5318086b13d1c9aab4dd4ebdbcd4a",
+      "chunkSha256": "67290f731af62d20224f4c462c07c1ecbe5965c0f3f9362b83d684194a407da7",
+      "servedEqualsCompilerOutput": true,
+      "sourceMapMatchesFinalSource": true
+    },
+    {
+      "name": "GuidanceLineRuntime.ts",
+      "source": "src/chart/GuidanceLineRuntime.ts",
+      "chunk": "./chunks/63/63f427a813d2ae759b12cf6d47faef24c479d84a.js",
+      "sourceSha256": "2560babe86a45d207cb7ed6f2a66713b50fc43a5c2e8a9764d5fc22d1b451204",
+      "chunkSha256": "7e1648d1eae3b9d0f28f30446fb2f5a9346f8c8836eaa56f0513eabe9ad669d9",
+      "servedEqualsCompilerOutput": true,
+      "sourceMapMatchesFinalSource": true
+    },
+    {
+      "name": "GuidanceChartRuntime.ts",
+      "source": "src/chart/GuidanceChartRuntime.ts",
+      "chunk": "./chunks/37/37b7d6cb2f4d1a944155651f5fc42b81c8f2d71f.js",
+      "sourceSha256": "b9b9f293760711aa30dc997d61ccf156c63ba7dbfcc2c7a1b71cf078781929f8",
+      "chunkSha256": "0ca931825efb4e59398c7e131d8b75966131b381bd01740192400a6a0faa8e78",
+      "servedEqualsCompilerOutput": true,
+      "sourceMapMatchesFinalSource": true
+    },
+    {
+      "name": "ChartPremiere.ts",
+      "source": "src/chart/ChartPremiere.ts",
+      "chunk": "./chunks/f6/f60b6933309c58f221e1afef92454f4692cbf7a6.js",
+      "sourceSha256": "50617d366ae7c5b8dd6b402389f1ef9e43822bf24e03f0687476e1558853eb6d",
+      "chunkSha256": "2ecf6adbf09c1f6fe227be17ce790a7c8ecf0cbd978e31dd035ff172a519b532",
+      "servedEqualsCompilerOutput": true,
+      "sourceMapMatchesFinalSource": true
+    },
+    {
+      "name": "LineEraseEffect.ts",
+      "source": "src/presentation/LineEraseEffect.ts",
+      "chunk": "./chunks/33/33602cd2fe563b12ea97df8f9eb23f02908ad871.js",
+      "sourceSha256": "dd236db85a35abe343477cdbfafead610ccb29ef709fc2c250e2c59a632c0697",
+      "chunkSha256": "3311bac4d91f111ff4cf92d1e34f385e8f549323a55724a5d7a4f49a2c2f6378",
+      "servedEqualsCompilerOutput": true,
+      "sourceMapMatchesFinalSource": true
+    },
+    {
+      "name": "AudioOutputClock.ts",
+      "source": "src/presentation/AudioOutputClock.ts",
+      "chunk": "./chunks/b3/b3dde3c9abfdfa294db7fe9612812dec4e076cf6.js",
+      "sourceSha256": "16ea1319d3380bb82940ca85dfb06ede1f259bd509589f7b9b35a395c52c9414",
+      "chunkSha256": "2303e135b8ac843be0c1ad651483281707a89b63ca11d2d665370bb06d2d5418",
+      "servedEqualsCompilerOutput": true,
+      "sourceMapMatchesFinalSource": true
+    }
+  ],
+  "mockResourceRegistered": true,
+  "unchangedThroughEvidenceCapture": true
+}

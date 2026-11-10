@@ -1,0 +1,109 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-10T15:39:44.103Z",
+  "phase": "B2.4d final evidence consistency",
+  "implementationValidationPass": true,
+  "evidenceIntegrityPass": true,
+  "completeProtectedAuditPass": false,
+  "protectionException": "Two official documents drifted after baseline; provenance remains unverified. No allowlist or original baseline changes.",
+  "suites": [
+    {
+      "file": "drain-contract-results.json",
+      "mode": "ContractAdapter",
+      "passed": 20,
+      "sha256": "3bd8251cd6ae057538dbc2edff98104a77aa62643e3c311a9c1997dc77aa130b"
+    },
+    {
+      "file": "boundary-contract-results.json",
+      "mode": "ContractAdapter",
+      "passed": 8,
+      "sha256": "0b29c6157d90646743b2d2aec83f14892a4828a96437900de2f233b3fa010b6c"
+    },
+    {
+      "file": "authority-contract-results.json",
+      "mode": "ContractAdapter",
+      "passed": 32,
+      "sha256": "5a2bb52eb72701be975cf715dbbb9a7f1b904ac7b4a19f212a4fdf3b3ecaba3a"
+    },
+    {
+      "file": "storage-contract-results.json",
+      "mode": "ContractAdapter",
+      "passed": 34,
+      "sha256": "5114b06cc521b1bcecf35058ff3702e7ece89e1d0f8c2ecc300cf4215ac37d78"
+    },
+    {
+      "file": "prototype-contract-results.json",
+      "mode": "ContractAdapter",
+      "passed": 12,
+      "sha256": "f43ee3e17706f2f537abf884ab3f0d57fae1cedadb1c74d6557b5a5248d964a9"
+    }
+  ],
+  "contractAdapterPassed": 106,
+  "regressions": [
+    {
+      "file": "../b2-cross-device-core/contract-results.json",
+      "passed": 59,
+      "sha256": "6210c02c88998d431d2c7a71f59ff778411d6446f6f8d97c0a0be468c9dce40c"
+    },
+    {
+      "file": "../b2-cross-device-core/prototype-contract-results.json",
+      "passed": 6,
+      "sha256": "e310aca1b96b0b7f301b461834c5f0d55c4eb0e3518b9570282dfc8345223b3a"
+    }
+  ],
+  "crossDeviceCRegressionPassed": 65,
+  "gates": [
+    {
+      "command": "npm run check:naming",
+      "pass": true,
+      "summary": [
+        "汇总: 0 ERROR / 22 WARN"
+      ]
+    },
+    {
+      "command": "npm run typecheck",
+      "pass": true,
+      "summary": []
+    },
+    {
+      "command": "npm run check:dependencies",
+      "pass": true,
+      "summary": [
+        "扫描: 120 个 .ts 文件，约 423 条静态依赖子句",
+        "汇总: 0 ERROR"
+      ]
+    }
+  ],
+  "creatorPreview": {
+    "pass": true,
+    "sourceModules": 33,
+    "screenshots": 34,
+    "finishedAt": "2026-10-10T15:35:45.622Z",
+    "resolutions": [
+      {
+        "resolution": "1920x1080",
+        "migrationPass": true,
+        "activeReplayPausePass": true
+      },
+      {
+        "resolution": "2560x1440",
+        "migrationPass": true,
+        "activeReplayPausePass": true
+      }
+    ],
+    "realElapsedHour": false,
+    "authorityMode": "ContractAdapter",
+    "rendererErrors": 0,
+    "runtimeErrors": 0,
+    "externalRequests": 0
+  },
+  "canonicalChangedFiles": 4,
+  "canonicalAddedFiles": 12,
+  "limitations": [
+    "Restricted Core prototype",
+    "Two fixed logical device identities",
+    "Explicit independent service fixture clock advancement",
+    "No real external services, full FileCarry, platform uptime OfflineGrace, or non-Primary production migration",
+    "Documentation drift prevents a whole-workspace protection PASS"
+  ]
+}

@@ -1,0 +1,221 @@
+{
+  "batch": 30,
+  "verdicts": [
+    158,
+    159,
+    160,
+    161,
+    162,
+    163,
+    164,
+    165,
+    166,
+    167,
+    168
+  ],
+  "generatedAt": "2026-10-10T05:12:08.099Z",
+  "pass": true,
+  "scope": "Local development account, short graybox prologue, browser Cocos preview, one existing InitialWorld",
+  "acceptance": [
+    {
+      "id": 1,
+      "title": "登录 → 首次序章 → 世界文件夹",
+      "pass": true
+    },
+    {
+      "id": 2,
+      "title": "世界文件夹显示两个入口",
+      "pass": true
+    },
+    {
+      "id": 3,
+      "title": "初始世界进入 A/B/C 完整链路",
+      "pass": true
+    },
+    {
+      "id": 4,
+      "title": "从世界退出返回世界文件夹",
+      "pass": true
+    },
+    {
+      "id": 5,
+      "title": "编辑器文件夹展开完整目录",
+      "pass": true
+    },
+    {
+      "id": 6,
+      "title": "引导线编辑器打开现有界面",
+      "pass": true
+    },
+    {
+      "id": 7,
+      "title": "占位项反馈暂未实现",
+      "pass": true
+    },
+    {
+      "id": 8,
+      "title": "从编辑器退出返回世界文件夹",
+      "pass": true
+    },
+    {
+      "id": 9,
+      "title": "两档分辨率一致",
+      "pass": true
+    },
+    {
+      "id": 10,
+      "title": "门禁＋真实Cocos＋完整证据",
+      "pass": true
+    }
+  ],
+  "gates": [
+    {
+      "gate": "naming",
+      "command": "npm run check:naming",
+      "pass": true,
+      "exitCode": 0
+    },
+    {
+      "gate": "dependencies",
+      "command": "npm run check:dependencies",
+      "pass": true,
+      "exitCode": 0
+    },
+    {
+      "gate": "typecheck",
+      "command": "npm run typecheck",
+      "pass": true,
+      "exitCode": 0
+    }
+  ],
+  "existingNamingWarnings": 16,
+  "newNamingWarnings": [],
+  "logicTests": {
+    "passed": 95,
+    "failed": 0,
+    "runs": [
+      {
+        "name": "账号启动",
+        "passed": 4,
+        "failed": 0,
+        "file": "acceptance-results.json"
+      },
+      {
+        "name": "B 步",
+        "passed": 31,
+        "failed": 0,
+        "file": "b-regression-results.json"
+      },
+      {
+        "name": "C 步",
+        "passed": 14,
+        "failed": 0,
+        "file": "c-regression-results.json"
+      },
+      {
+        "name": "键盘网格",
+        "passed": 28,
+        "failed": 0,
+        "file": "pad-grid-regression-results.json"
+      },
+      {
+        "name": "引导线编辑器",
+        "passed": 18,
+        "failed": 0,
+        "file": "editor-regression-results.json"
+      }
+    ]
+  },
+  "creator": {
+    "version": "3.8.8",
+    "url": "http://localhost:7457/",
+    "screenshotCount": 40,
+    "checkCount": 22,
+    "rendererErrors": [],
+    "runtimeErrors": [],
+    "compilationEntries": 19,
+    "unchangedThroughEvidenceCapture": true,
+    "resolutions": [
+      {
+        "resolution": "1920x1080",
+        "pass": true,
+        "screenshotCount": 20,
+        "checkCount": 11,
+        "naturalFullChainFixture": "None: fresh selected InitialWorld; DOM movement and real output-clock rhythm beats; normal C multi-line player input; actual media completion.",
+        "beats": 8,
+        "result": {
+          "chartId": "guidance-c-1",
+          "tier": "Regular",
+          "perfectCount": 9,
+          "goodCount": 1,
+          "missCount": 0,
+          "totalScore": 1000,
+          "finishedAtMs": 12000,
+          "completed": true
+        },
+        "ledgerCount": 2,
+        "sync": {
+          "sampleCount": 358,
+          "maxRawPresentedErrorMs": 18.762000000000626
+        }
+      },
+      {
+        "resolution": "2560x1440",
+        "pass": true,
+        "screenshotCount": 20,
+        "checkCount": 11,
+        "naturalFullChainFixture": "None: fresh selected InitialWorld; DOM movement and real output-clock rhythm beats; normal C multi-line player input; actual media completion.",
+        "beats": 8,
+        "result": {
+          "chartId": "guidance-c-1",
+          "tier": "Regular",
+          "perfectCount": 9,
+          "goodCount": 1,
+          "missCount": 0,
+          "totalScore": 1000,
+          "finishedAtMs": 12000,
+          "completed": true
+        },
+        "ledgerCount": 2,
+        "sync": {
+          "sampleCount": 357,
+          "maxRawPresentedErrorMs": 14.796000000000276
+        }
+      }
+    ],
+    "resolutionComparison": {
+      "pass": true,
+      "identicalWorldFolderContentAndStyles": true,
+      "identicalEditorCatalogContentAndStyles": true,
+      "actualViewportCanvasAndPngDimensions": [
+        "1920x1080",
+        "2560x1440"
+      ],
+      "gameplayBothMissZero": true
+    }
+  },
+  "productionFiles": 18,
+  "newDeclarationLocations": 179,
+  "protectedFiles": 29,
+  "finalSourceHashVerification": true,
+  "noNewModule": true,
+  "noGateChanges": true,
+  "unchangedCoreModules": [
+    "chart",
+    "editor",
+    "world",
+    "character",
+    "trace",
+    "ledger"
+  ],
+  "pending": [
+    "PROTOCOL naming ratification",
+    "Trae spec/namebook proposal adoption",
+    "Remote authentication and account migration",
+    "Full prologue/tutorial narrative",
+    "World save/resume and additional worlds",
+    "Future ShoreHub entry",
+    "Native platform UI/storage/file adaptation"
+  ],
+  "knownRuntimeFailures": []
+}

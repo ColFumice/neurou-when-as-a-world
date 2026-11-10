@@ -1,0 +1,135 @@
+{
+  "scope": "Pure protocol/shape/canonical boundary tests only. No signature authenticity or HTTP/PG acceptance claimed.",
+  "passed": 32,
+  "failed": 0,
+  "checks": [
+    {
+      "name": "canonical status request exact round trip",
+      "pass": true
+    },
+    {
+      "name": "canonical bytes independent insertion order",
+      "pass": true
+    },
+    {
+      "name": "duplicate keys rejected before object collapse",
+      "pass": true
+    },
+    {
+      "name": "noncanonical whitespace rejected",
+      "pass": true
+    },
+    {
+      "name": "extra field rejected",
+      "pass": true
+    },
+    {
+      "name": "omitted null rejected",
+      "pass": true
+    },
+    {
+      "name": "noncanonical base64 padding rejected",
+      "pass": true
+    },
+    {
+      "name": "nonce decoded length must be32",
+      "pass": true
+    },
+    {
+      "name": "unknown route does not access prototype",
+      "pass": true
+    },
+    {
+      "name": "invalid unicode rejected",
+      "pass": true
+    },
+    {
+      "name": "unsafe number rejected",
+      "pass": true
+    },
+    {
+      "name": "negative zero rejected",
+      "pass": true
+    },
+    {
+      "name": "accessor rejected without evaluating it",
+      "pass": true
+    },
+    {
+      "name": "status request with a device signature rejected",
+      "pass": true
+    },
+    {
+      "name": "signed mutation cannot omit authorization",
+      "pass": true
+    },
+    {
+      "name": "status reply shape and fresh outer nonce",
+      "pass": true
+    },
+    {
+      "name": "reply extra field rejected",
+      "pass": true
+    },
+    {
+      "name": "reply wrong purpose rejected",
+      "pass": true
+    },
+    {
+      "name": "reply wrong outer nonce rejected",
+      "pass": true
+    },
+    {
+      "name": "untrusted status cannot contain a trusted sample",
+      "pass": true
+    },
+    {
+      "name": "trusted status cannot omit sample",
+      "pass": true
+    },
+    {
+      "name": "code preserves leading zero and CAS null",
+      "pass": true
+    },
+    {
+      "name": "numeric access code rejected",
+      "pass": true
+    },
+    {
+      "name": "pull uint64 full boundary supported without Number",
+      "pass": true
+    },
+    {
+      "name": "pull uint64 overflow rejected",
+      "pass": true
+    },
+    {
+      "name": "pull count bound rejected",
+      "pass": true
+    },
+    {
+      "name": "ACK position order is numeric decimal total order",
+      "pass": true
+    },
+    {
+      "name": "ACK reverse order rejected",
+      "pass": true
+    },
+    {
+      "name": "fixed signing purposes cannot become arbitrary domain",
+      "pass": true
+    },
+    {
+      "name": "exact signed world-operation input accepts only route schema",
+      "pass": true
+    },
+    {
+      "name": "new outer nonce preserves historical receipt nonce",
+      "pass": true
+    },
+    {
+      "name": "bare historical receipt rejected as mutation top result",
+      "pass": true
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "baselineOnly": true,
+  "b22Acceptance": false,
+  "note": "The existing project passes or fails independently of the unimplemented B2.2 scope. These are not B2.2 delivery gates.",
+  "gates": [
+    {
+      "script": "check:naming",
+      "command": "npm run check:naming",
+      "startedAt": "2026-10-10T08:59:35.098Z",
+      "finishedAt": "2026-10-10T08:59:35.636Z",
+      "exitCode": 0,
+      "signal": null,
+      "passed": true,
+      "stdoutFile": "baseline-gate-naming.stdout.log",
+      "stderrFile": "baseline-gate-naming.stderr.log",
+      "scope": "Existing project baseline only; not B2.2 implementation acceptance."
+    },
+    {
+      "script": "typecheck",
+      "command": "npm run typecheck",
+      "startedAt": "2026-10-10T08:59:35.119Z",
+      "finishedAt": "2026-10-10T08:59:36.752Z",
+      "exitCode": 0,
+      "signal": null,
+      "passed": true,
+      "stdoutFile": "baseline-gate-typecheck.stdout.log",
+      "stderrFile": "baseline-gate-typecheck.stderr.log",
+      "scope": "Existing project baseline only; not B2.2 implementation acceptance."
+    },
+    {
+      "script": "check:dependencies",
+      "command": "npm run check:dependencies",
+      "startedAt": "2026-10-10T08:59:35.148Z",
+      "finishedAt": "2026-10-10T08:59:35.689Z",
+      "exitCode": 0,
+      "signal": null,
+      "passed": true,
+      "stdoutFile": "baseline-gate-dependencies.stdout.log",
+      "stderrFile": "baseline-gate-dependencies.stderr.log",
+      "scope": "Existing project baseline only; not B2.2 implementation acceptance."
+    }
+  ]
+}

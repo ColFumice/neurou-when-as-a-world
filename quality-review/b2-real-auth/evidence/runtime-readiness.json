@@ -1,0 +1,23 @@
+{
+  "observedUtc": "2026-10-11T02:47:19.2860178Z",
+  "executable": "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-real-auth\\evidence\\runtime\\pgsql\\bin\\postgres.exe",
+  "executableSignatureStatus": "NotSigned",
+  "listeners": [
+    {
+      "LocalAddress": "127.0.0.1",
+      "LocalPort": 55436,
+      "State": 2
+    }
+  ],
+  "privateAcl": [
+    {
+      "identity": "WIN-2GVHBE78OU1\\Administrator",
+      "rights": "FullControl",
+      "inherited": false
+    }
+  ],
+  "verifiedDatabase": "b25_auth",
+  "verifiedRole": "b25_app",
+  "roleSuperuser": false,
+  "passwordValueRecorded": false
+}

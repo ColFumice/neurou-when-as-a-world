@@ -1,0 +1,434 @@
+{
+  "batch": "B2.2d-2",
+  "generatedAt": "2026-10-10T12:07:32.089803+00:00",
+  "pass": true,
+  "contracts": [
+    {
+      "file": "recall.contract-results.json",
+      "passed": 31,
+      "failed": 0,
+      "category": "ContractTest"
+    },
+    {
+      "file": "world-link.contract-results.json",
+      "passed": 24,
+      "failed": 0,
+      "category": "ContractTest"
+    },
+    {
+      "file": "aggregation.contract-results.json",
+      "passed": 23,
+      "failed": 0,
+      "category": "ContractTest"
+    },
+    {
+      "file": "chart-contract-results.json",
+      "passed": 24,
+      "failed": 0,
+      "category": "ContractTest"
+    },
+    {
+      "file": "runtime-wiring.contract-results.json",
+      "passed": 11,
+      "failed": 0,
+      "category": "ContractTest"
+    },
+    {
+      "file": "storage.contract-results.json",
+      "passed": 23,
+      "failed": 0,
+      "category": "ContractTest"
+    },
+    {
+      "file": "replay.contract-results.json",
+      "passed": 23,
+      "failed": 0,
+      "category": "ContractTest"
+    }
+  ],
+  "newContractPassed": 159,
+  "regressions": [
+    {
+      "file": "ledger.contract-results.json",
+      "passed": 44,
+      "failed": 0,
+      "category": "ContractRegression"
+    },
+    {
+      "file": "puzzle.contract-results.json",
+      "passed": 14,
+      "failed": 0,
+      "category": "ContractRegression"
+    },
+    {
+      "file": "b2a-account-regression-results.json",
+      "passed": 26,
+      "failed": 0,
+      "category": "ContractRegression"
+    },
+    {
+      "file": "b2c-domain-regression-results.json",
+      "passed": 49,
+      "failed": 0,
+      "category": "ContractRegression"
+    },
+    {
+      "file": "b2c-storage-regression-results.json",
+      "passed": 56,
+      "failed": 0,
+      "category": "ContractRegression"
+    }
+  ],
+  "regressionPassed": 189,
+  "gates": [
+    {
+      "command": "npm run check:naming",
+      "exitCode": 0,
+      "pass": true,
+      "log": "gate-naming.log"
+    },
+    {
+      "command": "npm run typecheck",
+      "exitCode": 0,
+      "pass": true,
+      "log": "gate-typecheck.log"
+    },
+    {
+      "command": "npm run check:dependencies",
+      "exitCode": 0,
+      "pass": true,
+      "log": "gate-dependencies.log"
+    }
+  ],
+  "namingErrors": 0,
+  "namingSemanticWarnings": 27,
+  "productionEvidence": {
+    "file": "creator-preview-results.json",
+    "pass": true,
+    "capturedAt": "2026-10-10T11:59:37.701Z",
+    "resolutions": [
+      "1920x1080",
+      "2560x1440"
+    ],
+    "sourceMapMatchesCurrentFiles": 36,
+    "screenshots": [
+      {
+        "file": "1920x1080-00-new-account-created-format-time.png",
+        "sha256": "415674a01d6817e3ba6f6caf132abdbaf77d47e239bf0a7ebcdc6d40f8ec3ace",
+        "dimensions": [
+          1920,
+          1080
+        ]
+      },
+      {
+        "file": "1920x1080-01-primary-empty-stable-core.png",
+        "sha256": "dd21405af11b03a2da6121b85c1b73c9cce1124f35b344357195a89f161acec9",
+        "dimensions": [
+          1920,
+          1080
+        ]
+      },
+      {
+        "file": "1920x1080-02-player-choice-durable-ledger-sphere-entry.png",
+        "sha256": "48f3a3fe8b186838ec59168d2b1745fb569c9e968204e00ba588b3d1fe2b1f8d",
+        "dimensions": [
+          1920,
+          1080
+        ]
+      },
+      {
+        "file": "1920x1080-03-world-chart-native-media.png",
+        "sha256": "fc0bd5a1d4cda098a32c71048d99ae2a23bf112afb20594df1986f7d0f30bb18",
+        "dimensions": [
+          1920,
+          1080
+        ]
+      },
+      {
+        "file": "1920x1080-04-world-completed-durable-ledger-account-record.png",
+        "sha256": "2c5e5343294d93d97bf4ed5609bbd07a05f3fe7b194f222199bf0e1d30f93643",
+        "dimensions": [
+          1920,
+          1080
+        ]
+      },
+      {
+        "file": "1920x1080-05-directory-after-world-clear-durable-core.png",
+        "sha256": "3c51f0361db4c3dec330edc55e57ddef6e164a0200d96ae457f6ca8a598c3081",
+        "dimensions": [
+          1920,
+          1080
+        ]
+      },
+      {
+        "file": "1920x1080-06-world-ledger-seeded-reentry-byte-preserved.png",
+        "sha256": "e3fee7f13f732a62e426ca605bab8e5041dcbba68c75cbc9c6f91102a70c589f",
+        "dimensions": [
+          1920,
+          1080
+        ]
+      },
+      {
+        "file": "1920x1080-07-natural-t6-entry-cumulative-three-ledger-events.png",
+        "sha256": "a098bca7d6f3f867ec30a6a269d40b5c47d6d92010c578e78205d6b044e1c0a0",
+        "dimensions": [
+          1920,
+          1080
+        ]
+      },
+      {
+        "file": "1920x1080-08-natural-t7-completed-stable-puzzle-ledger-format-time.png",
+        "sha256": "66ee444ef9b20251a176efe59eff7814efd05b48c6e050578dc4d6dc0b27bdb1",
+        "dimensions": [
+          1920,
+          1080
+        ]
+      },
+      {
+        "file": "1920x1080-09-directory-completed-puzzle-persisted.png",
+        "sha256": "3c51f0361db4c3dec330edc55e57ddef6e164a0200d96ae457f6ca8a598c3081",
+        "dimensions": [
+          1920,
+          1080
+        ]
+      },
+      {
+        "file": "1920x1080-10-puzzle-completed-seeded-reentry-format-time-preserved.png",
+        "sha256": "5baac33cd1e54172bb17628033bab75f912dbf5dda68d597240a91d3dbc982d2",
+        "dimensions": [
+          1920,
+          1080
+        ]
+      },
+      {
+        "file": "1920x1080-11-fresh-window-same-profile-directory-preserved.png",
+        "sha256": "3c51f0361db4c3dec330edc55e57ddef6e164a0200d96ae457f6ca8a598c3081",
+        "dimensions": [
+          1920,
+          1080
+        ]
+      },
+      {
+        "file": "1920x1080-12-fresh-window-puzzle-ledger-format-time-restored.png",
+        "sha256": "5baac33cd1e54172bb17628033bab75f912dbf5dda68d597240a91d3dbc982d2",
+        "dimensions": [
+          1920,
+          1080
+        ]
+      },
+      {
+        "file": "1920x1080-13-own-recall-trace-replay-shared-counter.png",
+        "sha256": "1f54070b7d8b30b6ba85bbf72fc53c573c6d943bb83a3ea7c1fd434016efd49c",
+        "dimensions": [
+          1920,
+          1080
+        ]
+      },
+      {
+        "file": "1920x1080-14-frozen-world-chart-replay-active.png",
+        "sha256": "74de863c88d43e5f3a8b622e633e20ede6d80caf792480c7c06d519d2fba1342",
+        "dimensions": [
+          1920,
+          1080
+        ]
+      },
+      {
+        "file": "1920x1080-15-chart-replay-updates-score-only.png",
+        "sha256": "d4f535933fd0f7e080bd9a7e20a03cece8eab5c0841d0a2d1eeaa6788b7b9d10",
+        "dimensions": [
+          1920,
+          1080
+        ]
+      },
+      {
+        "file": "1920x1080-16-directory-seven-sections-complete.png",
+        "sha256": "2c9056c9723c3432e6533b2b73375c4639a1dc82342bdce36fb1b1ca68cad441",
+        "dimensions": [
+          1920,
+          1080
+        ]
+      },
+      {
+        "file": "1920x1080-17-seven-sections-restored-with-recall-and-score.png",
+        "sha256": "d4f535933fd0f7e080bd9a7e20a03cece8eab5c0841d0a2d1eeaa6788b7b9d10",
+        "dimensions": [
+          1920,
+          1080
+        ]
+      },
+      {
+        "file": "2560x1440-00-new-account-created-format-time.png",
+        "sha256": "b5b625667e294ff7b1a24fd892902944f15e3d97afc4f2247e0423c203f64cf7",
+        "dimensions": [
+          2560,
+          1440
+        ]
+      },
+      {
+        "file": "2560x1440-01-primary-empty-stable-core.png",
+        "sha256": "ce4f21883c6d679d125f568fd478893098a8d481361e0fbfd9e178fa96f2aec7",
+        "dimensions": [
+          2560,
+          1440
+        ]
+      },
+      {
+        "file": "2560x1440-02-player-choice-durable-ledger-sphere-entry.png",
+        "sha256": "aae925a039de60f0b028d4c0b61fd3d35b008d7167719ebcb0735ab1fe009bb1",
+        "dimensions": [
+          2560,
+          1440
+        ]
+      },
+      {
+        "file": "2560x1440-03-world-chart-native-media.png",
+        "sha256": "9c922f222843cf20acd1c18a4924cc212aaa271e1b63c1eecf6af17aba26265c",
+        "dimensions": [
+          2560,
+          1440
+        ]
+      },
+      {
+        "file": "2560x1440-04-world-completed-durable-ledger-account-record.png",
+        "sha256": "ef3d03f851656041bdeb82e427bf6e9d675c9828e4f47b3a2ec0cc356ff38535",
+        "dimensions": [
+          2560,
+          1440
+        ]
+      },
+      {
+        "file": "2560x1440-05-directory-after-world-clear-durable-core.png",
+        "sha256": "fa630b3e080f438f49718d060d7a14b7dad8064e97d81bf47b71ce09d10e5a4f",
+        "dimensions": [
+          2560,
+          1440
+        ]
+      },
+      {
+        "file": "2560x1440-06-world-ledger-seeded-reentry-byte-preserved.png",
+        "sha256": "33c7008e2dc8481a4495cd9186a5754295c0c1c99a762893a47da5007ebd0664",
+        "dimensions": [
+          2560,
+          1440
+        ]
+      },
+      {
+        "file": "2560x1440-07-natural-t6-entry-cumulative-three-ledger-events.png",
+        "sha256": "b8d5e3340cbd9a6a89f04d258d92caae47150167dec560300d56718b84f239a5",
+        "dimensions": [
+          2560,
+          1440
+        ]
+      },
+      {
+        "file": "2560x1440-08-natural-t7-completed-stable-puzzle-ledger-format-time.png",
+        "sha256": "19602b8227b1e4031af1f4ecd948a69318b118146b55d2f17f5386b395dd5d0f",
+        "dimensions": [
+          2560,
+          1440
+        ]
+      },
+      {
+        "file": "2560x1440-09-directory-completed-puzzle-persisted.png",
+        "sha256": "fa630b3e080f438f49718d060d7a14b7dad8064e97d81bf47b71ce09d10e5a4f",
+        "dimensions": [
+          2560,
+          1440
+        ]
+      },
+      {
+        "file": "2560x1440-10-puzzle-completed-seeded-reentry-format-time-preserved.png",
+        "sha256": "e39d5556dd27135e3d7d30ee0378b5b848b9ad1c8ea41cb20952f571b52a167a",
+        "dimensions": [
+          2560,
+          1440
+        ]
+      },
+      {
+        "file": "2560x1440-11-fresh-window-same-profile-directory-preserved.png",
+        "sha256": "fa630b3e080f438f49718d060d7a14b7dad8064e97d81bf47b71ce09d10e5a4f",
+        "dimensions": [
+          2560,
+          1440
+        ]
+      },
+      {
+        "file": "2560x1440-12-fresh-window-puzzle-ledger-format-time-restored.png",
+        "sha256": "e39d5556dd27135e3d7d30ee0378b5b848b9ad1c8ea41cb20952f571b52a167a",
+        "dimensions": [
+          2560,
+          1440
+        ]
+      },
+      {
+        "file": "2560x1440-13-own-recall-trace-replay-shared-counter.png",
+        "sha256": "8156dd16e22b43c240211f7329b30979be109952df2c7dfdb976b8521be122f1",
+        "dimensions": [
+          2560,
+          1440
+        ]
+      },
+      {
+        "file": "2560x1440-14-frozen-world-chart-replay-active.png",
+        "sha256": "13182c1eee305a40d1a5d928a3a6cc4470675b8dbafed1fe4f48fb21b1042b24",
+        "dimensions": [
+          2560,
+          1440
+        ]
+      },
+      {
+        "file": "2560x1440-15-chart-replay-updates-score-only.png",
+        "sha256": "8f7c5930d10c07e5d01d0f86189c894793ab3b2af0e903ae834fa0fba92638fb",
+        "dimensions": [
+          2560,
+          1440
+        ]
+      },
+      {
+        "file": "2560x1440-16-directory-seven-sections-complete.png",
+        "sha256": "d5f01dd1c7a6ed9485d7547042e4985ce9e703f9e8205846b324e326ae5ecd13",
+        "dimensions": [
+          2560,
+          1440
+        ]
+      },
+      {
+        "file": "2560x1440-17-seven-sections-restored-with-recall-and-score.png",
+        "sha256": "8f7c5930d10c07e5d01d0f86189c894793ab3b2af0e903ae834fa0fba92638fb",
+        "dimensions": [
+          2560,
+          1440
+        ]
+      }
+    ],
+    "sameProfileFreshWindowRestored": true,
+    "liveStableCaptureKind": "Complete",
+    "runtimeRestoreKind": "Restored",
+    "externalRequests": 0
+  },
+  "changes": {
+    "modified": 10,
+    "added": 16,
+    "deleted": 0
+  },
+  "protectedFilesUnchanged": 32,
+  "logicCcImports": 0,
+  "deliveryFiles": [
+    "delivery-report.md",
+    "正式裁定书-VERDICT-256-270.md",
+    "NAMEBOOK-v3.10-appendix-proposal.md",
+    "dependency-proposal.md",
+    "acceptance-evidence.md",
+    "production.diff",
+    "changed-files.json",
+    "final-review-domain.md",
+    "world-link-aggregation-delivery.md",
+    "chart-archive-delivery.md"
+  ],
+  "limitations": [
+    "BugShore/FinalShore/foreign-first are contract coverage only",
+    "Active timer/reveal/performance hydration remains UnsupportedBoundary",
+    "Legacy missing actual chart archives remain Incomplete",
+    "WorldForkAvailability remains NotImplemented; identity rebasing belongs to B2.3"
+  ]
+}

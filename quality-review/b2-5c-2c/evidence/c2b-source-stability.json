@@ -1,0 +1,196 @@
+{
+  "phase": "B2.5c-2c read-only prerequisite c-2b source stability",
+  "generatedUtc": "2026-10-11T08:39:54.599Z",
+  "referencePath": "quality-review/b2-5c-2b/evidence/changed-files.json",
+  "referenceSha256": "e884769f935a49ab6ffa8421c63a604d5ce0cf0fe2b2b0bbc139a802cc345642",
+  "fileCount": 23,
+  "files": [
+    {
+      "path": "assets/scripts/SharedRelayPrototypeBuilder.ts",
+      "expectedBytes": 1795,
+      "expectedSha256": "65e9636369f66dec87b36da94beea0c79f998ef3946b72875312da77ea3840bf",
+      "currentBytes": 1795,
+      "currentSha256": "65e9636369f66dec87b36da94beea0c79f998ef3946b72875312da77ea3840bf",
+      "pass": true
+    },
+    {
+      "path": "server/SharedBuild.mjs",
+      "expectedBytes": 1616,
+      "expectedSha256": "a3cc9d9073be378093e0969b1b3bdbf6a61db96e6668ca3eb815183540db9c01",
+      "currentBytes": 1616,
+      "currentSha256": "a3cc9d9073be378093e0969b1b3bdbf6a61db96e6668ca3eb815183540db9c01",
+      "pass": true
+    },
+    {
+      "path": "server/sql/002_shared_authority.sql",
+      "expectedBytes": 8358,
+      "expectedSha256": "8891dc04fc4c9c6aa35eabcfc2c3241176a6c6960fc9aef52edb1f4a288a2a59",
+      "currentBytes": 8358,
+      "currentSha256": "8891dc04fc4c9c6aa35eabcfc2c3241176a6c6960fc9aef52edb1f4a288a2a59",
+      "pass": true
+    },
+    {
+      "path": "server/src/AuthorityRoute.ts",
+      "expectedBytes": 3965,
+      "expectedSha256": "1490b475447f7a8cb6cbf93763c1e32b5f36624729e5bfae52904def39ff6f0e",
+      "currentBytes": 3965,
+      "currentSha256": "1490b475447f7a8cb6cbf93763c1e32b5f36624729e5bfae52904def39ff6f0e",
+      "pass": true
+    },
+    {
+      "path": "server/src/RealAuthorityClock.ts",
+      "expectedBytes": 4143,
+      "expectedSha256": "ef385ef705626a7269dd171e6491ee3523819d515427effb25ec70bfa657efda",
+      "currentBytes": 4143,
+      "currentSha256": "ef385ef705626a7269dd171e6491ee3523819d515427effb25ec70bfa657efda",
+      "pass": true
+    },
+    {
+      "path": "server/src/SharedCryptoProof.ts",
+      "expectedBytes": 1958,
+      "expectedSha256": "6a1a49343276bd2651548c1c0dc815601182eaa17d4011da8d8ab01eff208f97",
+      "currentBytes": 1958,
+      "currentSha256": "6a1a49343276bd2651548c1c0dc815601182eaa17d4011da8d8ab01eff208f97",
+      "pass": true
+    },
+    {
+      "path": "server/src/SharedMigrationRunner.ts",
+      "expectedBytes": 4001,
+      "expectedSha256": "ca334b3a0d9239be218881d9a9ed53c3144e614bfad5b24474040c32f915cc43",
+      "currentBytes": 4001,
+      "currentSha256": "ca334b3a0d9239be218881d9a9ed53c3144e614bfad5b24474040c32f915cc43",
+      "pass": true
+    },
+    {
+      "path": "server/src/SharedReceiptSigner.ts",
+      "expectedBytes": 3253,
+      "expectedSha256": "4d32c01fd861f7dd68b817da12a10f3a9b4b99858a1d503fab25e60fde3cd9ef",
+      "currentBytes": 3253,
+      "currentSha256": "4d32c01fd861f7dd68b817da12a10f3a9b4b99858a1d503fab25e60fde3cd9ef",
+      "pass": true
+    },
+    {
+      "path": "server/src/SharedServerConfig.ts",
+      "expectedBytes": 3901,
+      "expectedSha256": "aee3d526e2af6c4b7682b49ddd0e0e3e80deee73f456c7b5c2045b9cdf30c87f",
+      "currentBytes": 3901,
+      "currentSha256": "aee3d526e2af6c4b7682b49ddd0e0e3e80deee73f456c7b5c2045b9cdf30c87f",
+      "pass": true
+    },
+    {
+      "path": "server/src/SharedSessionVerifier.ts",
+      "expectedBytes": 3402,
+      "expectedSha256": "674b5411364bfaa42728885d94453c1468564690b81aa519e7b40a7f6f1439b9",
+      "currentBytes": 3402,
+      "currentSha256": "674b5411364bfaa42728885d94453c1468564690b81aa519e7b40a7f6f1439b9",
+      "pass": true
+    },
+    {
+      "path": "server/src/WorldAuthorityService.ts",
+      "expectedBytes": 49772,
+      "expectedSha256": "99eabb1a7f2549af482d8a3cd619774173235b31fcf9dcc085c54e3313b9df88",
+      "currentBytes": 49772,
+      "currentSha256": "99eabb1a7f2549af482d8a3cd619774173235b31fcf9dcc085c54e3313b9df88",
+      "pass": true
+    },
+    {
+      "path": "server/src/WorldAuthorityStorage.ts",
+      "expectedBytes": 1156,
+      "expectedSha256": "69958b263668dbe315b1787b29a1c451a1f489f7e5e009ab6dac19d0574fe8ad",
+      "currentBytes": 1156,
+      "currentSha256": "69958b263668dbe315b1787b29a1c451a1f489f7e5e009ab6dac19d0574fe8ad",
+      "pass": true
+    },
+    {
+      "path": "server/src/buildSharedServer.ts",
+      "expectedBytes": 2043,
+      "expectedSha256": "60f30f111909739bceb2be4135b0a1f4b49c31b0061859a334ae2c7b88194733",
+      "currentBytes": 2043,
+      "currentSha256": "60f30f111909739bceb2be4135b0a1f4b49c31b0061859a334ae2c7b88194733",
+      "pass": true
+    },
+    {
+      "path": "server/src/shared-cli.ts",
+      "expectedBytes": 476,
+      "expectedSha256": "ab4e9a0d87950fa859cd99fd8c35533935ed33195d188772e7d2e7f9014a0116",
+      "currentBytes": 476,
+      "currentSha256": "ab4e9a0d87950fa859cd99fd8c35533935ed33195d188772e7d2e7f9014a0116",
+      "pass": true
+    },
+    {
+      "path": "server/src/shared-main.ts",
+      "expectedBytes": 1114,
+      "expectedSha256": "db867cb126915f1652313f21c009d178d25fd528cdd5e48e7780e4630d284df2",
+      "currentBytes": 1114,
+      "currentSha256": "db867cb126915f1652313f21c009d178d25fd528cdd5e48e7780e4630d284df2",
+      "pass": true
+    },
+    {
+      "path": "server/test/shared-clock-migration.test.ts",
+      "expectedBytes": 3504,
+      "expectedSha256": "1a045ff129e8a68142c20af04cadcca55ec62de1d1c07e9cdbcd4d1249c58d95",
+      "currentBytes": 3504,
+      "currentSha256": "1a045ff129e8a68142c20af04cadcca55ec62de1d1c07e9cdbcd4d1249c58d95",
+      "pass": true
+    },
+    {
+      "path": "server/test/shared-http.test.ts",
+      "expectedBytes": 39255,
+      "expectedSha256": "1040fb1057b2f199e2df0e71c874ddeff9f4ef0797b3a649ddcc23af0c7a021a",
+      "currentBytes": 39255,
+      "currentSha256": "1040fb1057b2f199e2df0e71c874ddeff9f4ef0797b3a649ddcc23af0c7a021a",
+      "pass": true
+    },
+    {
+      "path": "server/tsconfig.shared.json",
+      "expectedBytes": 192,
+      "expectedSha256": "7a152e46c1d4c92f15e5e0f8b1dd776315223e3f1b8c5274446f6671b26fb031",
+      "currentBytes": 192,
+      "currentSha256": "7a152e46c1d4c92f15e5e0f8b1dd776315223e3f1b8c5274446f6671b26fb031",
+      "pass": true
+    },
+    {
+      "path": "src/director/IntentPort.ts",
+      "expectedBytes": 50175,
+      "expectedSha256": "1e29ebc8f7cf1bfef700eea7fc1bae8a09e6cdb4e1f39d9e2ef07549991649a3",
+      "currentBytes": 50175,
+      "currentSha256": "1e29ebc8f7cf1bfef700eea7fc1bae8a09e6cdb4e1f39d9e2ef07549991649a3",
+      "pass": true
+    },
+    {
+      "path": "src/director/SharedServiceProtocolCodec.ts",
+      "expectedBytes": 17678,
+      "expectedSha256": "22bb5e8139f8323388bcb2129d021471c48b97c0ede4a25cbea1285629400fea",
+      "currentBytes": 17678,
+      "currentSha256": "22bb5e8139f8323388bcb2129d021471c48b97c0ede4a25cbea1285629400fea",
+      "pass": true
+    },
+    {
+      "path": "src/director/SharedServiceProtocolContracts.ts",
+      "expectedBytes": 18711,
+      "expectedSha256": "e74f48e14ded771db56cb1890c24a19490e52e2a9b8d96a9c3a9a9bad33b4a80",
+      "currentBytes": 18711,
+      "currentSha256": "e74f48e14ded771db56cb1890c24a19490e52e2a9b8d96a9c3a9a9bad33b4a80",
+      "pass": true
+    },
+    {
+      "path": "src/presentation/RealSharedServiceSessionAdapter.ts",
+      "expectedBytes": 44370,
+      "expectedSha256": "46238bab2bd3d082622d0b22ba2e3cb82f0330b40f77d70c4de6b229b8af1f8e",
+      "currentBytes": 44370,
+      "currentSha256": "46238bab2bd3d082622d0b22ba2e3cb82f0330b40f77d70c4de6b229b8af1f8e",
+      "pass": true
+    },
+    {
+      "path": "src/presentation/RealWorldAuthorityAdapter.ts",
+      "expectedBytes": 6187,
+      "expectedSha256": "fa51d3cc028601f3506bcdee6ce53e5288ebeb3cb98f6fd2a94e1092aac8db39",
+      "currentBytes": 6187,
+      "currentSha256": "fa51d3cc028601f3506bcdee6ce53e5288ebeb3cb98f6fd2a94e1092aac8db39",
+      "pass": true
+    }
+  ],
+  "changedFiles": [],
+  "pass": true,
+  "scope": "All 23 c-2b implementation source/config/migration/test files and modified IntentPort compared to accepted c-2b final byte hashes. No implementation edits are authorized in this prerequisite audit. The separate protection audit also hashes all pre-existing non-excluded generated kernel/runtime files."
+}

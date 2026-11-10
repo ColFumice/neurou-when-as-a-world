@@ -1,0 +1,114 @@
+{
+  "runName": "validation-repair-1",
+  "generatedUtc": "2026-10-11T04:25:35.711Z",
+  "nodeVersion": "v24.19.0",
+  "isolatedCompiler": {
+    "lib": [
+      "ES2020"
+    ],
+    "types": [],
+    "noDOM": true,
+    "noEngineDeclarations": true
+  },
+  "sources": [
+    {
+      "path": "src/director/SharedCommitContracts.ts",
+      "bytes": 22261,
+      "sha256": "e0682252df74a4767cdeac5a79bebb33dbdd88343af0d0f4ebb362a1e41cd291"
+    },
+    {
+      "path": "src/director/SharedCanonicalBytes.ts",
+      "bytes": 13285,
+      "sha256": "1cd132ab68ee3a5c30989cd4e5464743c4223ba3141ae7dc16dd4e27c2fbe27c"
+    },
+    {
+      "path": "src/director/SharedCommitCodec.ts",
+      "bytes": 42218,
+      "sha256": "ab5aca0e315879a9245c662682c80575f90a0446ed4c6130a5e6f369bc1e1376"
+    },
+    {
+      "path": "src/director/SharedCommitValidator.ts",
+      "bytes": 31775,
+      "sha256": "b1aba3744872bf0cc97af6ac05cf2f63ab27b6262bf03adfeff206e0c4c6cba9"
+    },
+    {
+      "path": "src/director/SharedWorldReducer.ts",
+      "bytes": 25393,
+      "sha256": "b0831393ec0f732b64517266d9be52d3d77577eb9740e5457c20b9a47bf5bc14"
+    }
+  ],
+  "tests": [
+    {
+      "path": "quality-review/b2-5c-1/evidence/validator-tests.cjs",
+      "sha256": "2c737f5f6d946d9b06736ca9a56f9a1205ad4a2a7d94c1c89b411819a3682c3d"
+    },
+    {
+      "path": "quality-review/b2-5c-1/tests/codec-tests.cjs",
+      "sha256": "b89330f717ec3e1baffe034db43d505c37e1acc28f444e76218d2770bdf033db"
+    }
+  ],
+  "helperFiles": [
+    {
+      "path": "fixtures.cjs",
+      "sha256": "aaea50831da5f1f9b6a0bb81e01b6f37dff0c56ddcc676c1b8d55c6504c75e70"
+    },
+    {
+      "path": "no-network.cjs",
+      "sha256": "153992d856bf5740cb4eeee80cfa2f7ec6d796626cca7e41937f4304c1330eb5"
+    },
+    {
+      "path": "run-tests.cjs",
+      "sha256": "d30e246dd6cda33d6b6e3b9c770ec47927054dd7f8dfb807f0567e7f251693d1"
+    },
+    {
+      "path": "tsconfig-isolated.json",
+      "sha256": "6878f49ee67fe276afb971ab8139fcdeaa0b335a9ca91a3773ce0aeaf7b55063"
+    }
+  ],
+  "compile": {
+    "name": "isolated-typecheck-build",
+    "startedUtc": "2026-10-11T04:25:34.835Z",
+    "completedUtc": "2026-10-11T04:25:35.301Z",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "node_modules/typescript/bin/tsc",
+      "--project",
+      "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-1\\evidence\\tsconfig-isolated.json"
+    ],
+    "exitCode": 0,
+    "pass": true,
+    "rawSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "testRun": {
+    "name": "contract-tests",
+    "startedUtc": "2026-10-11T04:25:35.301Z",
+    "completedUtc": "2026-10-11T04:25:35.711Z",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "--require",
+      "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-1\\evidence\\no-network.cjs",
+      "--test",
+      "--test-reporter=tap",
+      "--test-reporter-destination=stdout",
+      "--test-reporter=junit",
+      "--test-reporter-destination=D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-1\\evidence\\test-runs\\validation-repair-1\\junit.xml",
+      "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-1\\evidence\\validator-tests.cjs",
+      "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-1\\tests\\codec-tests.cjs"
+    ],
+    "exitCode": 0,
+    "pass": true,
+    "rawSha256": "f888abedaca700ff35dcd8f4a11d0ecd503f57e0aea0ee3ae7b7c8f25078aa88"
+  },
+  "counts": {
+    "tests": 115,
+    "suites": 0,
+    "pass": 115,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  "networkInstrumentation": "deny HTTP/HTTPS/HTTP2/net/tls/dns/dgram/undici imports, getBuiltinModule, global fetch/WebSocket. Only exercised code evidence; not an OS sandbox.",
+  "cryptographicBackend": "Native in-memory Node EC ES256/P1363, AES-256-GCM, HMAC-SHA256 RFC5869 HKDF (verified standard vector), SHA256; no persisted secret/private key/cookie/database.",
+  "pass": true
+}

@@ -1,0 +1,22 @@
+[
+  {
+    "prior": "protected-final-audit.json",
+    "preserved": "protected-pre-version-audit.json",
+    "sha256": "629b848997114d34cf9065859871405ab3ffebbe3c44e1aa4136d39550e1df02"
+  },
+  {
+    "prior": "code.diff",
+    "preserved": "pre-version-code.diff",
+    "sha256": "83d168f74ff3fe4a611778e1df06219662c7855dbf30a3b32a8d2532154cd364"
+  },
+  {
+    "prior": "changed-files.json",
+    "preserved": "pre-version-changed-files.json",
+    "sha256": "514c803a05b4e72745df48988b593befbd4763835c1b3d05d1abd245c7adcdfa"
+  },
+  {
+    "prior": "new-names.json",
+    "preserved": "pre-version-new-names.json",
+    "sha256": "11a56025396c4d29848c5b62d5044002fc1ce1beee55ab898037c0548c7059ca"
+  }
+]

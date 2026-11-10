@@ -1,0 +1,1152 @@
+{
+  "generatedUtc": "2026-10-11T04:58:09.444Z",
+  "finalRawSha256": "df4e868155323526d7dc55e194e107d79311a5bf66c9c53a15cd282839d22966",
+  "finalTestCounts": {
+    "tests": 154,
+    "suites": 0,
+    "pass": 154,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  "cases": [
+    {
+      "tapNumber": 1,
+      "name": "native-HMAC RFC5869 vector and native AES-GCM backend are independent cryptographic evidence",
+      "id": "V01",
+      "suite": "validator",
+      "pass": true
+    },
+    {
+      "tapNumber": 2,
+      "name": "installed Genesis trust succeeds and serialized/runtime brands confer no trust",
+      "id": "V02",
+      "suite": "validator",
+      "pass": true
+    },
+    {
+      "tapNumber": 3,
+      "name": "real registered author proof and epoch accept developer",
+      "id": "V03",
+      "suite": "validator",
+      "pass": true
+    },
+    {
+      "tapNumber": 4,
+      "name": "real registered author proof and epoch accept coDeveloper",
+      "id": "V04",
+      "suite": "validator",
+      "pass": true
+    },
+    {
+      "tapNumber": 5,
+      "name": "real registered author proof and epoch accept observer",
+      "id": "V05",
+      "suite": "validator",
+      "pass": true
+    },
+    {
+      "tapNumber": 6,
+      "name": "real registered author proof and epoch accept observerDevice2",
+      "id": "V06",
+      "suite": "validator",
+      "pass": true
+    },
+    {
+      "tapNumber": 7,
+      "name": "old admitted permit stays valid by signed acceptance time; no current wall clock exists in validator",
+      "id": "V07",
+      "suite": "validator",
+      "pass": true
+    },
+    {
+      "tapNumber": 8,
+      "name": "repeated historical receipt validates without reconstructing a physical identity",
+      "id": "V08",
+      "suite": "validator",
+      "pass": true
+    },
+    {
+      "tapNumber": 9,
+      "name": "wrong installed service public key never bootstraps from receipt",
+      "id": "V09",
+      "suite": "validator",
+      "pass": true
+    },
+    {
+      "tapNumber": 10,
+      "name": "wrong installed developer pin fails before trusting membership publisher",
+      "id": "V10",
+      "suite": "validator",
+      "pass": true
+    },
+    {
+      "tapNumber": 11,
+      "name": "tampered authenticated service receipt is Gap, never a technical-invalid body capability",
+      "id": "V11",
+      "suite": "validator",
+      "pass": true
+    },
+    {
+      "tapNumber": 12,
+      "name": "wrong receipt purpose cannot reuse a service signature from another protocol purpose",
+      "id": "V12",
+      "suite": "validator",
+      "pass": true
+    },
+    {
+      "tapNumber": 13,
+      "name": "signed admission request nonce must match author-signed admission claim nonce",
+      "id": "V13",
+      "suite": "validator",
+      "pass": true
+    },
+    {
+      "tapNumber": 14,
+      "name": "author claim signature cannot be replaced by service assertion",
+      "id": "V14",
+      "suite": "validator",
+      "pass": true
+    },
+    {
+      "tapNumber": 15,
+      "name": "claim/admission final digest disagreement is missing provenance",
+      "id": "V15",
+      "suite": "validator",
+      "pass": true
+    },
+    {
+      "tapNumber": 16,
+      "name": "tampered exact envelope bytes do not turn into trustworthy InvalidChange",
+      "id": "V16",
+      "suite": "validator",
+      "pass": true
+    },
+    {
+      "tapNumber": 17,
+      "name": "valid signed claim + admission binds exact malformed envelope bytes as technical InvalidChange",
+      "id": "V17",
+      "suite": "validator",
+      "pass": true
+    },
+    {
+      "tapNumber": 18,
+      "name": "duplicate JSON keys in exact admitted envelope are technical-invalid rather than silently parsed",
+      "id": "V18",
+      "suite": "validator",
+      "pass": true
+    },
+    {
+      "tapNumber": 19,
+      "name": "bad envelope ES256 signature with valid independent claim is technical-invalid",
+      "id": "V19",
+      "suite": "validator",
+      "pass": true
+    },
+    {
+      "tapNumber": 20,
+      "name": "wrong wrapping AAD cannot yield a body or shared change",
+      "id": "V20",
+      "suite": "validator",
+      "pass": true
+    },
+    {
+      "tapNumber": 21,
+      "name": "wrong body AAD cannot yield a body or shared change",
+      "id": "V21",
+      "suite": "validator",
+      "pass": true
+    },
+    {
+      "tapNumber": 22,
+      "name": "authenticated body duplicate keys fail strict decoding",
+      "id": "V22",
+      "suite": "validator",
+      "pass": true
+    },
+    {
+      "tapNumber": 23,
+      "name": "authenticated inner appended time must equal signed public header",
+      "id": "V23",
+      "suite": "validator",
+      "pass": true
+    },
+    {
+      "tapNumber": 24,
+      "name": "authenticated body cannot change content manifest context",
+      "id": "V24",
+      "suite": "validator",
+      "pass": true
+    },
+    {
+      "tapNumber": 25,
+      "name": "map entity content approval is required even for an authenticated developer body",
+      "id": "V25",
+      "suite": "validator",
+      "pass": true
+    },
+    {
+      "tapNumber": 26,
+      "name": "missing epoch key stays Gap even if exact bytes are admitted",
+      "id": "V26",
+      "suite": "validator",
+      "pass": true
+    },
+    {
+      "tapNumber": 27,
+      "name": "missing key plus exact bad bytes cannot advance settlement as InvalidChange",
+      "id": "V27",
+      "suite": "validator",
+      "pass": true
+    },
+    {
+      "tapNumber": 28,
+      "name": "key capability returning wrong committed group key is Gap",
+      "id": "V28",
+      "suite": "validator",
+      "pass": true
+    },
+    {
+      "tapNumber": 29,
+      "name": "membership activated after logical append cannot authorize it",
+      "id": "V29",
+      "suite": "validator",
+      "pass": true
+    },
+    {
+      "tapNumber": 30,
+      "name": "forged author credential absent from signed epoch is Gap",
+      "id": "V30",
+      "suite": "validator",
+      "pass": true
+    },
+    {
+      "tapNumber": 31,
+      "name": "every signed epoch member agreement fingerprint binds its actual ECDH key",
+      "id": "V31",
+      "suite": "validator",
+      "pass": true
+    },
+    {
+      "tapNumber": 32,
+      "name": "signed epoch rejects ECDH reuse of registered signing key even for a non-author member",
+      "id": "V32",
+      "suite": "validator",
+      "pass": true
+    },
+    {
+      "tapNumber": 33,
+      "name": "signed epoch rejects ECDH reuse of developer root key even for a non-author member",
+      "id": "V33",
+      "suite": "validator",
+      "pass": true
+    },
+    {
+      "tapNumber": 34,
+      "name": "signed epoch rejects ECDH reuse of service root key even for a non-author member",
+      "id": "V34",
+      "suite": "validator",
+      "pass": true
+    },
+    {
+      "tapNumber": 35,
+      "name": "non-root signed epoch member must retain Observer admission provenance",
+      "id": "V35",
+      "suite": "validator",
+      "pass": true
+    },
+    {
+      "tapNumber": 36,
+      "name": "permit acceptance at exact expiry endpoint is rejected",
+      "id": "V36",
+      "suite": "validator",
+      "pass": true
+    },
+    {
+      "tapNumber": 37,
+      "name": "unknown future clock generation is Gap; signed historical generation remains accepted",
+      "id": "V37",
+      "suite": "validator",
+      "pass": true
+    },
+    {
+      "tapNumber": 38,
+      "name": "untrusted signed clock status does not become trusted because signature verifies",
+      "id": "V38",
+      "suite": "validator",
+      "pass": true
+    },
+    {
+      "tapNumber": 39,
+      "name": "AddCoDeveloper requires signed active Observer fact at AppendedAt",
+      "id": "V39",
+      "suite": "validator",
+      "pass": true
+    },
+    {
+      "tapNumber": 40,
+      "name": "RemoveCoDeveloper accepts old valid admission source without requiring target still active",
+      "id": "V40",
+      "suite": "validator",
+      "pass": true
+    },
+    {
+      "tapNumber": 41,
+      "name": "roster cannot use another observer admission fact as target provenance",
+      "id": "V41",
+      "suite": "validator",
+      "pass": true
+    },
+    {
+      "tapNumber": 42,
+      "name": "missing observer fact is Gap, not author narrative evidence",
+      "id": "V42",
+      "suite": "validator",
+      "pass": true
+    },
+    {
+      "tapNumber": 43,
+      "name": "injected crypto outage and producer outage are HostFailure, never technical InvalidChange",
+      "id": "V43",
+      "suite": "validator",
+      "pass": true
+    },
+    {
+      "tapNumber": 44,
+      "name": "bad cryptography return shape cannot be mistaken for trustworthy digest or key",
+      "id": "V44",
+      "suite": "validator",
+      "pass": true
+    },
+    {
+      "tapNumber": 45,
+      "name": "signed seal must satisfy S-H and policy fingerprint",
+      "id": "V45",
+      "suite": "validator",
+      "pass": true
+    },
+    {
+      "tapNumber": 46,
+      "name": "seal chain needs runtime-trusted prior receipt and increasing boundary",
+      "id": "V46",
+      "suite": "validator",
+      "pass": true
+    },
+    {
+      "tapNumber": 47,
+      "name": "developer closure and rejection proofs stay separate from shared change/body",
+      "id": "V47",
+      "suite": "validator",
+      "pass": true
+    },
+    {
+      "tapNumber": 48,
+      "name": "canonical decode rejects duplicate and escaped duplicate JSON keys",
+      "id": "C01",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 49,
+      "name": "canonical decode rejects alternate JSON spellings and trailing input",
+      "id": "C02",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 50,
+      "name": "strict UTF8 rejects BOM, truncation, overlong, surrogate and out of range encodings",
+      "id": "C03",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 51,
+      "name": "UTF8 agrees with independent Node encoding across scalar ranges",
+      "id": "C04",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 52,
+      "name": "object descriptor validation never invokes accessors",
+      "id": "C05",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 53,
+      "name": "canonical objects reject symbols, hidden properties and foreign prototypes",
+      "id": "C06",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 54,
+      "name": "canonical arrays reject holes, properties, symbols and custom prototypes",
+      "id": "C07",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 55,
+      "name": "canonical data rejects cycles, invalid Unicode and unsupported number types",
+      "id": "C08",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 56,
+      "name": "canonical nesting safety rejects unbounded hostile data",
+      "id": "C09",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 57,
+      "name": "JCS UTF16 key order and integer subset known vector",
+      "id": "C10",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 58,
+      "name": "canonical base64url matches independent byte oracle and rejects alternate tails",
+      "id": "C11",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 59,
+      "name": "domain bytes retain NUL separator and byte comparison is exact",
+      "id": "C12",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 60,
+      "name": "schema roundtrip and immutable copy: WorldCommitIdentity",
+      "id": "C13",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 61,
+      "name": "schema roundtrip and immutable copy: SharedPosition",
+      "id": "C14",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 62,
+      "name": "schema roundtrip and immutable copy: SharedContentReference",
+      "id": "C15",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 63,
+      "name": "schema roundtrip and immutable copy: WorldSharedGenesis",
+      "id": "C16",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 64,
+      "name": "schema roundtrip and immutable copy: AuthorSequenceSegment",
+      "id": "C17",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 65,
+      "name": "schema roundtrip and immutable copy: SharedAppendedAt",
+      "id": "C18",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 66,
+      "name": "schema roundtrip and immutable copy: WorldAppendPermit",
+      "id": "C19",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 67,
+      "name": "schema roundtrip and immutable copy: WorldCommitAdmission",
+      "id": "C20",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 68,
+      "name": "schema roundtrip and immutable copy: WorldCommitAdmissionClaim",
+      "id": "C21",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 69,
+      "name": "schema roundtrip and immutable copy: SignedWorldCommitAdmissionClaim",
+      "id": "C22",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 70,
+      "name": "schema roundtrip and immutable copy: WorldDeveloperClosureFact",
+      "id": "C23",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 71,
+      "name": "schema roundtrip and immutable copy: WorldCommitRejection",
+      "id": "C24",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 72,
+      "name": "schema roundtrip and immutable copy: WorldAuthorKeyBinding",
+      "id": "C25",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 73,
+      "name": "schema roundtrip and immutable copy: WorldChangeClass",
+      "id": "C26",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 74,
+      "name": "schema roundtrip and immutable copy: SharedCommitClass",
+      "id": "C27",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 75,
+      "name": "schema roundtrip and immutable copy: MonotonicRevealChange",
+      "id": "C28",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 76,
+      "name": "schema roundtrip and immutable copy: TraceTouchChange",
+      "id": "C29",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 77,
+      "name": "schema roundtrip and immutable copy: EditTarget",
+      "id": "C30",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 78,
+      "name": "schema roundtrip and immutable copy: SharedMapEntityDefinition",
+      "id": "C31",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 79,
+      "name": "schema roundtrip and immutable copy: SharedTriggerDefinition",
+      "id": "C32",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 80,
+      "name": "schema roundtrip and immutable copy: MapEditOperation",
+      "id": "C33",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 81,
+      "name": "schema roundtrip and immutable copy: MapEditCommitChange",
+      "id": "C34",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 82,
+      "name": "schema roundtrip and immutable copy: DeveloperRosterChange",
+      "id": "C35",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 83,
+      "name": "schema roundtrip and immutable copy: WorldChange",
+      "id": "C36",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 84,
+      "name": "schema roundtrip and immutable copy: WorldCommit",
+      "id": "C37",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 85,
+      "name": "schema roundtrip and immutable copy: RestrictedWriteHeader",
+      "id": "C38",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 86,
+      "name": "schema roundtrip and immutable copy: RelayCommitHeader",
+      "id": "C39",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 87,
+      "name": "schema roundtrip and immutable copy: WrappedRelayDataKey",
+      "id": "C40",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 88,
+      "name": "schema roundtrip and immutable copy: RelayCommitEnvelope",
+      "id": "C41",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 89,
+      "name": "schema roundtrip and immutable copy: AdmittedWorldCommit",
+      "id": "C42",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 90,
+      "name": "schema roundtrip and immutable copy: SharedEntityRecord",
+      "id": "C43",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 91,
+      "name": "schema roundtrip and immutable copy: SharedTriggerRecord",
+      "id": "C44",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 92,
+      "name": "schema roundtrip and immutable copy: TraceTouchAggregate",
+      "id": "C45",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 93,
+      "name": "schema roundtrip and immutable copy: DeveloperRosterState",
+      "id": "C46",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 94,
+      "name": "schema roundtrip and immutable copy: SharedWorldState",
+      "id": "C47",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 95,
+      "name": "schema roundtrip and immutable copy: WorldChangeLogWire",
+      "id": "C48",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 96,
+      "name": "schema roundtrip and immutable copy: RelaySettlementSeal",
+      "id": "C49",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 97,
+      "name": "schema roundtrip and immutable copy: CheckpointCoverageEntry",
+      "id": "C50",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 98,
+      "name": "schema roundtrip and immutable copy: WorldCheckpointWire",
+      "id": "C51",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 99,
+      "name": "schema roundtrip and immutable copy: SharedSettlementPolicy",
+      "id": "C52",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 100,
+      "name": "schema roundtrip and immutable copy: RelayCursor",
+      "id": "C53",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 101,
+      "name": "schema roundtrip and immutable copy: RelayPullReply",
+      "id": "C54",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 102,
+      "name": "schema roundtrip and immutable copy: SharedAuthorityReceipt",
+      "id": "C55",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 103,
+      "name": "schema roundtrip and immutable copy: WorldKeyAgreementPublicKey",
+      "id": "C56",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 104,
+      "name": "schema roundtrip and immutable copy: WorldDeveloperTrustAnchor",
+      "id": "C57",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 105,
+      "name": "schema roundtrip and immutable copy: WorldObserverAdmissionFact",
+      "id": "C58",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 106,
+      "name": "schema roundtrip and immutable copy: WorldMemberCredential",
+      "id": "C59",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 107,
+      "name": "schema roundtrip and immutable copy: WorldRelayKeyDescriptor",
+      "id": "C60",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 108,
+      "name": "schema roundtrip and immutable copy: WorldMembershipEpoch",
+      "id": "C61",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 109,
+      "name": "schema roundtrip and immutable copy: WorldMembershipEpochProposal",
+      "id": "C62",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 110,
+      "name": "schema roundtrip and immutable copy: WorldMembershipChange",
+      "id": "C63",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 111,
+      "name": "schema roundtrip and immutable copy: WorldRelayKeyPackageContext",
+      "id": "C64",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 112,
+      "name": "schema roundtrip and immutable copy: WorldRelayKeyPackage",
+      "id": "C65",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 113,
+      "name": "schema roundtrip and immutable copy: WorldRelayKeyAcceptance",
+      "id": "C66",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 114,
+      "name": "exact schema rejects extra and missing fields without broad compatibility",
+      "id": "C67",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 115,
+      "name": "sequence, permit and settlement exact boundaries reject incoherent facts",
+      "id": "C68",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 116,
+      "name": "touch count uses exact uint128 and independently saturates rendering",
+      "id": "C69",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 117,
+      "name": "sorted state and coverage preserve exact identities rather than max sequence",
+      "id": "C70",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 118,
+      "name": "single-object map operations reject old atomic edit arrays and target mismatch",
+      "id": "C71",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 119,
+      "name": "receipt purpose, identity, accepted-time and key bindings remain distinct",
+      "id": "C72",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 120,
+      "name": "codec preserves admitted raw bytes for cryptographic invalid-body classification",
+      "id": "C73",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 121,
+      "name": "stable definition IDs share one domain while references may recur",
+      "id": "C74",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 122,
+      "name": "Genesis and state reject every cross-kind stable ID collision including tombstones",
+      "id": "C75",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 123,
+      "name": "created records require edit attribution without excluding edited Genesis records",
+      "id": "C76",
+      "suite": "codec",
+      "pass": true
+    },
+    {
+      "tapNumber": 124,
+      "name": "R01 deterministic three-class replay, unique touch and canonical checkpoint hashes",
+      "id": "R01",
+      "suite": "replay",
+      "pass": true
+    },
+    {
+      "tapNumber": 125,
+      "name": "R02 same-millisecond order is account ASCII then sequence, independent of receipt order",
+      "id": "R02",
+      "suite": "replay",
+      "pass": true
+    },
+    {
+      "tapNumber": 126,
+      "name": "R03 two devices share an account with nonoverlapping segments; holes stay absent from coverage",
+      "id": "R03",
+      "suite": "replay",
+      "pass": true
+    },
+    {
+      "tapNumber": 127,
+      "name": "R04 signed overlapping segments from different devices are refused",
+      "id": "R04",
+      "suite": "replay",
+      "pass": true
+    },
+    {
+      "tapNumber": 128,
+      "name": "R05 same identity with two authored envelope digests is an IdentityConflict",
+      "id": "R05",
+      "suite": "replay",
+      "pass": true
+    },
+    {
+      "tapNumber": 129,
+      "name": "R06 different objects remain independent when one target is deleted",
+      "id": "R06",
+      "suite": "replay",
+      "pass": true
+    },
+    {
+      "tapNumber": 130,
+      "name": "R07 tombstones prevent Replace/Create resurrection, repeated Delete is NoEffect without new diagnostic",
+      "id": "R07",
+      "suite": "replay",
+      "pass": true
+    },
+    {
+      "tapNumber": 131,
+      "name": "R08 CoDeveloper permission is evaluated at total-order position, not receipt or pull order",
+      "id": "R08",
+      "suite": "replay",
+      "pass": true
+    },
+    {
+      "tapNumber": 132,
+      "name": "R09 observer cannot edit map, developer can grant observer then editing works",
+      "id": "R09",
+      "suite": "replay",
+      "pass": true
+    },
+    {
+      "tapNumber": 133,
+      "name": "R10 unsealed tail emits provisional coverage only and reorders on earlier revocation",
+      "id": "R10",
+      "suite": "replay",
+      "pass": true
+    },
+    {
+      "tapNumber": 134,
+      "name": "R11 seal includes only complete prefix, tail cannot add terminal coverage or diagnostics",
+      "id": "R11",
+      "suite": "replay",
+      "pass": true
+    },
+    {
+      "tapNumber": 135,
+      "name": "R12 missing admitted prefix is Gap even with valid seal signature",
+      "id": "R12",
+      "suite": "replay",
+      "pass": true
+    },
+    {
+      "tapNumber": 136,
+      "name": "R13 seal beyond S-H is rejected; H and retention inequalities are enforced",
+      "id": "R13",
+      "suite": "replay",
+      "pass": true
+    },
+    {
+      "tapNumber": 137,
+      "name": "R14 exact admitted bad body is covered as technical InvalidChange without state side effects",
+      "id": "R14",
+      "suite": "replay",
+      "pass": true
+    },
+    {
+      "tapNumber": 138,
+      "name": "R15 missing key and missing exact byte source prevent advancement, not InvalidChange",
+      "id": "R15",
+      "suite": "replay",
+      "pass": true
+    },
+    {
+      "tapNumber": 139,
+      "name": "R16 host failure never becomes InvalidChange or stores a trusted checkpoint",
+      "id": "R16",
+      "suite": "replay",
+      "pass": true
+    },
+    {
+      "tapNumber": 140,
+      "name": "R17 checkpoint parent is runtime trusted, not serialized brand or self-consistent hashes",
+      "id": "R17",
+      "suite": "replay",
+      "pass": true
+    },
+    {
+      "tapNumber": 141,
+      "name": "R18 trusted parent can advance without old log; null diagnostic becomes sealed MergeConflict",
+      "id": "R18",
+      "suite": "replay",
+      "pass": true
+    },
+    {
+      "tapNumber": 142,
+      "name": "R19 same seal retry returns original checkpoint rather than inventing a new parent chain",
+      "id": "R19",
+      "suite": "replay",
+      "pass": true
+    },
+    {
+      "tapNumber": 143,
+      "name": "R20 signed new identity below a sealed boundary is Gap, while exact covered duplicate adds nothing",
+      "id": "R20",
+      "suite": "replay",
+      "pass": true
+    },
+    {
+      "tapNumber": 144,
+      "name": "R21 account closure at the same timestamp freezes root roster but preserves existing CoDeveloper edits",
+      "id": "R21",
+      "suite": "replay",
+      "pass": true
+    },
+    {
+      "tapNumber": 145,
+      "name": "R22 closure not bound by seal and newly backdated closure cannot change trusted parent",
+      "id": "R22",
+      "suite": "replay",
+      "pass": true
+    },
+    {
+      "tapNumber": 146,
+      "name": "R23 trigger dangling creation is invalid; deleting anchor preserves existing trigger definition",
+      "id": "R23",
+      "suite": "replay",
+      "pass": true
+    },
+    {
+      "tapNumber": 147,
+      "name": "R24 explicit Create records attribution, equal Replace is NoEffect and deletion is permanent",
+      "id": "R24",
+      "suite": "replay",
+      "pass": true
+    },
+    {
+      "tapNumber": 148,
+      "name": "R25 bound failure or pending candidates prevents a checkpoint; input is immutable across awaits",
+      "id": "R25",
+      "suite": "replay",
+      "pass": true
+    },
+    {
+      "tapNumber": 149,
+      "name": "R26 same-account device conflicts have no exemption and exact aggregate survives display saturation",
+      "id": "R26",
+      "suite": "replay",
+      "pass": true
+    },
+    {
+      "tapNumber": 150,
+      "name": "R27 uint128 overflow and deleted trace target do not add touch or narrative facts",
+      "id": "R27",
+      "suite": "replay",
+      "pass": true
+    },
+    {
+      "tapNumber": 151,
+      "name": "R28 exact covered re-delivery inherits local trust after old epoch key removal; new input remains Gap",
+      "id": "R28",
+      "suite": "replay",
+      "pass": true
+    },
+    {
+      "tapNumber": 152,
+      "name": "R29 stable IDs remain globally reserved across entity, trigger, trace touch and map, including tombstones",
+      "id": "R29",
+      "suite": "replay",
+      "pass": true
+    },
+    {
+      "tapNumber": 153,
+      "name": "R30 independent closure projects in an empty tail without backdating an earlier checkpoint",
+      "id": "R30",
+      "suite": "replay",
+      "pass": true
+    },
+    {
+      "tapNumber": 154,
+      "name": "R31 locally observed signed allocation conflicts remain detectable across trusted checkpoint advances",
+      "id": "R31",
+      "suite": "replay",
+      "pass": true
+    }
+  ],
+  "pureProfiles": [
+    {
+      "path": "src/director/SharedCommitContracts.ts",
+      "bytes": 22261,
+      "sha256": "e0682252df74a4767cdeac5a79bebb33dbdd88343af0d0f4ebb362a1e41cd291",
+      "imports": [],
+      "importsOnlyWithinIsolatedKernel": true,
+      "prohibitedIdentifiers": []
+    },
+    {
+      "path": "src/director/SharedCanonicalBytes.ts",
+      "bytes": 13285,
+      "sha256": "1cd132ab68ee3a5c30989cd4e5464743c4223ba3141ae7dc16dd4e27c2fbe27c",
+      "imports": [
+        "./SharedCommitContracts"
+      ],
+      "importsOnlyWithinIsolatedKernel": true,
+      "prohibitedIdentifiers": []
+    },
+    {
+      "path": "src/director/SharedCommitCodec.ts",
+      "bytes": 43479,
+      "sha256": "ed55c2ba48857b7a75c45f2e887b541ebf2fb68fb50cd48233f64dd343ee77cd",
+      "imports": [
+        "./SharedCommitContracts",
+        "./SharedCanonicalBytes"
+      ],
+      "importsOnlyWithinIsolatedKernel": true,
+      "prohibitedIdentifiers": []
+    },
+    {
+      "path": "src/director/SharedCommitValidator.ts",
+      "bytes": 32121,
+      "sha256": "8443e792b9f4c2b12c9a8f053240d3d15bc47303cec993438ff4d9466588b31a",
+      "imports": [
+        "./SharedCommitContracts",
+        "./SharedCanonicalBytes",
+        "./SharedCommitCodec"
+      ],
+      "importsOnlyWithinIsolatedKernel": true,
+      "prohibitedIdentifiers": []
+    },
+    {
+      "path": "src/director/SharedWorldReducer.ts",
+      "bytes": 27557,
+      "sha256": "cb9449c0160eea3aae1217f17125d23538ec202a9340e49eee4ff469684fa6d9",
+      "imports": [
+        "./SharedCommitContracts",
+        "./SharedCommitValidator",
+        "./SharedCommitValidator",
+        "./SharedCanonicalBytes",
+        "./SharedCommitCodec"
+      ],
+      "importsOnlyWithinIsolatedKernel": true,
+      "prohibitedIdentifiers": []
+    }
+  ],
+  "sourceProfilePass": true,
+  "limitations": "AST import/name audit plus lib=ES2020/types=[] compilation covers these five modules. Trusted injected capabilities may call platform APIs in a future caller; no claim about unseen adapters."
+}

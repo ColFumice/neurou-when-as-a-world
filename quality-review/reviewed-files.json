@@ -1,0 +1,234 @@
+[
+  {
+    "file": "assets/scripts/Bootstrap.ts",
+    "sha256": "28bb2b93faca15b3b513880fc4754d5f8fefc37ac5a700c8bbe870b03a09af50"
+  },
+  {
+    "file": "assets/scripts/SceneBuilder.ts",
+    "sha256": "953b7e5a54a96be6c83b92c88cff0bc50e77f87cfa52542c49950e58a3b779e9"
+  },
+  {
+    "file": "constants/index.ts",
+    "sha256": "56cf29e891945201320bbee8f62f7d8750adb7267c881deedbc782f584d15578"
+  },
+  {
+    "file": "src/character/DecorationPalette.ts",
+    "sha256": "f547e81d1af02bdb414af9396e975240660742cded8500b55849d59cb83c7ed0"
+  },
+  {
+    "file": "src/character/HairColor.ts",
+    "sha256": "95dfc12ae3212f13a601d41b30abf7a9550182c897d616311411eeffab8da26e"
+  },
+  {
+    "file": "src/character/MoveSpeed.ts",
+    "sha256": "36f5806295d48cb7911e456129346c9aef5ad597f1097bc8ead2b88e67d56fc2"
+  },
+  {
+    "file": "src/character/Protagonist.ts",
+    "sha256": "92bbc77a6f210d1763756cef51574347c96cfc12345302e7beadcc1679b7bb9b"
+  },
+  {
+    "file": "src/character/TrailLength.ts",
+    "sha256": "f19ea1c0adb4871368ffc4e3b2471c11b0cdf195bfa8a4d56091a132055b5c52"
+  },
+  {
+    "file": "src/chart/ChartPlaybackState.ts",
+    "sha256": "9dee861745d0214eb2a8b0c6222e63967d6b2a5a08b2ee2da684e20c16d7a2c4"
+  },
+  {
+    "file": "src/chart/ChartPremiere.ts",
+    "sha256": "466839500a8b8cc563c527f0c4e64ab7c2a099626daeef9da6bebb04782d7d3b"
+  },
+  {
+    "file": "src/chart/ChartScore.ts",
+    "sha256": "1b813defa247a86c7394ece53bae1672d5a70430ce1c2db3b7ad6afaa161940e"
+  },
+  {
+    "file": "src/chart/FrameLocator.ts",
+    "sha256": "c1b52344168a824c5a110b7d6a4d61493b16ee1fc741c694b9535e276606a622"
+  },
+  {
+    "file": "src/chart/KeyboardPadLayout.ts",
+    "sha256": "155c9c0129f9343a60f22db1f28eb303e40770c0f9ecbb18422db7eb37ed3581"
+  },
+  {
+    "file": "src/chart/Note.ts",
+    "sha256": "b515eb95517e964de92435976378651891009c78ac08775b8fe1250908f5f674"
+  },
+  {
+    "file": "src/chart/Strike.ts",
+    "sha256": "7f30956540dd0a99f9d2eee43d788efda420a956365ac9cf817bcd032e863ebe"
+  },
+  {
+    "file": "src/chart/VideoSyncTest.ts",
+    "sha256": "0e4ec6f867f150cd65862278c69abf1f125d611c160dc5d941e025149caa0461"
+  },
+  {
+    "file": "src/director/Chapter.ts",
+    "sha256": "3d1df38c555a1e3d088a98eea0358b4c22026b32adc04b7e98659cc6fc385545"
+  },
+  {
+    "file": "src/director/EndingWindow.ts",
+    "sha256": "053840e88285ec185f60abbff4723ab9f16b70db3b7eb42ca13ed28fe433bc11"
+  },
+  {
+    "file": "src/director/IntentPort.ts",
+    "sha256": "ef50fce4f4ac616e4ba1d146ab4272621fd87f562d18c2a220d598b7bf53bfca"
+  },
+  {
+    "file": "src/director/PlayerIntent.ts",
+    "sha256": "17b1de4910faffb63765ad663fb0df53a93660e07323ae374b90e6c1e1f52030"
+  },
+  {
+    "file": "src/ledger/LedgerAppend.ts",
+    "sha256": "e2a73908338c153ebf19846257ed86fcf0fb698b92b40ae29a43d360594556e9"
+  },
+  {
+    "file": "src/ledger/LedgerPosition.ts",
+    "sha256": "7f8dbce4fc7541ee8524c0ec3915b0b4d7fd0cb8d5c47869d92d15614201a143"
+  },
+  {
+    "file": "src/ledger/LedgerRead.ts",
+    "sha256": "6b104efed0d85259a3990372e4da13ce8346a352c4a02777247f0df5d34731e0"
+  },
+  {
+    "file": "src/ledger/MomentInfo.ts",
+    "sha256": "e26f7a95e194685b4bb6e9eebd92490057e43c636807adfab33507f3865018b9"
+  },
+  {
+    "file": "src/ledger/NarrativeEvent.ts",
+    "sha256": "1ef150d369693d6921be3ff9de60f53f699a148509139f820b8100e2a9dcb323"
+  },
+  {
+    "file": "src/presentation/AudioOutputClock.ts",
+    "sha256": "468045ff5eac1017a99dda4fb1b223294f01dd2fc011d9a52b791347365bbf59"
+  },
+  {
+    "file": "src/presentation/CameraRig.ts",
+    "sha256": "646e4876c4eb3e0943021c0a2cd987e776bfaf777400f8971634cc159c6ecba9"
+  },
+  {
+    "file": "src/presentation/ChartPadView.ts",
+    "sha256": "e9f6c9b5b42808dacd05722f003e712e2d36081e27aaf3f2ae714cb9bd6f5c63"
+  },
+  {
+    "file": "src/presentation/ChartPausePanel.ts",
+    "sha256": "99bb46fceaeed708c9b3ec22dac3574800088c1526088858a7cc22172ba75810"
+  },
+  {
+    "file": "src/presentation/DebugPanel.ts",
+    "sha256": "8b2e26a55f1cb73408304bd9be8151a137bc59098d74926d33473fa78662ca15"
+  },
+  {
+    "file": "src/presentation/DeepTraceRevealSequence.ts",
+    "sha256": "5f5e87ca78973ca7453881cc5fbebc370c31dbfba813489b1d94751c106ed27c"
+  },
+  {
+    "file": "src/presentation/ElementEntityView.ts",
+    "sha256": "1f25c4cc415f1213f0ff252d72ce435c53ef5654c6248033832ef35f73ce790d"
+  },
+  {
+    "file": "src/presentation/FrameDriver.ts",
+    "sha256": "e70232f3ef6f803bba02a6c2af1d40107aea95400dfd65e9845636a836faf3a6"
+  },
+  {
+    "file": "src/presentation/InputCollector.ts",
+    "sha256": "a61731253805e85415cd7128ba8e04380aa506d10988a449825fee80cfd129a9"
+  },
+  {
+    "file": "src/presentation/PerceptionFilter.ts",
+    "sha256": "8e5d15d33542f965f64c05275550c6936459dbe3ad27c60c7def908649c5d2c1"
+  },
+  {
+    "file": "src/presentation/ProtagonistView.ts",
+    "sha256": "0f8db6f43e81f0b00255a2486c5087fd72b1b30c769267274c811f6867dedfe3"
+  },
+  {
+    "file": "src/presentation/ScreenInvertRipple.ts",
+    "sha256": "b528cc815597a01d01469f9e580c688a00b1cbd420ec065d6c8c1bab2f4ee264"
+  },
+  {
+    "file": "src/presentation/TrailRender.ts",
+    "sha256": "ac21c5dea3cd09021972721708b4be9b6cfdbe4e55ad988241565ecaf70cfed6"
+  },
+  {
+    "file": "src/trace/DeepTrace.ts",
+    "sha256": "57416414e343a735915bcf7d70e1412cbf2a132f33b01bfe364d10631c6a8d44"
+  },
+  {
+    "file": "src/trace/EchoTrace.ts",
+    "sha256": "acb9b9d87cef559e9144c06ff0c0ff3c3c3ff793bbb5c9394bdbb42cebf8d70a"
+  },
+  {
+    "file": "src/trace/ElementEntity.ts",
+    "sha256": "f907c498b8b2542a3b1204b720fe620d5a2d6186d4155ae869d04b0b69d89bf2"
+  },
+  {
+    "file": "src/trace/EmpathyScaling.ts",
+    "sha256": "b69da01576601c0e23c85dd1fd4f4f380145478e8ef82a13f0575db1e9b83f11"
+  },
+  {
+    "file": "src/trace/PuzzleChain.ts",
+    "sha256": "89804529d2ac5ee56ca6a761cf1257a3ad8b2a37bf09d94f1fa7a4646263e6ef"
+  },
+  {
+    "file": "src/trace/PuzzleProgress.ts",
+    "sha256": "9930df35b56d7e22faeee2cff6d80f24f2338996c0bc3500aa0ae5544f535411"
+  },
+  {
+    "file": "src/trace/RhythmStrike.ts",
+    "sha256": "45c904bffadedf25c5a459df965649bbd561080aca8827250fd53946f8e50c35"
+  },
+  {
+    "file": "src/trace/Trace.ts",
+    "sha256": "843295b12eb979404708c7c08543f7f900f86841d006d095b61552dabd709686"
+  },
+  {
+    "file": "src/trace/TraceOrigin.ts",
+    "sha256": "0bb0540235f6f1a5cc09567327ce31143420065553a9777fab3f70283c944348"
+  },
+  {
+    "file": "src/trace/TraceProximityVolume.ts",
+    "sha256": "d689e7eae056339f81d850d0ff6a80db1773242423c5d64dc7243c42a578c053"
+  },
+  {
+    "file": "src/trace/TraceTier.ts",
+    "sha256": "0af1275da6e47a1660e58d3fcd53af8b735bea0d23935b96c7abdab1c36b8b3e"
+  },
+  {
+    "file": "src/trace/VisibilityState.ts",
+    "sha256": "8967aaa0098af6d4425a88f45beb961abd1b2eaa2d227da7074d730707fa67c9"
+  },
+  {
+    "file": "src/trace/VisibilityTransition.ts",
+    "sha256": "db16e0bec6ac13468985dd6f1125f1d96c36a13dea5cfbc0f9542287196049ff"
+  },
+  {
+    "file": "src/world/DepthAxis.ts",
+    "sha256": "d4b65989cb943b4c02d050d61cd9050b9362622b1192d53cc4eaeea1ae760768"
+  },
+  {
+    "file": "src/world/LateralAxis.ts",
+    "sha256": "9c2e6fc570e2b656cbefff7f5030b01ea9b5671aaeda369c574ac0bbf9b3e1f0"
+  },
+  {
+    "file": "src/world/MapCenter.ts",
+    "sha256": "dc5171943a6a79f3655d25e0b0e1a5a526f8f8afe68e149d458228a793ca26be"
+  },
+  {
+    "file": "src/world/VerticalAxis.ts",
+    "sha256": "f4a59268e561036bcb4891c64fa6128780305a39b2d9c036d55eb99760bdc238"
+  },
+  {
+    "file": "src/world/WorldInstance.ts",
+    "sha256": "c77d3f044a773c72b9b27fd1d208bb0ba42de08a2e077da8212440d3e572954c"
+  },
+  {
+    "file": "src/world/WorldMap.ts",
+    "sha256": "89ee978b1ba328eaedfea7a6016aa5618cb22ea8de1c6a393ffa0e29d1bd133f"
+  },
+  {
+    "file": "src/world/WorldMeter.ts",
+    "sha256": "f6bebb7130bc78a820df7ccca5ed34b4d63fe14ebf7f55fa29c16d974d317480"
+  }
+]

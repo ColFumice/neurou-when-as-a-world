@@ -1,0 +1,338 @@
+[
+  {
+    "name": "handle",
+    "file": "src/chart/VideoSyncTest.ts"
+  },
+  {
+    "name": "frameHandle",
+    "file": "src/chart/VideoSyncTest.ts"
+  },
+  {
+    "name": "timeoutHandle",
+    "file": "src/chart/VideoSyncTest.ts"
+  },
+  {
+    "name": "onLoaded",
+    "file": "src/chart/VideoSyncTest.ts"
+  },
+  {
+    "name": "onEnded",
+    "file": "src/chart/VideoSyncTest.ts"
+  },
+  {
+    "name": "onError",
+    "file": "src/chart/VideoSyncTest.ts"
+  },
+  {
+    "name": "_nowMs",
+    "file": "src/chart/VideoSyncTest.ts"
+  },
+  {
+    "name": "ledgerEvents",
+    "file": "src/director/IntentPort.ts"
+  },
+  {
+    "name": "event",
+    "file": "src/director/IntentPort.ts"
+  },
+  {
+    "name": "getLedgerEvents",
+    "file": "src/director/IntentPort.ts"
+  },
+  {
+    "name": "isWorldMotionGated",
+    "file": "src/director/IntentPort.ts"
+  },
+  {
+    "name": "frameBeganGated",
+    "file": "src/director/IntentPort.ts"
+  },
+  {
+    "name": "_finishedAtMs",
+    "file": "src/director/IntentPort.ts"
+  },
+  {
+    "name": "now",
+    "file": "src/director/IntentPort.ts"
+  },
+  {
+    "name": "evaluatePuzzleApproach",
+    "file": "src/director/IntentPort.ts"
+  },
+  {
+    "name": "AudioOutputClock",
+    "file": "src/presentation/AudioOutputClock.ts"
+  },
+  {
+    "name": "context",
+    "file": "src/presentation/AudioOutputClock.ts"
+  },
+  {
+    "name": "bgmBuffer",
+    "file": "src/presentation/AudioOutputClock.ts"
+  },
+  {
+    "name": "bgmSource",
+    "file": "src/presentation/AudioOutputClock.ts"
+  },
+  {
+    "name": "bgmGain",
+    "file": "src/presentation/AudioOutputClock.ts"
+  },
+  {
+    "name": "bgmStartSeconds",
+    "file": "src/presentation/AudioOutputClock.ts"
+  },
+  {
+    "name": "video",
+    "file": "src/presentation/AudioOutputClock.ts"
+  },
+  {
+    "name": "mediaSource",
+    "file": "src/presentation/AudioOutputClock.ts"
+  },
+  {
+    "name": "chartTimeMs",
+    "file": "src/presentation/AudioOutputClock.ts"
+  },
+  {
+    "name": "chartAnchor",
+    "file": "src/presentation/AudioOutputClock.ts"
+  },
+  {
+    "name": "chartRunning",
+    "file": "src/presentation/AudioOutputClock.ts"
+  },
+  {
+    "name": "disposed",
+    "file": "src/presentation/AudioOutputClock.ts"
+  },
+  {
+    "name": "onMediaPlaying",
+    "file": "src/presentation/AudioOutputClock.ts"
+  },
+  {
+    "name": "onMediaPause",
+    "file": "src/presentation/AudioOutputClock.ts"
+  },
+  {
+    "name": "onMediaWaiting",
+    "file": "src/presentation/AudioOutputClock.ts"
+  },
+  {
+    "name": "ensureContext",
+    "file": "src/presentation/AudioOutputClock.ts"
+  },
+  {
+    "name": "loadBgm",
+    "file": "src/presentation/AudioOutputClock.ts"
+  },
+  {
+    "name": "url",
+    "file": "src/presentation/AudioOutputClock.ts"
+  },
+  {
+    "name": "response",
+    "file": "src/presentation/AudioOutputClock.ts"
+  },
+  {
+    "name": "buffer",
+    "file": "src/presentation/AudioOutputClock.ts"
+  },
+  {
+    "name": "unlock",
+    "file": "src/presentation/AudioOutputClock.ts"
+  },
+  {
+    "name": "startBgm",
+    "file": "src/presentation/AudioOutputClock.ts"
+  },
+  {
+    "name": "setBgmVolume",
+    "file": "src/presentation/AudioOutputClock.ts"
+  },
+  {
+    "name": "value",
+    "file": "src/presentation/AudioOutputClock.ts"
+  },
+  {
+    "name": "readBgmTimeMs",
+    "file": "src/presentation/AudioOutputClock.ts"
+  },
+  {
+    "name": "attachVideo",
+    "file": "src/presentation/AudioOutputClock.ts"
+  },
+  {
+    "name": "resetChart",
+    "file": "src/presentation/AudioOutputClock.ts"
+  },
+  {
+    "name": "readChartTimeMs",
+    "file": "src/presentation/AudioOutputClock.ts"
+  },
+  {
+    "name": "outputSeconds",
+    "file": "src/presentation/AudioOutputClock.ts"
+  },
+  {
+    "name": "mapped",
+    "file": "src/presentation/AudioOutputClock.ts"
+  },
+  {
+    "name": "readOutputSeconds",
+    "file": "src/presentation/AudioOutputClock.ts"
+  },
+  {
+    "name": "timestamp",
+    "file": "src/presentation/AudioOutputClock.ts"
+  },
+  {
+    "name": "measuredLatency",
+    "file": "src/presentation/AudioOutputClock.ts"
+  },
+  {
+    "name": "detachVideo",
+    "file": "src/presentation/AudioOutputClock.ts"
+  },
+  {
+    "name": "destroy",
+    "file": "src/presentation/AudioOutputClock.ts"
+  },
+  {
+    "name": "location",
+    "file": "src/presentation/ChartPausePanel.ts"
+  },
+  {
+    "name": "local",
+    "file": "src/presentation/ChartPausePanel.ts"
+  },
+  {
+    "name": "ownsFrameDriverGuard",
+    "file": "src/presentation/FrameDriver.ts"
+  },
+  {
+    "name": "worldStrikeResetter",
+    "file": "src/presentation/InputCollector.ts"
+  },
+  {
+    "name": "chartContextProvider",
+    "file": "src/presentation/InputCollector.ts"
+  },
+  {
+    "name": "bindChartContextProvider",
+    "file": "src/presentation/InputCollector.ts"
+  },
+  {
+    "name": "worldMotionProvider",
+    "file": "src/presentation/InputCollector.ts"
+  },
+  {
+    "name": "bindWorldMotionProvider",
+    "file": "src/presentation/InputCollector.ts"
+  },
+  {
+    "name": "isWorldMotionGated",
+    "file": "src/presentation/InputCollector.ts"
+  },
+  {
+    "name": "clearHeldInput",
+    "file": "src/presentation/InputCollector.ts"
+  },
+  {
+    "name": "bindWorldStrikeResetter",
+    "file": "src/presentation/InputCollector.ts"
+  },
+  {
+    "name": "resetter",
+    "file": "src/presentation/InputCollector.ts"
+  },
+  {
+    "name": "centerX",
+    "file": "src/presentation/ScreenInvertRipple.ts"
+  },
+  {
+    "name": "centerY",
+    "file": "src/presentation/ScreenInvertRipple.ts"
+  },
+  {
+    "name": "effect",
+    "file": "src/presentation/ScreenInvertRipple.ts"
+  },
+  {
+    "name": "projected",
+    "file": "src/presentation/ScreenInvertRipple.ts"
+  },
+  {
+    "name": "cameraNode",
+    "file": "src/presentation/ScreenInvertRipple.ts"
+  },
+  {
+    "name": "rootTransform",
+    "file": "src/presentation/ScreenInvertRipple.ts"
+  },
+  {
+    "name": "createdVisualAssets",
+    "file": "src/presentation/TrailRender.ts"
+  },
+  {
+    "name": "asset",
+    "file": "src/presentation/TrailRender.ts"
+  },
+  {
+    "name": "nextBeatTimeMs",
+    "file": "src/trace/PuzzleChain.ts"
+  },
+  {
+    "name": "beatIntervalMs",
+    "file": "src/trace/PuzzleChain.ts"
+  },
+  {
+    "name": "resetSustained",
+    "file": "src/trace/PuzzleChain.ts"
+  },
+  {
+    "name": "end",
+    "file": "src/trace/PuzzleChain.ts"
+  },
+  {
+    "name": "GuideTransparency",
+    "file": "assets/scripts/SceneBuilder.ts"
+  },
+  {
+    "name": "createdVisualAssets",
+    "file": "assets/scripts/SceneBuilder.ts"
+  },
+  {
+    "name": "audioOutputClock",
+    "file": "assets/scripts/SceneBuilder.ts"
+  },
+  {
+    "name": "chartMediaStarted",
+    "file": "assets/scripts/SceneBuilder.ts"
+  },
+  {
+    "name": "lastChartState",
+    "file": "assets/scripts/SceneBuilder.ts"
+  },
+  {
+    "name": "rootTransform",
+    "file": "assets/scripts/SceneBuilder.ts"
+  },
+  {
+    "name": "parentTransform",
+    "file": "assets/scripts/SceneBuilder.ts"
+  },
+  {
+    "name": "error",
+    "file": "assets/scripts/SceneBuilder.ts"
+  },
+  {
+    "name": "renderer",
+    "file": "assets/scripts/SceneBuilder.ts"
+  },
+  {
+    "name": "transform",
+    "file": "assets/scripts/SceneBuilder.ts"
+  }
+]

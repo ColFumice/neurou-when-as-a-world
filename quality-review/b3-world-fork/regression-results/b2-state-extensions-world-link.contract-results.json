@@ -1,0 +1,127 @@
+{
+  "category": "ContractTest",
+  "passed": 24,
+  "failed": 0,
+  "results": [
+    {
+      "name": "Primary declares explicit verified NotApplicable without profile/source access",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "FinalShore declares NotApplicable without borrowing a six-world source",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "BugShore without injected authoritative reader rejects",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "BugShore does not invent snapshot before actual source entry",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "source entry freezes complete profile, clock and identities after durable write",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "Bound reads live source changes while stored snapshot changes only on source entry",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "directory direct reentry hydration neither clocks nor refreshes nor persists",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "known source tombstone derives Orphaned purely, explicit lifecycle persists once",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "Orphaned profile never refreshes or rebinds when source id reappears",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "Unknown source never silently becomes orphaned or changes saved bytes",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "write failure preserves prior in-memory snapshot and permits same entry retry",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "mutating link lifecycle requires actual persistence callback",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "persist callback cannot reenter and replace an outer candidate",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "wrong source entry id rejects before reading or persisting",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "single level authority rejects Shore source and self references",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "authoritative source account/world mismatch rejects",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "snapshot account/world/character/source/state/version are strictly bound",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "missing required orphan snapshot cannot be replaced by a default profile",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "strict envelopes reject unknown fields, inherited prototypes, accessors and symbol keys",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "profile validation deep-clones immutable full configuration",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "profile rejects empty templates/routes, missing/duplicate providers and route references",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "private task routing rejects cloud while ordinary route can fall back to actual templates",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "local provider configuration is retained completely and quotations cannot generate",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "sparse/accessor/extended arrays and future profile schema reject without executing getters",
+      "category": "ContractTest",
+      "result": "PASS"
+    }
+  ]
+}

@@ -1,0 +1,405 @@
+{
+  "phase": "B2.5c-2c final validation commands and source lineage",
+  "generatedUtc": "2026-10-11T09:20:50.378Z",
+  "nodeVersion": "v24.19.0",
+  "testRuns": [
+    {
+      "kind": "RealServerRelayLoopbackHttpPG",
+      "command": [
+        "node",
+        "quality-review/b2-5c-2c/server-relay-tests.mjs",
+        "quality-review/b2-5c-2c/evidence/runtime/.local/connection.json",
+        "quality-review/b2-5c-2c/evidence/server-relay-run-05/results.json"
+      ],
+      "cwd": "D:\\Project\\A_New_Begin\\Neurou_official",
+      "stdoutStderr": "evidence/server-relay-run-05.log",
+      "log": {
+        "path": "evidence/server-relay-run-05.log",
+        "bytes": 1878,
+        "sha256": "7dc4590f4a1ee105c2d321bdbc228c9034dd35cc495a15713adea02298c2b43d"
+      },
+      "actualExitCode": 0,
+      "observedExecSession": 58119,
+      "result": {
+        "path": "evidence/server-relay-run-05/results.json",
+        "sha256": "8ba3d7831b9f267fa331e855cafdfde8bd6175c0a7eced57810dc2ad24c28443"
+      },
+      "counts": {
+        "passed": 20,
+        "failed": 0,
+        "total": 20
+      },
+      "clockCategories": {
+        "productionRealWall": 17,
+        "explicitlyIsolatedClock": 3
+      },
+      "executionEvidenceSource": "Server agent supplied actual completed command/exit0; raw results/log retained.",
+      "harnessAtDelivery": {
+        "path": "server-relay-tests.mjs",
+        "bytes": 40624,
+        "sha256": "b0029dfc763b68983d057b90c3185ee9524fa22a1a508c23db285b5bcb848de5"
+      },
+      "harnessLineageNote": "After the completed full20 run, the same new harness added a --concurrency-only branch and two targeted first-enqueue cases. Full20 case bodies/assertions remained unchanged; the delivery hash records this later harness, not a claim of identical whole-harness bytes at earlier run05 time."
+    },
+    {
+      "kind": "RealServerRelayTargetedFirstEnqueueConcurrency",
+      "command": [
+        "node",
+        "quality-review/b2-5c-2c/server-relay-tests.mjs",
+        "quality-review/b2-5c-2c/evidence/runtime/.local/connection.json",
+        "quality-review/b2-5c-2c/evidence/server-relay-concurrency/results.json",
+        "--concurrency-only"
+      ],
+      "cwd": "D:\\Project\\A_New_Begin\\Neurou_official",
+      "stdoutStderr": "evidence/server-relay-concurrency.log",
+      "log": {
+        "path": "evidence/server-relay-concurrency.log",
+        "bytes": 199,
+        "sha256": "273e20b74f302c726c5407b8f69e03002e255f4191a2b7ecb1e520f30117d7fd"
+      },
+      "actualExitCode": 0,
+      "result": {
+        "path": "evidence/server-relay-concurrency/results.json",
+        "sha256": "ed78163b94181cbe9b112ab9c9b94acf66fe4ed55b813da9769e675a7b43add1"
+      },
+      "counts": {
+        "passed": 2,
+        "failed": 0,
+        "total": 2
+      },
+      "harnessAtDelivery": {
+        "path": "server-relay-tests.mjs",
+        "bytes": 40624,
+        "sha256": "b0029dfc763b68983d057b90c3185ee9524fa22a1a508c23db285b5bcb848de5"
+      }
+    },
+    {
+      "kind": "ProductionRelayAdapterRealLoopbackHttpPgWithIsolatedCryptoAndHostCache",
+      "command": [
+        "node",
+        "quality-review/b2-5c-2c/client-real-http.cjs"
+      ],
+      "cwd": "D:\\Project\\A_New_Begin\\Neurou_official",
+      "powershellRedirection": "*> quality-review/b2-5c-2c/evidence/client-real-http-run-01.log",
+      "stdoutStderr": "evidence/client-real-http-run-01.log",
+      "log": {
+        "path": "evidence/client-real-http-run-01.log",
+        "bytes": 1989,
+        "sha256": "312f043ad5c44c6fdaac633f11ff31d34c380d5618f0891d820fba998068eef2"
+      },
+      "actualExitCode": 0,
+      "observedExecSession": 80058,
+      "result": {
+        "path": "evidence/client-real-http-results.json",
+        "sha256": "b432d878a1afd8613f7812a8e3d329ac49623f5d8f23e86936aaeecd00a093b9"
+      },
+      "counts": {
+        "passed": 22,
+        "failed": 0
+      },
+      "harnessAtDelivery": {
+        "path": "client-real-http.cjs",
+        "bytes": 35766,
+        "sha256": "bb413efa3cc6614159361ca651e8b2b836581a77d63f597456769a0b9e0d488f"
+      },
+      "limits": "Actual production session/authority/Relay adapters and c-1 validator, Fastify TCP/PG17 and production wall clock. In-memory native crypto oracle and isolated test WAL host cache are injected. No production group-key delivery, complete dual-client replay, product UI, physical host/boot or LAN TLS acceptance."
+    }
+  ],
+  "finalBuildTypecheck": {
+    "path": "evidence/server-build-checks/final/results.json",
+    "sha256": "e548d64e8b83165ed3d7039ad6e9d13945bcedda2250ede2ee85fb4904d93220",
+    "pass": true,
+    "runs": [
+      {
+        "name": "build",
+        "command": [
+          "C:\\Program Files\\nodejs\\node.exe",
+          "SharedBuild.mjs"
+        ],
+        "cwd": "D:\\Project\\A_New_Begin\\Neurou_official\\server",
+        "startedUtc": "2026-10-11T09:14:20.521Z",
+        "completedUtc": "2026-10-11T09:14:22.423Z",
+        "exitCode": 0,
+        "pass": true,
+        "log": "server-build-checks/final/build.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "typecheck",
+        "command": [
+          "C:\\Program Files\\nodejs\\node.exe",
+          "node_modules/typescript/bin/tsc",
+          "-p",
+          "tsconfig.shared.json",
+          "--noEmit"
+        ],
+        "cwd": "D:\\Project\\A_New_Begin\\Neurou_official\\server",
+        "startedUtc": "2026-10-11T09:14:22.423Z",
+        "completedUtc": "2026-10-11T09:14:23.572Z",
+        "exitCode": 0,
+        "pass": true,
+        "log": "server-build-checks/final/typecheck.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ]
+  },
+  "finalThreeGates": {
+    "path": "evidence/gate-runs/final/results.json",
+    "sha256": "13f9840c807c749aa8b0e0d8400e286e46cde95a07b178081a840917adaa4c7a",
+    "pass": true
+  },
+  "contractOracle": {
+    "path": "evidence/client-relay-contract/results.json",
+    "sha256": "ee95a7d478f9f0adc4b3995b751b6a9042e391a29ac40306d653da2edd106aee",
+    "passed": 32,
+    "realHttp": false,
+    "realPostgreSQL": false
+  },
+  "deadlineOracle": {
+    "path": "evidence/p10-deadline-results.json",
+    "sha256": "8788459a9c62b16504883173266b180b993da9a355f3296fe9ad782fe10801c8",
+    "passed": 13,
+    "realHttp": false,
+    "simulatedElapsedClock": true
+  },
+  "postgresReadonlyFacts": {
+    "path": "evidence/runtime-readonly-facts.json",
+    "sha256": "9ed371f4b1a0165a17462c3a82d7d28632a9271d9166d3f7b329d92c23d68fd8",
+    "pass": true
+  },
+  "historicalRegression": {
+    "path": "evidence/paused-evidence-summary.json",
+    "sha256": "664ae6abeca0056f6644a719a5cd404304e0872f22d453cbfd2bf45e1dbaf369",
+    "passedTotal": 508,
+    "categories": [
+      {
+        "category": "ContractAdapterLogicalFixture",
+        "passed": 227,
+        "pass": true
+      },
+      {
+        "category": "PureCanonicalValidatorReplay",
+        "passed": 154,
+        "pass": true
+      },
+      {
+        "category": "OldAuth16ServerHttpPGPlus24ClientOraclePlus6ClientHttpPG",
+        "passed": 46,
+        "pass": true
+      },
+      {
+        "category": "Authority32ProtocolPlus18ClientTransportOracle",
+        "passed": 50,
+        "pass": true
+      },
+      {
+        "category": "Authority20ServerAnd11ProductionAdapterRealHttpPG",
+        "passed": 31,
+        "pass": true
+      }
+    ]
+  },
+  "sourceLineage": [
+    {
+      "path": "server/src/RelayRoute.ts",
+      "acceptedFinalSha256": "d15e6323479eb36b8f7ada83578c628d287db252e2eb78e6f27799236971bd6b",
+      "currentSha256": "d15e6323479eb36b8f7ada83578c628d287db252e2eb78e6f27799236971bd6b",
+      "exactFinalBytes": true
+    },
+    {
+      "path": "server/src/RelayService.ts",
+      "acceptedFinalSha256": "55ffe45f60aeb69b9c32c1b4a3e498c8e184f921fdd4db23554f8baf85491549",
+      "currentSha256": "55ffe45f60aeb69b9c32c1b4a3e498c8e184f921fdd4db23554f8baf85491549",
+      "exactFinalBytes": true
+    },
+    {
+      "path": "server/src/RelayStorage.ts",
+      "acceptedFinalSha256": "a5cbd6ea1635ca347aaa11fd9f3c2040fe16212739d2f78e277a0bbf0508e9e5",
+      "currentSha256": "a5cbd6ea1635ca347aaa11fd9f3c2040fe16212739d2f78e277a0bbf0508e9e5",
+      "exactFinalBytes": true
+    },
+    {
+      "path": "server/src/buildRelayServer.ts",
+      "acceptedFinalSha256": "89f08e60c8c1a699c585384047bf003e981f19ba6b8043193712f10aa9798430",
+      "currentSha256": "89f08e60c8c1a699c585384047bf003e981f19ba6b8043193712f10aa9798430",
+      "exactFinalBytes": true
+    },
+    {
+      "path": "src/director/IntentPort.ts",
+      "acceptedFinalSha256": "4348f4bdc950f1f9c6e224364fa77a80adeb0f2722c608e1dd961c0fe5a4e0a2",
+      "currentSha256": "4348f4bdc950f1f9c6e224364fa77a80adeb0f2722c608e1dd961c0fe5a4e0a2",
+      "exactFinalBytes": true
+    },
+    {
+      "path": "src/presentation/RealCommitRelayAdapter.ts",
+      "acceptedFinalSha256": "ec4b5d8cb11caf06f499d65706a64cd880ce8c7f3ba849ff557225cebd9fd9a9",
+      "currentSha256": "ec4b5d8cb11caf06f499d65706a64cd880ce8c7f3ba849ff557225cebd9fd9a9",
+      "exactFinalBytes": true
+    },
+    {
+      "path": "src/presentation/RealSharedServiceSessionAdapter.ts",
+      "acceptedFinalSha256": "8a1b8d778fc1d25e4c93855a2929b2c7fe3dded476599b250863a163edd2c452",
+      "currentSha256": "8a1b8d778fc1d25e4c93855a2929b2c7fe3dded476599b250863a163edd2c452",
+      "exactFinalBytes": true
+    }
+  ],
+  "oldC2bSourceStability": [
+    {
+      "path": "assets/scripts/SharedRelayPrototypeBuilder.ts",
+      "acceptedC2bSha256": "65e9636369f66dec87b36da94beea0c79f998ef3946b72875312da77ea3840bf",
+      "finalSha256": "65e9636369f66dec87b36da94beea0c79f998ef3946b72875312da77ea3840bf",
+      "expectedException": false
+    },
+    {
+      "path": "server/SharedBuild.mjs",
+      "acceptedC2bSha256": "a3cc9d9073be378093e0969b1b3bdbf6a61db96e6668ca3eb815183540db9c01",
+      "finalSha256": "a3cc9d9073be378093e0969b1b3bdbf6a61db96e6668ca3eb815183540db9c01",
+      "expectedException": false
+    },
+    {
+      "path": "server/sql/002_shared_authority.sql",
+      "acceptedC2bSha256": "8891dc04fc4c9c6aa35eabcfc2c3241176a6c6960fc9aef52edb1f4a288a2a59",
+      "finalSha256": "8891dc04fc4c9c6aa35eabcfc2c3241176a6c6960fc9aef52edb1f4a288a2a59",
+      "expectedException": false
+    },
+    {
+      "path": "server/src/AuthorityRoute.ts",
+      "acceptedC2bSha256": "1490b475447f7a8cb6cbf93763c1e32b5f36624729e5bfae52904def39ff6f0e",
+      "finalSha256": "1490b475447f7a8cb6cbf93763c1e32b5f36624729e5bfae52904def39ff6f0e",
+      "expectedException": false
+    },
+    {
+      "path": "server/src/RealAuthorityClock.ts",
+      "acceptedC2bSha256": "ef385ef705626a7269dd171e6491ee3523819d515427effb25ec70bfa657efda",
+      "finalSha256": "ef385ef705626a7269dd171e6491ee3523819d515427effb25ec70bfa657efda",
+      "expectedException": false
+    },
+    {
+      "path": "server/src/SharedCryptoProof.ts",
+      "acceptedC2bSha256": "6a1a49343276bd2651548c1c0dc815601182eaa17d4011da8d8ab01eff208f97",
+      "finalSha256": "6a1a49343276bd2651548c1c0dc815601182eaa17d4011da8d8ab01eff208f97",
+      "expectedException": false
+    },
+    {
+      "path": "server/src/SharedMigrationRunner.ts",
+      "acceptedC2bSha256": "ca334b3a0d9239be218881d9a9ed53c3144e614bfad5b24474040c32f915cc43",
+      "finalSha256": "ca334b3a0d9239be218881d9a9ed53c3144e614bfad5b24474040c32f915cc43",
+      "expectedException": false
+    },
+    {
+      "path": "server/src/SharedReceiptSigner.ts",
+      "acceptedC2bSha256": "4d32c01fd861f7dd68b817da12a10f3a9b4b99858a1d503fab25e60fde3cd9ef",
+      "finalSha256": "4d32c01fd861f7dd68b817da12a10f3a9b4b99858a1d503fab25e60fde3cd9ef",
+      "expectedException": false
+    },
+    {
+      "path": "server/src/SharedServerConfig.ts",
+      "acceptedC2bSha256": "aee3d526e2af6c4b7682b49ddd0e0e3e80deee73f456c7b5c2045b9cdf30c87f",
+      "finalSha256": "aee3d526e2af6c4b7682b49ddd0e0e3e80deee73f456c7b5c2045b9cdf30c87f",
+      "expectedException": false
+    },
+    {
+      "path": "server/src/SharedSessionVerifier.ts",
+      "acceptedC2bSha256": "674b5411364bfaa42728885d94453c1468564690b81aa519e7b40a7f6f1439b9",
+      "finalSha256": "674b5411364bfaa42728885d94453c1468564690b81aa519e7b40a7f6f1439b9",
+      "expectedException": false
+    },
+    {
+      "path": "server/src/WorldAuthorityService.ts",
+      "acceptedC2bSha256": "99eabb1a7f2549af482d8a3cd619774173235b31fcf9dcc085c54e3313b9df88",
+      "finalSha256": "99eabb1a7f2549af482d8a3cd619774173235b31fcf9dcc085c54e3313b9df88",
+      "expectedException": false
+    },
+    {
+      "path": "server/src/WorldAuthorityStorage.ts",
+      "acceptedC2bSha256": "69958b263668dbe315b1787b29a1c451a1f489f7e5e009ab6dac19d0574fe8ad",
+      "finalSha256": "69958b263668dbe315b1787b29a1c451a1f489f7e5e009ab6dac19d0574fe8ad",
+      "expectedException": false
+    },
+    {
+      "path": "server/src/buildSharedServer.ts",
+      "acceptedC2bSha256": "60f30f111909739bceb2be4135b0a1f4b49c31b0061859a334ae2c7b88194733",
+      "finalSha256": "60f30f111909739bceb2be4135b0a1f4b49c31b0061859a334ae2c7b88194733",
+      "expectedException": false
+    },
+    {
+      "path": "server/src/shared-cli.ts",
+      "acceptedC2bSha256": "ab4e9a0d87950fa859cd99fd8c35533935ed33195d188772e7d2e7f9014a0116",
+      "finalSha256": "ab4e9a0d87950fa859cd99fd8c35533935ed33195d188772e7d2e7f9014a0116",
+      "expectedException": false
+    },
+    {
+      "path": "server/src/shared-main.ts",
+      "acceptedC2bSha256": "db867cb126915f1652313f21c009d178d25fd528cdd5e48e7780e4630d284df2",
+      "finalSha256": "db867cb126915f1652313f21c009d178d25fd528cdd5e48e7780e4630d284df2",
+      "expectedException": false
+    },
+    {
+      "path": "server/test/shared-clock-migration.test.ts",
+      "acceptedC2bSha256": "1a045ff129e8a68142c20af04cadcca55ec62de1d1c07e9cdbcd4d1249c58d95",
+      "finalSha256": "1a045ff129e8a68142c20af04cadcca55ec62de1d1c07e9cdbcd4d1249c58d95",
+      "expectedException": false
+    },
+    {
+      "path": "server/test/shared-http.test.ts",
+      "acceptedC2bSha256": "1040fb1057b2f199e2df0e71c874ddeff9f4ef0797b3a649ddcc23af0c7a021a",
+      "finalSha256": "1040fb1057b2f199e2df0e71c874ddeff9f4ef0797b3a649ddcc23af0c7a021a",
+      "expectedException": false
+    },
+    {
+      "path": "server/tsconfig.shared.json",
+      "acceptedC2bSha256": "7a152e46c1d4c92f15e5e0f8b1dd776315223e3f1b8c5274446f6671b26fb031",
+      "finalSha256": "7a152e46c1d4c92f15e5e0f8b1dd776315223e3f1b8c5274446f6671b26fb031",
+      "expectedException": false
+    },
+    {
+      "path": "src/director/IntentPort.ts",
+      "acceptedC2bSha256": "1e29ebc8f7cf1bfef700eea7fc1bae8a09e6cdb4e1f39d9e2ef07549991649a3",
+      "finalSha256": "4348f4bdc950f1f9c6e224364fa77a80adeb0f2722c608e1dd961c0fe5a4e0a2",
+      "expectedException": true
+    },
+    {
+      "path": "src/director/SharedServiceProtocolCodec.ts",
+      "acceptedC2bSha256": "22bb5e8139f8323388bcb2129d021471c48b97c0ede4a25cbea1285629400fea",
+      "finalSha256": "22bb5e8139f8323388bcb2129d021471c48b97c0ede4a25cbea1285629400fea",
+      "expectedException": false
+    },
+    {
+      "path": "src/director/SharedServiceProtocolContracts.ts",
+      "acceptedC2bSha256": "e74f48e14ded771db56cb1890c24a19490e52e2a9b8d96a9c3a9a9bad33b4a80",
+      "finalSha256": "e74f48e14ded771db56cb1890c24a19490e52e2a9b8d96a9c3a9a9bad33b4a80",
+      "expectedException": false
+    },
+    {
+      "path": "src/presentation/RealSharedServiceSessionAdapter.ts",
+      "acceptedC2bSha256": "46238bab2bd3d082622d0b22ba2e3cb82f0330b40f77d70c4de6b229b8af1f8e",
+      "finalSha256": "8a1b8d778fc1d25e4c93855a2929b2c7fe3dded476599b250863a163edd2c452",
+      "expectedException": true
+    },
+    {
+      "path": "src/presentation/RealWorldAuthorityAdapter.ts",
+      "acceptedC2bSha256": "fa51d3cc028601f3506bcdee6ce53e5288ebeb3cb98f6fd2a94e1092aac8db39",
+      "finalSha256": "fa51d3cc028601f3506bcdee6ce53e5288ebeb3cb98f6fd2a94e1092aac8db39",
+      "expectedException": false
+    }
+  ],
+  "unauthorizedOldC2bSourceDifferences": [],
+  "protectionEvidence": {
+    "path": "evidence/protected-implementation-final-audit.json",
+    "sha256": "7b3f89d6a4e7cada743af1f951ac2d2569f3859ea61ab64d6121a8c2aa92947d",
+    "pass": true,
+    "exactP10": true,
+    "intentPrefixPreserved": true,
+    "oldKernelChangedCount": 0
+  },
+  "rawRecordsRetained": [
+    "server-relay-run-01/results.json",
+    "server-relay-run-02/results.json",
+    "server-relay-run-04/results.json",
+    "history-c2b-http/results.json",
+    "protected-final-audit.json",
+    "protected-implementation-paused-audit.json"
+  ],
+  "pass": true,
+  "scope": "Mechanical linkage of actual completed commands, preserved logs/results and delivered implementation bytes. Test source changes after full20 execution are disclosed. Historical and contract-oracle categories are distinct from real Relay HTTP/PG evidence. Stage acceptance remains the delivery report and PROTOCOL review; this index does not certify excluded future phases."
+}

@@ -1,0 +1,1 @@
+export interface MusicEditorReader { getDocument(): unknown }; export interface MusicEditorPort { submitMusicEditorIntent(intent: unknown): void }; export class MusicEditorSession {}

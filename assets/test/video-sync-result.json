@@ -1,0 +1,12 @@
+﻿[
+  {
+    "resolution": "1920x1080",
+    "deviationMs": 16.87,
+    "sampleCount": 10
+  },
+  {
+    "resolution": "2560x1440",
+    "deviationMs": 16.53,
+    "sampleCount": 10
+  }
+]

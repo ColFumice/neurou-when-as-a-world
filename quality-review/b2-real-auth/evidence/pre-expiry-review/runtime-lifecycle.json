@@ -1,0 +1,27 @@
+{
+  "observedUtc": "2026-10-11T02:58:23.4289602Z",
+  "finalRuntimeState": "StoppedAfterAcceptance",
+  "stopCommand": "quality-review/b2-real-auth/evidence/runtime/stop-postgres.ps1",
+  "stopExitCode": 0,
+  "PostgreSQL": {
+    "address": "127.0.0.1",
+    "port": 55436,
+    "listenerCount": 0,
+    "postmasterPidFilePresent": false,
+    "clusterDataRetained": true,
+    "privateConnectionRetained": true
+  },
+  "HTTP": {
+    "clientTestAddress": "127.0.0.1",
+    "clientTestPort": 43126,
+    "clientTestListenerCount": 0,
+    "defaultMainPort": 43125,
+    "defaultMainListenerCount": 0,
+    "matchingMainOrTestNodeProcesses": 0,
+    "ephemeralHarnessPorts": "Not retained; actual child main processes exit in test cleanup and final Node test runner has exited."
+  },
+  "restartCommand": "quality-review/b2-real-auth/evidence/runtime/start-postgres.ps1",
+  "noDeletion": true,
+  "pointInTimeReadinessUntouched": true,
+  "verification": "PostgreSQL pg_ctl reports server stopped; no postmaster.pid or loopback55436 listener; client43126/default43125 have no listener and no matching server/test Node child process remains."
+}

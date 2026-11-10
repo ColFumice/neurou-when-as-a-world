@@ -1,0 +1,6 @@
+{
+ "extends":"./tsconfig.json",
+ "compilerOptions":{"outDir":"shared-dist"},
+ "include":["src/**/*.ts","test/shared-*.test.ts"],
+ "exclude":["test/http.test.ts","test/main-process.test.ts"]
+}

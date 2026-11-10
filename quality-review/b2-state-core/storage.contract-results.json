@@ -1,0 +1,208 @@
+{
+  "category": "ContractTest",
+  "note": "Isolated in-memory locks and storage plus actual domain validators; no production world clear or Cocos restore is claimed.",
+  "passed": 40,
+  "failed": 0,
+  "results": [
+    {
+      "name": "read absence preserves historical missing FormatTime and writes nothing",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "explicit new-world initialization requires lease and proof, then writes authority once",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "world lease uses encoded identity and rejects writes after release",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "same instance rejects duplicate pending/held lease; separate adapters serialize the same world",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "different worlds have independent leases with account/world isolation",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "release waits for retained pending account commits before another runtime obtains the world lease",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "missing lock and failing provider reject without holding phantom leases or writing data",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "locked save requires expected current state and monotonic revision; identical retry does not rewrite bytes",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "quota failure preserves prior bytes and does not publish a durable next revision",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "known immutable FormatTime cannot be changed or removed; old null cannot be filled later",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "tombstone blocks further world writes while bytes and independent account clear keys remain intact",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "published content validates combined Ledger/Puzzle/Format sections and produces cloned frozen data",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "atomic combined checkpoint enforces durable Ledger prefix even when bypassing section facade",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "known world kind cannot be changed, but unavailable identity can be enriched by formal content",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "nullable sections never bypass missing bound domain validators",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "strict core codec rejects wrong schema without writes",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "strict core codec rejects wrong kind without writes",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "strict core codec rejects missing field without writes",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "strict core codec rejects extra field without writes",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "strict core codec rejects bad identity without writes",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "strict core codec rejects unencodable identity without writes",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "strict core codec rejects negative revision without writes",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "strict core codec rejects fractional revision without writes",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "strict core codec rejects bad captured time without writes",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "strict core codec rejects Primary origin without writes",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "strict core codec rejects Shore origin without writes",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "strict core codec rejects unknown world kind without writes",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "strict core codec rejects extra section without writes",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "strict core codec rejects missing section without writes",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "strict core codec rejects negative FormatTime without writes",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "strict core codec rejects extra FormatTime without writes",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "strict core codec rejects non-plain prototype without writes",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "strict core codec rejects symbol field without writes",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "codec rejects duplicate/sparse puzzle list and cross-world section identities",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "accessors and revoked proxies fail safely; getter code never runs at codec or platform boundary",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "existing malformed bytes are retained when reading or saving rejects",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "existing null bytes are retained when reading or saving rejects",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "existing array bytes are retained when reading or saving rejects",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "existing old header-only bytes are retained when reading or saving rejects",
+      "category": "ContractTest",
+      "result": "PASS"
+    },
+    {
+      "name": "existing future schema bytes are retained when reading or saving rejects",
+      "category": "ContractTest",
+      "result": "PASS"
+    }
+  ]
+}

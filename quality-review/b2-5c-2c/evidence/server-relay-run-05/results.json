@@ -1,0 +1,133 @@
+{
+  "schemaVersion": 1,
+  "suite": "c-2c-real-loopback-pg-server",
+  "serviceMode": "ExternalService",
+  "databaseVersion": "PostgreSQL17",
+  "isolatedPublicWorldPins": true,
+  "noProductionKeyDeliveryOrReplayClaim": true,
+  "total": 20,
+  "passed": 20,
+  "failed": 0,
+  "results": [
+    {
+      "name": "actual loopback registered session, shared authority and relay strict Host/Origin/CSRF",
+      "pass": true,
+      "clock": "production-real-wall",
+      "elapsedMs": 52
+    },
+    {
+      "name": "admitted without enqueue is signed conservative MissingAdmittedEnvelope Gap",
+      "pass": true,
+      "clock": "production-real-wall",
+      "elapsedMs": 40
+    },
+    {
+      "name": "submit above old auth 16KiB stores exact envelope/proof/position/original receipt atomically",
+      "pass": true,
+      "clock": "production-real-wall",
+      "elapsedMs": 41
+    },
+    {
+      "name": "concurrent same nonce returns original HTTP bytes; fresh nonce same digest retains position",
+      "pass": true,
+      "clock": "production-real-wall",
+      "elapsedMs": 125
+    },
+    {
+      "name": "same identity different envelope digest rejects; bad author signature never queues",
+      "pass": true,
+      "clock": "production-real-wall",
+      "elapsedMs": 73
+    },
+    {
+      "name": "signed pull reconstructs original exact ciphertext and complete public proof",
+      "pass": true,
+      "clock": "production-real-wall",
+      "elapsedMs": 56
+    },
+    {
+      "name": "P11 request memory contains references/skeleton/hash only; live same nonce reconstructs exact wire",
+      "pass": true,
+      "clock": "production-real-wall",
+      "elapsedMs": 51
+    },
+    {
+      "name": "P11 corrupt memory shape/hash/signature rejects without body or new nonce consumption",
+      "pass": true,
+      "clock": "production-real-wall",
+      "elapsedMs": 115
+    },
+    {
+      "name": "ACK registered signature and exact recipient/position/digest; invalid batch rolls back atomically",
+      "pass": true,
+      "clock": "production-real-wall",
+      "elapsedMs": 54
+    },
+    {
+      "name": "all recipients ACK cannot delete any bytes before admittedAt plus retention",
+      "pass": true,
+      "clock": "production-real-wall",
+      "elapsedMs": 49
+    },
+    {
+      "name": "relay insertion failure rolls position and nonce back while auth/authority remain usable",
+      "pass": true,
+      "clock": "production-real-wall",
+      "elapsedMs": 99
+    },
+    {
+      "name": "lost mutation response and disconnect retry recover original committed HTTP bytes",
+      "pass": true,
+      "clock": "production-real-wall",
+      "elapsedMs": 52
+    },
+    {
+      "name": "one pending pull per device; long wait holds no PG business lock; cancellation clears pending",
+      "pass": true,
+      "clock": "production-real-wall",
+      "elapsedMs": 508
+    },
+    {
+      "name": "default 25000ms actual server wait completes past 12000ms without occupied business locks",
+      "pass": true,
+      "clock": "production-real-wall",
+      "elapsedMs": 25016
+    },
+    {
+      "name": "restart preserves relay generation/positions/raw queue/ACK and original nonce response",
+      "pass": true,
+      "clock": "production-real-wall",
+      "elapsedMs": 258
+    },
+    {
+      "name": "pull caps count and full signed response bytes without partial commits or cursor skipping",
+      "pass": true,
+      "clock": "production-real-wall",
+      "elapsedMs": 2668
+    },
+    {
+      "name": "strict route wire/independent body limits and uint64 reject without relaxing old auth",
+      "pass": true,
+      "clock": "production-real-wall",
+      "elapsedMs": 88
+    },
+    {
+      "name": "retention expiration persists tombstones/floor/original receipt; expired resubmit does not restore bytes",
+      "pass": true,
+      "clock": "isolated-injected-clock-no-production-wall-duration-claim",
+      "elapsedMs": 234
+    },
+    {
+      "name": "certified missing PG row advances durable generation once, then missing-authority-envelope Gap",
+      "pass": true,
+      "clock": "isolated-injected-clock-and-explicit-test-storage-loss",
+      "elapsedMs": 38
+    },
+    {
+      "name": "P11 real root epoch credential revocation prevents old nonce body replay",
+      "pass": true,
+      "clock": "isolated-injected-clock-real-authority-epoch-route",
+      "elapsedMs": 44
+    }
+  ]
+}

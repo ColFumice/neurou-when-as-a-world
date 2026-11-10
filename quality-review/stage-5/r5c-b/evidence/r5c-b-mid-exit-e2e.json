@@ -1,0 +1,20 @@
+{
+  "startedAt": "2026-10-26T05:07:45.843Z",
+  "error": null,
+  "explore": true,
+  "beforeExit": {
+    "modeButton": "ESC / EXPLORE",
+    "hud": true,
+    "countdown": "GET READY\n\n1"
+  },
+  "returned": {
+    "explore": true,
+    "grid": false,
+    "hud": false
+  },
+  "ledger": {
+    "lines": 0,
+    "valid": false
+  },
+  "finishedAt": "2026-10-26T05:08:05.734Z"
+}

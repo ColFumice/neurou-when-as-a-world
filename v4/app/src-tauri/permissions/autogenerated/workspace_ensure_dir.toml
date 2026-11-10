@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-workspace-ensure-dir"
+description = "Enables the workspace_ensure_dir command without any pre-configured scope."
+commands.allow = ["workspace_ensure_dir"]
+
+[[permission]]
+identifier = "deny-workspace-ensure-dir"
+description = "Denies the workspace_ensure_dir command without any pre-configured scope."
+commands.deny = ["workspace_ensure_dir"]

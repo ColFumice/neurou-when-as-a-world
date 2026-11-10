@@ -1,0 +1,8 @@
+{
+  "decision": "批准 P10 最小局部修正，继续 c-2c",
+  "source": "Direct user reply to P10 approval question",
+  "permittedChange": "Only shared request local deadline: validated relay/pull maximumWaitMs + 7000; otherwise 12000. Private auth call unchanged.",
+  "path": "src/presentation/RealSharedServiceSessionAdapter.ts",
+  "beforeSha256": "46238bab2bd3d082622d0b22ba2e3cb82f0330b40f77d70c4de6b229b8af1f8e",
+  "beforeBytes": 44370
+}

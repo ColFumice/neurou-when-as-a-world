@@ -1,0 +1,13 @@
+{
+  "phase": "B2.5c-2b exact planned source and isolated test additions",
+  "authorization": "User c-2b implementation scope; parent /root explicitly directed freezing the server agent's exact helper/test/tsconfig list after the all-old-file baseline, with no directory-wide allowance. No existing-file modification is authorized.",
+  "frozenUtc": "2026-10-11T07:39:00.000Z",
+  "paths": [
+    "server/src/SharedReceiptSigner.ts",
+    "server/src/shared-cli.ts",
+    "server/src/SharedCryptoProof.ts",
+    "server/tsconfig.shared.json",
+    "server/test/shared-http.test.ts",
+    "server/test/shared-clock-migration.test.ts"
+  ]
+}

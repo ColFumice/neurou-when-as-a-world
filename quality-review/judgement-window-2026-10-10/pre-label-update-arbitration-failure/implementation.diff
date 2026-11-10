@@ -1,0 +1,133 @@
+diff --git a/constants/index.ts b/constants/index.ts
+index 02211f0..a045914 100644
+--- a/constants/index.ts
++++ b/constants/index.ts
+@@ -220,16 +220,16 @@ export const MAX_MOVE_SPEED_WM_PER_SECONDS = 5;
+ export const DEPTH_RANGE_WM = 5;
+ 
+ /**
+- * Perfect 判定窗口（毫秒，占位值）：
+- * 必须严格小于 GOOD_WINDOW_MS（50 < 120 ✓）。
++ * Perfect 判定窗口（毫秒）：用户确认放宽，修订 VERDICT-123 第 5 条。
++ * 必须严格小于 GOOD_WINDOW_MS（100 < 200 ✓）；窗口含端点。
+  */
+-export const PERFECT_WINDOW_MS = 50;
++export const PERFECT_WINDOW_MS = 100;
+ 
+ /**
+- * Good 判定窗口（毫秒，占位值）：
++ * Good 判定窗口（毫秒）：用户确认放宽，修订 VERDICT-123 第 5 条。
+  * 必须严格大于 PERFECT_WINDOW_MS；超出 Good 窗口即为 Miss。
+  */
+-export const GOOD_WINDOW_MS = 120;
++export const GOOD_WINDOW_MS = 200;
+ 
+ /** Head 独立启动窗口，含两个端点。本值于 PROTOCOL 裁定批次正式确认为 1000ms；名库和 stage-1 已同步修正。 */
+ export const HEAD_WINDOW_MS = 1000;
+@@ -237,7 +237,7 @@ export const HEAD_WINDOW_MS = 1000;
+ /**
+  * 音画同步容差（毫秒）：T0 技术验证合格线口径。
+  * 名库 v1.8 硬约束：SYNC_TOLERANCE_MS 必须严格小于
+- * PERFECT_WINDOW_MS（30 < 50 ✓）。T0 实测偏差
++ * PERFECT_WINDOW_MS（30 < 100 ✓）。原 T0 实测偏差
+  * 16.87ms / 16.53ms，在该容差内。
+  */
+ export const SYNC_TOLERANCE_MS = 30;
+@@ -275,10 +275,11 @@ export const GRAVITY_WM_PER_SECONDS_SQUARED = 20;
+ 
+ /**
+  * 节奏敲击判定窗口（毫秒）：名库 v2.3 冻结名 RHYTHM_STRIKE_WINDOW_MS，
+- * 取值 50 为名库明示。敲击时间戳与目标节拍时间戳的绝对偏差
++ * 本轮用户确认取值 100，修订 VERDICT-113 第 2 条（原值 50）。
++ * 敲击时间戳与目标节拍时间戳的绝对偏差
+  * 小于等于本值时判为命中（RhythmStrike 判定口径）。
+  */
+-export const RHYTHM_STRIKE_WINDOW_MS = 50;
++export const RHYTHM_STRIKE_WINDOW_MS = 100;
+ 
+ // ------------------------------------------------------------
+ // 板块十：T7 视频谱面共享类型（HANDOFF-ROUND-18 冻结契约）
+diff --git a/src/trace/RhythmStrike.ts b/src/trace/RhythmStrike.ts
+index 4da3f13..05f3173 100644
+--- a/src/trace/RhythmStrike.ts
++++ b/src/trace/RhythmStrike.ts
+@@ -1,7 +1,7 @@
+ ﻿// ============================================================
+ // S3 痕接口 · RhythmStrike 节奏敲击（T6 / AC-12）
+ // 名库 v2.3 冻结名：RhythmStrike（trace 模块）、
+-//                  RHYTHM_STRIKE_WINDOW_MS = 50（constants）
++//                  RHYTHM_STRIKE_WINDOW_MS = 100（本轮修订 VERDICT-113 第 2 条）
+ //
+ // 文件职责：
+ //   声明"一次具有成功 / 失败判定的敲击"的数据形状，并提供
+@@ -37,10 +37,10 @@ export interface RhythmStrike {
+ }
+ 
+ /**
+- * 节奏敲击判定（AC-12：判定窗口为目标拍点前后各 50ms）。
++ * 节奏敲击判定（本轮修订：目标拍点前后各 100ms，含端点）。
+  *
+  * 绝对偏差 |敲击时间戳 - 目标节拍时间戳| ≤
+- * RHYTHM_STRIKE_WINDOW_MS（名库 v2.3 冻结取值 50）判为命中。
++ * RHYTHM_STRIKE_WINDOW_MS（冻结名称复用，当前用户确认取值 100）判为命中。
+  * 纯函数；函数名 judgeRhythmStrike 为"判定"直译，待 PROTOCOL 追认。
+  *
+  * @param strikeTimeMs 敲击时间戳（毫秒）
+diff --git a/src/trace/PuzzleChain.ts b/src/trace/PuzzleChain.ts
+index cccf95b..c5fe60e 100644
+--- a/src/trace/PuzzleChain.ts
++++ b/src/trace/PuzzleChain.ts
+@@ -7,7 +7,7 @@
+ //   第一步：主角移动使痕满足指定接近距离，且痕的屏幕投影进入
+ //           指定敲击区域 → PuzzleProgress 推进至"待敲击"；
+ //           离开有效范围 → 退回第一步；
+-//   第二步：保持条件并连续七秒命中拍点（±50ms）；漏拍 / 离区归零。
++//   第二步：保持条件并连续七秒命中拍点（当前窗口 ±100ms）；漏拍 / 离区归零。
+ //   中间不写账本（进度只更新 PuzzleProgress）；终点恰好写入
+ //   一条 NarrativeEvent（结算由 director 经 LedgerAppend 执行，
+ //   INV-2，并防止重复结算）。
+@@ -77,7 +77,7 @@ export class PuzzleChain {
+ 
+   /**
+    * 连续无失误持续时长要求（毫秒，占位 7000）。
+-   * 用户指令：固定跟随节拍无溢出 ±50ms 保持 7 秒后才进入
++   * 用户指令：固定跟随节拍无溢出当前判定窗口（±100ms）保持 7 秒后才进入
+    * 谱面，而非准了一次就跳转。以时间而非拍数为口径，因为
+    * 后续可能有不同的节奏型。数值为本文件内部占位，不进
+    * constants，待 PROTOCOL 冻结登记。
+diff --git a/src/chart/ChartScore.ts b/src/chart/ChartScore.ts
+index c0b962b..00701f4 100644
+--- a/src/chart/ChartScore.ts
++++ b/src/chart/ChartScore.ts
+@@ -10,7 +10,8 @@
+ //     保持随 GuideTransparency 单调递增（AC-18）。
+ //
+ // 语义：
+-//   - 时间窗口纯判定：|Δ| ≤ 50 Perfect；≤ 120 Good；其余 Miss；
++//   - 时间窗口纯判定：|Δ| ≤ 100 Perfect；≤ 200 Good；其余 Miss；
++//     本轮用户确认数值，修订 VERDICT-123 第 5 条；窗口含端点。
+ //   - 命中（Perfect / Good）得基础分 + 透明度线性加成；
+ //     Miss 不得分。
+ //   - 占位口径：Perfect / Good 基础分同为 100（HANDOFF 仅明示
+diff --git a/assets/scripts/SceneBuilder.ts b/assets/scripts/SceneBuilder.ts
+index b326763..b798b57 100644
+--- a/assets/scripts/SceneBuilder.ts
++++ b/assets/scripts/SceneBuilder.ts
+@@ -1034,7 +1034,7 @@ export class SceneBuilder extends Component {
+       const stageText = stage === 'Step1'
+         ? '第一步：走近深痕，使其投影进入屏幕中央敲击区'
+         : stage === 'AwaitingStrike'
+-          ? '第二步：跟拍按数字键（±50ms，连续 7 秒无漏拍通过）'
++          ? '第二步：跟拍按数字键（±100ms，连续 7 秒无漏拍通过）'
+           : '解谜完成';
+       const bgmText = !this.bgmClipLoaded
+         ? this.bgmLoadFailed
+@@ -1076,7 +1076,7 @@ export class SceneBuilder extends Component {
+         diagnostics =
+           `\n距深痕 ${distanceWm.toFixed(1)} 米（需≤2）｜`
+           + `投影 ${projectionText}（需在 0.30~0.70）`
+-          + `\n最近敲击偏差 ${deviationText}（需|偏差|≤50，+ = 敲晚）`
++          + `\n最近敲击偏差 ${deviationText}（需|偏差|≤100，+ = 敲晚）`
+           + sustainedText;
+       }
+       this.puzzleLabel.string =

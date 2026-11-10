@@ -1,0 +1,61 @@
+{
+  "phase": "B2.5b server independent package",
+  "generatedUtc": "2026-10-11T02:55:36.718Z",
+  "pass": true,
+  "runs": [
+    {
+      "name": "server-build",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "node_modules/typescript/bin/tsc",
+        "-p",
+        "tsconfig.json"
+      ],
+      "cwd": "D:\\Project\\A_New_Begin\\Neurou_official\\server",
+      "startedUtc": "2026-10-11T02:55:32.642Z",
+      "completedUtc": "2026-10-11T02:55:33.642Z",
+      "exitCode": 0,
+      "pass": true,
+      "log": "server-build.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "summary": []
+    },
+    {
+      "name": "server-contract-and-http",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "--test",
+        "dist/test/http.test.js",
+        "dist/test/main-process.test.js"
+      ],
+      "cwd": "D:\\Project\\A_New_Begin\\Neurou_official\\server",
+      "startedUtc": "2026-10-11T02:55:33.642Z",
+      "completedUtc": "2026-10-11T02:55:36.718Z",
+      "exitCode": 0,
+      "pass": true,
+      "log": "server-contract-and-http.log",
+      "sha256": "f6e43c3481b875646bfed8e3b4369f8a57e87c4e0449ee82760229e3f194b14f",
+      "summary": [
+        "ℹ tests 16",
+        "ℹ suites 0",
+        "ℹ pass 16",
+        "ℹ fail 0",
+        "ℹ cancelled 0",
+        "ℹ skipped 0",
+        "ℹ todo 0",
+        "ℹ duration_ms 3018.9579"
+      ]
+    }
+  ],
+  "packageScriptEquivalence": "npm test = npm run build && node --test dist/test/*.test.js; executed directly with Node 24 to avoid host PATH ambiguity.",
+  "database": {
+    "implementation": "Real PostgreSQL",
+    "majorVersion": 17,
+    "host": "127.0.0.1",
+    "port": 55436,
+    "name": "b25_auth",
+    "credentialRecorded": false
+  },
+  "transport": "Real loopback HTTP via app.listen and HTTP fetch; never Fastify inject or in-memory substitute DB.",
+  "limits": "Independent server contract and development HTTP acceptance only; external HTTPS deployment, physical device and OfflineGrant are not attested."
+}

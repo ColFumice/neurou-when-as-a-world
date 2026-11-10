@@ -1,0 +1,7 @@
+{
+  "comparison": "Prior batch protected hashes versus current task starting references; these changes are not part of this task.",
+  "priorUpdates": [
+    "docs\\NAMEBOOK.md",
+    "docs\\spec\\stage-1.md"
+  ]
+}

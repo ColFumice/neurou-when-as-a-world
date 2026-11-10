@@ -1,0 +1,12 @@
+{
+  "phase": "B2.5c-2b exact build additions",
+  "authorization": "Parent /root approved server/SharedBuild.mjs and two new generated server directories. Every old baseline file remains compared; these build allowances fail if any baseline path was already inside them. Root-level .shared-kernel is not authorized.",
+  "paths": [
+    "server/SharedBuild.mjs"
+  ],
+  "newBuildPrefixes": [
+    "server/.shared-kernel",
+    "server/shared-dist"
+  ],
+  "frozenUtc": "2026-10-11T07:43:47.056Z"
+}

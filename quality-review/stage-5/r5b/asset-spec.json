@@ -1,0 +1,515 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-25T15:19:24.838Z",
+  "video": {
+    "left": {
+      "relPath": "media/theme/rain-night-left-loop.mp4",
+      "assetId": "3e47b45fe03a21bc",
+      "file": "D:\\Project\\A_New_Begin\\Neurou_official\\v4\\.stereo-demo\\project\\media\\theme\\rain-night-left-loop.mp4",
+      "bytes": 22356070,
+      "duration": 72,
+      "durationMs": 72000,
+      "bitRate": 2484007,
+      "video": {
+        "codec": "h264",
+        "width": 1280,
+        "height": 720,
+        "fps": 30,
+        "duration": 72
+      },
+      "audio": null
+    },
+    "right": {
+      "relPath": "media/theme/rain-night-right-loop.mp4",
+      "assetId": "4ee4d19a44bf992f",
+      "file": "D:\\Project\\A_New_Begin\\Neurou_official\\v4\\.stereo-demo\\project\\media\\theme\\rain-night-right-loop.mp4",
+      "bytes": 22345954,
+      "duration": 72,
+      "durationMs": 72000,
+      "bitRate": 2482883,
+      "video": {
+        "codec": "h264",
+        "width": 1280,
+        "height": 720,
+        "fps": 30,
+        "duration": 72
+      },
+      "audio": null
+    },
+    "posters": [
+      "posters/still-01.png",
+      "posters/still-02.png",
+      "posters/still-03.png"
+    ],
+    "stereoBaselinePx": 8
+  },
+  "images": [
+    {
+      "id": "theme-rain-night",
+      "title": "雨若 · 雨夜主题图",
+      "file": "theme-rain-night.webp",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 98672,
+      "quality": 90,
+      "overBudget": false,
+      "sha256": "d5ce5c3a2db011f74c43dac069e5bf3029a7c6744420d9dd7f2a1fbc3cbd6850"
+    },
+    {
+      "id": "world-rain-night",
+      "title": "雨若 · 世界背景",
+      "file": "world-rain-night.webp",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 72114,
+      "quality": 90,
+      "overBudget": false,
+      "sha256": "b9f2439c18fc199f77268aa0d7d947323494bd9da2d26077ac0f96226340af66"
+    },
+    {
+      "id": "logo-horizontal",
+      "title": "雨若 · 横向 Logo",
+      "file": "logo-horizontal.webp",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 26476,
+      "quality": 90,
+      "overBudget": false,
+      "sha256": "531f6eb7778f62edc8977b56b900da0c5f1918023ddfb933af7f7206b433a938"
+    },
+    {
+      "id": "logo-vertical",
+      "title": "雨若 · 纵向 Logo",
+      "file": "logo-vertical.webp",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 20080,
+      "quality": 90,
+      "overBudget": false,
+      "sha256": "5c14c94eb02261dfbdf2c1a73948f7168c905ec394a155c73a05ca571d1cecf9"
+    },
+    {
+      "id": "logo-mark",
+      "title": "雨若 · 标记 Logo",
+      "file": "logo-mark.webp",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 19298,
+      "quality": 90,
+      "overBudget": false,
+      "sha256": "85fb1143a911dec91907c0de39cdb38f891ff08448f31dbf4e6b97e1b921eaf1"
+    },
+    {
+      "id": "logo-title",
+      "title": "雨若 · 标题卡 Logo",
+      "file": "logo-title.webp",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 41956,
+      "quality": 90,
+      "overBudget": false,
+      "sha256": "eeedca73de7ea0e7f1c021794a5898dafa968ab566ce9057554e2bda1fb4f71c"
+    }
+  ],
+  "audio": {
+    "schemaVersion": 1,
+    "generatedBy": "v4/app/tools/assets/generate-music.mjs",
+    "generatedAt": "2026-10-25T15:19:21.453Z",
+    "title": "雨若 / Rain, Unfinished",
+    "bpm": 90,
+    "meter": 4,
+    "offsetMs": 0,
+    "durationSeconds": 72,
+    "durationMs": 72000,
+    "sampleRate": 48000,
+    "channels": 2,
+    "bitDepth": 16,
+    "codec": "PCM s16le",
+    "bars": 27,
+    "sections": [
+      {
+        "name": "intro",
+        "startBar": 0,
+        "endBar": 4,
+        "startMs": 0,
+        "endMs": 10667
+      },
+      {
+        "name": "verse",
+        "startBar": 4,
+        "endBar": 16,
+        "startMs": 10667,
+        "endMs": 42667
+      },
+      {
+        "name": "chorus",
+        "startBar": 16,
+        "endBar": 23,
+        "startMs": 42667,
+        "endMs": 61333
+      },
+      {
+        "name": "outro",
+        "startBar": 23,
+        "endBar": 27,
+        "startMs": 61333,
+        "endMs": 72000
+      }
+    ],
+    "rmsDb": {
+      "intro": -23.56,
+      "verse": -19.26,
+      "chorus": -16.24,
+      "outro": -20.76
+    },
+    "peakDbfs": -1,
+    "bytes": 13824044,
+    "sha256": "7b3aed0eb3b77aec8a1cf38fa84ea0e8e01d29cb836e20e2fecfbb1b4298cb65",
+    "beatsMs": [
+      0,
+      667,
+      1333,
+      2000,
+      2667,
+      3333,
+      4000,
+      4667,
+      5333,
+      6000,
+      6667,
+      7333,
+      8000,
+      8667,
+      9333,
+      10000,
+      10667,
+      11333,
+      12000,
+      12667,
+      13333,
+      14000,
+      14667,
+      15333,
+      16000,
+      16667,
+      17333,
+      18000,
+      18667,
+      19333,
+      20000,
+      20667,
+      21333,
+      22000,
+      22667,
+      23333,
+      24000,
+      24667,
+      25333,
+      26000,
+      26667,
+      27333,
+      28000,
+      28667,
+      29333,
+      30000,
+      30667,
+      31333,
+      32000,
+      32667,
+      33333,
+      34000,
+      34667,
+      35333,
+      36000,
+      36667,
+      37333,
+      38000,
+      38667,
+      39333,
+      40000,
+      40667,
+      41333,
+      42000,
+      42667,
+      43333,
+      44000,
+      44667,
+      45333,
+      46000,
+      46667,
+      47333,
+      48000,
+      48667,
+      49333,
+      50000,
+      50667,
+      51333,
+      52000,
+      52667,
+      53333,
+      54000,
+      54667,
+      55333,
+      56000,
+      56667,
+      57333,
+      58000,
+      58667,
+      59333,
+      60000,
+      60667,
+      61333,
+      62000,
+      62667,
+      63333,
+      64000,
+      64667,
+      65333,
+      66000,
+      66667,
+      67333,
+      68000,
+      68667,
+      69333,
+      70000,
+      70667,
+      71333
+    ],
+    "downbeatsMs": [
+      0,
+      2667,
+      5333,
+      8000,
+      10667,
+      13333,
+      16000,
+      18667,
+      21333,
+      24000,
+      26667,
+      29333,
+      32000,
+      34667,
+      37333,
+      40000,
+      42667,
+      45333,
+      48000,
+      50667,
+      53333,
+      56000,
+      58667,
+      61333,
+      64000,
+      66667,
+      69333
+    ],
+    "notes": [
+      "No samples. All voices are synthesized from wavetable sine partials, filtered noise and envelopes.",
+      "Reverb is a stereo Schroeder network; delay is a ping-pong dotted-eighth.",
+      "Kick sidechain ducks pad/bass to leave room for the low end."
+    ]
+  },
+  "subtitles": {
+    "schemaVersion": 1,
+    "generatedBy": "v4/app/tools/assets/generate-subtitles.mjs",
+    "generatedAt": "2026-10-25T15:05:44.413Z",
+    "assetId": "subtitles:prologue",
+    "worldId": "w1",
+    "chartId": "chart-w1",
+    "locale": "zh-CN",
+    "title": "雨若 · 序言",
+    "durationMs": 72000,
+    "style": {
+      "fontFamily": "\"Noto Serif SC\", \"Source Han Serif SC\", \"Microsoft YaHei\", serif",
+      "fontSizePx": 42,
+      "fontWeight": 400,
+      "letterSpacing": "0.08em",
+      "lineHeight": 1.8,
+      "color": "#d8d2c4",
+      "opacity": 0.9,
+      "shadow": "0 2px 18px rgba(0,0,0,0.65)",
+      "align": "left",
+      "anchor": "bottom-left",
+      "marginPx": 96,
+      "fadeInMs": 600,
+      "fadeOutMs": 800
+    },
+    "sections": [
+      {
+        "name": "intro",
+        "startMs": 0,
+        "endMs": 10667
+      },
+      {
+        "name": "verse",
+        "startMs": 10667,
+        "endMs": 42667
+      },
+      {
+        "name": "chorus",
+        "startMs": 42667,
+        "endMs": 61333
+      },
+      {
+        "name": "outro",
+        "startMs": 61333,
+        "endMs": 72000
+      }
+    ],
+    "lines": [
+      {
+        "id": "sub-01",
+        "index": 0,
+        "startMs": 1000,
+        "endMs": 8000,
+        "section": "intro",
+        "text": "雨落了很久。",
+        "note": "开场，只留雨声与一个短句。",
+        "appearEffect": "FadeIn",
+        "disappearEffect": "FadeOut",
+        "easing": "EaseInOut"
+      },
+      {
+        "id": "sub-02",
+        "index": 1,
+        "startMs": 11000,
+        "endMs": 19000,
+        "section": "verse",
+        "text": "霓虹在水里，比在墙上更亮。",
+        "note": "主歌进入，镜头掠过湿地反光。",
+        "appearEffect": "FadeIn",
+        "disappearEffect": "FadeOut",
+        "easing": "EaseInOut"
+      },
+      {
+        "id": "sub-03",
+        "index": 2,
+        "startMs": 27000,
+        "endMs": 35000,
+        "section": "verse",
+        "text": "有些名字，只在关机前出现。",
+        "note": "第一次情绪下沉，留白拉长。",
+        "appearEffect": "FadeIn",
+        "disappearEffect": "FadeOut",
+        "easing": "EaseInOut"
+      },
+      {
+        "id": "sub-04",
+        "index": 3,
+        "startMs": 43000,
+        "endMs": 51000,
+        "section": "chorus",
+        "text": "光开始有了重量。",
+        "note": "副歌抬升，字幕更短、更亮。",
+        "appearEffect": "FadeIn",
+        "disappearEffect": "FadeOut",
+        "easing": "EaseInOut"
+      },
+      {
+        "id": "sub-05",
+        "index": 4,
+        "startMs": 61500,
+        "endMs": 69500,
+        "section": "outro",
+        "text": "这里曾经有过名字。",
+        "note": "尾奏，最后一个短句，之后只剩雨声。",
+        "appearEffect": "FadeIn",
+        "disappearEffect": "FadeOut",
+        "easing": "EaseInOut"
+      }
+    ]
+  },
+  "style": {
+    "name": "rain-night / restrained cyan",
+    "palette": {
+      "abyss": "#060a0f",
+      "ink": "#1a2332",
+      "deep": "#0a131b",
+      "slate": "#16222d",
+      "steel": "#243747",
+      "teal": "#4f8fa8",
+      "cyan": "#78d7e6",
+      "ice": "#b9dbe1",
+      "moss": "#6f8f7a",
+      "amber": "#c08a5e",
+      "ember": "#e0a06a",
+      "bone": "#d8d2c4",
+      "fog": "#8aa3ad"
+    },
+    "grade": {
+      "exposure": 1.04,
+      "contrast": 1.06,
+      "saturation": 0.86,
+      "gamma": 1.02,
+      "shadowLift": [
+        0.012,
+        0.02,
+        0.03
+      ],
+      "highlightTint": [
+        0.028,
+        0.012,
+        -0.004
+      ],
+      "toe": 0.018
+    },
+    "vignette": {
+      "strength": 0.34,
+      "inner": 0.38,
+      "outer": 1.08
+    },
+    "grain": {
+      "strength": 1.7,
+      "size": 512
+    },
+    "rain": {
+      "color": [
+        0.52,
+        0.69,
+        0.78
+      ],
+      "wind": -0.19,
+      "layers": [
+        {
+          "count": 1150,
+          "speed": 760,
+          "length": 16,
+          "alpha": 0.075,
+          "width": 1,
+          "depth": 0.2
+        },
+        {
+          "count": 780,
+          "speed": 1120,
+          "length": 26,
+          "alpha": 0.14,
+          "width": 1.2,
+          "depth": 0.55
+        },
+        {
+          "count": 320,
+          "speed": 1660,
+          "length": 44,
+          "alpha": 0.26,
+          "width": 1.7,
+          "depth": 0.92
+        }
+      ]
+    },
+    "bloom": {
+      "threshold": 0.58,
+      "radius": 14,
+      "intensity": 0.72
+    }
+  },
+  "chart": {
+    "chartId": "chart-w1",
+    "durationMs": 72000,
+    "keyframes": 12,
+    "bindings": 5,
+    "bpm": 90,
+    "beats": 108,
+    "downbeats": 27
+  }
+}

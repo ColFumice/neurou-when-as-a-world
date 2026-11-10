@@ -1,0 +1,20 @@
+[
+  {
+    "file": "D:\\Project\\A_New_Begin\\Neurou_official\\docs\\spec\\stage-1-acceptance.md",
+    "expected": "C08C7CBFB24876B56E0482559C578AD51D9C623E97CED7045907CBA742E2BF59",
+    "actual": "C08C7CBFB24876B56E0482559C578AD51D9C623E97CED7045907CBA742E2BF59",
+    "unchanged": true
+  },
+  {
+    "file": "D:\\Project\\A_New_Begin\\Neurou_official\\docs\\spec\\stage-1.md",
+    "expected": "44E7364F6EA55852718CDBCEC601D7E77D89983D5AFE44693CCE774D2E035A2C",
+    "actual": "44E7364F6EA55852718CDBCEC601D7E77D89983D5AFE44693CCE774D2E035A2C",
+    "unchanged": true
+  },
+  {
+    "file": "D:\\Project\\A_New_Begin\\expanding_filtercircle_effect_code(html).txt",
+    "expected": "B8AC42B5C76970795AF63C294EAD6E3635AEB277D6D3C8BD003045FB2A3FAC44",
+    "actual": "B8AC42B5C76970795AF63C294EAD6E3635AEB277D6D3C8BD003045FB2A3FAC44",
+    "unchanged": true
+  }
+]

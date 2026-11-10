@@ -1,0 +1,54 @@
+{
+  "pass": true,
+  "checkedAt": "2026-10-10T05:56:39.656Z",
+  "productionFiles": 5,
+  "authorizedConstantChanges": [
+    {
+      "name": "PERFECT_WINDOW_MS",
+      "before": 50,
+      "after": 100
+    },
+    {
+      "name": "GOOD_WINDOW_MS",
+      "before": 120,
+      "after": 200
+    },
+    {
+      "name": "RHYTHM_STRIKE_WINDOW_MS",
+      "before": 50,
+      "after": 100
+    }
+  ],
+  "semanticChecks": [
+    {
+      "file": "constants/index.ts",
+      "pass": true,
+      "rule": "Only three authorized numeric exports differ; comments ignored"
+    },
+    {
+      "file": "src/trace/RhythmStrike.ts",
+      "pass": true,
+      "rule": "Only comments differ; emitted JavaScript identical"
+    },
+    {
+      "file": "src/trace/PuzzleChain.ts",
+      "pass": true,
+      "rule": "Only comments differ; emitted JavaScript identical"
+    },
+    {
+      "file": "src/chart/ChartScore.ts",
+      "pass": true,
+      "rule": "Only comments differ; emitted JavaScript identical"
+    },
+    {
+      "file": "assets/scripts/SceneBuilder.ts",
+      "pass": true,
+      "rule": "Only two existing T6 window labels updated from 50 to 100; all runtime operations identical"
+    }
+  ],
+  "judgementLogicUnchanged": true,
+  "noNewNamesOrModules": true,
+  "gateScriptsUnchanged": true,
+  "protectedFiles": 29,
+  "changedProtected": []
+}

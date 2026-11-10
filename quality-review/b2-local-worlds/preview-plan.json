@@ -1,0 +1,106 @@
+{
+  "status": "Final corrected HUD evidence complete: both resolutions, 28 full-workflow PNGs plus 2 independent-process-restart PNGs, all 30 visually inspected.",
+  "preferredPreviewUrl": "http://localhost:7456/",
+  "resolutions": [
+    [
+      1920,
+      1080
+    ],
+    [
+      2560,
+      1440
+    ]
+  ],
+  "policy": "Actual Creator preview, isolated temporary Electron userData and one partition per resolution. UI controls are the only product writers. Read-only component, DOM and localStorage observation is permitted. No localStorage seed, fixture data, catalog manipulation, factory replacement or forged screenshots. All PNGs are direct CDP screenshot bytes.",
+  "existingControls": {
+    "login": "#folder-login",
+    "account": "#folder-account",
+    "completePrologue": "#folder-complete-prologue",
+    "worldFolder": "#world-folder",
+    "initialWorld": "[data-world-id=InitialWorld]",
+    "openEditorFolder": "#open-editor-folder",
+    "exitRuntime": "#folder-runtime-exit"
+  },
+  "implementedInterfaces": [
+    "#create-world, #world-title, #world-description, #confirm-create-world",
+    ".folder-world-card[data-world-id], [data-action][data-world-id]",
+    "Fork control reports not open and preserves catalog bytes",
+    "#world-delete-confirm, #confirm-delete-world, #cancel-delete-world",
+    "MinimalWorldBuilder with actual GameCanvas movement/jump inputs",
+    "Account schemaVersion 1, strict six-field world metadata whitelist",
+    "InitialWorld retains legacy SceneBuilder; EmptyWorld uses MinimalWorldBuilder"
+  ],
+  "screenshots": [
+    {
+      "name": "00-default-world-list",
+      "evidence": "One built-in InitialWorld; no gameplay runtime before selection"
+    },
+    {
+      "name": "00a-initial-world-default-chart",
+      "evidence": "Legacy InitialWorld opens chart/guidance_c with chartId guidance-c-1 and schemaVersion 2; exit leaves no runtime"
+    },
+    {
+      "name": "00b-global-editor-directory",
+      "evidence": "Global editor directory navigation lists existing editor entries; returning writes no metadata"
+    },
+    {
+      "name": "01-create-world-form",
+      "evidence": "Product new-world UI; title and description for EmptyWorld"
+    },
+    {
+      "name": "02-multiple-world-list",
+      "evidence": "Built-in and at least two distinct local worlds"
+    },
+    {
+      "name": "03-fork-not-open",
+      "evidence": "Fork UI reports not open; no clone and no catalog storage mutation"
+    },
+    {
+      "name": "04-minimal-world-movement",
+      "evidence": "DOM KeyD and Space move/jump actual Cocos protagonist; no gameplay persistence"
+    },
+    {
+      "name": "05-return-world-list",
+      "evidence": "Product exit destroys runtime before returning folder"
+    },
+    {
+      "name": "06-delete-confirmation",
+      "evidence": "Product confirmation; cancellation leaves catalog bytes unchanged"
+    },
+    {
+      "name": "07-local-world-tombstoned",
+      "evidence": "Only harness-created world removed from list; tombstone metadata retained"
+    },
+    {
+      "name": "08-persisted-after-window-restart",
+      "evidence": "Close/reopen same profile/partition, main account UI login; metadata/tombstone preserved"
+    },
+    {
+      "name": "09-reenter-world-at-spawn",
+      "evidence": "World metadata survives but protagonist respawns at origin"
+    },
+    {
+      "name": "10-second-account-isolated",
+      "evidence": "Same partition, second account only gets its own built-in InitialWorld"
+    },
+    {
+      "name": "11-original-account-preserved",
+      "evidence": "Returning main account keeps main A and tombstoned B; other account C absent"
+    },
+    {
+      "name": "12-persisted-after-process-restart",
+      "evidence": "Independent Electron process after complete harness exits; same profile/partition and UI login retain byte-identical metadata, tombstone and account isolation"
+    }
+  ],
+  "verification": [
+    "Final source maps include current source; served chunk hash equals Creator compiled disk output",
+    "Freshness unchanged before/after the complete evidence run",
+    "Actual viewport, canvas and raw PNG dimensions match each requested resolution",
+    "Offline product data created exclusively through visible controls",
+    "No application requests to non-local origins during core local workflows",
+    "World isolation, runtime creation and teardown assertions",
+    "Persistence and delete retained across BrowserWindow close/reopen and independent Electron process restart",
+    "Both resolutions follow the same actions and normalized catalog semantics",
+    "No unexpected renderer or runtime errors"
+  ]
+}

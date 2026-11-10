@@ -1,0 +1,140 @@
+{
+  "pass": true,
+  "acceptance": [
+    {
+      "item": "1 多线共享媒体时钟",
+      "evidence": "Cocos 同一 AudioOutputClock；双分辨率媒体同步采样",
+      "file": "creator-preview-results.json"
+    },
+    {
+      "item": "2 共享布局与 chart 级版本",
+      "evidence": "严格布局版本校验、v1/v2；47 键邻键回归",
+      "file": "pad-grid-regression-results.json"
+    },
+    {
+      "item": "3 Tap 单消费及四级优先级",
+      "evidence": "C 检查 03/04/05/14；input-conflict 截图一线 Perfect、另一线未决",
+      "file": "results.json"
+    },
+    {
+      "item": "4 多 Head 重叠窗口",
+      "evidence": "C 检查 02；真实预览两次 Space 分别启动",
+      "file": "results.json"
+    },
+    {
+      "item": "5 独立 startedAtMs",
+      "evidence": "C 检查 02/09/14；两档真实预览 starts 不同",
+      "file": "creator-preview-results.json"
+    },
+    {
+      "item": "6 交错/重叠独立擦除",
+      "evidence": "C 检查 09；实际谱面共享首段后分支交叉，各线 remainingPoints 独立",
+      "file": "creator-preview-results.json"
+    },
+    {
+      "item": "7 单线超时独立终止",
+      "evidence": "C 检查 07；两档 independent-timeout 截图：第一线 Running、第二线 TimedOut",
+      "file": "creator-preview-results.json"
+    },
+    {
+      "item": "8 全线结算与媒体结束",
+      "evidence": "C 检查 07/11/13；Playing 到 10 秒，真实媒体 12 秒结束只追加一次",
+      "file": "results.json"
+    },
+    {
+      "item": "9 v1/v2 无硬上限",
+      "evidence": "C 检查 01/12：v1 恰单线，v2 接受三线，拒绝空与重复 ID，深冻结",
+      "file": "results.json"
+    },
+    {
+      "item": "10 性能与渲染",
+      "evidence": "无专门优化；只读多快照遍历；两档渲染无错误；编译来源匹配",
+      "file": "creator-compilation.json"
+    },
+    {
+      "item": "11 生命周期、分辨率、完整链路",
+      "evidence": "C 检查 08/09/13/14；两档暂停、早退、重入、完成与超时截图",
+      "file": "creator-preview-results.json"
+    }
+  ],
+  "logic": {
+    "c": 14,
+    "b": 31,
+    "pad": 28
+  },
+  "preview": [
+    {
+      "resolution": "1920x1080",
+      "starts": [
+        2010.837,
+        2026.6670000000001
+      ],
+      "result": {
+        "chartId": "guidance-c-1",
+        "tier": "Regular",
+        "perfectCount": 9,
+        "goodCount": 1,
+        "missCount": 0,
+        "totalScore": 1000,
+        "finishedAtMs": 12000,
+        "completed": true
+      },
+      "ledger": 1,
+      "sync": {
+        "sampleCount": 660,
+        "maxRawPresentedErrorMs": 15.469999999997526,
+        "maxProjectedPresentedErrorMs": 15.243999999999971
+      },
+      "screenshots": [
+        "1920x1080-parallel.png",
+        "1920x1080-input-conflict.png",
+        "1920x1080-overlap-interweave.png",
+        "1920x1080-two-holds-paused.png",
+        "1920x1080-early-exit.png",
+        "1920x1080-reentry-reset.png",
+        "1920x1080-completion.png",
+        "1920x1080-independent-timeout.png"
+      ]
+    },
+    {
+      "resolution": "2560x1440",
+      "starts": [
+        2015.2140000000004,
+        2031.3880000000006
+      ],
+      "result": {
+        "chartId": "guidance-c-1",
+        "tier": "Regular",
+        "perfectCount": 9,
+        "goodCount": 1,
+        "missCount": 0,
+        "totalScore": 1000,
+        "finishedAtMs": 12000,
+        "completed": true
+      },
+      "ledger": 1,
+      "sync": {
+        "sampleCount": 659,
+        "maxRawPresentedErrorMs": 24.253999999999905,
+        "maxProjectedPresentedErrorMs": 13.55199999999968
+      },
+      "screenshots": [
+        "2560x1440-parallel.png",
+        "2560x1440-input-conflict.png",
+        "2560x1440-overlap-interweave.png",
+        "2560x1440-two-holds-paused.png",
+        "2560x1440-early-exit.png",
+        "2560x1440-reentry-reset.png",
+        "2560x1440-completion.png",
+        "2560x1440-independent-timeout.png"
+      ]
+    }
+  ],
+  "constraints": {
+    "zeroCcLogic": true,
+    "presentationReadOnly": true,
+    "directorOnlyLedgerWriter": true,
+    "docsUnchanged": true,
+    "noEditorImplemented": true
+  }
+}

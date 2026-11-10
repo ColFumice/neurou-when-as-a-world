@@ -1,0 +1,221 @@
+{
+  "generatedAt": "2026-10-10T12:27:23.225Z",
+  "scope": "Actual WorldFolderSession and WorldLocalStorage, with deterministic ID/time/persist/storage boundaries. Metadata only; no claim of gameplay/WorldFork persistence.",
+  "passed": 15,
+  "failed": 0,
+  "checks": [
+    {
+      "name": "W01 null registry seeds one InitialWorld and persists immutable account snapshot",
+      "pass": true,
+      "evidence": {
+        "initialWorlds": 1,
+        "persistCalls": 1,
+        "accountId": "account-A",
+        "record": {
+          "worldId": "InitialWorld",
+          "title": "初始世界",
+          "description": "箱庭 · 深痕 · 解谜链 · 引导线演奏",
+          "createdAt": 1000,
+          "deletedAt": null,
+          "template": "InitialWorld"
+        }
+      }
+    },
+    {
+      "name": "W02 two real create intents populate dynamic list and strict serialized reload preserves stable IDs",
+      "pass": true,
+      "evidence": {
+        "created": [
+          {
+            "worldId": "world-local-test-1",
+            "title": "甲世界",
+            "description": "本地空白世界",
+            "createdAt": 1001,
+            "deletedAt": null,
+            "template": "EmptyWorld"
+          },
+          {
+            "worldId": "world-local-test-2",
+            "title": "乙世界",
+            "description": "本地空白世界",
+            "createdAt": 1002,
+            "deletedAt": null,
+            "template": "EmptyWorld"
+          }
+        ],
+        "activeCount": 3,
+        "persistCalls": 3,
+        "reloadPersistCalls": 0
+      }
+    },
+    {
+      "name": "W03 persist failure on seed/create/delete never exposes a successful registry state",
+      "pass": true,
+      "evidence": {
+        "seedRejected": true,
+        "failedCreatePreservesState": true,
+        "failedDeleteWorldStillActive": true
+      }
+    },
+    {
+      "name": "W04 tombstone hides world, retains exact metadata and all earlier snapshot records across reload",
+      "pass": true,
+      "evidence": {
+        "physicalRecordCount": 3,
+        "activeCount": 2,
+        "tombstone": {
+          "worldId": "world-local-test-1",
+          "title": "有记录的世界",
+          "description": "本地空白世界",
+          "createdAt": 1001,
+          "deletedAt": 1003,
+          "template": "EmptyWorld"
+        },
+        "unaffectedRecord": "world-local-test-2",
+        "preservationScope": "Registry record metadata only; no unavailable gameplay persistence is claimed."
+      }
+    },
+    {
+      "name": "W05 unknown ID/stale deleted entry/fork route reject without mutation; deleted InitialWorld never reseeds on reload",
+      "pass": true,
+      "evidence": {
+        "deletedInitialWorldRemainsTombstone": true,
+        "emptyListDoesNotReseed": true,
+        "unknownRejected": true,
+        "tombstonedEntryRejected": true,
+        "forkUnavailable": true
+      }
+    },
+    {
+      "name": "W06 ID collisions and tombstone reuse cannot replace existing metadata or create duplicate identity",
+      "pass": true,
+      "evidence": {
+        "collisionRejected": true,
+        "tombstoneIdNotReused": true
+      }
+    },
+    {
+      "name": "W07 invalid ID/clock/title input rejects atomically and snapshots never freeze caller input",
+      "pass": true,
+      "evidence": {
+        "invalidIds": [
+          "",
+          "InitialWorld",
+          "__proto__",
+          "constructor",
+          "a/b",
+          "../world",
+          "a.json"
+        ],
+        "invalidClockValues": 3,
+        "callerInputDetached": true
+      }
+    },
+    {
+      "name": "W08 strict snapshot validation refuses corruption, foreign account, duplicate IDs and invalid tombstones",
+      "pass": true,
+      "evidence": {
+        "rejected": [
+          "schema",
+          "foreign account",
+          "unknown root field",
+          "missing records",
+          "duplicate id",
+          "extra record field",
+          "unknown template",
+          "initial template changed",
+          "invalid timestamp",
+          "delete before creation",
+          "empty title",
+          "unsafe ID"
+        ],
+        "noMigrationOrEmptyFallback": true
+      }
+    },
+    {
+      "name": "W09 real storage adapter isolates account keys and persists tombstones without touching milestone/editor data",
+      "pass": true,
+      "evidence": {
+        "accountKeys": [
+          "neurou-world-folder-v1:%E8%B4%A6%E5%8F%B7%3A%2F%20A",
+          "neurou-world-folder-v1:%E8%B4%A6%E5%8F%B7%3A%2F%20B"
+        ],
+        "unrelatedKeysRetained": [
+          "neurou-account-milestone-v1:account-A",
+          "neurou-guidance-draft-v1",
+          "neurou-music-draft-v1"
+        ],
+        "physicallyDeletedKeys": 0
+      }
+    },
+    {
+      "name": "W10 actual storage read/JSON/write exceptions propagate and successful state follows the durable boundary",
+      "pass": true,
+      "evidence": {
+        "readFailurePropagated": true,
+        "corruptJsonRejected": true,
+        "failedCreateNoGhost": true,
+        "failedDeleteRetainsDurableWorld": true
+      }
+    },
+    {
+      "name": "W11 registry operations do not expose ledger, permission, copy or gameplay persistence capabilities",
+      "pass": true,
+      "evidence": {
+        "exactMetadataFields": [
+          "createdAt",
+          "deletedAt",
+          "description",
+          "template",
+          "title",
+          "worldId"
+        ],
+        "newLedgerWrites": 0,
+        "noCopyPermissionGrant": true,
+        "actualWorldForkUnavailable": true
+      }
+    },
+    {
+      "name": "W12 stale session compare-and-set rejects create/delete rather than losing or reviving another tab record",
+      "pass": true,
+      "evidence": {
+        "rejectedStaleCreate": true,
+        "rejectedStaleDelete": true,
+        "otherTabCreationRetained": true,
+        "tombstoneNotRevived": true,
+        "storageWrites": 3
+      }
+    },
+    {
+      "name": "W13 repeated delete remains idempotent without storage/time rewrite and loaded empty snapshot remains empty",
+      "pass": true,
+      "evidence": {
+        "repeatedDeleteWrites": 0,
+        "originalTombstoneRetained": true,
+        "loadedEmptyActiveCount": 0,
+        "loadedEmptySeedWrites": 0
+      }
+    },
+    {
+      "name": "W14 dynamic presentation reader reflects latest active session and deep-detaches callers with exact entry fields",
+      "pass": true,
+      "evidence": {
+        "afterCreate": 2,
+        "afterDelete": 1,
+        "oldSnapshotRetained": true,
+        "metadataFieldsOnly": true,
+        "mutableBoundaryDetached": true
+      }
+    },
+    {
+      "name": "W15 account startup remains Login -> Prologue -> WorldFolder with persistence failure transaction and separate milestone keys",
+      "pass": true,
+      "evidence": {
+        "firstAccountCompleted": true,
+        "secondAccountNeedsPrologue": true,
+        "failedMilestoneLeavesPrologue": true,
+        "worldRegistryKeysWrittenByStartup": 0
+      }
+    }
+  ]
+}

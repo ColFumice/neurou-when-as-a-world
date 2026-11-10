@@ -1,0 +1,122 @@
+{
+  "category": "ContractTest",
+  "passed": 23,
+  "failed": 0,
+  "results": [
+    {
+      "name": "all seven codecs expose Implemented while WorldFork remains fixed NotImplemented",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "new real Primary carrier with zero legal records has seven nonnull sections and certified Complete",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "legacy three fields stay three fields, read only compatible but never Complete",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "new four extension fields must be present together even when explicitly null",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "each missing section rejects Complete without inserting default values",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "seven JSON-shaped sections do not bypass bound validators or complete-reference validator",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "certification is local runtime identity; JSON clone or parse-only cannot forge it",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "extension envelope account/world and WorldLink world/role identity cannot cross boundaries",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "nested arrays and unfamiliar section fields cannot bypass strict extension validators",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "capture reads source once, returns certified Complete and publishes only the result",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "binding only old Core reader remains explicitly Incomplete even with seven present sections",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "partial full-source capture returns actual known parts and diagnostics, never promotion",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "absent source and corrupt source remain Incomplete without empty-data migration",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "live activity rejects capture as UnsupportedBoundary instead of certifying the old stored checkpoint",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "validate-only binding cannot claim Restored",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "forged validation result rejects before graph preparation",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "foreign certified identity cannot restore into current world",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "failed strict validation leaves prior graph/storage and last capture untouched",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "prepare failure never publishes or reports restoration",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "publish false or throw discards prepared graph exactly once and preserves prior graph",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "restore requires synchronous successful publication, promises cannot fake success",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "successful restore validates then prepares inactive then publishes once; no append/account callbacks",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "real completed World premiere requires actual played snapshot and result; legacy missing artifacts stays partial",
+      "result": "PASS",
+      "category": "ContractTest"
+    }
+  ]
+}

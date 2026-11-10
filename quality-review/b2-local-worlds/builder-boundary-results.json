@@ -1,0 +1,101 @@
+{
+  "generatedAt": "2026-10-10T08:38:47.826Z",
+  "scope": "Actual WorldFolderBuilder, WorldFolderSession, AccountStartupSession, WorldLocalStorage and AccountStartupStorage; mocked cc lifecycle/views/runtime constructor boundaries. No actual rendering claim.",
+  "passed": 9,
+  "failed": 0,
+  "checks": [
+    {
+      "name": "C01 real startup shell seeds metadata after prologue and creates no gameplay objects before explicit selection",
+      "pass": true,
+      "evidence": {
+        "factoryCallsBeforeSelection": 0,
+        "activeMetadataCount": 1,
+        "phase": "WorldFolder"
+      }
+    },
+    {
+      "name": "C02 empty-world entry uses minimal factory with current stored record and never invokes InitialWorld gameplay factory",
+      "pass": true,
+      "evidence": {
+        "runtimeName": "world-ef2bef15-d1af-41f6-bc58-ad705b6b52af",
+        "minimalEntry": {
+          "worldId": "world-ef2bef15-d1af-41f6-bc58-ad705b6b52af",
+          "title": "空白A",
+          "description": "独立空箱庭",
+          "createdAt": 1791621527823,
+          "deletedAt": null,
+          "template": "EmptyWorld"
+        },
+        "InitialWorldFactoryCalls": 0
+      }
+    },
+    {
+      "name": "C03 built-in selection preserves configured InitialWorld factory and rapid duplicate opens create one runtime",
+      "pass": true,
+      "evidence": {
+        "InitialWorldFactoryCalls": 1,
+        "duplicateRuntimeCount": 0,
+        "previousFactoryPreserved": true
+      }
+    },
+    {
+      "name": "C04 opening stale/unknown/foreign-account entry rechecks storage and refuses runtime creation",
+      "pass": true,
+      "evidence": {
+        "staleDeletedRefused": true,
+        "unknownForeignRefused": true,
+        "readFailureRefused": true,
+        "runtimeCreations": 0
+      }
+    },
+    {
+      "name": "C05 exit disables and destroys runtime once, gates new open until after-draw, then reloads latest external directory",
+      "pass": true,
+      "evidence": {
+        "immediateDeactivation": true,
+        "destroyCalls": 1,
+        "afterDrawCallbacks": 1,
+        "latestListCount": 3,
+        "latestExternalCreateVisible": true
+      }
+    },
+    {
+      "name": "C06 refresh sees external metadata, stale port CAS cannot overwrite it, and later valid create succeeds",
+      "pass": true,
+      "evidence": {
+        "staleWriteRejected": true,
+        "refreshCount": 2,
+        "postRefreshCreateCount": 3
+      }
+    },
+    {
+      "name": "C07 failed metadata load displays empty unavailable list without reseed/overwrite and keeps editors accessible",
+      "pass": true,
+      "evidence": {
+        "unavailableListCount": 0,
+        "corruptStorageUntouched": true,
+        "ghostCreateRefused": true,
+        "editorDirectoryAccessible": true
+      }
+    },
+    {
+      "name": "C08 destroy removes pending after-draw callback, retires active runtime and prevents view reconstruction",
+      "pass": true,
+      "evidence": {
+        "activeRuntimeRetired": true,
+        "pendingCallbacksRemoved": true,
+        "viewRecreated": false
+      }
+    },
+    {
+      "name": "C09 composition failure rolls back partial runtime, retains visible error, and permits retry after deferred destruction",
+      "pass": true,
+      "evidence": {
+        "partialRuntimeDestroyed": true,
+        "visibleFolderRetained": true,
+        "errorRetainedAfterDraw": true,
+        "retrySucceeds": true
+      }
+    }
+  ]
+}

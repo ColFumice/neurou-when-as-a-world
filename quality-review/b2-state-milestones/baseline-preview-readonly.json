@@ -1,0 +1,217 @@
+{
+  "checkedAt": "2026-10-10T08:59:36.752Z",
+  "baseUrl": "http://localhost:7456/",
+  "policy": "HTTP GET and disk reads only. No browser UI, localStorage, application state, Creator launch, recompilation command, or screenshot manipulation.",
+  "b22Screenshots": {
+    "status": "not-produced",
+    "reason": "B2.2 production implementation is stopped for missing prerequisites; existing B2.1 preview cannot substantiate milestone or capture/restore behavior."
+  },
+  "index": {
+    "url": "http://localhost:7456/",
+    "status": 200,
+    "bytes": 16615,
+    "sha256": "597f20154961d3dfa8f2ef2926d0436f8017a26fafcf150416db1ccbf88a8e5a"
+  },
+  "importMap": {
+    "url": "http://localhost:7456/scripting/x/import-map.json",
+    "status": 200,
+    "bytes": 48024,
+    "sha256": "40412608934303ce6a16fd89d858e7cbb3552ec904f67e62cb211402d5f76b12"
+  },
+  "compilation": [
+    {
+      "file": "assets/scripts/SceneBuilder.ts",
+      "importId": "file:///D:/Project/A_New_Begin/Neurou_official/assets/scripts/SceneBuilder.ts",
+      "chunkUrl": "http://localhost:7456/scripting/x/chunks/8b/8b7eae5ef325431fd5924802b2c0ea4b14e61744.js",
+      "status": 200,
+      "sourceMapStatus": 200,
+      "sourceSha256": "10371fdc3d2a1d66f63d87d019d8777d0bb8e80191788e65bf8eb2b6002c09c9",
+      "compiledSha256": "eafa2d6b2c8422b916bea3fc55eb17300fd7578bb631d65860310c511b6d67e3",
+      "available": true,
+      "sourceMapMatchesCurrentSource": true,
+      "servedEqualsCompilerOutput": true
+    },
+    {
+      "file": "assets/scripts/WorldFolderBuilder.ts",
+      "importId": "file:///D:/Project/A_New_Begin/Neurou_official/assets/scripts/WorldFolderBuilder.ts",
+      "chunkUrl": "http://localhost:7456/scripting/x/chunks/c8/c89cca6e27a0e04da4c658b697e7bc59e71b096a.js",
+      "status": 200,
+      "sourceMapStatus": 200,
+      "sourceSha256": "257b9e07a416bac089f3c5fa1845c028ecf3b56aa80198406a70514657581b6d",
+      "compiledSha256": "0c7a2b1b6ecba402062bd668cea319688af222350cece1782ee746bf12801633",
+      "available": true,
+      "sourceMapMatchesCurrentSource": true,
+      "servedEqualsCompilerOutput": true
+    },
+    {
+      "file": "assets/scripts/MinimalWorldBuilder.ts",
+      "importId": "file:///D:/Project/A_New_Begin/Neurou_official/assets/scripts/MinimalWorldBuilder.ts",
+      "chunkUrl": "http://localhost:7456/scripting/x/chunks/dc/dc69610e1587a201108556c634a607fab6a0539e.js",
+      "status": 200,
+      "sourceMapStatus": 200,
+      "sourceSha256": "7b827cc11b2bdf5855ef7c2007a52f2149097aab32e2a7840542dba91b07cbf7",
+      "compiledSha256": "ce40ee51cfaa2d4e7e291e778db5cf1753e91d83d6d7a38c320827193832ef3e",
+      "available": true,
+      "sourceMapMatchesCurrentSource": true,
+      "servedEqualsCompilerOutput": true
+    },
+    {
+      "file": "assets/scripts/Bootstrap.ts",
+      "importId": "file:///D:/Project/A_New_Begin/Neurou_official/assets/scripts/Bootstrap.ts",
+      "chunkUrl": "http://localhost:7456/scripting/x/chunks/9e/9e2c13831323df77824f6de3d4244f62f225f2e0.js",
+      "status": 200,
+      "sourceMapStatus": 200,
+      "sourceSha256": "28bb2b93faca15b3b513880fc4754d5f8fefc37ac5a700c8bbe870b03a09af50",
+      "compiledSha256": "421058e3366ca3e02557374030cc95c8f5eb3a3e2055883fab6d6a6f7d29b103",
+      "available": true,
+      "sourceMapMatchesCurrentSource": true,
+      "servedEqualsCompilerOutput": true
+    },
+    {
+      "file": "src/presentation/WorldFolderView.ts",
+      "importId": "file:///D:/Project/A_New_Begin/Neurou_official/assets/scripts/src/presentation/WorldFolderView.ts",
+      "chunkUrl": "http://localhost:7456/scripting/x/chunks/d2/d2d6e6d95a20b4190042fb0999b7f1bc153afac7.js",
+      "status": 200,
+      "sourceMapStatus": 200,
+      "sourceSha256": "27f77dd8d0bee09d7b872b10d27625f9746faa50593d00bc71a2325b04dcb05b",
+      "compiledSha256": "5c7d308a0c4e6de41a9e5378d38b379e5b432406f12e922e7d664b6e4314b129",
+      "available": true,
+      "sourceMapMatchesCurrentSource": true,
+      "servedEqualsCompilerOutput": true
+    },
+    {
+      "file": "src/presentation/FolderCatalog.ts",
+      "importId": "file:///D:/Project/A_New_Begin/Neurou_official/assets/scripts/src/presentation/FolderCatalog.ts",
+      "chunkUrl": "http://localhost:7456/scripting/x/chunks/8c/8c3cfae05cf8500736a1f9a4214bc6917d8baa93.js",
+      "status": 200,
+      "sourceMapStatus": 200,
+      "sourceSha256": "930c65d034781192f8d7570ac6d4660ae348a5858469e1e15a4c02a5a41d101a",
+      "compiledSha256": "47c4f5a3083be851eb68d93e10a5d5d8457fdafeb10d523de7fe503424c723ec",
+      "available": true,
+      "sourceMapMatchesCurrentSource": true,
+      "servedEqualsCompilerOutput": true
+    },
+    {
+      "file": "src/presentation/FolderStartupView.ts",
+      "importId": "file:///D:/Project/A_New_Begin/Neurou_official/assets/scripts/src/presentation/FolderStartupView.ts",
+      "chunkUrl": "http://localhost:7456/scripting/x/chunks/71/71feaa4c2021f182b17818d17e6bffb6762728cf.js",
+      "status": 200,
+      "sourceMapStatus": 200,
+      "sourceSha256": "50fa7afb3f2be26a78715a8916b8677ee6862dbe66e0dc14cab878ca78083988",
+      "compiledSha256": "c6da0d67553dd96ed5dea9641ac0aa073150718bc1a47a3da2ed646b113e201c",
+      "available": true,
+      "sourceMapMatchesCurrentSource": true,
+      "servedEqualsCompilerOutput": true
+    },
+    {
+      "file": "src/director/AccountStartupSession.ts",
+      "importId": "file:///D:/Project/A_New_Begin/Neurou_official/assets/scripts/src/director/AccountStartupSession.ts",
+      "chunkUrl": "http://localhost:7456/scripting/x/chunks/0d/0d72978f95e3b1351889a247aff58a0cf1c3ada0.js",
+      "status": 200,
+      "sourceMapStatus": 200,
+      "sourceSha256": "f376a9d618bbf3a4cdfebd57f615a855825d7149c1f33cae4f5b8ab5941684bb",
+      "compiledSha256": "c5995b3f278d6af2696e6605c3ff0ccf289c8601375ee7f97a57ea25cc283605",
+      "available": true,
+      "sourceMapMatchesCurrentSource": true,
+      "servedEqualsCompilerOutput": true
+    },
+    {
+      "file": "src/presentation/FrameDriver.ts",
+      "importId": "file:///D:/Project/A_New_Begin/Neurou_official/assets/scripts/src/presentation/FrameDriver.ts",
+      "chunkUrl": "http://localhost:7456/scripting/x/chunks/fa/faf4ead6ab2aff43422b70a8edd6e2755751b585.js",
+      "status": 200,
+      "sourceMapStatus": 200,
+      "sourceSha256": "e70232f3ef6f803bba02a6c2af1d40107aea95400dfd65e9845636a836faf3a6",
+      "compiledSha256": "c62fa482dcd849e6eaaefad09eb99646ef31988e959169fc135ed90c0a3b4822",
+      "available": true,
+      "sourceMapMatchesCurrentSource": true,
+      "servedEqualsCompilerOutput": true
+    },
+    {
+      "file": "src/presentation/InputCollector.ts",
+      "importId": "file:///D:/Project/A_New_Begin/Neurou_official/assets/scripts/src/presentation/InputCollector.ts",
+      "chunkUrl": "http://localhost:7456/scripting/x/chunks/80/80b5318e658fb283a27d22d0af4d9a8d28eaaca0.js",
+      "status": 200,
+      "sourceMapStatus": 200,
+      "sourceSha256": "1cf85eb3e8de3621bc199a3e6e96cba92a1309fb6172ce1221ef692281b67420",
+      "compiledSha256": "6816e7d6fbfb17545953e5a78b235f0e2cecc916247b3709b5d851388b1bae58",
+      "available": true,
+      "sourceMapMatchesCurrentSource": true,
+      "servedEqualsCompilerOutput": true
+    },
+    {
+      "file": "src/director/IntentPort.ts",
+      "importId": "file:///D:/Project/A_New_Begin/Neurou_official/assets/scripts/src/director/IntentPort.ts",
+      "chunkUrl": "http://localhost:7456/scripting/x/chunks/49/498a6617b96cfa47405016084b673d49f11a12d0.js",
+      "status": 200,
+      "sourceMapStatus": 200,
+      "sourceSha256": "4eba8835849c789636a67fc01ceb1ff27fd5c53c4c161bf25cb447f7aa17b21c",
+      "compiledSha256": "e322977b9f015c97976ddba214a0659854f2f4883a90192636f7ee3eddb94b0e",
+      "available": true,
+      "sourceMapMatchesCurrentSource": true,
+      "servedEqualsCompilerOutput": true
+    },
+    {
+      "file": "src/director/WorldFolderSession.ts",
+      "importId": "file:///D:/Project/A_New_Begin/Neurou_official/assets/scripts/src/director/WorldFolderSession.ts",
+      "chunkUrl": "http://localhost:7456/scripting/x/chunks/ca/ca518216c3a5a6ffdae1c91376d10fbbe5fd7c0b.js",
+      "status": 200,
+      "sourceMapStatus": 200,
+      "sourceSha256": "59777e43dccd7ad6d2d0767b28daf83e525a176ae391b1f60a9500d739ea0420",
+      "compiledSha256": "087f463d01cb641db2fd86e84cfef24bbc70f577c769c19ac8f06506721785e8",
+      "available": true,
+      "sourceMapMatchesCurrentSource": true,
+      "servedEqualsCompilerOutput": true
+    },
+    {
+      "file": "src/presentation/WorldLocalStorage.ts",
+      "importId": "file:///D:/Project/A_New_Begin/Neurou_official/assets/scripts/src/presentation/WorldLocalStorage.ts",
+      "chunkUrl": "http://localhost:7456/scripting/x/chunks/f2/f2c58e49d17326318248deee9162c10942eb4601.js",
+      "status": 200,
+      "sourceMapStatus": 200,
+      "sourceSha256": "25ac84d7c55b59c2e59ae8e30270c4b4c43c625f472132ef997de64e96d3ebf1",
+      "compiledSha256": "c8c1840aab66cfe3713f193db7e6e459968b9ae3e679bfbf0d33cfcb2e0ac448",
+      "available": true,
+      "sourceMapMatchesCurrentSource": true,
+      "servedEqualsCompilerOutput": true
+    },
+    {
+      "file": "src/presentation/EditorFolderView.ts",
+      "importId": "file:///D:/Project/A_New_Begin/Neurou_official/assets/scripts/src/presentation/EditorFolderView.ts",
+      "chunkUrl": "http://localhost:7456/scripting/x/chunks/03/0338eae4705f4ce378870ad1b40016e775fd81af.js",
+      "status": 200,
+      "sourceMapStatus": 200,
+      "sourceSha256": "68a69bdd8259f9444a99ad788dc4b181193ccbde37e132e9aceee932024127e2",
+      "compiledSha256": "5e915dfcb24240eb9c39c590ab430475acabae044cb2d87e8d5bfd25af24d06d",
+      "available": true,
+      "sourceMapMatchesCurrentSource": true,
+      "servedEqualsCompilerOutput": true
+    },
+    {
+      "file": "src/presentation/CameraRig.ts",
+      "importId": "file:///D:/Project/A_New_Begin/Neurou_official/assets/scripts/src/presentation/CameraRig.ts",
+      "chunkUrl": "http://localhost:7456/scripting/x/chunks/a8/a86e574d3e9bd9ff4eebee3e17e14608de492348.js",
+      "status": 200,
+      "sourceMapStatus": 200,
+      "sourceSha256": "646e4876c4eb3e0943021c0a2cd987e776bfaf777400f8971634cc159c6ecba9",
+      "compiledSha256": "f7670836a16b2f9172747aff8743afd439f485e9ebae5eb73563aba989b6f140",
+      "available": true,
+      "sourceMapMatchesCurrentSource": true,
+      "servedEqualsCompilerOutput": true
+    },
+    {
+      "file": "src/presentation/ProtagonistView.ts",
+      "importId": "file:///D:/Project/A_New_Begin/Neurou_official/assets/scripts/src/presentation/ProtagonistView.ts",
+      "chunkUrl": "http://localhost:7456/scripting/x/chunks/20/2000eb1ab6ab7bde2b2ec3b3134c5749ed8deb57.js",
+      "status": 200,
+      "sourceMapStatus": 200,
+      "sourceSha256": "0f8db6f43e81f0b00255a2486c5087fd72b1b30c769267274c811f6867dedfe3",
+      "compiledSha256": "1641792550a098a07517baa3235ee96cd2f2cdca25bb8b3eb34d5713fc74a23f",
+      "available": true,
+      "sourceMapMatchesCurrentSource": true,
+      "servedEqualsCompilerOutput": true
+    }
+  ],
+  "available": true,
+  "allSelectedCompilationFresh": true
+}

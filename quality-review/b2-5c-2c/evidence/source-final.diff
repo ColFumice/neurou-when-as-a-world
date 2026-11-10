@@ -1,0 +1,841 @@
+diff --git a/server/src/RelayRoute.ts b/server/src/RelayRoute.ts
+new file mode 100644
+--- /dev/null
++++ b/server/src/RelayRoute.ts
+@@ -0,0 +1,48 @@
++import type { FastifyInstance, FastifyRequest } from 'fastify';
++import { SharedServiceProtocolCodec } from '../.shared-kernel/SharedServiceProtocolCodec.js';
++import { SharedCanonicalBytes, SharedSchemaError } from '../.shared-kernel/SharedCanonicalBytes.js';
++import type { SharedProtocolOperation } from '../.shared-kernel/SharedServiceProtocolContracts.js';
++import { SharedServiceFailure } from './SharedSessionVerifier.js';
++import type { RelayService } from './RelayService.js';
++
++const operations = [['/relay/submit', 524288], ['/relay/pull', 16384], ['/relay/ack', 65536]] as const;
++
++function schemaFailure(error: SharedSchemaError, request: FastifyRequest): SharedServiceFailure {
++  if (error.code === 'CanonicalInvalid') { return new SharedServiceFailure('CanonicalInvalid', 400, 'InvalidData', 'Relay'); }
++  if (error.code === 'LimitExceeded') { return new SharedServiceFailure('ResourceLimit', 413, 'InvalidData', 'Relay'); }
++  try {
++    const value = SharedCanonicalBytes.decode(SharedCanonicalBytes.utf8(request.body as string));
++    if (value !== null && typeof value === 'object' && !Array.isArray(value)) {
++      const version = (value as Record<string, unknown>).schemaVersion;
++      if (typeof version === 'number' && Number.isSafeInteger(version) && version !== 1) { return new SharedServiceFailure('VersionUnsupported', 400, 'VersionUnsupported', 'Relay'); }
++    }
++  } catch {}
++  return new SharedServiceFailure('SchemaInvalid', 400, 'InvalidData', 'Relay');
++}
++
++/** Child scope retains exact wire without changing the old global auth parser, limit or guards. */
++export async function relayRoutes(app: FastifyInstance, service: RelayService): Promise<void> {
++  app.removeContentTypeParser('application/json');
++  app.addContentTypeParser('application/json', { parseAs: 'string' }, (_request, source, done) => done(null, source));
++  app.setErrorHandler((error, request, reply) => {
++    const legacy = error as Error & { statusCode?: number; code?: string };
++    let fault: SharedServiceFailure;
++    if (error instanceof SharedServiceFailure) { fault = error; }
++    else if (error instanceof SharedSchemaError) { fault = schemaFailure(error, request); }
++    else if (legacy.constructor.name === 'Fault' && legacy.code === 'Forbidden') { fault = new SharedServiceFailure('OriginRejected', 403, 'Forbidden', 'Relay'); }
++    else if (legacy.constructor.name === 'Fault' && legacy.code === 'RateLimited') { fault = new SharedServiceFailure('RateLimitExceeded', 429, 'RateLimited', 'Relay', 60000); }
++    else if (legacy.constructor.name === 'Fault' && legacy.code === 'InvalidData') { fault = new SharedServiceFailure('SchemaInvalid', 400, 'InvalidData', 'Relay'); }
++    else if (legacy.statusCode === 413) { fault = new SharedServiceFailure('ResourceLimit', 413, 'InvalidData', 'Relay'); }
++    else { fault = new SharedServiceFailure('RelayUnavailable', 503, 'AuthorityUnavailable', 'Relay'); }
++    let nonce: string | null = null;
++    try { nonce = SharedServiceProtocolCodec.parseRequest(request.url.slice('/api/v1/shared'.length) as SharedProtocolOperation, request.body as string).requestNonce; } catch {}
++    return reply.code(fault.status).type('application/json').send(SharedServiceProtocolCodec.encode({ kind: 'Rejected', fault: { code: fault.code, layer: fault.layer, detail: fault.detail, requestId: request.id, requestNonce: nonce, retryAfterMs: fault.retryAfterMs } }));
++  });
++  for (const [operation, bodyLimit] of operations) {
++    app.post<{ Body: string }>('/api/v1/shared' + operation, { bodyLimit }, async (request, reply) => {
++      const input = SharedServiceProtocolCodec.parseRequest(operation, request.body);
++      const result = await service.handle(operation, input, request.body, request as FastifyRequest);
++      return reply.code(result.status).type('application/json').send(result.wire);
++    });
++  }
++}
+
+diff --git a/server/src/RelayService.ts b/server/src/RelayService.ts
+new file mode 100644
+--- /dev/null
++++ b/server/src/RelayService.ts
+@@ -0,0 +1,317 @@
++import { performance } from 'node:perf_hooks';
++import type { FastifyRequest } from 'fastify';
++import type { PoolClient } from 'pg';
++import { SharedCommitCodec } from '../.shared-kernel/SharedCommitCodec.js';
++import { SharedCanonicalBytes } from '../.shared-kernel/SharedCanonicalBytes.js';
++import { SharedServiceProtocolCodec } from '../.shared-kernel/SharedServiceProtocolCodec.js';
++import type { AdmittedWorldCommit, RelayCommitEnvelope, RelayCommitHeader, RelayCursor, RelayPullReply, WorldMembershipEpoch } from '../.shared-kernel/SharedCommitContracts.js';
++import type { SharedHttpRequest, SharedProtocolOperation, RelayAckRequest } from '../.shared-kernel/SharedServiceProtocolContracts.js';
++import { sha256, keyFingerprint } from './crypto.js';
++import { RealAuthorityClock } from './RealAuthorityClock.js';
++import { SharedReceiptSigner, sharedCanonical, sharedUnsigned, verifySharedSignature } from './SharedReceiptSigner.js';
++import { SharedSessionVerifier, SharedServiceFailure, type SharedSession } from './SharedSessionVerifier.js';
++import { RelayStorage, type RelayStoredStream, type RelayStoredCommit } from './RelayStorage.js';
++import type { StoredWorld } from './WorldAuthorityStorage.js';
++
++type Data = Record<string, any>;
++type RelayOperation = '/relay/submit' | '/relay/pull' | '/relay/ack';
++interface PreparedRelayCommit { readonly wire: AdmittedWorldCommit; readonly bytes: Buffer; readonly envelope: RelayCommitEnvelope; readonly header: RelayCommitHeader; }
++interface RelayPullResultMemory {
++  readonly schemaVersion: 1;
++  readonly kind: 'RelayPullReferences';
++  readonly wireSha256: string;
++  readonly receipt: Data;
++  readonly entries: readonly { readonly position: string; readonly identity: { readonly authorAccountId: string; readonly authorSequence: number }; readonly envelopeSha256: string }[];
++}
++const RETENTION_MS = 86400000;
++const MAX_CURSOR = 18446744073709551615n;
++const RESPONSE_LIMIT = 1048576;
++function fail(detail: string, status = 409, code = 'Conflict'): never { throw new SharedServiceFailure(detail, status, code, 'Relay'); }
++function same(a: unknown, b: unknown): boolean { return sharedCanonical(a) === sharedCanonical(b); }
++function fromBytes(bytes: Buffer): Data { return JSON.parse(bytes.toString('utf8')) as Data; }
++
++/** Public source verification only: this service has no group key and never decrypts a body. */
++export class RelayService {
++  private readonly codec = new SharedCommitCodec();
++  private readonly verifier = new SharedSessionVerifier();
++  private readonly rates = new Map<string, { count: number; expires: number }>();
++  private readonly pendingPulls = new Set<string>();
++
++  constructor(private readonly storage: RelayStorage, private readonly signer: SharedReceiptSigner, private readonly clock: RealAuthorityClock) {}
++
++  async handle(operation: RelayOperation, input: SharedHttpRequest<unknown>, raw: string, request: FastifyRequest): Promise<{ wire: string; status: number }> {
++    const payload = input.payload as Data;
++    const prepared = operation === '/relay/submit' ? this.prepareCommit(payload.commit) : null;
++    const started = performance.now();
++    const maximumWait = operation === '/relay/pull' ? payload.maximumWaitMs as number : 0;
++    let pendingKey: string | null = null;
++    let charged = false;
++    const disconnected = (): boolean => request.raw.aborted || request.raw.socket.destroyed;
++    try {
++      for (;;) {
++        if (disconnected()) { fail('RelayUnavailable', 503, 'AuthorityUnavailable'); }
++        const final = performance.now() - started >= maximumWait;
++        const result = await this.storage.transaction(async client => {
++          // Existing auth locks always precede clock/world/stream locks. No lock is held during a wait.
++          const session = await this.verifier.verify(request, client, Date.now());
++          const sample = await this.clock.sample(client);
++          const worldId = operation === '/relay/submit' ? prepared!.header.worldId : payload.worldId as string;
++          const requestSha = sha256(raw);
++          const prior = (await client.query<Data>('SELECT * FROM authority_requests WHERE service_instance_id=$1 AND account_id=$2 AND request_nonce=$3', [this.signer.serviceInstanceId, session.accountId, input.requestNonce])).rows[0];
++          if (prior) {
++            if (prior.operation !== operation || prior.world_id !== worldId || prior.device_id !== session.deviceId || Number(prior.device_generation) !== session.deviceGeneration || prior.request_sha256 !== requestSha) { fail('IdempotencyConflict'); }
++            if (prior.result_wire === null) { fail('IdempotencyExpired'); }
++            if (operation !== '/relay/pull') { return { wire: (prior.result_wire as Buffer).toString('utf8'), status: this.storedStatus(prior.result_wire as Buffer), empty: false }; }
++          }
++          if ((operation === '/relay/pull' || operation === '/relay/submit') && !sample.trusted) { fail('ClockUntrusted', 503, 'TimeUntrusted'); }
++          if (!charged) {
++            this.limit(session, operation, worldId);
++            charged = true;
++          }
++          if (operation === '/relay/pull' && pendingKey === null) {
++            const key = session.accountId + ':' + session.deviceId;
++            if (this.pendingPulls.has(key)) { throw new SharedServiceFailure('RateLimitExceeded', 429, 'RateLimited', 'Relay', 1000); }
++            this.pendingPulls.add(key);
++            pendingKey = key;
++          }
++          this.authorization(operation, input, session);
++          const world = (await client.query<StoredWorld & { service_instance_id: string }>('SELECT * FROM authority_worlds WHERE world_id=$1 FOR UPDATE', [worldId])).rows[0];
++          if (!world || world.service_instance_id !== this.signer.serviceInstanceId) { fail('FactUnavailable', 503, 'AuthorityUnavailable'); }
++          await client.query('SAVEPOINT relay_business');
++          let value: unknown;
++          let status = 200;
++          let empty = false;
++          try {
++            const stream = await this.storage.lockStream(client, worldId);
++            await this.storage.expire(client, stream, sample.trusted ? sample.epochMs : null);
++            if (operation === '/relay/submit') {
++              value = await this.submit(client, world, stream, prepared!, input.requestNonce, session);
++              // A late first enqueue may commit its immutable receipt/tombstone, never live expired bytes.
++              await this.storage.expire(client, stream, sample.trusted ? sample.epochMs : null);
++            }
++            else if (operation === '/relay/ack') { value = await this.acknowledge(client, world, stream, payload as RelayAckRequest, input.requestNonce, session); }
++            else {
++              const memory = prior ? this.pullMemory(prior.result_wire as Buffer) : null;
++              const batch = await this.pull(client, world, stream, payload, session);
++              empty = !prior && batch.kind === 'Batch' && batch.commits.length === 0;
++              if (memory !== null && batch.kind === 'Batch') { value = await this.reconstructPull(client, memory); }
++              else if (memory !== null && same(memory.receipt.payload, batch)) { value = await this.reconstructPull(client, memory); }
++              else { value = this.pullReceipt(batch, input.requestNonce); }
++            }
++            const finalSample = await this.clock.sample(client);
++            if (sample.trusted && !finalSample.trusted) { fail('ClockUntrusted', 503, 'TimeUntrusted'); }
++          } catch (error) {
++            if (!(error instanceof SharedServiceFailure)) { throw error; }
++            await client.query('ROLLBACK TO SAVEPOINT relay_business');
++            status = error.status;
++            value = { code: error.code, layer: error.layer, detail: error.detail, requestId: request.id, requestNonce: input.requestNonce, retryAfterMs: error.retryAfterMs };
++          }
++          // A latch survives a business savepoint rollback, including an unsafe expiry attempt.
++          await this.clock.sample(client);
++          const reply = status === 200 ? { kind: 'Accepted', value } : { kind: 'Rejected', fault: value };
++          const wire = SharedServiceProtocolCodec.encode(reply);
++          if (Buffer.byteLength(wire) > RESPONSE_LIMIT) { fail('ResourceLimit', 413, 'InvalidData'); }
++          SharedServiceProtocolCodec.parseReply(operation, wire, input.requestNonce);
++          if ((status === 200 || status === 409) && (!empty || final || prior)) {
++            const stored = operation === '/relay/pull' && status === 200 ? RelayStorage.bytes(this.rememberPull(value as Data, wire)) : Buffer.from(wire);
++            // P11: only lightweight references live in authority_requests; the queue is the sole ciphertext source.
++            if (!prior) { await client.query('INSERT INTO authority_requests(service_instance_id,account_id,request_nonce,operation,world_id,device_id,device_generation,request_sha256,result_wire,result_kind,created_at) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)', [this.signer.serviceInstanceId, session.accountId, input.requestNonce, operation, worldId, session.deviceId, session.deviceGeneration, requestSha, stored, status === 200 ? 'Accepted' : 'Rejected', Date.now()]); }
++          }
++          return { wire, status, empty };
++        });
++        if (!result.empty || final || operation !== '/relay/pull') { return result; }
++        await new Promise<void>(resolve => setTimeout(resolve, Math.min(100, Math.max(1, maximumWait - (performance.now() - started)))));
++      }
++    } catch (error) {
++      await this.clock.persistLatch(this.storage.pool);
++      throw error;
++    } finally {
++      if (pendingKey !== null) { this.pendingPulls.delete(pendingKey); }
++    }
++  }
++
++  private storedStatus(bytes: Buffer): number {
++    const result = fromBytes(bytes);
++    if (result.kind === 'Accepted') { return 200; }
++    const f = result.fault;
++    return f.detail === 'ResourceLimit' ? 413 : f.code === 'Unauthenticated' ? 401 : f.code === 'Forbidden' || f.code === 'DeviceUntrusted' ? 403 : f.code === 'RateLimited' ? 429 : f.code === 'Conflict' ? 409 : f.code === 'VersionUnsupported' || f.code === 'InvalidData' ? 400 : 503;
++  }
++
++  private limit(session: SharedSession, operation: RelayOperation, worldId: string): void {
++    const now = Date.now();
++    const window = Math.floor(now / 60000) * 60000;
++    const charge = (key: string, maximum: number): void => {
++      const previous = this.rates.get(key);
++      if (!previous || previous.expires !== window + 60000) { this.rates.set(key, { count: 1, expires: window + 60000 }); }
++      else if (++previous.count > maximum) { throw new SharedServiceFailure('RateLimitExceeded', 429, 'RateLimited', 'Relay', 60000); }
++    };
++    charge(session.accountId + ':' + session.deviceId + ':' + operation, operation === '/relay/ack' ? 240 : 120);
++    if (operation === '/relay/submit') { charge('world:' + worldId, 600); }
++    if (this.rates.size > 4096) { for (const [key, value] of this.rates) { if (value.expires <= now) { this.rates.delete(key); } } }
++  }
++
++  private authorization(operation: RelayOperation, input: SharedHttpRequest<unknown>, session: SharedSession): void {
++    if (operation === '/relay/pull') { if (input.authorization !== null) { fail('SchemaInvalid', 400, 'InvalidData'); } return; }
++    const authorization = input.authorization;
++    if (authorization === null || authorization.authorDeviceId !== session.deviceId || authorization.authorDeviceGeneration !== session.deviceGeneration) { fail('CredentialMismatch', 403, 'DeviceUntrusted'); }
++    const unsigned = { schemaVersion: 1, serviceInstanceId: this.signer.serviceInstanceId, operation, requestNonce: input.requestNonce, authorDeviceId: authorization.authorDeviceId, authorDeviceGeneration: authorization.authorDeviceGeneration, payload: input.payload };
++    if (!verifySharedSignature(session.signingPublicKey, 'Neurou/shared-device-operation/v1\0', unsigned, authorization.deviceSignatureBase64Url)) { fail('CredentialMismatch', 403, 'DeviceUntrusted'); }
++  }
++
++  private prepareCommit(input: unknown): PreparedRelayCommit {
++    const wire = this.codec.validate('AdmittedWorldCommit', input);
++    const bytes = Buffer.from(SharedCanonicalBytes.base64UrlDecode(wire.envelopeBytesBase64Url));
++    const claim = wire.admissionClaim.claim;
++    const header = claim.header;
++    if (bytes.length > 65536 || sha256(bytes) !== claim.envelopeSha256 || claim.serviceInstanceId !== this.signer.serviceInstanceId || header.serviceInstanceId !== this.signer.serviceInstanceId) { fail('CredentialMismatch', 403, 'DeviceUntrusted'); }
++    const receipts = [wire.authorKeyBindingReceipt, wire.sequenceSegmentReceipt, wire.appendPermitReceipt, wire.admissionReceipt, wire.membershipEpochReceipt];
++    try { for (const receipt of receipts) { this.signer.verifyAuthority(receipt); } if (wire.rosterObserverAdmissionReceipt !== null) { this.signer.verifyAuthority(wire.rosterObserverAdmissionReceipt); } } catch { fail('CredentialMismatch', 403, 'DeviceUntrusted'); }
++    if (wire.authorKeyBindingReceipt.purpose !== 'AuthorKeyBinding' || wire.sequenceSegmentReceipt.purpose !== 'SequenceSegment' || wire.appendPermitReceipt.purpose !== 'WorldAppendPermit' || wire.admissionReceipt.purpose !== 'WorldCommitAdmission' || wire.membershipEpochReceipt.purpose !== 'WorldMembership') { fail('CredentialMismatch', 403, 'DeviceUntrusted'); }
++    const binding = wire.authorKeyBindingReceipt.payload;
++    if (binding.serviceInstanceId !== this.signer.serviceInstanceId || binding.authorAccountId !== header.identity.authorAccountId || binding.authorDeviceId !== header.authorDeviceId || binding.authorDeviceGeneration !== header.authorDeviceGeneration || binding.assurance !== 'RegisteredCredential' || binding.registeredAtServerEpochMs > header.appendedAt.epochMs || keyFingerprint(binding.authorSigningPublicJwk) !== header.authorSigningKeyFingerprint || binding.authorSigningKeyFingerprint !== header.authorSigningKeyFingerprint || !verifySharedSignature(binding.authorSigningPublicJwk, 'Neurou/commit-admission-claim/v1\0', claim, wire.admissionClaim.authorSignatureBase64Url) || wire.admissionReceipt.requestNonce !== claim.requestNonce) { fail('CredentialMismatch', 403, 'DeviceUntrusted'); }
++    const envelope = this.codec.decode('RelayCommitEnvelope', new Uint8Array(bytes));
++    if (!same(envelope.header, header) || !verifySharedSignature(binding.authorSigningPublicJwk, 'Neurou/world-commit/v1\0', sharedUnsigned(envelope as unknown as Record<string, unknown>, 'authorSignatureBase64Url'), envelope.authorSignatureBase64Url)) { fail('CredentialMismatch', 403, 'DeviceUntrusted'); }
++    return { wire, bytes, envelope, header };
++  }
++
++  private async currentMember(client: PoolClient, world: StoredWorld, session: SharedSession): Promise<WorldMembershipEpoch> {
++    if (world.current_epoch === null) { fail('MemberNotActive', 403, 'Forbidden'); }
++    const row = (await client.query<{ payload: WorldMembershipEpoch }>('SELECT payload FROM authority_membership_epochs WHERE world_id=$1 AND membership_epoch=$2', [world.world_id, world.current_epoch])).rows[0];
++    if (!row || !row.payload.credentials.some(c => c.accountId === session.accountId && c.deviceId === session.deviceId && c.deviceGeneration === session.deviceGeneration && c.registeredSigningKeyFingerprint === session.signingKeyFingerprint)) { fail('MemberNotActive', 403, 'Forbidden'); }
++    return row.payload;
++  }
++
++  private async verifyStoredSource(client: PoolClient, world: StoredWorld, prepared: PreparedRelayCommit): Promise<void> {
++    const { wire, header } = prepared;
++    const admission = (await client.query<Data>('SELECT * FROM authority_commit_admissions WHERE account_id=$1 AND author_sequence=$2', [header.identity.authorAccountId, header.identity.authorSequence])).rows[0];
++    if (!admission || admission.world_id !== world.world_id || admission.envelope_sha256 !== wire.admissionClaim.claim.envelopeSha256 || !same(admission.public_header, header) || !same(fromBytes(admission.receipt), wire.admissionReceipt)) { fail('IdentityConflict'); }
++    const segment = (await client.query<Data>('SELECT receipt FROM authority_sequence_segments WHERE segment_id=$1', [header.segmentId])).rows[0];
++    const permit = (await client.query<Data>('SELECT receipt FROM authority_append_permits WHERE permit_id=$1', [header.permitId])).rows[0];
++    const epoch = (await client.query<Data>('SELECT receipt FROM authority_membership_epochs WHERE world_id=$1 AND membership_epoch=$2', [world.world_id, header.membershipEpoch])).rows[0];
++    const bindings = (await client.query<Data>('SELECT binding_receipt FROM authority_agreement_credentials WHERE world_id=$1 AND account_id=$2 AND device_id=$3 AND device_generation=$4', [world.world_id, header.identity.authorAccountId, header.authorDeviceId, header.authorDeviceGeneration])).rows;
++    if (!segment || !permit || !epoch || !same(fromBytes(segment.receipt), wire.sequenceSegmentReceipt) || !same(fromBytes(permit.receipt), wire.appendPermitReceipt) || !same(fromBytes(epoch.receipt), wire.membershipEpochReceipt) || !bindings.some(row => same(fromBytes(row.binding_receipt), wire.authorKeyBindingReceipt))) { fail('CredentialMismatch', 403, 'DeviceUntrusted'); }
++    const membership = wire.membershipEpochReceipt.payload;
++    const anchor = world.root_anchor as Data;
++    const unsigned = sharedUnsigned(sharedUnsigned(membership as unknown as Record<string, unknown>, 'developerSignatureBase64Url'), 'activatedAtServerEpochMs');
++    if (membership.worldId !== world.world_id || membership.key.keyEpoch !== header.keyEpoch || membership.key.worldRelayKeyId !== header.worldRelayKeyId || membership.developerTrustAnchorSha256 !== sha256(sharedCanonical(anchor)) || !verifySharedSignature(anchor.developerPublicKey, 'Neurou/world-membership/v1\0', unsigned, membership.developerSignatureBase64Url)) { fail('CredentialMismatch', 403, 'DeviceUntrusted'); }
++    const roster = header.restrictedWrite;
++    if (roster !== null && roster.subtype === 'DeveloperRosterChange') {
++      const observer = (await client.query<Data>('SELECT receipt FROM authority_observer_facts WHERE world_id=$1 AND account_id=$2', [world.world_id, roster.accountId])).rows[0];
++      if (!observer || wire.rosterObserverAdmissionReceipt === null || !same(fromBytes(observer.receipt), wire.rosterObserverAdmissionReceipt) || wire.rosterObserverAdmissionReceipt.payload.observerAdmissionRevision !== roster.observerAdmissionRevision) { fail('CredentialMismatch', 403, 'DeviceUntrusted'); }
++    } else if (wire.rosterObserverAdmissionReceipt !== null) { fail('CredentialMismatch', 403, 'DeviceUntrusted'); }
++  }
++
++  private async submit(client: PoolClient, world: StoredWorld, stream: RelayStoredStream, prepared: PreparedRelayCommit, nonce: string, session: SharedSession): Promise<unknown> {
++    const { wire, header } = prepared;
++    if (header.identity.authorAccountId !== session.accountId || header.authorDeviceId !== session.deviceId || header.authorDeviceGeneration !== session.deviceGeneration || header.authorSigningKeyFingerprint !== session.signingKeyFingerprint) { fail('CredentialMismatch', 403, 'DeviceUntrusted'); }
++    await this.verifyStoredSource(client, world, prepared);
++    const prior = (await client.query<RelayStoredCommit>('SELECT * FROM relay_commit_queue WHERE account_id=$1 AND author_sequence=$2', [header.identity.authorAccountId, header.identity.authorSequence])).rows[0];
++    if (prior) {
++      if (prior.world_id !== world.world_id || prior.envelope_sha256 !== wire.admissionClaim.claim.envelopeSha256) { fail('IdentityConflict'); }
++      // A fresh HTTP nonce gets a fresh wrapper around the original immutable position facts.
++      return this.signer.transport('RelaySubmit', nonce, fromBytes(prior.receipt).payload);
++    }
++    const current = await this.currentMember(client, world, session);
++    if (current.membershipEpoch !== header.membershipEpoch) { fail('EpochClosed'); }
++    if (BigInt(stream.next_position) >= MAX_CURSOR) { fail('ResourceLimit', 413, 'InvalidData'); }
++    const position = stream.next_position;
++    const admittedAt = wire.admissionReceipt.payload.admittedAtServerEpochMs;
++    const retainedUntil = admittedAt + RETENTION_MS;
++    if (!Number.isSafeInteger(retainedUntil)) { fail('ResourceLimit', 413, 'InvalidData'); }
++    const fact = { worldId: world.world_id, identity: header.identity, envelopeSha256: wire.admissionClaim.claim.envelopeSha256, cursor: { relayGeneration: Number(stream.generation), position }, admittedAtServerEpochMs: admittedAt, retainedUntilServerEpochMs: retainedUntil };
++    const receipt = this.signer.transport('RelaySubmit', nonce, fact);
++    const { envelopeBytesBase64Url: omitted, ...proof } = wire;
++    await client.query('INSERT INTO relay_commit_queue(world_id,generation,position,account_id,author_sequence,envelope_bytes,public_proof,envelope_sha256,admitted_at,retained_until,receipt) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)', [world.world_id, stream.generation, position, header.identity.authorAccountId, header.identity.authorSequence, prepared.bytes, proof, fact.envelopeSha256, admittedAt, retainedUntil, RelayStorage.bytes(receipt)]);
++    const recipients = [...wire.membershipEpochReceipt.payload.credentials].sort((a, b) => a.accountId.localeCompare(b.accountId) || a.deviceId.localeCompare(b.deviceId) || a.deviceGeneration - b.deviceGeneration);
++    for (const recipient of recipients) { await client.query('INSERT INTO relay_delivery_recipients(world_id,generation,position,account_id,device_id,device_generation) VALUES($1,$2,$3,$4,$5,$6)', [world.world_id, stream.generation, position, recipient.accountId, recipient.deviceId, recipient.deviceGeneration]); }
++    stream.next_position = String(BigInt(position) + 1n);
++    await client.query('UPDATE relay_streams SET next_position=$2 WHERE world_id=$1', [world.world_id, stream.next_position]);
++    return receipt;
++  }
++
++  private async pull(client: PoolClient, world: StoredWorld, stream: RelayStoredStream, payload: Data, session: SharedSession): Promise<RelayPullReply> {
++    await this.currentMember(client, world, session);
++    await this.storage.detectLostRange(client, stream);
++    const after = payload.after as RelayCursor;
++    const floor = { relayGeneration: Number(stream.generation), position: stream.retention_floor };
++    const gap = (reason: 'RetentionExpired' | 'RelayGenerationChanged' | 'MissingAdmittedEnvelope'): RelayPullReply => ({ kind: 'Gap', worldId: world.world_id, after, retentionFloor: floor, reason });
++    if (after.relayGeneration !== Number(stream.generation)) { return gap('RelayGenerationChanged'); }
++    if (BigInt(after.position) < BigInt(stream.retention_floor)) { return gap('RetentionExpired'); }
++    if (BigInt(after.position) >= BigInt(stream.next_position)) { fail('SchemaInvalid', 400, 'InvalidData'); }
++    if (await this.storage.missingAdmission(client, stream)) { return gap('MissingAdmittedEnvelope'); }
++    const rows = (await client.query<RelayStoredCommit>('SELECT * FROM relay_commit_queue WHERE world_id=$1 AND generation=$2 AND position>$3 ORDER BY position LIMIT $4', [world.world_id, stream.generation, after.position, payload.maximumCount])).rows;
++    const commits: AdmittedWorldCommit[] = [];
++    let next = after.position;
++    for (const row of rows) {
++      if (BigInt(row.position) !== BigInt(next) + 1n || row.tombstone || row.envelope_bytes === null || row.public_proof === null || sha256(row.envelope_bytes) !== row.envelope_sha256) { return gap('MissingAdmittedEnvelope'); }
++      const commit = RelayStorage.commit(row);
++      this.codec.validate('AdmittedWorldCommit', commit);
++      commits.push(commit);
++      const candidate = { kind: 'Batch' as const, worldId: world.world_id, after, next: { relayGeneration: Number(stream.generation), position: row.position }, commits, retentionFloor: floor };
++      if (Buffer.byteLength(SharedServiceProtocolCodec.encode({ kind: 'Accepted', value: this.pullReceipt(candidate, 'A'.repeat(43)) })) > RESPONSE_LIMIT) {
++        commits.pop();
++        if (commits.length === 0) { fail('ResourceLimit', 413, 'InvalidData'); }
++        break;
++      }
++      next = row.position;
++    }
++    return { kind: 'Batch', worldId: world.world_id, after, next: { relayGeneration: Number(stream.generation), position: next }, commits, retentionFloor: floor };
++  }
++
++  private pullReceipt(batch: RelayPullReply, nonce: string): unknown { return this.signer.transport('RelayPull', nonce, batch); }
++
++  private rememberPull(receipt: Data, wire: string): RelayPullResultMemory {
++    const payload = receipt.payload as RelayPullReply;
++    const entries = payload.kind === 'Batch' ? payload.commits.map((commit, index) => ({ position: String(BigInt(payload.after.position) + BigInt(index + 1)), identity: commit.admissionClaim.claim.header.identity, envelopeSha256: commit.admissionClaim.claim.envelopeSha256 })) : [];
++    const skeleton = payload.kind === 'Batch' ? { ...payload, commits: [] } : payload;
++    return { schemaVersion: 1, kind: 'RelayPullReferences', wireSha256: sha256(wire), receipt: { ...receipt, payload: skeleton }, entries };
++  }
++
++  private pullMemory(bytes: Buffer): RelayPullResultMemory {
++    const memory = SharedCanonicalBytes.decode(new Uint8Array(bytes)) as Data;
++    const exact = (value: unknown, keys: readonly string[]): value is Data => value !== null && typeof value === 'object' && !Array.isArray(value) && Object.keys(value).sort().join('|') === [...keys].sort().join('|');
++    if (!exact(memory, ['schemaVersion', 'kind', 'wireSha256', 'receipt', 'entries']) || memory.schemaVersion !== 1 || memory.kind !== 'RelayPullReferences' || !/^[0-9a-f]{64}$/.test(memory.wireSha256) || !Array.isArray(memory.entries) || memory.entries.length > 256) { fail('RelayUnavailable', 503, 'AuthorityUnavailable'); }
++    // Validate the exact public skeleton with the unchanged frozen wire codec; no hidden payload fields.
++    const skeletonWire = SharedServiceProtocolCodec.encode({ kind: 'Accepted', value: memory.receipt });
++    try { SharedServiceProtocolCodec.parseReply('/relay/pull', skeletonWire, memory.receipt.requestNonce); } catch { fail('RelayUnavailable', 503, 'AuthorityUnavailable'); }
++    if (memory.receipt.payload.kind === 'Batch' && memory.receipt.payload.commits.length !== 0 || memory.receipt.payload.kind === 'Gap' && memory.entries.length !== 0) { fail('RelayUnavailable', 503, 'AuthorityUnavailable'); }
++    let position = memory.receipt.payload.after.position as string;
++    for (const entry of memory.entries) {
++      if (!exact(entry, ['position', 'identity', 'envelopeSha256']) || !exact(entry.identity, ['authorAccountId', 'authorSequence']) || typeof entry.position !== 'string' || !/^[1-9][0-9]{0,19}$/.test(entry.position) || BigInt(entry.position) > MAX_CURSOR || BigInt(entry.position) !== BigInt(position) + 1n || !/^[0-9a-f]{64}$/.test(entry.envelopeSha256) || !/^[0-9a-f-]{36}$/.test(entry.identity.authorAccountId) || !Number.isSafeInteger(entry.identity.authorSequence) || entry.identity.authorSequence < 1) { fail('RelayUnavailable', 503, 'AuthorityUnavailable'); }
++      position = entry.position;
++    }
++    if (memory.receipt.payload.kind === 'Batch' && position !== memory.receipt.payload.next.position) { fail('RelayUnavailable', 503, 'AuthorityUnavailable'); }
++    return memory as RelayPullResultMemory;
++  }
++
++  private async reconstructPull(client: PoolClient, memory: RelayPullResultMemory): Promise<Data> {
++    const skeleton = memory.receipt.payload as RelayPullReply;
++    const commits: AdmittedWorldCommit[] = [];
++    for (const entry of memory.entries) {
++      const row = (await client.query<RelayStoredCommit>('SELECT * FROM relay_commit_queue WHERE world_id=$1 AND generation=$2 AND position=$3', [skeleton.worldId, skeleton.after.relayGeneration, entry.position])).rows[0];
++      if (!row || row.tombstone || row.envelope_bytes === null || row.public_proof === null || row.account_id !== entry.identity.authorAccountId || Number(row.author_sequence) !== entry.identity.authorSequence || row.envelope_sha256 !== entry.envelopeSha256 || sha256(row.envelope_bytes) !== entry.envelopeSha256) { fail('RelayUnavailable', 503, 'AuthorityUnavailable'); }
++      commits.push(RelayStorage.commit(row));
++    }
++    const payload = skeleton.kind === 'Batch' ? { ...skeleton, commits } : skeleton;
++    const receipt: Data = { ...memory.receipt, payload };
++    const wire = SharedServiceProtocolCodec.encode({ kind: 'Accepted', value: receipt });
++    if (sha256(wire) !== memory.wireSha256 || !verifySharedSignature(this.signer.jwk, 'Neurou/shared-transport/v1\0', sharedUnsigned(receipt, 'signatureBase64Url'), receipt.signatureBase64Url)) { fail('RelayUnavailable', 503, 'AuthorityUnavailable'); }
++    return receipt;
++  }
++
++  private async acknowledge(client: PoolClient, world: StoredWorld, stream: RelayStoredStream, payload: RelayAckRequest, nonce: string, session: SharedSession): Promise<unknown> {
++    if (payload.authorDeviceId !== session.deviceId || payload.authorDeviceGeneration !== session.deviceGeneration || payload.relayGeneration !== Number(stream.generation)) { fail('CredentialMismatch', 403, 'DeviceUntrusted'); }
++    await this.currentMember(client, world, session);
++    const unsigned = sharedUnsigned(payload as unknown as Record<string, unknown>, 'deviceSignatureBase64Url');
++    if (!verifySharedSignature(session.signingPublicKey, 'Neurou/relay-ack/v1\0', { serviceInstanceId: this.signer.serviceInstanceId, requestNonce: nonce, payload: unsigned }, payload.deviceSignatureBase64Url)) { fail('CredentialMismatch', 403, 'DeviceUntrusted'); }
++    for (const entry of payload.entries) {
++      const row = (await client.query<RelayStoredCommit>('SELECT q.* FROM relay_commit_queue q JOIN relay_delivery_recipients r USING(world_id,generation,position) WHERE q.world_id=$1 AND q.generation=$2 AND q.position=$3 AND r.account_id=$4 AND r.device_id=$5 AND r.device_generation=$6 FOR UPDATE OF q', [world.world_id, stream.generation, entry.position, session.accountId, session.deviceId, session.deviceGeneration])).rows[0];
++      if (!row || row.tombstone || BigInt(entry.position) <= BigInt(stream.retention_floor) || row.account_id !== entry.identity.authorAccountId || Number(row.author_sequence) !== entry.identity.authorSequence || row.envelope_sha256 !== entry.envelopeSha256) { fail('CredentialMismatch', 403, 'DeviceUntrusted'); }
++    }
++    const entriesSha = sha256(sharedCanonical(payload.entries));
++    const fact = { worldId: world.world_id, relayGeneration: Number(stream.generation), accountId: session.accountId, deviceId: session.deviceId, deviceGeneration: session.deviceGeneration, entriesSha256: entriesSha, acknowledgedCount: payload.entries.length };
++    const receipt = this.signer.transport('RelayAck', nonce, fact);
++    for (const entry of payload.entries) { await client.query('INSERT INTO relay_acknowledgements(world_id,generation,position,account_id,device_id,device_generation,confirmation_sha256,receipt) VALUES($1,$2,$3,$4,$5,$6,$7,$8) ON CONFLICT DO NOTHING', [world.world_id, stream.generation, entry.position, session.accountId, session.deviceId, session.deviceGeneration, entriesSha, RelayStorage.bytes(receipt)]); }
++    return receipt;
++  }
++}
+
+diff --git a/server/src/RelayStorage.ts b/server/src/RelayStorage.ts
+new file mode 100644
+--- /dev/null
++++ b/server/src/RelayStorage.ts
+@@ -0,0 +1,87 @@
++import type { Pool, PoolClient } from 'pg';
++import type { AdmittedWorldCommit } from '../.shared-kernel/SharedCommitContracts.js';
++import { sharedCanonical } from './SharedReceiptSigner.js';
++
++export interface RelayStoredStream {
++  readonly world_id: string;
++  generation: string;
++  next_position: string;
++  retention_floor: string;
++}
++
++export interface RelayStoredCommit {
++  readonly world_id: string;
++  readonly generation: string;
++  readonly position: string;
++  readonly account_id: string;
++  readonly author_sequence: string;
++  readonly envelope_bytes: Buffer | null;
++  readonly public_proof: Omit<AdmittedWorldCommit, 'envelopeBytesBase64Url'> | null;
++  readonly envelope_sha256: string;
++  readonly admitted_at: string;
++  readonly retained_until: string;
++  readonly tombstone: boolean;
++  readonly receipt: Buffer;
++}
++
++/** Only finite shared ciphertext, public proof, cursors and ACK declarations live here. */
++export class RelayStorage {
++  constructor(readonly pool: Pool) {}
++
++  async transaction<T>(action: (client: PoolClient) => Promise<T>): Promise<T> {
++    const client = await this.pool.connect();
++    try {
++      await client.query('BEGIN');
++      const value = await action(client);
++      await client.query('COMMIT');
++      return value;
++    } catch (error) {
++      await client.query('ROLLBACK');
++      throw error;
++    } finally {
++      client.release();
++    }
++  }
++
++  async lockStream(client: PoolClient, worldId: string): Promise<RelayStoredStream> {
++    await client.query('INSERT INTO relay_streams(world_id,generation,next_position,retention_floor) VALUES($1,1,1,0) ON CONFLICT(world_id) DO NOTHING', [worldId]);
++    return (await client.query<RelayStoredStream>('SELECT * FROM relay_streams WHERE world_id=$1 FOR UPDATE', [worldId])).rows[0]!;
++  }
++
++  /** Expiry never uses ACK counts. Earlier unexpired rows retain their bytes even behind the floor. */
++  async expire(client: PoolClient, stream: RelayStoredStream, trustedTime: number | null): Promise<void> {
++    if (trustedTime === null) { return; }
++    const expired = (await client.query<{ floor: string | null }>('SELECT max(position)::text AS floor FROM relay_commit_queue WHERE world_id=$1 AND generation=$2 AND retained_until<=$3', [stream.world_id, stream.generation, trustedTime])).rows[0]!.floor;
++    // Lost-range generation changes must not strand old finite payloads forever. The floor
++    // above remains specific to the active stream; cleanup covers every generation of this world.
++    await client.query('UPDATE relay_commit_queue SET envelope_bytes=NULL,public_proof=NULL,tombstone=true WHERE world_id=$1 AND retained_until<=$2 AND NOT tombstone', [stream.world_id, trustedTime]);
++    if (expired !== null && BigInt(expired) > BigInt(stream.retention_floor)) {
++      stream.retention_floor = expired;
++      await client.query('UPDATE relay_streams SET retention_floor=$2 WHERE world_id=$1', [stream.world_id, expired]);
++    }
++  }
++
++  /** A certified missing position changes generation once; no successful empty rebuild is invented. */
++  async detectLostRange(client: PoolClient, stream: RelayStoredStream): Promise<boolean> {
++    const row = (await client.query<{ count: string; damaged: boolean }>('SELECT count(*)::text AS count,coalesce(bool_or(((envelope_bytes IS NULL OR public_proof IS NULL) AND NOT tombstone) OR (tombstone AND position>$3)),false) AS damaged FROM relay_commit_queue WHERE world_id=$1 AND generation=$2', [stream.world_id, stream.generation, stream.retention_floor])).rows[0]!;
++    if (BigInt(row.count) === BigInt(stream.next_position) - 1n && !row.damaged) { return false; }
++    const generation = Number(stream.generation) + 1;
++    if (!Number.isSafeInteger(generation)) { throw new Error('Relay generation exhausted'); }
++    stream.generation = String(generation);
++    stream.next_position = '1';
++    stream.retention_floor = '0';
++    await client.query('UPDATE relay_streams SET generation=$2,next_position=1,retention_floor=0 WHERE world_id=$1', [stream.world_id, generation]);
++    return true;
++  }
++
++  async missingAdmission(client: PoolClient, stream: RelayStoredStream): Promise<boolean> {
++    return (await client.query('SELECT 1 FROM authority_commit_admissions a LEFT JOIN relay_commit_queue q ON q.account_id=a.account_id AND q.author_sequence=a.author_sequence AND q.world_id=a.world_id AND q.generation=$2 WHERE a.world_id=$1 AND q.account_id IS NULL LIMIT 1', [stream.world_id, stream.generation])).rowCount !== 0;
++  }
++
++  static bytes(value: unknown): Buffer { return Buffer.from(sharedCanonical(value)); }
++
++  static commit(row: RelayStoredCommit): AdmittedWorldCommit {
++    if (row.tombstone || row.envelope_bytes === null || row.public_proof === null) { throw new Error('Relay ciphertext unavailable'); }
++    return { ...row.public_proof, envelopeBytesBase64Url: row.envelope_bytes.toString('base64url') };
++  }
++}
+
+diff --git a/server/src/buildRelayServer.ts b/server/src/buildRelayServer.ts
+new file mode 100644
+--- /dev/null
++++ b/server/src/buildRelayServer.ts
+@@ -0,0 +1,41 @@
++import type { Pool } from 'pg';
++import type { FastifyInstance } from 'fastify';
++import { buildApp } from './app.js';
++import { ReceiptSigner } from './crypto.js';
++import { SharedReceiptSigner } from './SharedReceiptSigner.js';
++import { RealAuthorityClock } from './RealAuthorityClock.js';
++import { WorldAuthorityService } from './WorldAuthorityService.js';
++import { WorldAuthorityStorage } from './WorldAuthorityStorage.js';
++import { authorityRoutes } from './AuthorityRoute.js';
++import { RelayService } from './RelayService.js';
++import { RelayStorage } from './RelayStorage.js';
++import { relayRoutes } from './RelayRoute.js';
++import { validateSharedConfig, type SharedServerConfig } from './SharedServerConfig.js';
++
++export async function buildRelayServer(config: SharedServerConfig, pool: Pool, authSigner: ReceiptSigner, sharedSigner: SharedReceiptSigner): Promise<FastifyInstance> {
++  return build(config, pool, authSigner, sharedSigner, RealAuthorityClock.production(config));
++}
++
++/** Isolated test injection only; no production environment or HTTP time switch. */
++export async function buildIsolatedRelayServer(config: SharedServerConfig, pool: Pool, authSigner: ReceiptSigner, sharedSigner: SharedReceiptSigner, clock: RealAuthorityClock): Promise<FastifyInstance> {
++  return build(config, pool, authSigner, sharedSigner, clock);
++}
++
++async function build(config: SharedServerConfig, pool: Pool, authSigner: ReceiptSigner, sharedSigner: SharedReceiptSigner, clock: RealAuthorityClock): Promise<FastifyInstance> {
++  validateSharedConfig(config);
++  if (authSigner.serviceInstanceId !== sharedSigner.serviceInstanceId || authSigner.keyId !== sharedSigner.keyId || sharedSigner.serviceInstanceId !== config.auth.serviceInstanceId) { throw new Error('Shared signer/service pin mismatch'); }
++  if (config.operatorWorldPins.some(pin => pin.developerTrustAnchor.developerPublicKeyFingerprint === sharedSigner.keyId)) { throw new Error('World root and service signing key must be distinct'); }
++  const app = await buildApp(config.auth, pool, authSigner);
++  try {
++    // One initialized clock capability is shared by unchanged authority and the new finite relay.
++    await clock.initialize(pool);
++    const authority = new WorldAuthorityService(config, new WorldAuthorityStorage(pool), sharedSigner, clock);
++    const relay = new RelayService(new RelayStorage(pool), sharedSigner, clock);
++    await app.register(async child => authorityRoutes(child, authority));
++    await app.register(async child => relayRoutes(child, relay));
++    return app;
++  } catch (error) {
++    await app.close();
++    throw error;
++  }
++}
+
+diff --git a/src/director/IntentPort.ts b/src/director/IntentPort.ts
+--- a/src/director/IntentPort.ts
++++ b/src/director/IntentPort.ts
+@@ -1106,3 +1106,6 @@
+   SharedProtocolCodecPort,
+   WorldKeyAgreementPort
+ } from './SharedServiceProtocolContracts';
++
++// B2.5c-2c: validator capability types only; no runtime director dependency.
++export type { SharedCommitValidator, ValidatedSharedCommit, SharedValidationResult } from './SharedCommitValidator';
+
+diff --git a/src/presentation/RealCommitRelayAdapter.ts b/src/presentation/RealCommitRelayAdapter.ts
+new file mode 100644
+--- /dev/null
++++ b/src/presentation/RealCommitRelayAdapter.ts
+@@ -0,0 +1,224 @@
++import type {
++  AdmittedWorldCommit, AuthenticatedServiceContext, RealCommitRelayProtocolPort,
++  RegisteredAuthorSigningPort, RelayAckReceipt, RelayAckRequest, RelayCursor, RelaySubmitReceipt,
++  SharedCommitValidator, SharedHttpReply, SharedProtocolCodecPort, SharedProtocolOperation,
++  SharedProtocolPayloadMap, SharedProtocolReply, SharedRelayDurableCachePort,
++  SharedServiceSessionPort, SharedServiceFault,
++} from '../director/IntentPort';
++
++class RelayClientFault extends Error {
++  constructor(readonly code: SharedServiceFault['code'], readonly detail: SharedServiceFault['detail']) {
++    super(detail);
++  }
++}
++
++/** Independent HTTP Relay. Full validation and durable ciphertext storage are installed capabilities. */
++export class RealCommitRelayAdapter implements RealCommitRelayProtocolPort {
++  readonly mode = 'ExternalService' as const;
++
++  constructor(private readonly session: SharedServiceSessionPort,
++    private readonly signer: Pick<RegisteredAuthorSigningPort, 'signRelayAck'>,
++    private readonly codec: SharedProtocolCodecPort,
++    private readonly validator: Pick<SharedCommitValidator, 'validateCommit' | 'ownsCommit'>,
++    private readonly cache: SharedRelayDurableCachePort) {}
++
++  relay(commit: AdmittedWorldCommit): Promise<SharedHttpReply<RelaySubmitReceipt>> {
++    return this.submit(commit);
++  }
++
++  async submit(commit: AdmittedWorldCommit): Promise<SharedHttpReply<RelaySubmitReceipt>> {
++    const requestNonce = this.session.createRequestNonce();
++    try {
++      const stable = this.copy(commit);
++      this.codec.validatePayload('/relay/submit', { commit: stable });
++      const reply = await this.invoke('/relay/submit', { commit: stable }, requestNonce);
++      if (reply.kind === 'Accepted') {
++        const fact = reply.value.payload;
++        const claim = stable.admissionClaim.claim;
++        const admission = stable.admissionReceipt.payload;
++        if (fact.worldId !== claim.header.worldId || !this.same(fact.identity, claim.header.identity)
++          || fact.envelopeSha256 !== claim.envelopeSha256
++          || fact.admittedAtServerEpochMs !== admission.admittedAtServerEpochMs
++          || fact.retainedUntilServerEpochMs - fact.admittedAtServerEpochMs < 86400000
++          || fact.cursor.position === '0') {
++          throw new RelayClientFault('InvalidData', 'SchemaInvalid');
++        }
++      }
++      return reply;
++    } catch (error) { return this.failure(error, requestNonce); }
++  }
++
++  async pull(worldId: string, after: RelayCursor, maximumCount = 128,
++    maximumWaitMs = 25000): Promise<SharedProtocolReply<'/relay/pull'>> {
++    const requestNonce = this.session.createRequestNonce();
++    try {
++      const payload = this.copy({ worldId, after, maximumCount, maximumWaitMs });
++      this.codec.validatePayload('/relay/pull', payload);
++      const reply = await this.invoke('/relay/pull', payload, requestNonce);
++      if (reply.kind === 'Accepted') {
++        const batch = reply.value.payload;
++        if (batch.worldId !== worldId || !this.same(batch.after, payload.after)) {
++          throw new RelayClientFault('InvalidData', 'SchemaInvalid');
++        }
++        if (batch.kind === 'Batch') {
++          if (batch.next.relayGeneration !== payload.after.relayGeneration
++            || batch.retentionFloor.relayGeneration !== payload.after.relayGeneration
++            || batch.commits.length > maximumCount
++            || batch.next.position !== advancePosition(payload.after.position, batch.commits.length)
++            || comparePosition(batch.retentionFloor.position, payload.after.position) > 0
++            || (batch.commits.length === 0 && batch.next.position !== payload.after.position)
++            || batch.commits.some(commit => commit.admissionClaim.claim.header.worldId !== worldId)) {
++            throw new RelayClientFault('InvalidData', 'SchemaInvalid');
++          }
++        }
++        // A signed empty batch is not an assertion of global completeness, and Gap never advances a cursor.
++      }
++      return reply;
++    } catch (error) { return this.failure(error, requestNonce); }
++  }
++
++  async acknowledge(request: RelayAckRequest): Promise<SharedHttpReply<RelayAckReceipt>> {
++    // The adapter owns this nonce and signature. A caller's precomputed signature is never forwarded.
++    const requestNonce = this.session.createRequestNonce();
++    try {
++      const stable = this.copy(request);
++      this.codec.validatePayload('/relay/ack', stable);
++      const context = this.requireContext();
++      if (stable.authorDeviceId !== context.deviceId
++        || stable.authorDeviceGeneration !== context.deviceGeneration) {
++        throw new RelayClientFault('DeviceUntrusted', 'CredentialMismatch');
++      }
++      for (const entry of stable.entries) {
++        const source = await this.cache.read(entry.identity);
++        this.assertCurrent(context);
++        if (source === null) { throw new RelayClientFault('AuthorityUnavailable', 'FactUnavailable'); }
++        const candidate = this.copy(source);
++        this.codec.validatePayload('/relay/submit', { commit: candidate });
++        if (candidate.admissionClaim.claim.header.worldId !== stable.worldId
++          || !this.same(candidate.admissionClaim.claim.header.identity, entry.identity)
++          || candidate.admissionClaim.claim.envelopeSha256 !== entry.envelopeSha256) {
++          throw new RelayClientFault('InvalidData', 'SchemaInvalid');
++        }
++        const validated = await this.validator.validateCommit(candidate);
++        this.assertCurrent(context);
++        if (validated.kind === 'Gap') { throw new RelayClientFault('AuthorityUnavailable', 'FactUnavailable'); }
++        if (validated.kind === 'HostFailure') { throw new RelayClientFault('AuthorityUnavailable', 'RelayUnavailable'); }
++        if (!this.validator.ownsCommit(validated.value)
++          || !this.same(validated.value.wire, candidate)
++          || !this.same(validated.value.identity, entry.identity)
++          || validated.value.envelopeBytesBase64Url !== candidate.envelopeBytesBase64Url
++          || validated.value.envelopeSha256 !== entry.envelopeSha256
++          || await envelopeDigest(candidate.envelopeBytesBase64Url) !== entry.envelopeSha256) {
++          throw new RelayClientFault('InvalidData', 'SchemaInvalid');
++        }
++        const confirmation = await this.cache.persistAndVerify(candidate);
++        this.assertCurrent(context);
++        const readBack = await this.cache.read(entry.identity);
++        this.assertCurrent(context);
++        if (!confirmation || confirmation.envelopeSha256 !== entry.envelopeSha256 || readBack === null
++          || !this.same(readBack, candidate)
++          || readBack.envelopeBytesBase64Url !== candidate.envelopeBytesBase64Url
++          || await envelopeDigest(readBack.envelopeBytesBase64Url) !== entry.envelopeSha256) {
++          throw new RelayClientFault('InvalidData', 'SchemaInvalid');
++        }
++        // Verified bad-body InvalidChange may ACK the preserved wire; its state application is a separate concern.
++      }
++      this.assertCurrent(context);
++      const unsignedAck = { worldId: stable.worldId, relayGeneration: stable.relayGeneration,
++        entries: stable.entries, authorDeviceId: context.deviceId, authorDeviceGeneration: context.deviceGeneration };
++      const deviceSignatureBase64Url = await this.signer.signRelayAck(requestNonce, unsignedAck);
++      this.assertCurrent(context);
++      const payload = { ...unsignedAck, deviceSignatureBase64Url };
++      this.codec.validatePayload('/relay/ack', payload);
++      const reply = await this.invoke('/relay/ack', payload, requestNonce);
++      if (reply.kind === 'Accepted') {
++        const fact = reply.value.payload;
++        const entriesSha256 = await textDigest(this.codec.encode(unsignedAck.entries));
++        this.assertCurrent(context);
++        if (fact.worldId !== stable.worldId || fact.relayGeneration !== stable.relayGeneration
++          || fact.accountId !== context.accountId || fact.deviceId !== context.deviceId
++          || fact.deviceGeneration !== context.deviceGeneration
++          || fact.entriesSha256 !== entriesSha256 || fact.acknowledgedCount !== stable.entries.length) {
++          throw new RelayClientFault('InvalidData', 'SchemaInvalid');
++        }
++      }
++      return reply;
++    } catch (error) { return this.failure(error, requestNonce); }
++  }
++
++  private async invoke<O extends SharedProtocolOperation>(operation: O,
++    payload: SharedProtocolPayloadMap[O], requestNonce: string): Promise<SharedProtocolReply<O>> {
++    this.requireContext();
++    const reply = await this.session.request(operation, requestNonce, payload);
++    const parsed = this.codec.parseReply(operation, this.codec.encode(reply), requestNonce) as SharedProtocolReply<O>;
++    if (parsed.kind === 'Rejected' && parsed.fault.layer === 'Session'
++      && parsed.fault.code === 'AuthorityUnavailable' && parsed.fault.detail === 'ServiceUnavailable') {
++      return { kind: 'Rejected', fault: { ...parsed.fault, layer: 'Relay', detail: 'RelayUnavailable' } };
++    }
++    return parsed;
++  }
++
++  private requireContext(): AuthenticatedServiceContext {
++    const value = this.session.currentContext();
++    if (!value) { throw new RelayClientFault('Unauthenticated', 'SessionMissing'); }
++    return value;
++  }
++
++  private assertCurrent(context: AuthenticatedServiceContext): void {
++    const current = this.requireContext();
++    if (current.accountId !== context.accountId || current.deviceId !== context.deviceId
++      || current.deviceGeneration !== context.deviceGeneration || current.authenticationId !== context.authenticationId) {
++      throw new RelayClientFault('Unauthenticated', 'AuthenticationMismatch');
++    }
++  }
++
++  private same(first: unknown, second: unknown): boolean {
++    return this.codec.encode(first) === this.codec.encode(second);
++  }
++
++  private copy<T>(value: T): T { return JSON.parse(this.codec.encode(value)) as T; }
++
++  private failure(error: unknown, requestNonce: string): { readonly kind: 'Rejected'; readonly fault: SharedServiceFault } {
++    const schemaFailure = typeof error === 'object' && error !== null && 'code' in error
++      && ['SchemaInvalid', 'CanonicalInvalid', 'LimitExceeded'].includes(String((error as { readonly code: unknown }).code));
++    const code = error instanceof RelayClientFault ? error.code : schemaFailure ? 'InvalidData' : 'AuthorityUnavailable';
++    const detail = error instanceof RelayClientFault ? error.detail : schemaFailure ? 'SchemaInvalid' : 'RelayUnavailable';
++    // A local capability/transport failure is not a signed server fact and does not imply Auth/authority failure.
++    return { kind: 'Rejected', fault: { code, detail, layer: 'Relay', requestId: this.session.createRequestNonce(),
++      requestNonce, retryAfterMs: null } };
++  }
++}
++
++function comparePosition(first: string, second: string): number {
++  if (first.length !== second.length) { return first.length < second.length ? -1 : 1; }
++  return first === second ? 0 : first < second ? -1 : 1;
++}
++
++function advancePosition(position: string, count: number): string {
++  const digits = position.split('');
++  let carry = count;
++  for (let index = digits.length - 1; index >= 0 && carry !== 0; index -= 1) {
++    const value = Number(digits[index]) + carry;
++    digits[index] = String(value % 10);
++    carry = Math.floor(value / 10);
++  }
++  return (carry === 0 ? '' : String(carry)) + digits.join('');
++}
++
++async function envelopeDigest(value: string): Promise<string> {
++  const binary = atob(value.replace(/-/g, '+').replace(/_/g, '/'));
++  const bytes = new Uint8Array(binary.length);
++  for (let index = 0; index < binary.length; index += 1) { bytes[index] = binary.charCodeAt(index); }
++  return hexDigest(bytes);
++}
++
++async function textDigest(value: string): Promise<string> {
++  return hexDigest(new TextEncoder().encode(value));
++}
++
++async function hexDigest(bytes: Uint8Array): Promise<string> {
++  const digest = new Uint8Array(await crypto.subtle.digest('SHA-256', bytes));
++  let result = '';
++  for (const byte of digest) { result += byte.toString(16).padStart(2, '0'); }
++  return result;
++}
+
+diff --git a/src/presentation/RealSharedServiceSessionAdapter.ts b/src/presentation/RealSharedServiceSessionAdapter.ts
+--- a/src/presentation/RealSharedServiceSessionAdapter.ts
++++ b/src/presentation/RealSharedServiceSessionAdapter.ts
+@@ -232,41 +232,44 @@
+       const context = this.requireContext();
+       const csrf = this.csrfToken as string;
+       this.codec.validatePayload(operation, payload);
+-      decodeBase64Url(requestNonce, 32);
+-      const body = await this.prepareRequest(operation, requestNonce, payload, context);
+-      const limit = sharedBodyLimit(operation);
+-      if (utf8(body).byteLength > limit) { throw new ServiceClientFault('InvalidData'); }
+-      const anchor = await this.anchor;
+-      this.assertCurrent(generation, context);
+-      controller = new AbortController();
+-      timer = setTimeout(() => { if (controller) { controller.abort(); } }, REQUEST_LIMIT_MS);
+-      const started = performance.now();
+-      let response: Response | null = null;
+-      // A retry preserves every signed byte and nonce. Authentication, parsing and business
+-      // failures are never retried. No fallback or new-nonce retry is introduced here.
+-      for (let attempt = 0; attempt < 3; attempt += 1) {
+-        try {
+-          response = await this.transport(this.environment.apiOrigin + '/api/v1/shared' + operation, {
+-            method: 'POST', headers: { Accept: 'application/json', 'Content-Type': 'application/json', 'X-CSRF-Token': csrf },
+-            credentials: 'include', mode: 'same-origin', cache: 'no-store', redirect: 'error',
+-            referrerPolicy: 'no-referrer', signal: controller.signal, body,
+-          });
+-          break;
+-        } catch (failure) {
+-          this.assertCurrent(generation, context);
+-          if (controller.signal.aborted || attempt === 2) { throw failure; }
+-        }
+-      }
+-      if (!response || performance.now() - started > REQUEST_LIMIT_MS || controller.signal.aborted) {
+-        throw new ServiceClientFault('AuthorityUnavailable');
+-      }
+-      if (!/^application\/json(?:\s*;|$)/i.test(response.headers.get('Content-Type') || '')) {
+-        throw new ServiceClientFault('InvalidData');
+-      }
+-      const source = await limitedResponseText(response);
+-      const reply = this.codec.parseReply(operation, source, requestNonce);
+-      this.assertCurrent(generation, context);
+-      if (performance.now() - started > REQUEST_LIMIT_MS || controller.signal.aborted) {
++      const requestLimitMs = operation === '/relay/pull'
++        ? (payload as { readonly maximumWaitMs: number }).maximumWaitMs + 7000
++        : REQUEST_LIMIT_MS;
++      decodeBase64Url(requestNonce, 32);
++      const body = await this.prepareRequest(operation, requestNonce, payload, context);
++      const limit = sharedBodyLimit(operation);
++      if (utf8(body).byteLength > limit) { throw new ServiceClientFault('InvalidData'); }
++      const anchor = await this.anchor;
++      this.assertCurrent(generation, context);
++      controller = new AbortController();
++      timer = setTimeout(() => { if (controller) { controller.abort(); } }, requestLimitMs);
++      const started = performance.now();
++      let response: Response | null = null;
++      // A retry preserves every signed byte and nonce. Authentication, parsing and business
++      // failures are never retried. No fallback or new-nonce retry is introduced here.
++      for (let attempt = 0; attempt < 3; attempt += 1) {
++        try {
++          response = await this.transport(this.environment.apiOrigin + '/api/v1/shared' + operation, {
++            method: 'POST', headers: { Accept: 'application/json', 'Content-Type': 'application/json', 'X-CSRF-Token': csrf },
++            credentials: 'include', mode: 'same-origin', cache: 'no-store', redirect: 'error',
++            referrerPolicy: 'no-referrer', signal: controller.signal, body,
++          });
++          break;
++        } catch (failure) {
++          this.assertCurrent(generation, context);
++          if (controller.signal.aborted || attempt === 2) { throw failure; }
++        }
++      }
++      if (!response || performance.now() - started > requestLimitMs || controller.signal.aborted) {
++        throw new ServiceClientFault('AuthorityUnavailable');
++      }
++      if (!/^application\/json(?:\s*;|$)/i.test(response.headers.get('Content-Type') || '')) {
++        throw new ServiceClientFault('InvalidData');
++      }
++      const source = await limitedResponseText(response);
++      const reply = this.codec.parseReply(operation, source, requestNonce);
++      this.assertCurrent(generation, context);
++      if (performance.now() - started > requestLimitMs || controller.signal.aborted) {
+         throw new ServiceClientFault('AuthorityUnavailable');
+       }
+       if (reply.kind === 'Rejected') {

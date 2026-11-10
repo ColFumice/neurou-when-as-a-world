@@ -1,0 +1,15 @@
+{
+  "url": "http://localhost:7457/",
+  "policy": "DOM login/prologue/world activation and read-only component inspection. No Inspector override or director mutation.",
+  "errors": [],
+  "snapshot": {
+    "resourcePath": "chart/guidance_c",
+    "chartId": "guidance-c-1",
+    "schemaVersion": 2,
+    "visualResourceExists": false,
+    "colorCount": 0,
+    "ledger": [],
+    "endpoint": false
+  },
+  "pass": true
+}

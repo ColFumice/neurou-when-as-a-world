@@ -1,0 +1,135 @@
+{
+  "batch": "B2.3",
+  "generatedAt": "2026-10-10T12:54:20.017111+00:00",
+  "evidenceScope": "OriginalAcceptedB23State",
+  "protectedSnapshots": "accepted-protected-manifest.json",
+  "baselineCapturedAt": "2026-10-10T12:14:35.289604+00:00",
+  "baselinePathCount": 313,
+  "excludedJunctionAliases": [
+    "assets/scripts/src/",
+    "assets/scripts/constants/"
+  ],
+  "modifiedCount": 9,
+  "addedCount": 8,
+  "files": [
+    {
+      "path": "assets/scripts/SceneBuilder.ts",
+      "status": "Modified",
+      "beforeSha256": "e6ee268af72d9080f0cd6b3856a104733cc7a676e9f696138e7e72246c1bfae4",
+      "afterSha256": "6ab0d26731fbd69127580f87de76d778d0409b1001aba718aaf160d1f6328c8f",
+      "bytes": 96126
+    },
+    {
+      "path": "assets/scripts/WorldFolderBuilder.ts",
+      "status": "Modified",
+      "beforeSha256": "d301e20426141856761d3efc568784ffd8852d42245674f80f1c8c8a4dff2820",
+      "afterSha256": "319728f72d0ef698a3fcaa6ef8fd3495ec6cce5880400cd4dbc24b9cb5c48017",
+      "bytes": 32448
+    },
+    {
+      "path": "src/director/ForkWorldClearSession.ts",
+      "status": "Added",
+      "beforeSha256": null,
+      "afterSha256": "d58fae6edd280317bcb3dee45003b69fee011ca48ccd17686d1a0f1b946fd67d",
+      "bytes": 1996
+    },
+    {
+      "path": "src/director/ForkWorldClearSession.ts.meta",
+      "status": "Added",
+      "beforeSha256": null,
+      "afterSha256": "91520c99d6899be2acf777252e973f2103c604aab51ad3760e91ac626f9e5857",
+      "bytes": 142
+    },
+    {
+      "path": "src/director/IntentPort.ts",
+      "status": "Modified",
+      "beforeSha256": "db15d91577a4c1b8090872b655c564c4b8631896e0bec3cdc7995317d2b4563e",
+      "afterSha256": "92311bd6f5153b851f8eacfedd135fb7633954f42db2f341549e5a7976544dfe",
+      "bytes": 45661
+    },
+    {
+      "path": "src/director/WorldClearSession.ts",
+      "status": "Modified",
+      "beforeSha256": "bc44d9c70f713cc100271d0795b5248f59c0a890178450dc72e1c34f6bc9fddc",
+      "afterSha256": "76df27e3e4c754ebead6843159bbe152972da23dede4daf941bacd0973c4a5f5",
+      "bytes": 21092
+    },
+    {
+      "path": "src/director/WorldForkOrigin.ts",
+      "status": "Added",
+      "beforeSha256": null,
+      "afterSha256": "fb4a87ba9ed06229f94748ab024b44e5f78e6dee5014cbf26c6abc9bc4fd92ac",
+      "bytes": 7425
+    },
+    {
+      "path": "src/director/WorldForkOrigin.ts.meta",
+      "status": "Added",
+      "beforeSha256": null,
+      "afterSha256": "9292d178f435ffbdf661f0fc119c9ad9a9c41348bb7820a66079ddbaad36dd4e",
+      "bytes": 171
+    },
+    {
+      "path": "src/director/WorldForkSession.ts",
+      "status": "Added",
+      "beforeSha256": null,
+      "afterSha256": "27e108d60d9cdc0fa0a2cc49d045e3d576737a96c0549d5026fe1a7f0482400c",
+      "bytes": 16167
+    },
+    {
+      "path": "src/director/WorldForkSession.ts.meta",
+      "status": "Added",
+      "beforeSha256": null,
+      "afterSha256": "ff8c875a092d7299aeb604c47221d0aaaabad7a6d96cb84ab85c43777463c0dc",
+      "bytes": 171
+    },
+    {
+      "path": "src/director/WorldStateCodec.ts",
+      "status": "Modified",
+      "beforeSha256": "9ee4b892791b16510a7e6c8f675c0a16de9e82cfe6b19fc881e10cc545ccde22",
+      "afterSha256": "a3820627857039be22c18e90c68b79f14752ee37f1b66b5d4b0e4fa1d32ff780",
+      "bytes": 15292
+    },
+    {
+      "path": "src/director/WorldStateSession.ts",
+      "status": "Modified",
+      "beforeSha256": "ba196ea6934ec9f22fe0e8d909daaf520e65a6eb5a48b5de16a6cd2741608017",
+      "afterSha256": "6b1ceca1e7d532add1e9d232820ec77e61ff2daaa912084fe3f548c57c0e084f",
+      "bytes": 20927
+    },
+    {
+      "path": "src/presentation/WorldClearView.ts",
+      "status": "Modified",
+      "beforeSha256": "9bee1ff0f36c4aec115f3afd5835077e8f8f8fbd8ac92766cff5ba2249a867c3",
+      "afterSha256": "07bb64db11e03e1e750369c2abe28e857546ff0124746b2734e725a71f206cba",
+      "bytes": 10555
+    },
+    {
+      "path": "src/presentation/WorldCoreStateStorage.ts",
+      "status": "Modified",
+      "beforeSha256": "5bb565a844bac60634f0428fd77e02406cba8868c9840f86b8c17a26fed8af3d",
+      "afterSha256": "e6fe146a78accac194a4d135a8e2b2d2feb406f038d5a9c1b5d76560ab976c49",
+      "bytes": 17463
+    },
+    {
+      "path": "src/presentation/WorldFolderView.ts",
+      "status": "Modified",
+      "beforeSha256": "35db2c33f11600136d8823640606582ff693a0a35691ed645c8b2e50ae9081bc",
+      "afterSha256": "0b0b77adfbc45974e3a7ea5b5cb2b2ccd6f8bb534b023286993ee3dd93b628ec",
+      "bytes": 20189
+    },
+    {
+      "path": "src/presentation/WorldForkStorage.ts",
+      "status": "Added",
+      "beforeSha256": null,
+      "afterSha256": "22747b7230f242cc7b8cd286d53f9ec0c95365ffa3b1b189aba229b19757ba1f",
+      "bytes": 15455
+    },
+    {
+      "path": "src/presentation/WorldForkStorage.ts.meta",
+      "status": "Added",
+      "beforeSha256": null,
+      "afterSha256": "b4b8692fe7e151c0370152a1c5babf09e6cc144b1c314a7a744fd9ac457cafbe",
+      "bytes": 171
+    }
+  ]
+}

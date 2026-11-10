@@ -1,0 +1,2332 @@
+diff --git a/src/director/IntentPort.ts b/src/director/IntentPort.ts
+--- a/src/director/IntentPort.ts
++++ b/src/director/IntentPort.ts
+@@ -1046,3 +1046,22 @@
+   AccountLoginRequest, ServiceFault, ServiceReply, ServiceReceiptPurpose, SignedServiceReceipt,
+   DeviceChallenge, ServiceAuthenticationPayload, ServerTimeSample, RealAccountFacts,
+   RealAuthServicePort, RealWorldAuthorityPort, RealCommitRelayPort } from './RealServiceContracts';
++
++// B2.5c-1: shared wire types only; no runtime replay, service or product connection.
++export type {
++  WorldCommitIdentity, SharedPosition, SharedContentReference, WorldSharedGenesis,
++  AuthorSequenceSegment, SharedAppendedAt, WorldAppendPermit, WorldCommitAdmission,
++  WorldCommitAdmissionClaim, SignedWorldCommitAdmissionClaim, WorldDeveloperClosureFact, WorldCommitRejection,
++  WorldAuthorKeyBinding, WorldChangeClass, SharedCommitClass, MonotonicRevealChange,
++  TraceTouchChange, EditTarget, SharedMapEntityDefinition, SharedTriggerDefinition,
++  MapEditOperation, MapEditCommitChange, DeveloperRosterChange, WorldChange,
++  WorldCommit, RestrictedWriteHeader, RelayCommitHeader, WrappedRelayDataKey,
++  RelayCommitEnvelope, AdmittedWorldCommit, SharedEntityRecord, SharedTriggerRecord,
++  TraceTouchAggregate, DeveloperRosterState, SharedWorldState, WorldChangeLogWire,
++  RelaySettlementSeal, CheckpointCoverageEntry, WorldCheckpointWire, SharedSettlementPolicy,
++  RelayCursor, RelayPullReply, SharedAuthorityReceipt, WorldKeyAgreementPublicKey,
++  WorldDeveloperTrustAnchor, WorldObserverAdmissionFact, WorldMemberCredential, WorldRelayKeyDescriptor,
++  WorldMembershipEpoch, WorldMembershipEpochProposal, WorldMembershipChange, WorldRelayKeyPackageContext,
++  WorldRelayKeyPackage, WorldRelayKeyAcceptance, SharedSchemaErrorCode, SharedAuthorityPayload,
++  SharedSchemaMap, SharedSchemaKind,
++} from './SharedCommitContracts';
+
+diff --git a/src/director/SharedCanonicalBytes.ts b/src/director/SharedCanonicalBytes.ts
+new file mode 100644
+--- /dev/null
++++ b/src/director/SharedCanonicalBytes.ts
+@@ -0,0 +1,290 @@
++import type { SharedSchemaErrorCode } from './SharedCommitContracts';
++
++/** Schema failures are data-boundary outcomes, never successful partial parsing. */
++export class SharedSchemaError extends Error {
++  constructor(readonly code: SharedSchemaErrorCode, message: string = code) {
++    super(message);
++    this.name = 'SharedSchemaError';
++    Object.setPrototypeOf(this, SharedSchemaError.prototype);
++  }
++}
++
++const BASE64_URL_ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
++const CANONICAL_DEPTH_LIMIT = 128;
++
++function invalid(message: string): never {
++  throw new SharedSchemaError('CanonicalInvalid', message);
++}
++
++function scalarString(value: string): void {
++  for (let index = 0; index < value.length; index += 1) {
++    const code = value.charCodeAt(index);
++    if (code >= 0xd800 && code <= 0xdbff) {
++      const next = value.charCodeAt(index + 1);
++      if (next < 0xdc00 || next > 0xdfff || !Number.isFinite(next)) { invalid('Unpaired Unicode surrogate'); }
++      index += 1;
++    } else if (code >= 0xdc00 && code <= 0xdfff) { invalid('Unpaired Unicode surrogate'); }
++  }
++}
++
++function descriptors(value: object): { [key: string]: PropertyDescriptor } {
++  if (Object.getOwnPropertySymbols(value).length !== 0) { invalid('Symbol property'); }
++  return Object.getOwnPropertyDescriptors(value);
++}
++
++function canonical(value: unknown, ancestors: Set<object>, depth: number): string {
++  if (depth > CANONICAL_DEPTH_LIMIT) { throw new SharedSchemaError('LimitExceeded', 'Canonical nesting limit'); }
++  if (value === null) { return 'null'; }
++  if (typeof value === 'boolean') { return value ? 'true' : 'false'; }
++  if (typeof value === 'number') {
++    if (!Number.isSafeInteger(value) || Object.is(value, -0)) { invalid('Expected safe integer without negative zero'); }
++    return String(value);
++  }
++  if (typeof value === 'string') { scalarString(value); return JSON.stringify(value); }
++  if (typeof value !== 'object') { invalid('Unsupported JSON value'); }
++  if (ancestors.has(value)) { invalid('Cyclic JSON value'); }
++  ancestors.add(value);
++  const properties = descriptors(value);
++  let result: string;
++  if (Array.isArray(value)) {
++    if (Object.getPrototypeOf(value) !== Array.prototype) { invalid('Unsupported array prototype'); }
++    const length = properties.length;
++    if (!length || !('value' in length) || !Number.isSafeInteger(length.value) || length.value < 0) {
++      invalid('Invalid array length');
++    }
++    if (Object.keys(properties).length !== length.value + 1) { invalid('Sparse array or extra array property'); }
++    const items: string[] = [];
++    for (let index = 0; index < length.value; index += 1) {
++      const property = properties[String(index)];
++      if (!property || !('value' in property) || !property.enumerable) { invalid('Array accessor or missing element'); }
++      items.push(canonical(property.value, ancestors, depth + 1));
++    }
++    result = '[' + items.join(',') + ']';
++  } else {
++    const prototype = Object.getPrototypeOf(value);
++    if (prototype !== Object.prototype && prototype !== null) { invalid('Unsupported object prototype'); }
++    const items: string[] = [];
++    for (const key of Object.keys(properties).sort()) {
++      scalarString(key);
++      const property = properties[key];
++      if (!('value' in property) || !property.enumerable) { invalid('Object accessor or non-enumerable property'); }
++      items.push(JSON.stringify(key) + ':' + canonical(property.value, ancestors, depth + 1));
++    }
++    result = '{' + items.join(',') + '}';
++  }
++  ancestors.delete(value);
++  return result;
++}
++
++/** Small JSON parser keeps duplicate keys visible before any ordinary object exists. */
++class SharedJsonReader {
++  private position = 0;
++  constructor(private readonly source: string) {}
++
++  read(): unknown {
++    const result = this.value(0);
++    this.space();
++    if (this.position !== this.source.length) { invalid('Trailing JSON input'); }
++    return result;
++  }
++
++  private space(): void {
++    while (' \t\r\n'.indexOf(this.source.charAt(this.position)) >= 0 && this.position < this.source.length) {
++      this.position += 1;
++    }
++  }
++
++  private value(depth: number): unknown {
++    if (depth > CANONICAL_DEPTH_LIMIT) { throw new SharedSchemaError('LimitExceeded', 'JSON nesting limit'); }
++    this.space();
++    const first = this.source.charAt(this.position);
++    if (first === '"') { return this.string(); }
++    if (first === '{') {
++      this.position += 1;
++      const result: { [key: string]: unknown } = Object.create(null) as { [key: string]: unknown };
++      const keys = new Set<string>();
++      this.space();
++      if (this.source.charAt(this.position) === '}') { this.position += 1; return result; }
++      while (true) {
++        this.space();
++        if (this.source.charAt(this.position) !== '"') { invalid('Expected JSON object key'); }
++        const key = this.string();
++        if (keys.has(key)) { invalid('Duplicate JSON key'); }
++        keys.add(key);
++        this.space();
++        if (this.source.charAt(this.position) !== ':') { invalid('Expected JSON colon'); }
++        this.position += 1;
++        Object.defineProperty(result, key, { value: this.value(depth + 1), enumerable: true, writable: true, configurable: true });
++        this.space();
++        const separator = this.source.charAt(this.position++);
++        if (separator === '}') { return result; }
++        if (separator !== ',') { invalid('Expected JSON object separator'); }
++      }
++    }
++    if (first === '[') {
++      this.position += 1;
++      const result: unknown[] = [];
++      this.space();
++      if (this.source.charAt(this.position) === ']') { this.position += 1; return result; }
++      while (true) {
++        result.push(this.value(depth + 1));
++        this.space();
++        const separator = this.source.charAt(this.position++);
++        if (separator === ']') { return result; }
++        if (separator !== ',') { invalid('Expected JSON array separator'); }
++      }
++    }
++    for (const entry of [{ text: 'true', value: true }, { text: 'false', value: false }, { text: 'null', value: null }]) {
++      if (this.source.slice(this.position, this.position + entry.text.length) === entry.text) {
++        this.position += entry.text.length;
++        return entry.value;
++      }
++    }
++    const match = /^-?(?:0|[1-9][0-9]*)(?:\.[0-9]+)?(?:[eE][+-]?[0-9]+)?/.exec(this.source.slice(this.position));
++    if (!match) { invalid('Invalid JSON value'); }
++    this.position += match[0].length;
++    const number = Number(match[0]);
++    if (!Number.isSafeInteger(number) || Object.is(number, -0)) { invalid('Invalid integer JSON value'); }
++    return number;
++  }
++
++  private string(): string {
++    this.position += 1;
++    let result = '';
++    while (this.position < this.source.length) {
++      const character = this.source.charAt(this.position++);
++      if (character === '"') { scalarString(result); return result; }
++      if (character.charCodeAt(0) < 0x20) { invalid('Unescaped JSON control character'); }
++      if (character !== '\\') { result += character; continue; }
++      const escape = this.source.charAt(this.position++);
++      const escapes: { [key: string]: string } = { '"': '"', '\\': '\\', '/': '/', b: '\b', f: '\f', n: '\n', r: '\r', t: '\t' };
++      if (Object.prototype.hasOwnProperty.call(escapes, escape)) { result += escapes[escape]; continue; }
++      if (escape !== 'u') { invalid('Invalid JSON string escape'); }
++      const hex = this.source.slice(this.position, this.position + 4);
++      if (!/^[0-9a-fA-F]{4}$/.test(hex)) { invalid('Invalid Unicode escape'); }
++      result += String.fromCharCode(parseInt(hex, 16));
++      this.position += 4;
++    }
++    return invalid('Unterminated JSON string');
++  }
++}
++
++function assertBytes(bytes: Uint8Array): void {
++  if (!(bytes instanceof Uint8Array) || Object.getPrototypeOf(bytes) !== Uint8Array.prototype) {
++    invalid('Expected direct Uint8Array');
++  }
++}
++
++/** Pure byte boundary: no platform codecs, network, clocks or crypto implementation. */
++export class SharedCanonicalBytes {
++  static encode(value: unknown): Uint8Array {
++    return SharedCanonicalBytes.utf8(canonical(value, new Set<object>(), 0));
++  }
++
++  static decode(bytes: Uint8Array): unknown {
++    const source = SharedCanonicalBytes.text(bytes);
++    const result = new SharedJsonReader(source).read();
++    if (!SharedCanonicalBytes.equalBytes(bytes, SharedCanonicalBytes.encode(result))) { invalid('Non-canonical JSON bytes'); }
++    return result;
++  }
++
++  static utf8(text: string): Uint8Array {
++    if (typeof text !== 'string') { invalid('Expected text'); }
++    scalarString(text);
++    const bytes: number[] = [];
++    for (let index = 0; index < text.length; index += 1) {
++      let code = text.charCodeAt(index);
++      if (code >= 0xd800 && code <= 0xdbff) {
++        code = 0x10000 + ((code - 0xd800) << 10) + text.charCodeAt(++index) - 0xdc00;
++      }
++      if (code < 0x80) { bytes.push(code); }
++      else if (code < 0x800) { bytes.push(0xc0 | (code >> 6), 0x80 | (code & 0x3f)); }
++      else if (code < 0x10000) { bytes.push(0xe0 | (code >> 12), 0x80 | ((code >> 6) & 0x3f), 0x80 | (code & 0x3f)); }
++      else { bytes.push(0xf0 | (code >> 18), 0x80 | ((code >> 12) & 0x3f), 0x80 | ((code >> 6) & 0x3f), 0x80 | (code & 0x3f)); }
++    }
++    return new Uint8Array(bytes);
++  }
++
++  static text(bytes: Uint8Array): string {
++    assertBytes(bytes);
++    const characters: string[] = [];
++    for (let index = 0; index < bytes.length;) {
++      const first = bytes[index++];
++      let code: number;
++      let continuation: number;
++      let minimum: number;
++      if (first < 0x80) { code = first; continuation = 0; minimum = 0; }
++      else if (first >= 0xc2 && first <= 0xdf) { code = first & 0x1f; continuation = 1; minimum = 0x80; }
++      else if (first >= 0xe0 && first <= 0xef) { code = first & 0x0f; continuation = 2; minimum = 0x800; }
++      else if (first >= 0xf0 && first <= 0xf4) { code = first & 7; continuation = 3; minimum = 0x10000; }
++      else { return invalid('Invalid UTF-8 lead byte'); }
++      if (index + continuation > bytes.length) { invalid('Truncated UTF-8'); }
++      for (let count = 0; count < continuation; count += 1) {
++        const next = bytes[index++];
++        if ((next & 0xc0) !== 0x80) { invalid('Invalid UTF-8 continuation'); }
++        code = (code << 6) | (next & 0x3f);
++      }
++      if (code < minimum || code > 0x10ffff || (code >= 0xd800 && code <= 0xdfff)) { invalid('Invalid UTF-8 scalar'); }
++      if (characters.length === 0 && code === 0xfeff) { invalid('UTF-8 BOM'); }
++      if (code <= 0xffff) { characters.push(String.fromCharCode(code)); }
++      else {
++        code -= 0x10000;
++        characters.push(String.fromCharCode(0xd800 | (code >> 10), 0xdc00 | (code & 0x3ff)));
++      }
++    }
++    return characters.join('');
++  }
++
++  static base64UrlEncode(bytes: Uint8Array): string {
++    assertBytes(bytes);
++    let result = '';
++    for (let index = 0; index < bytes.length; index += 3) {
++      const first = bytes[index];
++      const second = index + 1 < bytes.length ? bytes[index + 1] : 0;
++      const third = index + 2 < bytes.length ? bytes[index + 2] : 0;
++      result += BASE64_URL_ALPHABET.charAt(first >> 2);
++      result += BASE64_URL_ALPHABET.charAt(((first & 3) << 4) | (second >> 4));
++      if (index + 1 < bytes.length) { result += BASE64_URL_ALPHABET.charAt(((second & 15) << 2) | (third >> 6)); }
++      if (index + 2 < bytes.length) { result += BASE64_URL_ALPHABET.charAt(third & 63); }
++    }
++    return result;
++  }
++
++  static base64UrlDecode(text: string, expectedLength?: number): Uint8Array {
++    if (typeof text !== 'string' || !/^[A-Za-z0-9_-]*$/.test(text) || text.length % 4 === 1) { invalid('Invalid base64url'); }
++    if (expectedLength !== undefined && (!Number.isSafeInteger(expectedLength) || expectedLength < 0)) { invalid('Invalid expected byte length'); }
++    if (expectedLength !== undefined && Math.floor(text.length * 3 / 4) !== expectedLength) { invalid('Unexpected decoded byte length'); }
++    const bytes: number[] = [];
++    let value = 0;
++    let bits = 0;
++    for (let index = 0; index < text.length; index += 1) {
++      value = (value << 6) | BASE64_URL_ALPHABET.indexOf(text.charAt(index));
++      bits += 6;
++      if (bits >= 8) {
++        bits -= 8;
++        bytes.push((value >> bits) & 255);
++        value &= (1 << bits) - 1;
++      }
++    }
++    const result = new Uint8Array(bytes);
++    if (value !== 0 || SharedCanonicalBytes.base64UrlEncode(result) !== text) { invalid('Non-canonical base64url'); }
++    if (expectedLength !== undefined && result.length !== expectedLength) { invalid('Unexpected decoded byte length'); }
++    return result;
++  }
++
++  static equalBytes(first: Uint8Array, second: Uint8Array): boolean {
++    assertBytes(first); assertBytes(second);
++    if (first.length !== second.length) { return false; }
++    let difference = 0;
++    for (let index = 0; index < first.length; index += 1) { difference |= first[index] ^ second[index]; }
++    return difference === 0;
++  }
++
++  static domain(domainString: string, value: unknown): Uint8Array {
++    const prefix = SharedCanonicalBytes.utf8(domainString);
++    const encoded = SharedCanonicalBytes.encode(value);
++    const result = new Uint8Array(prefix.length + encoded.length);
++    result.set(prefix, 0); result.set(encoded, prefix.length);
++    return result;
++  }
++}
+
+diff --git a/src/director/SharedCommitCodec.ts b/src/director/SharedCommitCodec.ts
+new file mode 100644
+--- /dev/null
++++ b/src/director/SharedCommitCodec.ts
+@@ -0,0 +1,593 @@
++import type { SharedSchemaKind, SharedSchemaMap } from './SharedCommitContracts';
++import { SharedCanonicalBytes, SharedSchemaError } from './SharedCanonicalBytes';
++
++type SharedData = { [key: string]: unknown };
++type SharedRule = (value: unknown) => void;
++type SharedFields = { [key: string]: SharedRule };
++
++function fail(code: 'SchemaInvalid' | 'ValueInvalid' | 'InvariantInvalid' | 'LimitExceeded', message: string): never {
++  throw new SharedSchemaError(code, message);
++}
++function data(value: unknown): SharedData {
++  if (value === null || typeof value !== 'object' || Array.isArray(value)) { fail('SchemaInvalid', 'Expected object'); }
++  return value as SharedData;
++}
++function fields(required: SharedFields): SharedRule {
++  return (value: unknown): void => {
++    const object = data(value);
++    const names = Object.keys(object);
++    const wanted = Object.keys(required);
++    if (names.length !== wanted.length || names.some((name) => !Object.prototype.hasOwnProperty.call(required, name))) {
++      fail('SchemaInvalid', 'Unexpected or missing field');
++    }
++    for (const name of wanted) { required[name](object[name]); }
++  };
++}
++function literal(expected: unknown): SharedRule {
++  return (value: unknown): void => { if (value !== expected) { fail('ValueInvalid', 'Unexpected literal'); } };
++}
++function oneOf(values: readonly unknown[]): SharedRule {
++  return (value: unknown): void => { if (values.indexOf(value) < 0) { fail('ValueInvalid', 'Unexpected enum value'); } };
++}
++function stringPattern(pattern: RegExp): SharedRule {
++  return (value: unknown): void => { if (typeof value !== 'string' || !pattern.test(value)) { fail('ValueInvalid', 'Invalid string value'); } };
++}
++function integer(minimum: number, maximum: number = Number.MAX_SAFE_INTEGER): SharedRule {
++  return (value: unknown): void => {
++    if (typeof value !== 'number' || !Number.isSafeInteger(value) || Object.is(value, -0) || value < minimum || value > maximum) {
++      fail('ValueInvalid', 'Integer outside allowed range');
++    }
++  };
++}
++function nullable(rule: SharedRule): SharedRule {
++  return (value: unknown): void => { if (value !== null) { rule(value); } };
++}
++function array(rule: SharedRule): SharedRule {
++  return (value: unknown): void => {
++    if (!Array.isArray(value)) { fail('SchemaInvalid', 'Expected array'); }
++    for (const item of value) { rule(item); }
++  };
++}
++function alternative(rules: readonly SharedRule[]): SharedRule {
++  return (value: unknown): void => {
++    for (const rule of rules) {
++      try { rule(value); return; } catch (error) { if (!(error instanceof SharedSchemaError)) { throw error; } }
++    }
++    fail('SchemaInvalid', 'No exact union alternative');
++  };
++}
++function reference(kind: SharedSchemaKind): SharedRule {
++  return (value: unknown): void => { inspect(kind, value); };
++}
++function binary(length?: number, minimum: number = 0, maximum: number = Number.MAX_SAFE_INTEGER): SharedRule {
++  return (value: unknown): void => {
++    if (typeof value !== 'string') { fail('ValueInvalid', 'Expected base64url string'); }
++    if (value.length > Math.ceil(maximum * 4 / 3)) { fail('LimitExceeded', 'Encoded byte length outside limit'); }
++    const bytes = SharedCanonicalBytes.base64UrlDecode(value, length);
++    if (bytes.length < minimum || bytes.length > maximum) { fail('LimitExceeded', 'Decoded byte length outside limit'); }
++  };
++}
++function decimal(maximum: string): SharedRule {
++  return (value: unknown): void => {
++    if (typeof value !== 'string' || !/^(0|[1-9][0-9]*)$/.test(value) || value.length > maximum.length
++      || (value.length === maximum.length && value > maximum)) { fail('ValueInvalid', 'Invalid unsigned decimal'); }
++  };
++}
++function requireInvariant(condition: boolean, message: string): void {
++  if (!condition) { fail('InvariantInvalid', message); }
++}
++function same(first: unknown, second: unknown): boolean {
++  return SharedCanonicalBytes.equalBytes(SharedCanonicalBytes.encode(first), SharedCanonicalBytes.encode(second));
++}
++function sorted(values: readonly unknown[], key: (value: unknown) => string): void {
++  let previous: string | null = null;
++  for (const value of values) {
++    const next = key(value);
++    requireInvariant(previous === null || previous < next, 'Unsorted or duplicate identity');
++    previous = next;
++  }
++}
++function identityKey(value: unknown): string {
++  const identity = data(value);
++  return String(identity.authorAccountId) + ':' + String(identity.authorSequence);
++}
++function order(first: SharedData, second: SharedData): number {
++  const time = (data(first.appendedAt).epochMs as number) - (data(second.appendedAt).epochMs as number);
++  if (time !== 0) { return time; }
++  const a = data(first.identity); const b = data(second.identity);
++  if (a.authorAccountId !== b.authorAccountId) { return (a.authorAccountId as string) < (b.authorAccountId as string) ? -1 : 1; }
++  return (a.authorSequence as number) - (b.authorSequence as number);
++}
++
++const version = literal(1);
++const profile = literal('ExternalSharedOnlineV1');
++const uuid = stringPattern(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/);
++const instance = stringPattern(/^[A-Za-z0-9_.-]{3,128}$/);
++const digest = stringPattern(/^[0-9a-f]{64}$/);
++const fingerprint = binary(32);
++const nonnegative = integer(0);
++const positive = integer(1);
++const bool = oneOf([true, false]);
++const signature = binary(64);
++const nonce = binary(32);
++const uint128 = decimal('340282366920938463463374607431768211455');
++const uint64 = decimal('18446744073709551615');
++const key = fields({ kty: literal('EC'), crv: literal('P-256'), x: binary(32), y: binary(32) });
++const recordFields: SharedFields = {
++  definition: reference('SharedMapEntityDefinition'), createdBy: nullable(reference('WorldCommitIdentity')),
++  lastEditedBy: nullable(reference('WorldCommitIdentity')), deletedBy: nullable(reference('WorldCommitIdentity')),
++};
++const triggerRecordFields: SharedFields = { ...recordFields, definition: reference('SharedTriggerDefinition') };
++const membershipFields: SharedFields = {
++  schemaVersion: version, serviceInstanceId: instance, worldId: uuid, membershipEpoch: positive,
++  previousMembershipEpoch: nullable(positive), key: reference('WorldRelayKeyDescriptor'),
++  credentials: array(reference('WorldMemberCredential')), developerTrustAnchorSha256: digest,
++  developerSignatureBase64Url: signature,
++};
++
++const schemaRules: { [kind: string]: SharedRule } = {
++  WorldCommitIdentity: fields({ authorAccountId: uuid, authorSequence: positive }),
++  SharedPosition: fields({ lateralMilli: integer(-1000000000, 1000000000), depthMilli: integer(-1000000000, 1000000000) }),
++  SharedContentReference: fields({ contentId: stringPattern(/^[A-Za-z0-9_.:/-]{1,128}$/), contentSha256: digest }),
++  SharedAppendedAt: fields({ epochMs: nonnegative }),
++  WorldSharedGenesis: fields({
++    schemaVersion: version, profile, worldId: uuid, mapId: uuid, contentRevision: positive,
++    contentManifestSha256: digest, worldDeveloperAccountId: uuid,
++    developerTrustAnchor: reference('WorldDeveloperTrustAnchor'), initialState: reference('SharedWorldState'),
++  }),
++  AuthorSequenceSegment: fields({
++    schemaVersion: version, serviceInstanceId: instance, segmentId: uuid, authorAccountId: uuid,
++    authorDeviceId: uuid, authorDeviceGeneration: positive, worldId: uuid, membershipEpoch: positive,
++    firstSequence: positive, lastSequence: positive, issuedAtServerEpochMs: nonnegative, expiresAtServerEpochMs: nonnegative,
++  }),
++  WorldAppendPermit: fields({
++    schemaVersion: version, serviceInstanceId: instance, permitId: uuid, requestNonce: nonce, worldId: uuid,
++    identity: reference('WorldCommitIdentity'), authorDeviceId: uuid, authorDeviceGeneration: positive,
++    segmentId: uuid, membershipEpoch: positive, keyEpoch: positive, changeClass: reference('WorldChangeClass'),
++    appendedAt: reference('SharedAppendedAt'), expiresAtServerEpochMs: nonnegative, clockGeneration: positive,
++    clockStatus: literal('Trusted'),
++  }),
++  WorldCommitAdmission: fields({
++    schemaVersion: version, serviceInstanceId: instance, worldId: uuid, identity: reference('WorldCommitIdentity'),
++    envelopeSha256: digest, appendedAt: reference('SharedAppendedAt'), admittedAtServerEpochMs: nonnegative,
++    admissionRevision: positive, membershipEpoch: positive, rosterTargetObserverActiveAtAppendedAt: nullable(bool),
++  }),
++  WorldCommitAdmissionClaim: fields({ schemaVersion: version, serviceInstanceId: instance, requestNonce: nonce,
++    header: reference('RelayCommitHeader'), envelopeSha256: digest }),
++  SignedWorldCommitAdmissionClaim: fields({ claim: reference('WorldCommitAdmissionClaim'), authorSignatureBase64Url: signature }),
++  WorldDeveloperClosureFact: fields({ schemaVersion: version, serviceInstanceId: instance, worldId: uuid,
++    worldDeveloperAccountId: uuid, effectiveAtServerEpochMs: nonnegative, accountFactRevision: positive }),
++  WorldCommitRejection: fields({ schemaVersion: version, serviceInstanceId: instance, worldId: uuid,
++    identity: reference('WorldCommitIdentity'), envelopeSha256: digest, appendedAt: reference('SharedAppendedAt'),
++    rejectedAtServerEpochMs: nonnegative, reason: oneOf(['TimeTooLate', 'PermitExpired', 'EpochClosed', 'IdentityConflict']),
++    previouslyAdmitted: literal(false) }),
++  WorldAuthorKeyBinding: fields({ schemaVersion: version, serviceInstanceId: instance, authorAccountId: uuid,
++    authorDeviceId: uuid, authorDeviceGeneration: positive, authorSigningPublicJwk: key,
++    authorSigningKeyFingerprint: fingerprint, registeredAtServerEpochMs: nonnegative, assurance: literal('RegisteredCredential') }),
++  WorldChangeClass: oneOf(['MonotonicReveal', 'TraceTouch', 'DeveloperMapChange']),
++  SharedCommitClass: oneOf(['Monotonic', 'AddOnly', 'RestrictedWrite']),
++  MonotonicRevealChange: fields({ changeClass: literal('MonotonicReveal'), commitClass: literal('Monotonic'), entityId: uuid, revealed: literal(true) }),
++  TraceTouchChange: fields({ changeClass: literal('TraceTouch'), commitClass: literal('AddOnly'), traceTouchId: uuid,
++    normalTraceEntityId: uuid, touchUnits: literal(1) }),
++  EditTarget: alternative([fields({ kind: literal('Entity'), entityId: uuid }), fields({ kind: literal('Trigger'), triggerId: uuid })]),
++  SharedMapEntityDefinition: fields({ entityId: uuid, elementType: oneOf(['Initial', 'Process', 'Trace', 'Residue']),
++    position: reference('SharedPosition'), content: reference('SharedContentReference'),
++    normalTrace: nullable(fields({ traceTouchId: uuid, tier: oneOf(['Common', 'Deep', 'Rain']) })) }),
++  SharedTriggerDefinition: fields({ triggerId: uuid, anchorEntityId: uuid,
++    activation: alternative([fields({ kind: literal('Proximity'), radiusMilli: integer(1, 1000000) }), fields({ kind: literal('Interaction') })]),
++    action: fields({ kind: literal('RevealResidue'), targetEntityId: uuid }) }),
++  MapEditOperation: alternative([
++    fields({ operation: oneOf(['CreateEntity', 'ReplaceEntity']), target: fields({ kind: literal('Entity'), entityId: uuid }), definition: reference('SharedMapEntityDefinition') }),
++    fields({ operation: literal('DeleteEntity'), target: fields({ kind: literal('Entity'), entityId: uuid }) }),
++    fields({ operation: oneOf(['CreateTrigger', 'ReplaceTrigger']), target: fields({ kind: literal('Trigger'), triggerId: uuid }), definition: reference('SharedTriggerDefinition') }),
++    fields({ operation: literal('DeleteTrigger'), target: fields({ kind: literal('Trigger'), triggerId: uuid }) }),
++  ]),
++  MapEditCommitChange: fields({ changeClass: literal('DeveloperMapChange'), commitClass: literal('RestrictedWrite'),
++    subtype: literal('MapEditCommit'), edit: reference('MapEditOperation') }),
++  DeveloperRosterChange: fields({ changeClass: literal('DeveloperMapChange'), commitClass: literal('RestrictedWrite'),
++    subtype: literal('DeveloperRosterChange'), operation: oneOf(['AddCoDeveloper', 'RemoveCoDeveloper']), accountId: uuid,
++    observerAdmissionRevision: positive }),
++  WorldChange: alternative([reference('MonotonicRevealChange'), reference('TraceTouchChange'), reference('MapEditCommitChange'), reference('DeveloperRosterChange')]),
++  WorldCommit: fields({ schemaVersion: version, profile, worldId: uuid, mapId: uuid, contentManifestSha256: digest,
++    identity: reference('WorldCommitIdentity'), authorDeviceId: uuid, authorDeviceGeneration: positive, segmentId: uuid,
++    permitId: uuid, membershipEpoch: positive, keyEpoch: positive, appendedAt: reference('SharedAppendedAt'), change: reference('WorldChange') }),
++  RestrictedWriteHeader: nullable(alternative([
++    fields({ subtype: literal('MapEditCommit') }),
++    fields({ subtype: literal('DeveloperRosterChange'), operation: oneOf(['AddCoDeveloper', 'RemoveCoDeveloper']), accountId: uuid, observerAdmissionRevision: positive }),
++  ])),
++  RelayCommitHeader: fields({ schemaVersion: version, profile, kind: literal('RelayWorldCommit'), serviceInstanceId: instance,
++    worldId: uuid, identity: reference('WorldCommitIdentity'), authorDeviceId: uuid, authorDeviceGeneration: positive,
++    authorSigningKeyFingerprint: fingerprint, segmentId: uuid, permitId: uuid, membershipEpoch: positive, keyEpoch: positive,
++    worldRelayKeyId: uuid, appendedAt: reference('SharedAppendedAt'), changeClass: reference('WorldChangeClass'),
++    commitClass: reference('SharedCommitClass'), restrictedWrite: reference('RestrictedWriteHeader'), cipherSuite: literal('AES-256-GCM-HKDF-SHA256-v1') }),
++  WrappedRelayDataKey: fields({ nonceBase64Url: binary(12), ciphertextAndTagBase64Url: binary(48) }),
++  RelayCommitEnvelope: fields({ header: reference('RelayCommitHeader'), wrappedCommitDataKey: reference('WrappedRelayDataKey'),
++    nonceBase64Url: binary(12), ciphertextAndTagBase64Url: binary(undefined, 16, 65536), authorSignatureBase64Url: signature }),
++  AdmittedWorldCommit: fields({ envelopeBytesBase64Url: binary(undefined, 0, 65536),
++    appendPermitReceipt: reference('SharedAuthorityReceipt'), sequenceSegmentReceipt: reference('SharedAuthorityReceipt'),
++    admissionReceipt: reference('SharedAuthorityReceipt'), admissionClaim: reference('SignedWorldCommitAdmissionClaim'),
++    authorKeyBindingReceipt: reference('SharedAuthorityReceipt'), membershipEpochReceipt: reference('SharedAuthorityReceipt'),
++    rosterObserverAdmissionReceipt: nullable(reference('SharedAuthorityReceipt')) }),
++  SharedEntityRecord: fields(recordFields),
++  SharedTriggerRecord: fields(triggerRecordFields),
++  TraceTouchAggregate: fields({ traceTouchId: uuid, normalTraceEntityId: uuid, totalTouchUnits: uint128, aggregateStrength: integer(0, 65535) }),
++  DeveloperRosterState: fields({ worldDeveloperAccountId: uuid, coDeveloperAccountIds: array(uuid), frozen: bool }),
++  SharedWorldState: fields({ schemaVersion: version, profile, worldId: uuid, mapId: uuid, contentManifestSha256: digest,
++    entities: array(reference('SharedEntityRecord')), triggers: array(reference('SharedTriggerRecord')),
++    revealedResidueEntityIds: array(uuid), traceTouches: array(reference('TraceTouchAggregate')), developerRoster: reference('DeveloperRosterState') }),
++  WorldChangeLogWire: fields({ schemaVersion: version, profile, worldId: uuid, genesisSha256: digest,
++    baseCheckpointSha256: nullable(digest), developerClosure: nullable(reference('SharedAuthorityReceipt')), commits: array(reference('AdmittedWorldCommit')) }),
++  RelaySettlementSeal: fields({ schemaVersion: version, serviceInstanceId: instance, worldId: uuid, sealRevision: positive,
++    policySha256: digest, issuedAtServerEpochMs: nonnegative, sealedThroughEpochMs: nonnegative, admittedCommitCount: nonnegative,
++    admittedPrefixSha256: digest, developerClosureSha256: nullable(digest), previousSealSha256: nullable(digest) }),
++  CheckpointCoverageEntry: fields({ identity: reference('WorldCommitIdentity'), envelopeSha256: digest,
++    appendedAt: reference('SharedAppendedAt'), admissionRevision: positive, applyResult: oneOf(['Applied', 'NoEffect', 'RevertedEdit', 'InvalidChange']),
++    finalDiagnostic: nullable(oneOf(['MergeConflict', 'RevertedEdit', 'InvalidChange'])) }),
++  WorldCheckpointWire: fields({ schemaVersion: version, profile, worldId: uuid, genesisSha256: digest,
++    parentCheckpointSha256: nullable(digest), coveredThroughEpochMs: nonnegative, settlementSeal: reference('SharedAuthorityReceipt'),
++    developerClosure: nullable(reference('SharedAuthorityReceipt')), coverage: array(reference('CheckpointCoverageEntry')),
++    coverageSha256: digest, state: reference('SharedWorldState'), stateSha256: digest, checkpointSha256: digest }),
++  SharedSettlementPolicy: fields({ schemaVersion: version, offlineGraceMs: nonnegative, boundedRelayDelayMs: nonnegative,
++    timeUncertaintyAllowanceMs: nonnegative, settleHorizonMs: nonnegative, retentionMs: nonnegative }),
++  RelayCursor: fields({ relayGeneration: positive, position: uint64 }),
++  RelayPullReply: alternative([
++    fields({ kind: literal('Batch'), worldId: uuid, after: reference('RelayCursor'), next: reference('RelayCursor'), commits: array(reference('AdmittedWorldCommit')), retentionFloor: reference('RelayCursor') }),
++    fields({ kind: literal('Gap'), worldId: uuid, after: reference('RelayCursor'), retentionFloor: reference('RelayCursor'), reason: oneOf(['RetentionExpired', 'RelayGenerationChanged', 'MissingAdmittedEnvelope']) }),
++  ]),
++  SharedAuthorityReceipt: fields({ schemaVersion: version, serviceInstanceId: instance,
++    purpose: oneOf(['SequenceSegment', 'WorldAppendPermit', 'WorldCommitAdmission', 'WorldCommitRejection', 'AuthorKeyBinding', 'RelaySettlementSeal', 'WorldMembership', 'WorldDeveloperClosure']),
++    receiptId: uuid, keyId: fingerprint, requestNonce: nonce, issuedAtServerEpochMs: nonnegative,
++    clockGeneration: positive, clockStatus: literal('Trusted'), payload: (): void => {}, signatureBase64Url: signature }),
++  WorldKeyAgreementPublicKey: key,
++  WorldDeveloperTrustAnchor: fields({ schemaVersion: version, worldId: uuid, worldDeveloperAccountId: uuid,
++    developerSigningKeyId: fingerprint, developerPublicKey: key, developerPublicKeyFingerprint: fingerprint }),
++  WorldObserverAdmissionFact: fields({ schemaVersion: version, serviceInstanceId: instance, worldId: uuid, observerAccountId: uuid,
++    observerAdmissionRevision: positive, accessCodeRevision: positive, admittedAtServerEpochMs: nonnegative, developerTrustAnchorSha256: digest }),
++  WorldMemberCredential: fields({ accountId: uuid, observerAdmissionRevision: nullable(positive), deviceId: uuid,
++    deviceGeneration: positive, registeredSigningKeyFingerprint: fingerprint, keyAgreementPublicKey: key, keyAgreementKeyFingerprint: fingerprint }),
++  WorldRelayKeyDescriptor: fields({ schemaVersion: version, worldId: uuid, membershipEpoch: positive, keyEpoch: positive,
++    worldRelayKeyId: uuid, keyCommitmentSha256: digest }),
++  WorldMembershipEpoch: fields({ ...membershipFields, activatedAtServerEpochMs: nonnegative }),
++  WorldMembershipEpochProposal: fields(membershipFields),
++  WorldMembershipChange: fields({ schemaVersion: version, serviceInstanceId: instance, changeId: uuid, requestNonce: nonce,
++    worldId: uuid, expectedMembershipEpoch: nullable(positive), reason: oneOf(['Initial', 'MemberAdded', 'MemberRemoved', 'CredentialAdded', 'CredentialRemoved', 'KeyCompromise']), next: reference('WorldMembershipEpochProposal') }),
++  WorldRelayKeyPackageContext: fields({ schemaVersion: version, serviceInstanceId: instance, worldId: uuid, packageId: uuid,
++    descriptor: reference('WorldRelayKeyDescriptor'), recipient: reference('WorldMemberCredential'), developerTrustAnchorSha256: digest,
++    developerSigningKeyId: fingerprint, cipherSuite: literal('AES-256-GCM-HKDF-SHA256-v1') }),
++  WorldRelayKeyPackage: fields({ context: reference('WorldRelayKeyPackageContext'), ephemeralKeyAgreementPublicKey: key,
++    saltBase64Url: binary(32), nonceBase64Url: binary(12), ciphertextAndTagBase64Url: binary(48), developerSignatureBase64Url: signature }),
++  WorldRelayKeyAcceptance: fields({ schemaVersion: version, serviceInstanceId: instance, worldId: uuid, packageId: uuid,
++    packageSha256: digest, descriptor: reference('WorldRelayKeyDescriptor'), recipient: reference('WorldMemberCredential'),
++    acceptanceNonce: nonce, keyPossessionTagBase64Url: binary(32), recipientSignatureBase64Url: signature }),
++};
++
++function receiptPayload(receipt: SharedData, expectedPurpose?: string): SharedData {
++  if (expectedPurpose !== undefined) { requireInvariant(receipt.purpose === expectedPurpose, 'Wrong receipt purpose'); }
++  return data(receipt.payload);
++}
++
++function inspect(kind: SharedSchemaKind, value: unknown): void {
++  const rule = schemaRules[kind];
++  if (!rule || !Object.prototype.hasOwnProperty.call(schemaRules, kind)) { fail('SchemaInvalid', 'Unknown schema kind'); }
++  rule(value);
++  if (typeof value !== 'object' || value === null) { return; }
++  const object = data(value);
++  switch (kind) {
++    case 'AuthorSequenceSegment': {
++      requireInvariant((object.lastSequence as number) - (object.firstSequence as number) === 1023, 'Segment must contain exactly 1024 numbers');
++      requireInvariant((object.expiresAtServerEpochMs as number) - (object.issuedAtServerEpochMs as number) === 3600000, 'Wrong segment lifetime');
++      break;
++    }
++    case 'WorldAppendPermit': {
++      requireInvariant((object.expiresAtServerEpochMs as number) - (data(object.appendedAt).epochMs as number) === 30000, 'Wrong permit lifetime');
++      requireInvariant(object.membershipEpoch === object.keyEpoch, 'Epochs must match in schema 1');
++      break;
++    }
++    case 'WorldCommitAdmission':
++      requireInvariant((object.admittedAtServerEpochMs as number) >= (data(object.appendedAt).epochMs as number), 'Admission predates append'); break;
++    case 'WorldCommitRejection':
++      requireInvariant((object.rejectedAtServerEpochMs as number) >= (data(object.appendedAt).epochMs as number), 'Rejection predates append'); break;
++    case 'WorldCommitAdmissionClaim':
++      requireInvariant(object.serviceInstanceId === data(object.header).serviceInstanceId, 'Claim instance mismatch'); break;
++    case 'MapEditOperation': {
++      if (object.definition !== undefined) {
++        const target = data(object.target); const definition = data(object.definition);
++        requireInvariant(target.kind === 'Entity' ? target.entityId === definition.entityId : target.triggerId === definition.triggerId, 'Edit target and definition mismatch');
++      }
++      break;
++    }
++    case 'SharedMapEntityDefinition':
++      requireInvariant(object.normalTrace === null || object.elementType === 'Trace', 'Normal Trace descriptor on non-Trace');
++      requireInvariant(object.normalTrace === null || data(object.normalTrace).traceTouchId !== object.entityId,
++        'Entity and touch stable identities collide'); break;
++    case 'SharedTriggerDefinition':
++      requireInvariant(object.triggerId !== object.anchorEntityId && object.triggerId !== data(object.action).targetEntityId,
++        'Trigger and entity stable identities collide'); break;
++    case 'TraceTouchChange':
++      requireInvariant(object.traceTouchId !== object.normalTraceEntityId, 'Trace and touch stable identities collide'); break;
++    case 'WorldCommit':
++      requireInvariant(object.membershipEpoch === object.keyEpoch, 'Commit epochs mismatch');
++      if (SharedCanonicalBytes.encode(object).length > 49152) { fail('LimitExceeded', 'Commit plaintext limit'); }
++      break;
++    case 'RelayCommitHeader': {
++      const pairs: { [key: string]: string } = { MonotonicReveal: 'Monotonic', TraceTouch: 'AddOnly', DeveloperMapChange: 'RestrictedWrite' };
++      requireInvariant(object.commitClass === pairs[object.changeClass as string], 'Commit class mismatch');
++      requireInvariant((object.changeClass === 'DeveloperMapChange') === (object.restrictedWrite !== null), 'Restricted header mismatch');
++      requireInvariant(object.membershipEpoch === object.keyEpoch, 'Header epochs mismatch');
++      break;
++    }
++    case 'RelayCommitEnvelope':
++      if (SharedCanonicalBytes.encode(object).length > 65536) { fail('LimitExceeded', 'Relay envelope limit'); } break;
++    case 'AdmittedWorldCommit': admittedInvariants(object); break;
++    case 'SharedEntityRecord': case 'SharedTriggerRecord':
++      requireInvariant(object.createdBy === null || object.lastEditedBy !== null, 'Created record has no edit attribution');
++      requireInvariant(object.deletedBy === null || same(object.deletedBy, object.lastEditedBy), 'Deleted record attribution mismatch'); break;
++    case 'TraceTouchAggregate': {
++      requireInvariant(object.traceTouchId !== object.normalTraceEntityId, 'Trace and touch stable identities collide');
++      const total = object.totalTouchUnits as string;
++      const strength = total.length > 5 || (total.length === 5 && total > '65535') ? 65535 : Number(total);
++      requireInvariant(object.aggregateStrength === strength, 'Touch aggregate mismatch'); break;
++    }
++    case 'DeveloperRosterState':
++      sorted(object.coDeveloperAccountIds as unknown[], (item) => item as string);
++      requireInvariant((object.coDeveloperAccountIds as unknown[]).indexOf(object.worldDeveloperAccountId) < 0, 'Root duplicated as CoDeveloper'); break;
++    case 'SharedWorldState': stateInvariants(object); break;
++    case 'WorldSharedGenesis': genesisInvariants(object); break;
++    case 'WorldChangeLogWire': logInvariants(object); break;
++    case 'WorldCheckpointWire': checkpointInvariants(object); break;
++    case 'CheckpointCoverageEntry': {
++      if (object.applyResult === 'RevertedEdit' || object.applyResult === 'InvalidChange') {
++        requireInvariant(object.finalDiagnostic === object.applyResult, 'Business rejection diagnostic mismatch');
++      } else { requireInvariant(object.finalDiagnostic === null || object.finalDiagnostic === 'MergeConflict', 'Unexpected successful-step diagnostic'); }
++      break;
++    }
++    case 'RelaySettlementSeal':
++      requireInvariant((object.sealedThroughEpochMs as number) <= (object.issuedAtServerEpochMs as number), 'Seal predates boundary'); break;
++    case 'SharedSettlementPolicy': {
++      const sum = (object.offlineGraceMs as number) + (object.boundedRelayDelayMs as number) + (object.timeUncertaintyAllowanceMs as number);
++      requireInvariant(Number.isSafeInteger(sum) && (object.settleHorizonMs as number) >= sum && (object.retentionMs as number) >= (object.settleHorizonMs as number), 'Settlement retention inequality'); break;
++    }
++    case 'SharedAuthorityReceipt': authorityReceiptInvariants(object); break;
++    case 'WorldDeveloperTrustAnchor':
++      requireInvariant(object.developerSigningKeyId === object.developerPublicKeyFingerprint, 'Developer signing key ID mismatch'); break;
++    case 'WorldMemberCredential':
++      requireInvariant(object.registeredSigningKeyFingerprint !== object.keyAgreementKeyFingerprint, 'Signing and agreement key purposes must be distinct'); break;
++    case 'WorldRelayKeyDescriptor':
++      requireInvariant(object.membershipEpoch === object.keyEpoch, 'Key descriptor epochs mismatch'); break;
++    case 'WorldMembershipEpoch': case 'WorldMembershipEpochProposal': membershipInvariants(object); break;
++    case 'WorldMembershipChange': {
++      const next = data(object.next);
++      requireInvariant(object.worldId === next.worldId && object.serviceInstanceId === next.serviceInstanceId, 'Membership change context mismatch');
++      requireInvariant(object.expectedMembershipEpoch === next.previousMembershipEpoch, 'Membership CAS mismatch');
++      requireInvariant((object.reason === 'Initial') === (object.expectedMembershipEpoch === null), 'Initial membership reason mismatch'); break;
++    }
++    case 'WorldRelayKeyPackageContext':
++      requireInvariant(object.worldId === data(object.descriptor).worldId, 'Key package world mismatch'); break;
++    case 'WorldRelayKeyAcceptance':
++      requireInvariant(object.worldId === data(object.descriptor).worldId, 'Key acceptance world mismatch'); break;
++    case 'RelayPullReply': pullInvariants(object); break;
++    default: break;
++  }
++}
++
++function authorityReceiptInvariants(receipt: SharedData): void {
++  const purposes: { [purpose: string]: SharedSchemaKind } = {
++    SequenceSegment: 'AuthorSequenceSegment', WorldAppendPermit: 'WorldAppendPermit', WorldCommitAdmission: 'WorldCommitAdmission',
++    WorldCommitRejection: 'WorldCommitRejection', AuthorKeyBinding: 'WorldAuthorKeyBinding', RelaySettlementSeal: 'RelaySettlementSeal',
++    WorldDeveloperClosure: 'WorldDeveloperClosureFact',
++  };
++  if (receipt.purpose === 'WorldMembership') {
++    alternative([reference('WorldMembershipEpoch'), reference('WorldObserverAdmissionFact')])(receipt.payload);
++  } else { inspect(purposes[receipt.purpose as string], receipt.payload); }
++  const payload = data(receipt.payload);
++  requireInvariant(receipt.serviceInstanceId === payload.serviceInstanceId, 'Receipt service mismatch');
++  if (payload.requestNonce !== undefined) { requireInvariant(receipt.requestNonce === payload.requestNonce, 'Receipt nonce mismatch'); }
++  if (payload.clockGeneration !== undefined) { requireInvariant(receipt.clockGeneration === payload.clockGeneration, 'Receipt clock generation mismatch'); }
++  if (receipt.purpose === 'RelaySettlementSeal') { requireInvariant(receipt.issuedAtServerEpochMs === payload.issuedAtServerEpochMs, 'Seal issue time mismatch'); }
++  const time = payload.admittedAtServerEpochMs !== undefined ? payload.admittedAtServerEpochMs
++    : payload.activatedAtServerEpochMs !== undefined ? payload.activatedAtServerEpochMs
++      : payload.registeredAtServerEpochMs !== undefined ? payload.registeredAtServerEpochMs
++        : payload.effectiveAtServerEpochMs !== undefined ? payload.effectiveAtServerEpochMs
++          : payload.rejectedAtServerEpochMs !== undefined ? payload.rejectedAtServerEpochMs
++            : payload.issuedAtServerEpochMs !== undefined ? payload.issuedAtServerEpochMs : data(payload.appendedAt).epochMs;
++  requireInvariant((receipt.issuedAtServerEpochMs as number) >= (time as number), 'Receipt predates payload fact');
++}
++
++function admittedInvariants(wire: SharedData): void {
++  const claim = data(data(wire.admissionClaim).claim);
++  const header = data(claim.header);
++  const permit = receiptPayload(data(wire.appendPermitReceipt), 'WorldAppendPermit');
++  const segment = receiptPayload(data(wire.sequenceSegmentReceipt), 'SequenceSegment');
++  const admission = receiptPayload(data(wire.admissionReceipt), 'WorldCommitAdmission');
++  const author = receiptPayload(data(wire.authorKeyBindingReceipt), 'AuthorKeyBinding');
++  const epoch = receiptPayload(data(wire.membershipEpochReceipt), 'WorldMembership');
++  inspect('WorldMembershipEpoch', epoch);
++  for (const receiptName of ['appendPermitReceipt', 'sequenceSegmentReceipt', 'admissionReceipt', 'authorKeyBindingReceipt', 'membershipEpochReceipt']) {
++    requireInvariant(data(wire[receiptName]).serviceInstanceId === header.serviceInstanceId, 'Wire receipt instance mismatch');
++  }
++  const identity = data(header.identity);
++  for (const item of [permit, admission]) {
++    requireInvariant(item.worldId === header.worldId && same(item.identity, header.identity) && same(item.appendedAt, header.appendedAt)
++      && item.membershipEpoch === header.membershipEpoch, 'Wire identity, world, time or epoch mismatch');
++  }
++  requireInvariant(permit.authorDeviceId === header.authorDeviceId && permit.authorDeviceGeneration === header.authorDeviceGeneration
++    && permit.permitId === header.permitId && permit.segmentId === header.segmentId && permit.keyEpoch === header.keyEpoch
++    && permit.changeClass === header.changeClass, 'Permit header mismatch');
++  requireInvariant(segment.segmentId === header.segmentId && segment.authorAccountId === identity.authorAccountId
++    && segment.authorDeviceId === header.authorDeviceId && segment.authorDeviceGeneration === header.authorDeviceGeneration
++    && segment.worldId === header.worldId && segment.membershipEpoch === header.membershipEpoch, 'Segment header mismatch');
++  requireInvariant((identity.authorSequence as number) >= (segment.firstSequence as number)
++    && (identity.authorSequence as number) <= (segment.lastSequence as number), 'Author outside segment');
++  const appended = data(header.appendedAt).epochMs as number;
++  requireInvariant(appended >= (segment.issuedAtServerEpochMs as number) && appended < (segment.expiresAtServerEpochMs as number), 'Append outside segment lifetime');
++  requireInvariant((admission.admittedAtServerEpochMs as number) < (permit.expiresAtServerEpochMs as number), 'Admission outside permit lifetime');
++  requireInvariant(admission.envelopeSha256 === claim.envelopeSha256, 'Claim and admission digest mismatch');
++  requireInvariant(author.authorAccountId === identity.authorAccountId && author.authorDeviceId === header.authorDeviceId
++    && author.authorDeviceGeneration === header.authorDeviceGeneration && author.authorSigningKeyFingerprint === header.authorSigningKeyFingerprint
++    && (author.registeredAtServerEpochMs as number) <= appended, 'Author registration mismatch');
++  const descriptor = data(epoch.key);
++  requireInvariant(epoch.worldId === header.worldId && epoch.membershipEpoch === header.membershipEpoch
++    && descriptor.keyEpoch === header.keyEpoch && descriptor.worldRelayKeyId === header.worldRelayKeyId
++    && (epoch.activatedAtServerEpochMs as number) <= appended, 'Membership epoch mismatch');
++  const credentials = epoch.credentials as SharedData[];
++  requireInvariant(credentials.some((item) => item.accountId === identity.authorAccountId && item.deviceId === header.authorDeviceId
++    && item.deviceGeneration === header.authorDeviceGeneration && item.registeredSigningKeyFingerprint === header.authorSigningKeyFingerprint), 'Author absent from epoch');
++  const restricted = header.restrictedWrite === null ? null : data(header.restrictedWrite);
++  if (restricted !== null && restricted.subtype === 'DeveloperRosterChange') {
++    requireInvariant(wire.rosterObserverAdmissionReceipt !== null, 'Missing roster target admission fact');
++    const observer = receiptPayload(data(wire.rosterObserverAdmissionReceipt), 'WorldMembership');
++    inspect('WorldObserverAdmissionFact', observer);
++    requireInvariant(observer.worldId === header.worldId && observer.observerAccountId === restricted.accountId
++      && observer.observerAdmissionRevision === restricted.observerAdmissionRevision
++      && observer.serviceInstanceId === header.serviceInstanceId && (observer.admittedAtServerEpochMs as number) <= appended,
++    'Roster target source mismatch');
++    requireInvariant(restricted.operation === 'AddCoDeveloper' ? typeof admission.rosterTargetObserverActiveAtAppendedAt === 'boolean'
++      : admission.rosterTargetObserverActiveAtAppendedAt === null, 'Roster target active flag mismatch');
++  } else {
++    requireInvariant(wire.rosterObserverAdmissionReceipt === null && admission.rosterTargetObserverActiveAtAppendedAt === null, 'Unexpected roster fact');
++  }
++}
++
++function membershipInvariants(epoch: SharedData): void {
++  const descriptor = data(epoch.key);
++  requireInvariant(epoch.worldId === descriptor.worldId && epoch.membershipEpoch === descriptor.membershipEpoch, 'Epoch descriptor mismatch');
++  const previous = epoch.previousMembershipEpoch;
++  requireInvariant(previous === null ? epoch.membershipEpoch === 1 : (epoch.membershipEpoch as number) - (previous as number) === 1, 'Non-consecutive membership epoch');
++  const credentials = epoch.credentials as SharedData[];
++  let previousCredential: SharedData | null = null;
++  for (const credential of credentials) {
++    if (previousCredential !== null) {
++      const accountOrder = previousCredential.accountId === credential.accountId ? 0 : (previousCredential.accountId as string) < (credential.accountId as string) ? -1 : 1;
++      const deviceOrder = previousCredential.deviceId === credential.deviceId ? 0 : (previousCredential.deviceId as string) < (credential.deviceId as string) ? -1 : 1;
++      requireInvariant(accountOrder < 0 || (accountOrder === 0 && deviceOrder < 0), 'Unsorted or duplicate member device');
++    }
++    previousCredential = credential;
++  }
++}
++
++function stateInvariants(state: SharedData): void {
++  const entities = state.entities as SharedData[];
++  const triggers = state.triggers as SharedData[];
++  const touches = state.traceTouches as SharedData[];
++  sorted(entities, (item) => data(data(item).definition).entityId as string);
++  sorted(triggers, (item) => data(data(item).definition).triggerId as string);
++  sorted(touches, (item) => data(item).traceTouchId as string);
++  sorted(state.revealedResidueEntityIds as unknown[], (item) => item as string);
++  const byId: { [id: string]: SharedData } = Object.create(null) as { [id: string]: SharedData };
++  const stableIds = new Set<string>([state.mapId as string]);
++  const reserveStableId = (id: string): void => {
++    requireInvariant(!stableIds.has(id), 'Repeated world-scoped stable identity'); stableIds.add(id);
++  };
++  for (const entity of entities) {
++    const definition = data(entity.definition); byId[definition.entityId as string] = entity;
++    reserveStableId(definition.entityId as string);
++    if (definition.normalTrace !== null) {
++      const id = data(definition.normalTrace).traceTouchId as string;
++      reserveStableId(id);
++    }
++  }
++  for (const trigger of triggers) { reserveStableId(data(trigger.definition).triggerId as string); }
++  for (const id of state.revealedResidueEntityIds as string[]) {
++    requireInvariant(byId[id] !== undefined && data(byId[id].definition).elementType === 'Residue', 'Invalid revealed Residue identity');
++  }
++  for (const touch of touches) {
++    const record = byId[touch.normalTraceEntityId as string];
++    requireInvariant(record !== undefined, 'Unknown aggregate Trace entity');
++    const definition = data(record.definition);
++    requireInvariant(definition.elementType === 'Trace' && definition.normalTrace !== null
++      && data(definition.normalTrace).traceTouchId === touch.traceTouchId, 'Aggregate Trace identity mismatch');
++  }
++  for (const trigger of triggers) {
++    const definition = data(trigger.definition); const action = data(definition.action);
++    requireInvariant(byId[definition.anchorEntityId as string] !== undefined && byId[action.targetEntityId as string] !== undefined
++      && data(byId[action.targetEntityId as string].definition).elementType === 'Residue', 'Unknown or invalid Trigger reference');
++  }
++}
++
++function genesisInvariants(genesis: SharedData): void {
++  const state = data(genesis.initialState); const anchor = data(genesis.developerTrustAnchor);
++  requireInvariant(genesis.worldId === state.worldId && genesis.mapId === state.mapId
++    && genesis.contentManifestSha256 === state.contentManifestSha256 && genesis.worldId === anchor.worldId
++    && genesis.worldDeveloperAccountId === anchor.worldDeveloperAccountId
++    && data(state.developerRoster).worldDeveloperAccountId === genesis.worldDeveloperAccountId
++    && data(state.developerRoster).frozen === false, 'Genesis context mismatch');
++  for (const record of (state.entities as SharedData[]).concat(state.triggers as SharedData[])) {
++    requireInvariant(record.createdBy === null && record.lastEditedBy === null && record.deletedBy === null, 'Genesis attribution must be null');
++  }
++}
++
++function logInvariants(log: SharedData): void {
++  const seen = new Set<string>();
++  let previous: SharedData | null = null;
++  for (const wire of log.commits as SharedData[]) {
++    const header = data(data(data(wire.admissionClaim).claim).header);
++    requireInvariant(header.worldId === log.worldId, 'Log world mismatch');
++    const id = identityKey(header.identity); requireInvariant(!seen.has(id), 'Repeated log identity'); seen.add(id);
++    if (previous !== null) { requireInvariant(order(previous, header) < 0, 'Unsorted commit log'); }
++    previous = header;
++  }
++  if (log.developerClosure !== null) {
++    const closure = receiptPayload(data(log.developerClosure), 'WorldDeveloperClosure');
++    requireInvariant(closure.worldId === log.worldId, 'Log closure world mismatch');
++  }
++}
++
++function checkpointInvariants(checkpoint: SharedData): void {
++  const seal = receiptPayload(data(checkpoint.settlementSeal), 'RelaySettlementSeal');
++  requireInvariant(checkpoint.worldId === seal.worldId && checkpoint.worldId === data(checkpoint.state).worldId
++    && checkpoint.coveredThroughEpochMs === seal.sealedThroughEpochMs, 'Checkpoint boundary mismatch');
++  requireInvariant((checkpoint.coverage as unknown[]).length === seal.admittedCommitCount, 'Coverage count mismatch');
++  const seen = new Set<string>(); const revisions = new Set<number>(); let previous: SharedData | null = null;
++  for (const entry of checkpoint.coverage as SharedData[]) {
++    const id = identityKey(entry.identity); requireInvariant(!seen.has(id), 'Repeated coverage identity'); seen.add(id);
++    requireInvariant(!revisions.has(entry.admissionRevision as number), 'Repeated admission revision'); revisions.add(entry.admissionRevision as number);
++    requireInvariant((data(entry.appendedAt).epochMs as number) <= (checkpoint.coveredThroughEpochMs as number), 'Coverage exceeds seal');
++    if (previous !== null) { requireInvariant(order(previous, entry) < 0, 'Unsorted coverage'); } previous = entry;
++  }
++  if (checkpoint.developerClosure === null) { requireInvariant(seal.developerClosureSha256 === null, 'Unexpected sealed closure'); }
++  else {
++    const closure = receiptPayload(data(checkpoint.developerClosure), 'WorldDeveloperClosure');
++    requireInvariant(closure.worldId === checkpoint.worldId && (closure.effectiveAtServerEpochMs as number) <= (checkpoint.coveredThroughEpochMs as number)
++      && seal.developerClosureSha256 !== null, 'Checkpoint closure mismatch');
++  }
++}
++
++function pullInvariants(reply: SharedData): void {
++  if (reply.kind !== 'Batch') { return; }
++  const commits = reply.commits as SharedData[];
++  if (commits.length > 256 || SharedCanonicalBytes.encode(reply).length > 1048576) { fail('LimitExceeded', 'Relay batch limit'); }
++  const after = data(reply.after); const next = data(reply.next); const floor = data(reply.retentionFloor);
++  requireInvariant(after.relayGeneration === next.relayGeneration && next.relayGeneration === floor.relayGeneration, 'Batch generation mismatch');
++  const a = after.position as string; const b = next.position as string;
++  requireInvariant(a.length < b.length || (a.length === b.length && a <= b), 'Cursor moves backwards');
++  for (const commit of commits) {
++    requireInvariant(data(data(data(commit.admissionClaim).claim).header).worldId === reply.worldId, 'Batch world mismatch');
++  }
++}
++
++function immutable(value: unknown): unknown {
++  if (value !== null && typeof value === 'object') {
++    for (const keyName of Object.keys(value)) { immutable((value as SharedData)[keyName]); }
++    Object.freeze(value);
++  }
++  return value;
++}
++
++/** Shape validation grants no crypto/source/lease capability. Those boundaries remain separate. */
++export class SharedCommitCodec {
++  validate<K extends SharedSchemaKind>(kind: K, value: unknown): SharedSchemaMap[K] {
++    const copy = SharedCanonicalBytes.decode(SharedCanonicalBytes.encode(value));
++    inspect(kind, copy);
++    return immutable(copy) as SharedSchemaMap[K];
++  }
++
++  encode<K extends SharedSchemaKind>(kind: K, value: unknown): Uint8Array {
++    return SharedCanonicalBytes.encode(this.validate(kind, value));
++  }
++
++  decode<K extends SharedSchemaKind>(kind: K, bytes: Uint8Array): SharedSchemaMap[K] {
++    const value = SharedCanonicalBytes.decode(bytes);
++    inspect(kind, value);
++    return immutable(value) as SharedSchemaMap[K];
++  }
++}
+
+diff --git a/src/director/SharedCommitContracts.ts b/src/director/SharedCommitContracts.ts
+new file mode 100644
+--- /dev/null
++++ b/src/director/SharedCommitContracts.ts
+@@ -0,0 +1,508 @@
++/** P3 schema 1 data only. These declarations confer no signature, trust or storage capability. */
++export interface WorldCommitIdentity {
++  readonly authorAccountId: string;
++  readonly authorSequence: number;
++}
++export interface SharedPosition {
++  readonly lateralMilli: number;
++  readonly depthMilli: number;
++}
++export interface SharedContentReference {
++  readonly contentId: string;          // ASCII [A-Za-z0-9_.:/-]{1,128}
++  readonly contentSha256: string;
++}
++export interface WorldSharedGenesis {
++  readonly schemaVersion: 1;
++  readonly profile: 'ExternalSharedOnlineV1';
++  readonly worldId: string;
++  readonly mapId: string;
++  readonly contentRevision: number;
++  readonly contentManifestSha256: string;
++  readonly worldDeveloperAccountId: string;
++  readonly developerTrustAnchor: WorldDeveloperTrustAnchor;
++  readonly initialState: SharedWorldState;
++}
++
++export interface AuthorSequenceSegment {
++  readonly schemaVersion: 1;
++  readonly serviceInstanceId: string;
++  readonly segmentId: string;
++  readonly authorAccountId: string;
++  readonly authorDeviceId: string;
++  readonly authorDeviceGeneration: number;
++  readonly worldId: string;
++  readonly membershipEpoch: number;
++  readonly firstSequence: number;
++  readonly lastSequence: number;       // 包含端点，恰好1024个
++  readonly issuedAtServerEpochMs: number;
++  readonly expiresAtServerEpochMs: number;
++}
++
++export interface SharedAppendedAt { readonly epochMs: number; } // 文档结构别名，沿用AppendedAt语义
++export interface WorldAppendPermit {
++  readonly schemaVersion: 1;
++  readonly serviceInstanceId: string;
++  readonly permitId: string;
++  readonly requestNonce: string;           // 32字节
++  readonly worldId: string;
++  readonly identity: WorldCommitIdentity;
++  readonly authorDeviceId: string;
++  readonly authorDeviceGeneration: number;
++  readonly segmentId: string;
++  readonly membershipEpoch: number;
++  readonly keyEpoch: number;
++  readonly changeClass: WorldChangeClass;
++  readonly appendedAt: SharedAppendedAt;
++  readonly expiresAtServerEpochMs: number; // appendedAt+30000
++  readonly clockGeneration: number;
++  readonly clockStatus: 'Trusted';
++}
++export interface WorldCommitAdmission {
++  readonly schemaVersion: 1;
++  readonly serviceInstanceId: string;
++  readonly worldId: string;
++  readonly identity: WorldCommitIdentity;
++  readonly envelopeSha256: string;
++  readonly appendedAt: SharedAppendedAt;
++  readonly admittedAtServerEpochMs: number;
++  readonly admissionRevision: number;
++  readonly membershipEpoch: number;
++  readonly rosterTargetObserverActiveAtAppendedAt: boolean | null; // 仅AddCoDeveloper是boolean
++}
++export interface WorldCommitAdmissionClaim {
++  readonly schemaVersion: 1;
++  readonly serviceInstanceId: string;
++  readonly requestNonce: string;             // 32字节，一次请求上下文
++  readonly header: RelayCommitHeader;
++  readonly envelopeSha256: string;           // 最终完整envelope的摘要
++}
++export interface SignedWorldCommitAdmissionClaim {
++  readonly claim: WorldCommitAdmissionClaim;
++  readonly authorSignatureBase64Url: string; // 独立64字节ES256/P1363签名
++}
++export interface WorldDeveloperClosureFact {
++  readonly schemaVersion: 1;
++  readonly serviceInstanceId: string;
++  readonly worldId: string;
++  readonly worldDeveloperAccountId: string;
++  readonly effectiveAtServerEpochMs: number;
++  readonly accountFactRevision: number;
++}
++export interface WorldCommitRejection {
++  readonly schemaVersion: 1;
++  readonly serviceInstanceId: string;
++  readonly worldId: string;
++  readonly identity: WorldCommitIdentity;
++  readonly envelopeSha256: string;
++  readonly appendedAt: SharedAppendedAt;
++  readonly rejectedAtServerEpochMs: number;
++  readonly reason: 'TimeTooLate' | 'PermitExpired' | 'EpochClosed' | 'IdentityConflict';
++  readonly previouslyAdmitted: false; // 指本identity+摘要对；IdentityConflict可能已有别的摘要accepted
++}
++export interface WorldAuthorKeyBinding {
++  readonly schemaVersion: 1;
++  readonly serviceInstanceId: string;
++  readonly authorAccountId: string;
++  readonly authorDeviceId: string;
++  readonly authorDeviceGeneration: number;
++  readonly authorSigningPublicJwk: { readonly kty: 'EC'; readonly crv: 'P-256'; readonly x: string; readonly y: string };
++  readonly authorSigningKeyFingerprint: string;
++  readonly registeredAtServerEpochMs: number;
++  readonly assurance: 'RegisteredCredential';
++}
++
++export type WorldChangeClass = 'MonotonicReveal' | 'TraceTouch' | 'DeveloperMapChange';
++export type SharedCommitClass = 'Monotonic' | 'AddOnly' | 'RestrictedWrite';
++export interface MonotonicRevealChange {
++  readonly changeClass: 'MonotonicReveal';
++  readonly commitClass: 'Monotonic';
++  readonly entityId: string;
++  readonly revealed: true;
++}
++export interface TraceTouchChange {
++  readonly changeClass: 'TraceTouch';
++  readonly commitClass: 'AddOnly';
++  readonly traceTouchId: string;
++  readonly normalTraceEntityId: string;
++  readonly touchUnits: 1;
++}
++export type EditTarget = { readonly kind: 'Entity'; readonly entityId: string }
++  | { readonly kind: 'Trigger'; readonly triggerId: string };
++export interface SharedMapEntityDefinition {
++  readonly entityId: string;
++  readonly elementType: 'Initial' | 'Process' | 'Trace' | 'Residue';
++  readonly position: SharedPosition;
++  readonly content: SharedContentReference;
++  readonly normalTrace: { readonly traceTouchId: string; readonly tier: 'Common' | 'Deep' | 'Rain' } | null;
++}
++export interface SharedTriggerDefinition {
++  readonly triggerId: string;
++  readonly anchorEntityId: string;
++  readonly activation: { readonly kind: 'Proximity'; readonly radiusMilli: number }
++    | { readonly kind: 'Interaction' };
++  readonly action: { readonly kind: 'RevealResidue'; readonly targetEntityId: string };
++}
++export type MapEditOperation =
++  | { readonly operation: 'CreateEntity'; readonly target: { readonly kind: 'Entity'; readonly entityId: string }; readonly definition: SharedMapEntityDefinition }
++  | { readonly operation: 'ReplaceEntity'; readonly target: { readonly kind: 'Entity'; readonly entityId: string }; readonly definition: SharedMapEntityDefinition }
++  | { readonly operation: 'DeleteEntity'; readonly target: { readonly kind: 'Entity'; readonly entityId: string } }
++  | { readonly operation: 'CreateTrigger'; readonly target: { readonly kind: 'Trigger'; readonly triggerId: string }; readonly definition: SharedTriggerDefinition }
++  | { readonly operation: 'ReplaceTrigger'; readonly target: { readonly kind: 'Trigger'; readonly triggerId: string }; readonly definition: SharedTriggerDefinition }
++  | { readonly operation: 'DeleteTrigger'; readonly target: { readonly kind: 'Trigger'; readonly triggerId: string } };
++export interface MapEditCommitChange {
++  readonly changeClass: 'DeveloperMapChange';
++  readonly commitClass: 'RestrictedWrite';
++  readonly subtype: 'MapEditCommit';
++  readonly edit: MapEditOperation;
++}
++export interface DeveloperRosterChange {
++  readonly changeClass: 'DeveloperMapChange';
++  readonly commitClass: 'RestrictedWrite';
++  readonly subtype: 'DeveloperRosterChange';
++  readonly operation: 'AddCoDeveloper' | 'RemoveCoDeveloper';
++  readonly accountId: string;
++  readonly observerAdmissionRevision: number;
++}
++export type WorldChange = MonotonicRevealChange | TraceTouchChange | MapEditCommitChange | DeveloperRosterChange;
++
++export interface WorldCommit {
++  readonly schemaVersion: 1;
++  readonly profile: 'ExternalSharedOnlineV1';
++  readonly worldId: string;
++  readonly mapId: string;
++  readonly contentManifestSha256: string;
++  readonly identity: WorldCommitIdentity;
++  readonly authorDeviceId: string;
++  readonly authorDeviceGeneration: number;
++  readonly segmentId: string;
++  readonly permitId: string;
++  readonly membershipEpoch: number;
++  readonly keyEpoch: number;
++  readonly appendedAt: SharedAppendedAt;
++  readonly change: WorldChange;
++}
++export type RestrictedWriteHeader = null
++  | { readonly subtype: 'MapEditCommit' }
++  | { readonly subtype: 'DeveloperRosterChange'; readonly operation: 'AddCoDeveloper' | 'RemoveCoDeveloper'; readonly accountId: string; readonly observerAdmissionRevision: number };
++export interface RelayCommitHeader {
++  readonly schemaVersion: 1;
++  readonly profile: 'ExternalSharedOnlineV1';
++  readonly kind: 'RelayWorldCommit';
++  readonly serviceInstanceId: string;
++  readonly worldId: string;
++  readonly identity: WorldCommitIdentity;
++  readonly authorDeviceId: string;
++  readonly authorDeviceGeneration: number;
++  readonly authorSigningKeyFingerprint: string;
++  readonly segmentId: string;
++  readonly permitId: string;
++  readonly membershipEpoch: number;
++  readonly keyEpoch: number;
++  readonly worldRelayKeyId: string;
++  readonly appendedAt: SharedAppendedAt;
++  readonly changeClass: WorldChangeClass;
++  readonly commitClass: SharedCommitClass;
++  readonly restrictedWrite: RestrictedWriteHeader;
++  readonly cipherSuite: 'AES-256-GCM-HKDF-SHA256-v1';
++}
++export interface WrappedRelayDataKey {
++  readonly nonceBase64Url: string;              // 12字节
++  readonly ciphertextAndTagBase64Url: string;   // 32字节DEK+16字节tag
++}
++export interface RelayCommitEnvelope {
++  readonly header: RelayCommitHeader;
++  readonly wrappedCommitDataKey: WrappedRelayDataKey;
++  readonly nonceBase64Url: string;              // 12字节
++  readonly ciphertextAndTagBase64Url: string;
++  readonly authorSignatureBase64Url: string;    // 64字节ES256/P1363
++}
++export interface AdmittedWorldCommit {
++  readonly envelopeBytesBase64Url: string; // 精确UTF8 wire字节；先对receipt验摘要，再unknown解析
++  readonly appendPermitReceipt: SharedAuthorityReceipt<WorldAppendPermit>;
++  readonly sequenceSegmentReceipt: SharedAuthorityReceipt<AuthorSequenceSegment>;
++  readonly admissionReceipt: SharedAuthorityReceipt<WorldCommitAdmission>;
++  readonly admissionClaim: SignedWorldCommitAdmissionClaim;
++  readonly authorKeyBindingReceipt: SharedAuthorityReceipt<WorldAuthorKeyBinding>;
++  readonly membershipEpochReceipt: SharedAuthorityReceipt<WorldMembershipEpoch>;
++  readonly rosterObserverAdmissionReceipt: SharedAuthorityReceipt<WorldObserverAdmissionFact> | null;
++}
++
++export interface SharedEntityRecord {
++  readonly definition: SharedMapEntityDefinition;
++  readonly createdBy: WorldCommitIdentity | null;  // null=Genesis
++  readonly lastEditedBy: WorldCommitIdentity | null;
++  readonly deletedBy: WorldCommitIdentity | null;
++}
++export interface SharedTriggerRecord {
++  readonly definition: SharedTriggerDefinition;
++  readonly createdBy: WorldCommitIdentity | null;
++  readonly lastEditedBy: WorldCommitIdentity | null;
++  readonly deletedBy: WorldCommitIdentity | null;
++}
++export interface TraceTouchAggregate {
++  readonly traceTouchId: string;
++  readonly normalTraceEntityId: string;
++  readonly totalTouchUnits: string;           // uint128精确总量
++  readonly aggregateStrength: number;        // min(65535,totalTouchUnits)
++}
++export interface DeveloperRosterState {
++  readonly worldDeveloperAccountId: string;
++  readonly coDeveloperAccountIds: readonly string[];
++  readonly frozen: boolean;
++}
++export interface SharedWorldState {
++  readonly schemaVersion: 1;
++  readonly profile: 'ExternalSharedOnlineV1';
++  readonly worldId: string;
++  readonly mapId: string;
++  readonly contentManifestSha256: string;
++  readonly entities: readonly SharedEntityRecord[];
++  readonly triggers: readonly SharedTriggerRecord[];
++  readonly revealedResidueEntityIds: readonly string[];
++  readonly traceTouches: readonly TraceTouchAggregate[];
++  readonly developerRoster: DeveloperRosterState;
++}
++export interface WorldChangeLogWire {
++  readonly schemaVersion: 1;
++  readonly profile: 'ExternalSharedOnlineV1';
++  readonly worldId: string;
++  readonly genesisSha256: string;
++  readonly baseCheckpointSha256: string | null;
++  readonly developerClosure: SharedAuthorityReceipt<WorldDeveloperClosureFact> | null;
++  readonly commits: readonly AdmittedWorldCommit[];
++}
++
++export interface RelaySettlementSeal {
++  readonly schemaVersion: 1;
++  readonly serviceInstanceId: string;
++  readonly worldId: string;
++  readonly sealRevision: number;
++  readonly policySha256: string;
++  readonly issuedAtServerEpochMs: number;
++  readonly sealedThroughEpochMs: number;        // 包含边界
++  readonly admittedCommitCount: number;
++  readonly admittedPrefixSha256: string;
++  readonly developerClosureSha256: string | null; // 仅已在此边界生效的closure
++  readonly previousSealSha256: string | null;
++}
++export interface CheckpointCoverageEntry {
++  readonly identity: WorldCommitIdentity;
++  readonly envelopeSha256: string;
++  readonly appendedAt: SharedAppendedAt;
++  readonly admissionRevision: number;
++  readonly applyResult: 'Applied' | 'NoEffect' | 'RevertedEdit' | 'InvalidChange';
++  readonly finalDiagnostic: 'MergeConflict' | 'RevertedEdit' | 'InvalidChange' | null;
++}
++export interface WorldCheckpointWire {
++  readonly schemaVersion: 1;
++  readonly profile: 'ExternalSharedOnlineV1';
++  readonly worldId: string;
++  readonly genesisSha256: string;
++  readonly parentCheckpointSha256: string | null;
++  readonly coveredThroughEpochMs: number;
++  readonly settlementSeal: SharedAuthorityReceipt<RelaySettlementSeal>;
++  readonly developerClosure: SharedAuthorityReceipt<WorldDeveloperClosureFact> | null;
++  readonly coverage: readonly CheckpointCoverageEntry[];
++  readonly coverageSha256: string;
++  readonly state: SharedWorldState;
++  readonly stateSha256: string;
++  readonly checkpointSha256: string;
++}
++
++export interface SharedSettlementPolicy {
++  readonly schemaVersion: 1;
++  readonly offlineGraceMs: number;
++  readonly boundedRelayDelayMs: number;
++  readonly timeUncertaintyAllowanceMs: number;
++  readonly settleHorizonMs: number;
++  readonly retentionMs: number;
++}
++export interface RelayCursor {
++  readonly relayGeneration: number;
++  readonly position: string;             // 0或非零首位十进制uint64
++}
++export type RelayPullReply = {
++  readonly kind: 'Batch'; readonly worldId: string;
++  readonly after: RelayCursor; readonly next: RelayCursor;
++  readonly commits: readonly AdmittedWorldCommit[];
++  readonly retentionFloor: RelayCursor;
++} | {
++  readonly kind: 'Gap'; readonly worldId: string;
++  readonly after: RelayCursor; readonly retentionFloor: RelayCursor;
++  readonly reason: 'RetentionExpired' | 'RelayGenerationChanged' | 'MissingAdmittedEnvelope';
++};
++export interface SharedAuthorityReceipt<T> {
++  readonly schemaVersion: 1;
++  readonly serviceInstanceId: string;
++  readonly purpose: 'SequenceSegment' | 'WorldAppendPermit' | 'WorldCommitAdmission' | 'WorldCommitRejection' | 'AuthorKeyBinding' | 'RelaySettlementSeal' | 'WorldMembership' | 'WorldDeveloperClosure';
++  readonly receiptId: string;
++  readonly keyId: string;
++  readonly requestNonce: string;
++  readonly issuedAtServerEpochMs: number;
++  readonly clockGeneration: number;
++  readonly clockStatus: 'Trusted';
++  readonly payload: T;
++  readonly signatureBase64Url: string;
++}
++
++
++export interface WorldKeyAgreementPublicKey {
++  readonly kty: 'EC';
++  readonly crv: 'P-256';
++  readonly x: string;
++  readonly y: string;
++}
++export interface WorldDeveloperTrustAnchor {
++  readonly schemaVersion: 1;
++  readonly worldId: string;
++  readonly worldDeveloperAccountId: string;
++  readonly developerSigningKeyId: string;
++  readonly developerPublicKey: WorldKeyAgreementPublicKey;
++  readonly developerPublicKeyFingerprint: string;
++}
++export interface WorldObserverAdmissionFact {
++  readonly schemaVersion: 1;
++  readonly serviceInstanceId: string;
++  readonly worldId: string;
++  readonly observerAccountId: string;
++  readonly observerAdmissionRevision: number;
++  readonly accessCodeRevision: number;
++  readonly admittedAtServerEpochMs: number;
++  readonly developerTrustAnchorSha256: string;
++}
++export interface WorldMemberCredential {
++  readonly accountId: string;
++  readonly observerAdmissionRevision: number | null;
++  readonly deviceId: string;
++  readonly deviceGeneration: number;
++  readonly registeredSigningKeyFingerprint: string;
++  readonly keyAgreementPublicKey: WorldKeyAgreementPublicKey;
++  readonly keyAgreementKeyFingerprint: string;
++}
++
++export interface WorldRelayKeyDescriptor {
++  readonly schemaVersion: 1;
++  readonly worldId: string;
++  readonly membershipEpoch: number;
++  readonly keyEpoch: number;
++  readonly worldRelayKeyId: string;
++  readonly keyCommitmentSha256: string;
++}
++export interface WorldMembershipEpoch {
++  readonly schemaVersion: 1;
++  readonly serviceInstanceId: string;
++  readonly worldId: string;
++  readonly membershipEpoch: number;
++  readonly previousMembershipEpoch: number | null;
++  readonly key: WorldRelayKeyDescriptor;
++  readonly credentials: readonly WorldMemberCredential[];
++  readonly developerTrustAnchorSha256: string;
++  readonly activatedAtServerEpochMs: number;
++  readonly developerSignatureBase64Url: string;
++}
++export type WorldMembershipEpochProposal = Omit<WorldMembershipEpoch, 'activatedAtServerEpochMs'>;
++export interface WorldMembershipChange {
++  readonly schemaVersion: 1;
++  readonly serviceInstanceId: string;
++  readonly changeId: string;
++  readonly requestNonce: string;
++  readonly worldId: string;
++  readonly expectedMembershipEpoch: number | null;
++  readonly reason: 'Initial' | 'MemberAdded' | 'MemberRemoved'
++    | 'CredentialAdded' | 'CredentialRemoved' | 'KeyCompromise';
++  readonly next: WorldMembershipEpochProposal;
++}
++
++export interface WorldRelayKeyPackageContext {
++  readonly schemaVersion: 1;
++  readonly serviceInstanceId: string;
++  readonly worldId: string;
++  readonly packageId: string;
++  readonly descriptor: WorldRelayKeyDescriptor;
++  readonly recipient: WorldMemberCredential;
++  readonly developerTrustAnchorSha256: string;
++  readonly developerSigningKeyId: string;
++  readonly cipherSuite: 'AES-256-GCM-HKDF-SHA256-v1';
++}
++export interface WorldRelayKeyPackage {
++  readonly context: WorldRelayKeyPackageContext;
++  readonly ephemeralKeyAgreementPublicKey: WorldKeyAgreementPublicKey;
++  readonly saltBase64Url: string;
++  readonly nonceBase64Url: string;
++  readonly ciphertextAndTagBase64Url: string;
++  readonly developerSignatureBase64Url: string;
++}
++export interface WorldRelayKeyAcceptance {
++  readonly schemaVersion: 1;
++  readonly serviceInstanceId: string;
++  readonly worldId: string;
++  readonly packageId: string;
++  readonly packageSha256: string;
++  readonly descriptor: WorldRelayKeyDescriptor;
++  readonly recipient: WorldMemberCredential;
++  readonly acceptanceNonce: string;
++  readonly keyPossessionTagBase64Url: string;
++  readonly recipientSignatureBase64Url: string;
++}
++
++export type SharedSchemaErrorCode = 'CanonicalInvalid' | 'SchemaInvalid' | 'ValueInvalid' | 'InvariantInvalid' | 'LimitExceeded';
++export type SharedAuthorityPayload = AuthorSequenceSegment | WorldAppendPermit | WorldCommitAdmission
++  | WorldCommitRejection | WorldAuthorKeyBinding | RelaySettlementSeal | WorldObserverAdmissionFact
++  | WorldMembershipEpoch | WorldDeveloperClosureFact;
++export interface SharedSchemaMap {
++  readonly WorldCommitIdentity: WorldCommitIdentity;
++  readonly SharedPosition: SharedPosition;
++  readonly SharedContentReference: SharedContentReference;
++  readonly WorldSharedGenesis: WorldSharedGenesis;
++  readonly AuthorSequenceSegment: AuthorSequenceSegment;
++  readonly SharedAppendedAt: SharedAppendedAt;
++  readonly WorldAppendPermit: WorldAppendPermit;
++  readonly WorldCommitAdmission: WorldCommitAdmission;
++  readonly WorldCommitAdmissionClaim: WorldCommitAdmissionClaim;
++  readonly SignedWorldCommitAdmissionClaim: SignedWorldCommitAdmissionClaim;
++  readonly WorldDeveloperClosureFact: WorldDeveloperClosureFact;
++  readonly WorldCommitRejection: WorldCommitRejection;
++  readonly WorldAuthorKeyBinding: WorldAuthorKeyBinding;
++  readonly WorldChangeClass: WorldChangeClass;
++  readonly SharedCommitClass: SharedCommitClass;
++  readonly MonotonicRevealChange: MonotonicRevealChange;
++  readonly TraceTouchChange: TraceTouchChange;
++  readonly EditTarget: EditTarget;
++  readonly SharedMapEntityDefinition: SharedMapEntityDefinition;
++  readonly SharedTriggerDefinition: SharedTriggerDefinition;
++  readonly MapEditOperation: MapEditOperation;
++  readonly MapEditCommitChange: MapEditCommitChange;
++  readonly DeveloperRosterChange: DeveloperRosterChange;
++  readonly WorldChange: WorldChange;
++  readonly WorldCommit: WorldCommit;
++  readonly RestrictedWriteHeader: RestrictedWriteHeader;
++  readonly RelayCommitHeader: RelayCommitHeader;
++  readonly WrappedRelayDataKey: WrappedRelayDataKey;
++  readonly RelayCommitEnvelope: RelayCommitEnvelope;
++  readonly AdmittedWorldCommit: AdmittedWorldCommit;
++  readonly SharedEntityRecord: SharedEntityRecord;
++  readonly SharedTriggerRecord: SharedTriggerRecord;
++  readonly TraceTouchAggregate: TraceTouchAggregate;
++  readonly DeveloperRosterState: DeveloperRosterState;
++  readonly SharedWorldState: SharedWorldState;
++  readonly WorldChangeLogWire: WorldChangeLogWire;
++  readonly RelaySettlementSeal: RelaySettlementSeal;
++  readonly CheckpointCoverageEntry: CheckpointCoverageEntry;
++  readonly WorldCheckpointWire: WorldCheckpointWire;
++  readonly SharedSettlementPolicy: SharedSettlementPolicy;
++  readonly RelayCursor: RelayCursor;
++  readonly RelayPullReply: RelayPullReply;
++  readonly SharedAuthorityReceipt: SharedAuthorityReceipt<SharedAuthorityPayload>;
++  readonly WorldKeyAgreementPublicKey: WorldKeyAgreementPublicKey;
++  readonly WorldDeveloperTrustAnchor: WorldDeveloperTrustAnchor;
++  readonly WorldObserverAdmissionFact: WorldObserverAdmissionFact;
++  readonly WorldMemberCredential: WorldMemberCredential;
++  readonly WorldRelayKeyDescriptor: WorldRelayKeyDescriptor;
++  readonly WorldMembershipEpoch: WorldMembershipEpoch;
++  readonly WorldMembershipEpochProposal: WorldMembershipEpochProposal;
++  readonly WorldMembershipChange: WorldMembershipChange;
++  readonly WorldRelayKeyPackageContext: WorldRelayKeyPackageContext;
++  readonly WorldRelayKeyPackage: WorldRelayKeyPackage;
++  readonly WorldRelayKeyAcceptance: WorldRelayKeyAcceptance;
++}
++export type SharedSchemaKind = keyof SharedSchemaMap;
+
+diff --git a/src/director/SharedCommitValidator.ts b/src/director/SharedCommitValidator.ts
+new file mode 100644
+--- /dev/null
++++ b/src/director/SharedCommitValidator.ts
+@@ -0,0 +1,462 @@
++/** P3 verification only: caller-installed trust, injected cryptography, no platform or transport. */
++import type {
++  AdmittedWorldCommit, AuthorSequenceSegment, RelayCommitEnvelope, RelayCommitHeader,
++  RelaySettlementSeal, SharedAppendedAt, SharedAuthorityReceipt, SharedMapEntityDefinition,
++  SharedSettlementPolicy, WorldAuthorKeyBinding, WorldChange, WorldCommit, WorldCommitIdentity,
++  WorldAppendPermit, WorldCommitAdmission, WorldCommitRejection, WorldDeveloperClosureFact, WorldDeveloperTrustAnchor,
++  WorldKeyAgreementPublicKey, WorldMembershipEpoch, WorldObserverAdmissionFact,
++  WorldRelayKeyDescriptor, WorldSharedGenesis,
++} from './SharedCommitContracts';
++import { SharedCanonicalBytes, SharedSchemaError } from './SharedCanonicalBytes';
++import { SharedCommitCodec } from './SharedCommitCodec';
++
++export interface SharedCryptoPort {
++  sha256(bytes: Uint8Array): Promise<string>;
++  verifyEs256(jwk: WorldKeyAgreementPublicKey, signature: Uint8Array, message: Uint8Array): Promise<boolean>;
++  hkdfSha256(ikm: Uint8Array, salt: Uint8Array, info: Uint8Array, length: number): Promise<Uint8Array>;
++  /** null means a checked authentication failure; backend/host failures must throw. */
++  decryptAes256Gcm(key: Uint8Array, nonce: Uint8Array, ciphertextAndTag: Uint8Array, aad: Uint8Array): Promise<Uint8Array | null>;
++}
++
++/** Installed by a trusted composition caller; never reconstructed from an incoming file. */
++export interface SharedValidationContext {
++  readonly serviceInstanceId: string;
++  readonly servicePublicKeyJwk: WorldKeyAgreementPublicKey;
++  readonly serviceKeyFingerprint: string;
++  /** Highest independently trusted service clock generation; historical signed generations remain usable. */
++  readonly clockGeneration: number;
++  readonly developerTrustAnchor: WorldDeveloperTrustAnchor;
++  readonly genesisSha256: string;
++  readonly worldId: string;
++  readonly mapId: string;
++  readonly contentManifestSha256: string;
++  /** Must check approved content and the definition's Normal Trace qualification, not only presence. */
++  readonly isEntityDefinitionApproved: (definition: SharedMapEntityDefinition) => boolean;
++  readonly lookupWorldRelayKey: (descriptor: WorldRelayKeyDescriptor) => Promise<Uint8Array | null>;
++}
++
++export type SharedValidationResult<T> = { readonly kind: 'Verified'; readonly value: T }
++  | { readonly kind: 'Gap'; readonly reason: string }
++  | { readonly kind: 'HostFailure'; readonly reason: string };
++
++export interface TrustedVerifiedGenesis {
++  readonly genesis: WorldSharedGenesis;
++  readonly genesisSha256: string;
++}
++export interface ValidatedSharedCommit {
++  readonly wire: unknown;
++  readonly envelopeBytesBase64Url: string;
++  readonly commit: WorldCommit | null;
++  readonly identity: WorldCommitIdentity;
++  readonly appendedAt: SharedAppendedAt;
++  readonly envelopeSha256: string;
++  readonly admissionRevision: number;
++  readonly change: WorldChange | null;
++  readonly invalid: boolean;
++  readonly invalidReason: string | null;
++  readonly header: RelayCommitHeader;
++  readonly sequenceSegment: AuthorSequenceSegment;
++  readonly rosterTargetObserverActiveAtAppendedAt: boolean | null;
++}
++export interface ValidatedSharedSeal {
++  readonly wire: SharedAuthorityReceipt<RelaySettlementSeal>;
++  readonly seal: RelaySettlementSeal;
++  readonly receiptSha256: string;
++}
++export interface ValidatedSharedClosure {
++  readonly wire: SharedAuthorityReceipt<WorldDeveloperClosureFact>;
++  readonly closure: WorldDeveloperClosureFact;
++  readonly receiptSha256: string;
++}
++export interface ValidatedSharedRejection {
++  readonly wire: SharedAuthorityReceipt<WorldCommitRejection>;
++  readonly rejection: WorldCommitRejection;
++  readonly receiptSha256: string;
++}
++
++class SharedVerificationGap extends Error {}
++class SharedCryptoHostFailure extends Error {}
++
++function requireSource(condition: boolean, reason: string): void {
++  if (!condition) { throw new SharedVerificationGap(reason); }
++}
++function sameData(first: unknown, second: unknown): boolean {
++  return SharedCanonicalBytes.equalBytes(SharedCanonicalBytes.encode(first), SharedCanonicalBytes.encode(second));
++}
++function unsigned(value: object, omitted: readonly string[]): { [key: string]: unknown } {
++  const result: { [key: string]: unknown } = Object.create(null) as { [key: string]: unknown };
++  for (const key of Object.keys(value)) {
++    if (omitted.indexOf(key) < 0) { result[key] = (value as { [key: string]: unknown })[key]; }
++  }
++  return result;
++}
++function hashBytes(hex: string): Uint8Array {
++  if (!/^[0-9a-f]{64}$/.test(hex)) { throw new SharedCryptoHostFailure('InvalidCryptoDigest'); }
++  const result = new Uint8Array(32);
++  for (let index = 0; index < result.length; index += 1) { result[index] = parseInt(hex.slice(index * 2, index * 2 + 2), 16); }
++  return result;
++}
++function owns<T extends object>(set: WeakSet<object>, value: unknown): value is T {
++  return typeof value === 'object' && value !== null && set.has(value);
++}
++
++/** Each instance owns its capabilities. Structural brands and serialized values never confer trust. */
++export class SharedCommitValidator {
++  private readonly codec = new SharedCommitCodec();
++  private readonly genesisCapabilities = new WeakSet<object>();
++  private readonly commitCapabilities = new WeakSet<object>();
++  private readonly sealCapabilities = new WeakSet<object>();
++  private readonly closureCapabilities = new WeakSet<object>();
++  private readonly rejectionCapabilities = new WeakSet<object>();
++  private readonly context: SharedValidationContext;
++
++  constructor(private readonly crypto: SharedCryptoPort, context: SharedValidationContext) {
++    const publicKey = this.codec.validate('WorldKeyAgreementPublicKey', context.servicePublicKeyJwk);
++    const anchor = this.codec.validate('WorldDeveloperTrustAnchor', context.developerTrustAnchor);
++    requireSource(/^[A-Za-z0-9_.-]{3,128}$/.test(context.serviceInstanceId), 'InvalidInstalledService');
++    requireSource(Number.isSafeInteger(context.clockGeneration) && context.clockGeneration >= 1, 'InvalidInstalledClockGeneration');
++    requireSource(/^[0-9a-f]{64}$/.test(context.genesisSha256) && /^[0-9a-f]{64}$/.test(context.contentManifestSha256), 'InvalidInstalledDigest');
++    requireSource(anchor.worldId === context.worldId, 'InstalledWorldMismatch');
++    this.context = Object.freeze({ ...context, servicePublicKeyJwk: publicKey, developerTrustAnchor: anchor });
++  }
++
++  ownsGenesis(value: unknown): value is TrustedVerifiedGenesis { return owns(this.genesisCapabilities, value); }
++  ownsCommit(value: unknown): value is ValidatedSharedCommit { return owns(this.commitCapabilities, value); }
++  ownsSeal(value: unknown): value is ValidatedSharedSeal { return owns(this.sealCapabilities, value); }
++  ownsClosure(value: unknown): value is ValidatedSharedClosure { return owns(this.closureCapabilities, value); }
++  ownsRejection(value: unknown): value is ValidatedSharedRejection { return owns(this.rejectionCapabilities, value); }
++
++  async validateGenesis(input: unknown): Promise<SharedValidationResult<TrustedVerifiedGenesis>> {
++    return this.guard(async () => {
++      await this.verifyInstalledPins();
++      const genesis = this.codec.validate('WorldSharedGenesis', input);
++      const digest = await this.digest(SharedCanonicalBytes.encode(genesis));
++      requireSource(digest === this.context.genesisSha256, 'GenesisUnapproved');
++      requireSource(genesis.worldId === this.context.worldId && genesis.mapId === this.context.mapId
++        && genesis.contentManifestSha256 === this.context.contentManifestSha256, 'GenesisContextMismatch');
++      requireSource(sameData(genesis.developerTrustAnchor, this.context.developerTrustAnchor)
++        && genesis.worldDeveloperAccountId === this.context.developerTrustAnchor.worldDeveloperAccountId, 'GenesisRootMismatch');
++      const state = genesis.initialState;
++      requireSource(state.worldId === genesis.worldId && state.mapId === genesis.mapId
++        && state.contentManifestSha256 === genesis.contentManifestSha256, 'GenesisStateContextMismatch');
++      requireSource(state.developerRoster.worldDeveloperAccountId === genesis.worldDeveloperAccountId
++        && !state.developerRoster.frozen, 'GenesisRosterMismatch');
++      for (const entity of state.entities) {
++        requireSource(entity.createdBy === null && entity.lastEditedBy === null && entity.deletedBy === null, 'GenesisRuntimeAttribution');
++        requireSource(this.isApprovedEntityDefinition(entity.definition), 'GenesisContentUnapproved');
++      }
++      for (const trigger of state.triggers) {
++        requireSource(trigger.createdBy === null && trigger.lastEditedBy === null && trigger.deletedBy === null, 'GenesisRuntimeAttribution');
++        requireSource(state.entities.some(entity => entity.definition.entityId === trigger.definition.anchorEntityId)
++          && state.entities.some(entity => entity.definition.entityId === trigger.definition.action.targetEntityId
++            && entity.definition.elementType === 'Residue'), 'GenesisTriggerReferenceInvalid');
++      }
++      for (const id of state.revealedResidueEntityIds) {
++        requireSource(state.entities.some(entity => entity.definition.entityId === id && entity.definition.elementType === 'Residue'), 'GenesisRevealReferenceInvalid');
++      }
++      for (const aggregate of state.traceTouches) {
++        requireSource(state.entities.some(entity => entity.definition.entityId === aggregate.normalTraceEntityId
++          && entity.definition.elementType === 'Trace' && entity.definition.normalTrace !== null
++          && entity.definition.normalTrace.traceTouchId === aggregate.traceTouchId), 'GenesisTraceReferenceInvalid');
++      }
++      return this.capability(this.genesisCapabilities, { genesis, genesisSha256: digest });
++    });
++  }
++
++  /** Policy decisions must not throw or access platform APIs. A throwing producer is a host failure. */
++  isApprovedEntityDefinition(input: unknown): boolean {
++    const definition = this.codec.validate('SharedMapEntityDefinition', input);
++    const result = this.context.isEntityDefinitionApproved(definition);
++    if (typeof result !== 'boolean') { throw new SharedCryptoHostFailure('InvalidContentCapabilityResult'); }
++    return result;
++  }
++
++  async validateCommit(input: unknown): Promise<SharedValidationResult<ValidatedSharedCommit>> {
++    return this.guard(async () => {
++      await this.verifyInstalledPins();
++      // Envelope bytes stay opaque until all origin evidence and their exact digest have passed.
++      const wire = this.codec.validate('AdmittedWorldCommit', input);
++      const claim = wire.admissionClaim.claim;
++      const header = claim.header;
++      this.requireHeaderContext(header);
++      const bindingReceipt = await this.receipt<WorldAuthorKeyBinding>(wire.authorKeyBindingReceipt, 'AuthorKeyBinding');
++      const binding = this.codec.validate('WorldAuthorKeyBinding', bindingReceipt.payload);
++      requireSource(binding.serviceInstanceId === this.context.serviceInstanceId
++        && binding.authorAccountId === header.identity.authorAccountId
++        && binding.authorDeviceId === header.authorDeviceId
++        && binding.authorDeviceGeneration === header.authorDeviceGeneration
++        && binding.assurance === 'RegisteredCredential', 'AuthorBindingMismatch');
++      const authorFingerprint = await this.fingerprint(binding.authorSigningPublicJwk);
++      requireSource(authorFingerprint === binding.authorSigningKeyFingerprint
++        && authorFingerprint === header.authorSigningKeyFingerprint, 'AuthorFingerprintMismatch');
++      requireSource(binding.registeredAtServerEpochMs <= header.appendedAt.epochMs, 'AuthorRegisteredAfterAppend');
++      requireSource(claim.serviceInstanceId === this.context.serviceInstanceId, 'ClaimServiceMismatch');
++      requireSource(await this.verify(binding.authorSigningPublicJwk, wire.admissionClaim.authorSignatureBase64Url,
++        SharedCanonicalBytes.domain('Neurou/commit-admission-claim/v1\0', claim)), 'AdmissionClaimSignatureInvalid');
++
++      const segmentReceipt = await this.receipt<AuthorSequenceSegment>(wire.sequenceSegmentReceipt, 'SequenceSegment');
++      const segment = this.codec.validate('AuthorSequenceSegment', segmentReceipt.payload);
++      const permitReceipt = await this.receipt<WorldAppendPermit>(wire.appendPermitReceipt, 'WorldAppendPermit');
++      const permit = this.codec.validate('WorldAppendPermit', permitReceipt.payload);
++      const admissionReceipt = await this.receipt<WorldCommitAdmission>(wire.admissionReceipt, 'WorldCommitAdmission');
++      const admission = this.codec.validate('WorldCommitAdmission', admissionReceipt.payload);
++      requireSource(segment.serviceInstanceId === this.context.serviceInstanceId && segment.worldId === header.worldId
++        && segment.segmentId === header.segmentId && segment.authorAccountId === header.identity.authorAccountId
++        && segment.authorDeviceId === header.authorDeviceId && segment.authorDeviceGeneration === header.authorDeviceGeneration
++        && segment.membershipEpoch === header.membershipEpoch
++        && header.identity.authorSequence >= segment.firstSequence && header.identity.authorSequence <= segment.lastSequence,
++      'SequenceSegmentMismatch');
++      requireSource(segmentReceipt.issuedAtServerEpochMs === segment.issuedAtServerEpochMs, 'SequenceIssueMismatch');
++      requireSource(header.appendedAt.epochMs >= segment.issuedAtServerEpochMs
++        && header.appendedAt.epochMs < segment.expiresAtServerEpochMs, 'SequenceWindowMismatch');
++      requireSource(permit.serviceInstanceId === this.context.serviceInstanceId && permit.worldId === header.worldId
++        && sameData(permit.identity, header.identity) && permit.authorDeviceId === header.authorDeviceId
++        && permit.authorDeviceGeneration === header.authorDeviceGeneration && permit.segmentId === header.segmentId
++        && permit.permitId === header.permitId && permit.membershipEpoch === header.membershipEpoch
++        && permit.keyEpoch === header.keyEpoch && permit.changeClass === header.changeClass
++        && sameData(permit.appendedAt, header.appendedAt), 'AppendPermitMismatch');
++      requireSource(permitReceipt.requestNonce === permit.requestNonce
++        && permitReceipt.clockGeneration === permit.clockGeneration
++        && permitReceipt.issuedAtServerEpochMs === permit.appendedAt.epochMs, 'PermitReceiptMismatch');
++      requireSource(admission.serviceInstanceId === this.context.serviceInstanceId && admission.worldId === header.worldId
++        && sameData(admission.identity, header.identity) && sameData(admission.appendedAt, header.appendedAt)
++        && admission.membershipEpoch === header.membershipEpoch
++        && admission.envelopeSha256 === claim.envelopeSha256
++        && admissionReceipt.requestNonce === claim.requestNonce
++        && admissionReceipt.issuedAtServerEpochMs === admission.admittedAtServerEpochMs, 'AdmissionReceiptMismatch');
++      // Compare expiry with signed acceptance time, never today's wallclock.
++      requireSource(admission.admittedAtServerEpochMs >= header.appendedAt.epochMs
++        && admission.admittedAtServerEpochMs < permit.expiresAtServerEpochMs
++        && admission.admittedAtServerEpochMs < segment.expiresAtServerEpochMs, 'AdmissionWindowMismatch');
++      const membership = await this.verifyMembership(wire, header);
++      await this.verifyRosterOrigin(wire, header, admission);
++      const envelopeBytes = SharedCanonicalBytes.base64UrlDecode(wire.envelopeBytesBase64Url);
++      requireSource(await this.digest(envelopeBytes) === claim.envelopeSha256, 'EnvelopeDigestMismatch');
++      const relayKey = await this.context.lookupWorldRelayKey(membership.key);
++      requireSource(relayKey !== null, 'KeyUnavailable');
++      if (!(relayKey instanceof Uint8Array) || relayKey.length !== 32) { throw new SharedCryptoHostFailure('InvalidKeyCapability'); }
++      requireSource(await this.digest(relayKey) === membership.key.keyCommitmentSha256, 'KeyCommitmentMismatch');
++      const base = { wire, envelopeBytesBase64Url: wire.envelopeBytesBase64Url, identity: header.identity,
++        appendedAt: header.appendedAt, envelopeSha256: claim.envelopeSha256, admissionRevision: admission.admissionRevision,
++        header, sequenceSegment: segment, rosterTargetObserverActiveAtAppendedAt: admission.rosterTargetObserverActiveAtAppendedAt };
++      let envelope: RelayCommitEnvelope;
++      try { envelope = this.codec.decode('RelayCommitEnvelope', envelopeBytes); }
++      catch (error) {
++        if (error instanceof SharedSchemaError) { return this.invalidCommit(base, 'EnvelopeSchemaInvalid'); }
++        throw error;
++      }
++      if (!sameData(envelope.header, header)) { return this.invalidCommit(base, 'EnvelopeHeaderMismatch'); }
++      if (!await this.verify(binding.authorSigningPublicJwk, envelope.authorSignatureBase64Url,
++        SharedCanonicalBytes.domain('Neurou/world-commit/v1\0', unsigned(envelope, ['authorSignatureBase64Url'])))) {
++        return this.invalidCommit(base, 'EnvelopeSignatureInvalid');
++      }
++      const wrapKey = await this.crypto.hkdfSha256(relayKey.slice(), hashBytes(await this.digest(SharedCanonicalBytes.encode(header.identity))),
++        SharedCanonicalBytes.domain('Neurou/relay-dek/v1\0', header), 32);
++      if (!(wrapKey instanceof Uint8Array) || wrapKey.length !== 32) { throw new SharedCryptoHostFailure('InvalidHkdfResult'); }
++      const dataKey = await this.crypto.decryptAes256Gcm(wrapKey,
++        SharedCanonicalBytes.base64UrlDecode(envelope.wrappedCommitDataKey.nonceBase64Url, 12),
++        SharedCanonicalBytes.base64UrlDecode(envelope.wrappedCommitDataKey.ciphertextAndTagBase64Url, 48),
++        SharedCanonicalBytes.domain('Neurou/relay-wrap/v1\0', header));
++      if (dataKey === null) { return this.invalidCommit(base, 'WrappedDataKeyAuthenticationInvalid'); }
++      if (!(dataKey instanceof Uint8Array) || dataKey.length !== 32) { throw new SharedCryptoHostFailure('InvalidDataKeyResult'); }
++      const plaintext = await this.crypto.decryptAes256Gcm(dataKey,
++        SharedCanonicalBytes.base64UrlDecode(envelope.nonceBase64Url, 12),
++        SharedCanonicalBytes.base64UrlDecode(envelope.ciphertextAndTagBase64Url),
++        SharedCanonicalBytes.domain('Neurou/relay-body/v1\0', { header, wrappedCommitDataKey: envelope.wrappedCommitDataKey }));
++      if (plaintext === null) { return this.invalidCommit(base, 'BodyAuthenticationInvalid'); }
++      if (!(plaintext instanceof Uint8Array)) { throw new SharedCryptoHostFailure('InvalidDecryptionResult'); }
++      if (plaintext.length > 49152) { return this.invalidCommit(base, 'BodyLimitExceeded'); }
++      let commit: WorldCommit;
++      try { commit = this.codec.decode('WorldCommit', plaintext); }
++      catch (error) {
++        if (error instanceof SharedSchemaError) { return this.invalidCommit(base, 'BodySchemaInvalid'); }
++        throw error;
++      }
++      if (!this.bodyMatchesHeader(commit, header)) { return this.invalidCommit(base, 'BodyHeaderMismatch'); }
++      if (commit.mapId !== this.context.mapId || commit.contentManifestSha256 !== this.context.contentManifestSha256) {
++        return this.invalidCommit(base, 'BodyContentContextMismatch');
++      }
++      if (commit.change.changeClass === 'DeveloperMapChange' && commit.change.subtype === 'MapEditCommit') {
++        const edit = commit.change.edit;
++        if ((edit.operation === 'CreateEntity' || edit.operation === 'ReplaceEntity') && !this.isApprovedEntityDefinition(edit.definition)) {
++          return this.invalidCommit(base, 'EntityContentUnapproved');
++        }
++      }
++      if (commit.change.changeClass === 'DeveloperMapChange' && commit.change.subtype === 'DeveloperRosterChange'
++        && commit.change.operation === 'AddCoDeveloper' && admission.rosterTargetObserverActiveAtAppendedAt !== true) {
++        return this.invalidCommit(base, 'RosterObserverInactive');
++      }
++      return this.capability(this.commitCapabilities, { ...base, commit, change: commit.change, invalid: false, invalidReason: null });
++    });
++  }
++
++  async validateSeal(input: unknown, policyInput: SharedSettlementPolicy,
++    previous: ValidatedSharedSeal | null = null): Promise<SharedValidationResult<ValidatedSharedSeal>> {
++    return this.guard(async () => {
++      await this.verifyInstalledPins();
++      const wire = await this.receipt<RelaySettlementSeal>(input, 'RelaySettlementSeal');
++      const seal = this.codec.validate('RelaySettlementSeal', wire.payload);
++      const policy = this.codec.validate('SharedSettlementPolicy', policyInput);
++      requireSource(seal.serviceInstanceId === this.context.serviceInstanceId && seal.worldId === this.context.worldId, 'SealContextMismatch');
++      requireSource(seal.policySha256 === await this.digest(SharedCanonicalBytes.encode(policy)), 'SealPolicyMismatch');
++      requireSource(wire.issuedAtServerEpochMs === seal.issuedAtServerEpochMs
++        && seal.issuedAtServerEpochMs >= policy.settleHorizonMs
++        && seal.sealedThroughEpochMs <= seal.issuedAtServerEpochMs - policy.settleHorizonMs, 'SealHorizonMismatch');
++      if (previous === null) { requireSource(seal.previousSealSha256 === null, 'SealParentMissing'); }
++      else {
++        requireSource(this.ownsSeal(previous), 'SealParentUntrusted');
++        if (seal.sealedThroughEpochMs === previous.seal.sealedThroughEpochMs) {
++          requireSource(sameData(wire, previous.wire), 'SealBoundaryChanged');
++        } else {
++          requireSource(seal.sealedThroughEpochMs > previous.seal.sealedThroughEpochMs
++            && seal.previousSealSha256 === previous.receiptSha256
++            && seal.sealRevision > previous.seal.sealRevision
++            && seal.admittedCommitCount >= previous.seal.admittedCommitCount, 'SealParentMismatch');
++        }
++      }
++      return this.capability(this.sealCapabilities, { wire, seal, receiptSha256: await this.digest(SharedCanonicalBytes.encode(wire)) });
++    });
++  }
++
++  async validateClosure(input: unknown): Promise<SharedValidationResult<ValidatedSharedClosure>> {
++    return this.guard(async () => {
++      await this.verifyInstalledPins();
++      const wire = await this.receipt<WorldDeveloperClosureFact>(input, 'WorldDeveloperClosure');
++      const closure = this.codec.validate('WorldDeveloperClosureFact', wire.payload);
++      requireSource(closure.serviceInstanceId === this.context.serviceInstanceId && closure.worldId === this.context.worldId
++        && closure.worldDeveloperAccountId === this.context.developerTrustAnchor.worldDeveloperAccountId, 'ClosureContextMismatch');
++      requireSource(wire.issuedAtServerEpochMs >= closure.effectiveAtServerEpochMs, 'ClosureTimeMismatch');
++      return this.capability(this.closureCapabilities, { wire, closure, receiptSha256: await this.digest(SharedCanonicalBytes.encode(wire)) });
++    });
++  }
++
++  async validateRejection(input: unknown): Promise<SharedValidationResult<ValidatedSharedRejection>> {
++    return this.guard(async () => {
++      await this.verifyInstalledPins();
++      const wire = await this.receipt<WorldCommitRejection>(input, 'WorldCommitRejection');
++      const rejection = this.codec.validate('WorldCommitRejection', wire.payload);
++      requireSource(rejection.serviceInstanceId === this.context.serviceInstanceId && rejection.worldId === this.context.worldId
++        && wire.issuedAtServerEpochMs === rejection.rejectedAtServerEpochMs
++        && rejection.rejectedAtServerEpochMs >= rejection.appendedAt.epochMs
++        && rejection.previouslyAdmitted === false, 'RejectionContextMismatch');
++      return this.capability(this.rejectionCapabilities, { wire, rejection, receiptSha256: await this.digest(SharedCanonicalBytes.encode(wire)) });
++    });
++  }
++
++  private async verifyMembership(wire: AdmittedWorldCommit, header: RelayCommitHeader): Promise<WorldMembershipEpoch> {
++    const receipt = await this.receipt<WorldMembershipEpoch>(wire.membershipEpochReceipt, 'WorldMembership');
++    const epoch = this.codec.validate('WorldMembershipEpoch', receipt.payload);
++    requireSource(epoch.serviceInstanceId === this.context.serviceInstanceId && epoch.worldId === header.worldId
++      && epoch.membershipEpoch === header.membershipEpoch && epoch.key.membershipEpoch === header.membershipEpoch
++      && epoch.key.worldId === header.worldId && epoch.key.keyEpoch === header.keyEpoch
++      && epoch.key.worldRelayKeyId === header.worldRelayKeyId
++      && epoch.activatedAtServerEpochMs <= header.appendedAt.epochMs
++      && receipt.issuedAtServerEpochMs >= epoch.activatedAtServerEpochMs, 'MembershipEpochMismatch');
++    requireSource(epoch.developerTrustAnchorSha256 === await this.digest(SharedCanonicalBytes.encode(this.context.developerTrustAnchor)), 'MembershipRootMismatch');
++    requireSource(await this.verify(this.context.developerTrustAnchor.developerPublicKey, epoch.developerSignatureBase64Url,
++      SharedCanonicalBytes.domain('Neurou/world-membership/v1\0', unsigned(epoch, ['developerSignatureBase64Url', 'activatedAtServerEpochMs']))),
++    'MembershipPublisherSignatureInvalid');
++    for (const credential of epoch.credentials) {
++      const agreementFingerprint = await this.fingerprint(credential.keyAgreementPublicKey);
++      requireSource(credential.keyAgreementKeyFingerprint === agreementFingerprint, 'MemberAgreementFingerprintMismatch');
++      requireSource(agreementFingerprint !== credential.registeredSigningKeyFingerprint
++        && agreementFingerprint !== this.context.developerTrustAnchor.developerPublicKeyFingerprint
++        && agreementFingerprint !== this.context.serviceKeyFingerprint, 'MemberKeyPurposeConflict');
++      requireSource(credential.observerAdmissionRevision !== null
++        || credential.accountId === this.context.developerTrustAnchor.worldDeveloperAccountId, 'MemberAdmissionMissing');
++    }
++    requireSource(epoch.credentials.some(credential => credential.accountId === header.identity.authorAccountId
++      && credential.deviceId === header.authorDeviceId && credential.deviceGeneration === header.authorDeviceGeneration
++      && credential.registeredSigningKeyFingerprint === header.authorSigningKeyFingerprint), 'MemberCredentialMismatch');
++    return epoch;
++  }
++
++  private async verifyRosterOrigin(wire: AdmittedWorldCommit, header: RelayCommitHeader, admission: WorldCommitAdmission): Promise<void> {
++    const roster = header.restrictedWrite;
++    if (roster !== null && roster.subtype === 'DeveloperRosterChange') {
++      requireSource(wire.rosterObserverAdmissionReceipt !== null, 'RosterObserverFactMissing');
++      const receipt = await this.receipt<WorldObserverAdmissionFact>(wire.rosterObserverAdmissionReceipt, 'WorldMembership');
++      const fact = this.codec.validate('WorldObserverAdmissionFact', receipt.payload);
++      requireSource(fact.serviceInstanceId === this.context.serviceInstanceId && fact.worldId === header.worldId
++        && fact.observerAccountId === roster.accountId && fact.observerAdmissionRevision === roster.observerAdmissionRevision
++        && fact.admittedAtServerEpochMs <= header.appendedAt.epochMs
++        && fact.developerTrustAnchorSha256 === await this.digest(SharedCanonicalBytes.encode(this.context.developerTrustAnchor)),
++      'RosterObserverFactMismatch');
++      requireSource(roster.operation === 'AddCoDeveloper'
++        ? typeof admission.rosterTargetObserverActiveAtAppendedAt === 'boolean'
++        : admission.rosterTargetObserverActiveAtAppendedAt === null, 'RosterObserverActivityMismatch');
++    } else {
++      requireSource(wire.rosterObserverAdmissionReceipt === null
++        && admission.rosterTargetObserverActiveAtAppendedAt === null, 'UnexpectedRosterObserverFact');
++    }
++  }
++
++  private bodyMatchesHeader(commit: WorldCommit, header: RelayCommitHeader): boolean {
++    if (commit.schemaVersion !== header.schemaVersion || commit.profile !== header.profile || commit.worldId !== header.worldId
++      || !sameData(commit.identity, header.identity) || commit.authorDeviceId !== header.authorDeviceId
++      || commit.authorDeviceGeneration !== header.authorDeviceGeneration || commit.segmentId !== header.segmentId
++      || commit.permitId !== header.permitId || commit.membershipEpoch !== header.membershipEpoch
++      || commit.keyEpoch !== header.keyEpoch || !sameData(commit.appendedAt, header.appendedAt)
++      || commit.change.changeClass !== header.changeClass || commit.change.commitClass !== header.commitClass) { return false; }
++    if (commit.change.changeClass !== 'DeveloperMapChange') { return header.restrictedWrite === null; }
++    if (commit.change.subtype === 'MapEditCommit') { return sameData(header.restrictedWrite, { subtype: 'MapEditCommit' }); }
++    return sameData(header.restrictedWrite, { subtype: 'DeveloperRosterChange', operation: commit.change.operation,
++      accountId: commit.change.accountId, observerAdmissionRevision: commit.change.observerAdmissionRevision });
++  }
++
++  private requireHeaderContext(header: RelayCommitHeader): void {
++    requireSource(header.serviceInstanceId === this.context.serviceInstanceId && header.worldId === this.context.worldId, 'HeaderContextMismatch');
++  }
++
++  private async receipt<T>(input: unknown, purpose: SharedAuthorityReceipt<T>['purpose']): Promise<SharedAuthorityReceipt<T>> {
++    const value = this.codec.validate('SharedAuthorityReceipt', input);
++    requireSource(value.purpose === purpose && value.serviceInstanceId === this.context.serviceInstanceId
++      && value.keyId === this.context.serviceKeyFingerprint && value.clockStatus === 'Trusted'
++      && value.clockGeneration >= 1 && value.clockGeneration <= this.context.clockGeneration, 'AuthorityReceiptContextMismatch');
++    requireSource(await this.verify(this.context.servicePublicKeyJwk, value.signatureBase64Url,
++      SharedCanonicalBytes.domain('Neurou/shared-authority/v1\0', unsigned(value, ['signatureBase64Url']))), 'AuthorityReceiptSignatureInvalid');
++    return value as SharedAuthorityReceipt<T>;
++  }
++
++  private async verifyInstalledPins(): Promise<void> {
++    requireSource(await this.fingerprint(this.context.servicePublicKeyJwk) === this.context.serviceKeyFingerprint, 'InstalledServicePinMismatch');
++    const anchor = this.context.developerTrustAnchor;
++    const fingerprint = await this.fingerprint(anchor.developerPublicKey);
++    requireSource(fingerprint === anchor.developerPublicKeyFingerprint
++      && fingerprint === anchor.developerSigningKeyId, 'InstalledDeveloperPinMismatch');
++  }
++
++  private async fingerprint(jwk: WorldKeyAgreementPublicKey): Promise<string> {
++    const key = this.codec.validate('WorldKeyAgreementPublicKey', jwk);
++    return SharedCanonicalBytes.base64UrlEncode(hashBytes(await this.digest(SharedCanonicalBytes.encode(key))));
++  }
++  private async digest(bytes: Uint8Array): Promise<string> {
++    const digest = await this.crypto.sha256(bytes);
++    hashBytes(digest);
++    return digest;
++  }
++  private async verify(jwk: WorldKeyAgreementPublicKey, signature: string, message: Uint8Array): Promise<boolean> {
++    const result = await this.crypto.verifyEs256(jwk, SharedCanonicalBytes.base64UrlDecode(signature, 64), message);
++    if (typeof result !== 'boolean') { throw new SharedCryptoHostFailure('InvalidSignatureResult'); }
++    return result;
++  }
++  private invalidCommit(base: Omit<ValidatedSharedCommit, 'commit' | 'change' | 'invalid' | 'invalidReason'>,
++    reason: string): ValidatedSharedCommit {
++    return this.capability(this.commitCapabilities, { ...base, commit: null, change: null, invalid: true, invalidReason: reason });
++  }
++  private capability<T extends object>(set: WeakSet<object>, value: T): T {
++    const frozen = Object.freeze(value);
++    set.add(frozen);
++    return frozen;
++  }
++  private async guard<T>(action: () => Promise<T>): Promise<SharedValidationResult<T>> {
++    try { return Object.freeze({ kind: 'Verified', value: await action() }); }
++    catch (error) {
++      if (error instanceof SharedVerificationGap || error instanceof SharedSchemaError) {
++        return Object.freeze({ kind: 'Gap', reason: error.message });
++      }
++      // Backend failures are never evidence that an author's authenticated body is invalid.
++      return Object.freeze({ kind: 'HostFailure', reason: error instanceof SharedCryptoHostFailure ? error.message : 'CryptoOrProducerUnavailable' });
++    }
++  }
++}
+
+diff --git a/src/director/SharedWorldReducer.ts b/src/director/SharedWorldReducer.ts
+new file mode 100644
+--- /dev/null
++++ b/src/director/SharedWorldReducer.ts
+@@ -0,0 +1,423 @@
++/** B2.5c-1 isolated deterministic replay. No storage, player events, clocks or transport. */
++import type {
++  CheckpointCoverageEntry, DeveloperRosterChange, MapEditOperation, SharedEntityRecord,
++  SharedMapEntityDefinition, SharedSettlementPolicy, SharedTriggerDefinition, SharedTriggerRecord,
++  SharedWorldState, TraceTouchAggregate, WorldCheckpointWire, WorldCommitIdentity,
++} from './SharedCommitContracts';
++import type {
++  SharedCryptoPort, ValidatedSharedClosure, ValidatedSharedCommit, ValidatedSharedSeal,
++} from './SharedCommitValidator';
++import { SharedCommitValidator } from './SharedCommitValidator';
++import { SharedCanonicalBytes, SharedSchemaError } from './SharedCanonicalBytes';
++import { SharedCommitCodec } from './SharedCommitCodec';
++
++export interface SharedReplayRequest {
++  readonly genesis: unknown;
++  readonly parentCheckpoint: unknown | null;
++  readonly commits: readonly unknown[];
++  readonly settlementSeal: unknown | null;
++  readonly developerClosure: unknown | null;
++  readonly policy: SharedSettlementPolicy;
++  readonly gaps: readonly string[];
++  readonly pendingCandidateCount: number;
++}
++export interface SharedReplayDiagnostic {
++  readonly identity: WorldCommitIdentity;
++  readonly cause: 'MergeConflict' | 'RevertedEdit' | 'InvalidChange';
++  /** A deterministic proposal only; this kernel never appends a personal NarrativeEvent. */
++  readonly scope: 'PersonalDiagnosticBoundary';
++}
++/** Local provisional projection, intentionally not a serializable checkpoint coverage entry. */
++export type SharedProvisionalCoverageEntry = Omit<CheckpointCoverageEntry, 'finalDiagnostic'> & { readonly finalDiagnostic: null };
++export type SharedReplayResult = {
++  readonly kind: 'Replayed';
++  /** Includes the provisional tail; only checkpoint.state is a settled prefix. */
++  readonly state: SharedWorldState;
++  readonly coverage: readonly CheckpointCoverageEntry[];
++  readonly provisionalCoverage: readonly SharedProvisionalCoverageEntry[];
++  readonly checkpoint: WorldCheckpointWire | null;
++  readonly diagnostics: readonly SharedReplayDiagnostic[];
++  readonly selfContribution: { readonly kind: 'Unknown' };
++} | { readonly kind: 'Gap' | 'HostFailure'; readonly reason: string };
++
++type MutableEntityRecord = { -readonly [K in keyof SharedEntityRecord]: SharedEntityRecord[K] };
++type MutableTriggerRecord = { -readonly [K in keyof SharedTriggerRecord]: SharedTriggerRecord[K] };
++type MutableCoverage = { -readonly [K in keyof CheckpointCoverageEntry]: CheckpointCoverageEntry[K] };
++interface ReplayState {
++  readonly base: SharedWorldState;
++  readonly entities: Map<string, MutableEntityRecord>;
++  readonly triggers: Map<string, MutableTriggerRecord>;
++  readonly revealed: Set<string>;
++  readonly touches: Map<string, TraceTouchAggregate>;
++  readonly coDevelopers: Set<string>;
++  frozen: boolean;
++}
++interface AppliedChange {
++  readonly result: CheckpointCoverageEntry['applyResult'];
++  readonly diagnostic: CheckpointCoverageEntry['finalDiagnostic'];
++  readonly superseded: WorldCommitIdentity | null;
++}
++interface TrustedCheckpoint {
++  readonly checkpoint: WorldCheckpointWire;
++  readonly seal: ValidatedSharedSeal;
++  readonly closure: ValidatedSharedClosure | null;
++  /** Digests of complete source containers already verified by this instance, never file-supplied. */
++  readonly admittedWireSha256: ReadonlyMap<string, string>;
++  readonly observedAllocations: ObservedAllocations;
++}
++interface ObservedAllocations {
++  readonly segments: ReadonlyMap<string, ValidatedSharedCommit['sequenceSegment']>;
++  readonly permits: ReadonlyMap<string, string>;
++}
++class SharedReplayGap extends Error {}
++const UINT128_MAX = '340282366920938463463374607431768211455';
++const sharedCodec = new SharedCommitCodec();
++
++function requireReplay(condition: boolean, reason: string): asserts condition {
++  if (!condition) { throw new SharedReplayGap(reason); }
++}
++function compareText(first: string, second: string): number { return first < second ? -1 : first > second ? 1 : 0; }
++function identityKey(identity: WorldCommitIdentity): string { return identity.authorAccountId + ':' + identity.authorSequence; }
++function sameData(first: unknown, second: unknown): boolean {
++  return SharedCanonicalBytes.equalBytes(SharedCanonicalBytes.encode(first), SharedCanonicalBytes.encode(second));
++}
++function compareEntry(first: { appendedAt: { epochMs: number }; identity: WorldCommitIdentity },
++  second: { appendedAt: { epochMs: number }; identity: WorldCommitIdentity }): number {
++  if (first.appendedAt.epochMs !== second.appendedAt.epochMs) { return first.appendedAt.epochMs < second.appendedAt.epochMs ? -1 : 1; }
++  const accountOrder = compareText(first.identity.authorAccountId, second.identity.authorAccountId);
++  if (accountOrder !== 0) { return accountOrder; }
++  return first.identity.authorSequence < second.identity.authorSequence ? -1 : first.identity.authorSequence > second.identity.authorSequence ? 1 : 0;
++}
++function stateFrom(base: SharedWorldState): ReplayState {
++  return { base, entities: new Map(base.entities.map(record => [record.definition.entityId, { ...record }])),
++    triggers: new Map(base.triggers.map(record => [record.definition.triggerId, { ...record }])),
++    revealed: new Set(base.revealedResidueEntityIds),
++    touches: new Map(base.traceTouches.map(record => [record.traceTouchId, record])),
++    coDevelopers: new Set(base.developerRoster.coDeveloperAccountIds), frozen: base.developerRoster.frozen };
++}
++function stateSnapshot(state: ReplayState): SharedWorldState {
++  return sharedCodec.validate('SharedWorldState', {
++    schemaVersion: 1, profile: 'ExternalSharedOnlineV1', worldId: state.base.worldId,
++    mapId: state.base.mapId, contentManifestSha256: state.base.contentManifestSha256,
++    entities: Array.from(state.entities.values()).sort((a, b) => compareText(a.definition.entityId, b.definition.entityId)),
++    triggers: Array.from(state.triggers.values()).sort((a, b) => compareText(a.definition.triggerId, b.definition.triggerId)),
++    revealedResidueEntityIds: Array.from(state.revealed).sort(compareText),
++    traceTouches: Array.from(state.touches.values()).sort((a, b) => compareText(a.traceTouchId, b.traceTouchId)),
++    developerRoster: { worldDeveloperAccountId: state.base.developerRoster.worldDeveloperAccountId,
++      coDeveloperAccountIds: Array.from(state.coDevelopers).sort(compareText), frozen: state.frozen },
++  });
++}
++function activeEntity(state: ReplayState, id: string): MutableEntityRecord | null {
++  const record = state.entities.get(id);
++  return record !== undefined && record.deletedBy === null ? record : null;
++}
++function validTrigger(state: ReplayState, definition: SharedTriggerDefinition): boolean {
++  const anchor = activeEntity(state, definition.anchorEntityId);
++  const target = activeEntity(state, definition.action.targetEntityId);
++  return anchor !== null && target !== null && target.definition.elementType === 'Residue';
++}
++function nextTouchCount(count: string): string | null {
++  if (count === UINT128_MAX) { return null; }
++  const digits = count.split('');
++  let carry = 1;
++  for (let index = digits.length - 1; index >= 0 && carry !== 0; index -= 1) {
++    const next = Number(digits[index]) + carry;
++    digits[index] = String(next % 10); carry = next >= 10 ? 1 : 0;
++  }
++  if (carry !== 0) { digits.unshift('1'); }
++  const result = digits.join('');
++  if (result.length > UINT128_MAX.length || (result.length === UINT128_MAX.length && result > UINT128_MAX)) { return null; }
++  return result;
++}
++function touchStrength(count: string): number { return count.length > 5 || (count.length === 5 && count >= '65535') ? 65535 : Number(count); }
++function applied(result: AppliedChange['result'], diagnostic: AppliedChange['diagnostic'] = null,
++  superseded: WorldCommitIdentity | null = null): AppliedChange { return { result, diagnostic, superseded }; }
++function invalidChange(): AppliedChange { return applied('InvalidChange', 'InvalidChange'); }
++
++function mapEdit(state: ReplayState, edit: MapEditOperation, identity: WorldCommitIdentity): AppliedChange {
++  if (edit.target.kind === 'Entity') {
++    const id = edit.target.entityId;
++    const record = state.entities.get(id);
++    if (edit.operation === 'CreateEntity') {
++      if (usedStableId(state, id)) { return applied('NoEffect', 'MergeConflict'); }
++      if (!unusedTouchId(state, edit.definition)) { return invalidChange(); }
++      state.entities.set(id, { definition: edit.definition, createdBy: identity, lastEditedBy: identity, deletedBy: null });
++      return applied('Applied');
++    }
++    if (edit.operation === 'ReplaceEntity') {
++      if (record === undefined) { return invalidChange(); }
++      if (record.deletedBy !== null) { return applied('NoEffect', 'MergeConflict'); }
++      if (record.definition.elementType !== edit.definition.elementType || !sameData(record.definition.normalTrace, edit.definition.normalTrace)) { return invalidChange(); }
++      if (sameData(record.definition, edit.definition)) { return applied('NoEffect'); }
++      const superseded = record.lastEditedBy;
++      record.definition = edit.definition; record.lastEditedBy = identity;
++      return applied('Applied', null, superseded);
++    }
++    if (edit.operation === 'DeleteEntity') {
++      if (record === undefined) { return invalidChange(); }
++      if (record.deletedBy !== null) { return applied('NoEffect'); }
++      const superseded = record.lastEditedBy;
++      record.lastEditedBy = identity; record.deletedBy = identity;
++      return applied('Applied', null, superseded);
++    }
++    return invalidChange();
++  }
++  const id = edit.target.triggerId;
++  const record = state.triggers.get(id);
++  if (edit.operation === 'CreateTrigger') {
++    if (usedStableId(state, id)) { return applied('NoEffect', 'MergeConflict'); }
++    if (!validTrigger(state, edit.definition)) { return invalidChange(); }
++    state.triggers.set(id, { definition: edit.definition, createdBy: identity, lastEditedBy: identity, deletedBy: null });
++    return applied('Applied');
++  }
++  if (edit.operation === 'ReplaceTrigger') {
++    if (record === undefined) { return invalidChange(); }
++    if (record.deletedBy !== null) { return applied('NoEffect', 'MergeConflict'); }
++    if (!validTrigger(state, edit.definition)) { return invalidChange(); }
++    if (sameData(record.definition, edit.definition)) { return applied('NoEffect'); }
++    const superseded = record.lastEditedBy;
++    record.definition = edit.definition; record.lastEditedBy = identity;
++    return applied('Applied', null, superseded);
++  }
++  if (edit.operation === 'DeleteTrigger') {
++    if (record === undefined) { return invalidChange(); }
++    if (record.deletedBy !== null) { return applied('NoEffect'); }
++    const superseded = record.lastEditedBy;
++    record.lastEditedBy = identity; record.deletedBy = identity;
++    return applied('Applied', null, superseded);
++  }
++  return invalidChange();
++}
++function usedStableId(state: ReplayState, id: string): boolean {
++  if (id === state.base.mapId || state.entities.has(id) || state.triggers.has(id)) { return true; }
++  for (const record of state.entities.values()) {
++    if (record.definition.normalTrace !== null && record.definition.normalTrace.traceTouchId === id) { return true; }
++  }
++  return false;
++}
++function unusedTouchId(state: ReplayState, definition: SharedMapEntityDefinition): boolean {
++  return definition.normalTrace === null || (definition.normalTrace.traceTouchId !== definition.entityId
++    && !usedStableId(state, definition.normalTrace.traceTouchId));
++}
++function rosterEdit(state: ReplayState, change: DeveloperRosterChange, author: string,
++  targetActive: boolean | null): AppliedChange {
++  if (author !== state.base.developerRoster.worldDeveloperAccountId || state.frozen) { return applied('RevertedEdit', 'RevertedEdit'); }
++  if (change.accountId === state.base.developerRoster.worldDeveloperAccountId) { return invalidChange(); }
++  if (change.operation === 'AddCoDeveloper') {
++    if (targetActive !== true) { return invalidChange(); }
++    if (state.coDevelopers.has(change.accountId)) { return applied('NoEffect'); }
++    state.coDevelopers.add(change.accountId);
++  } else {
++    if (!state.coDevelopers.has(change.accountId)) { return applied('NoEffect'); }
++    state.coDevelopers.delete(change.accountId);
++  }
++  return applied('Applied');
++}
++function applyCommit(state: ReplayState, entry: ValidatedSharedCommit): AppliedChange {
++  if (entry.invalid || entry.change === null) { return invalidChange(); }
++  const change = entry.change;
++  if (change.changeClass === 'MonotonicReveal') {
++    const record = state.entities.get(change.entityId);
++    if (record === undefined || record.definition.elementType !== 'Residue') { return invalidChange(); }
++    if (record.deletedBy !== null || state.revealed.has(change.entityId)) { return applied('NoEffect'); }
++    state.revealed.add(change.entityId); return applied('Applied');
++  }
++  if (change.changeClass === 'TraceTouch') {
++    const record = state.entities.get(change.normalTraceEntityId);
++    if (record === undefined || record.definition.elementType !== 'Trace' || record.definition.normalTrace === null
++      || record.definition.normalTrace.traceTouchId !== change.traceTouchId) { return invalidChange(); }
++    if (record.deletedBy !== null) { return applied('NoEffect'); }
++    const previous = state.touches.get(change.traceTouchId);
++    if (previous !== undefined && previous.normalTraceEntityId !== change.normalTraceEntityId) { return invalidChange(); }
++    const count = nextTouchCount(previous === undefined ? '0' : previous.totalTouchUnits);
++    if (count === null) { return invalidChange(); }
++    state.touches.set(change.traceTouchId, { traceTouchId: change.traceTouchId,
++      normalTraceEntityId: change.normalTraceEntityId, totalTouchUnits: count, aggregateStrength: touchStrength(count) });
++    return applied('Applied');
++  }
++  const author = entry.identity.authorAccountId;
++  if (change.subtype === 'DeveloperRosterChange') { return rosterEdit(state, change, author, entry.rosterTargetObserverActiveAtAppendedAt); }
++  const root = state.base.developerRoster.worldDeveloperAccountId;
++  if ((author === root && state.frozen) || (author !== root && !state.coDevelopers.has(author))) { return applied('RevertedEdit', 'RevertedEdit'); }
++  return mapEdit(state, change.edit, entry.identity);
++}
++
++/** Instance-local trusted checkpoint registry. Serialization alone never creates a trusted parent. */
++export class SharedWorldReducer {
++  private readonly checkpoints = new Map<string, TrustedCheckpoint>();
++  constructor(private readonly validator: SharedCommitValidator, private readonly crypto: SharedCryptoPort) {}
++
++  async replay(input: SharedReplayRequest): Promise<SharedReplayResult> {
++    try {
++      // Clone before the first await: callers cannot alter any pending input or descriptors.
++      const request = SharedCanonicalBytes.decode(SharedCanonicalBytes.encode(input)) as SharedReplayRequest;
++      requireReplay(request !== null && typeof request === 'object' && Object.keys(request).sort().join(',')
++        === 'commits,developerClosure,gaps,genesis,parentCheckpoint,pendingCandidateCount,policy,settlementSeal', 'InvalidReplayRequest');
++      requireReplay(Array.isArray(request.commits) && Array.isArray(request.gaps) && request.gaps.every(gap => typeof gap === 'string')
++        && Number.isSafeInteger(request.pendingCandidateCount) && request.pendingCandidateCount >= 0, 'InvalidReplayRequest');
++      requireReplay(request.gaps.length === 0, 'BoundViolated');
++      requireReplay(request.pendingCandidateCount === 0, 'PendingCandidates');
++      const policy = sharedCodec.validate('SharedSettlementPolicy', request.policy);
++      const genesisResult = await this.validator.validateGenesis(request.genesis);
++      if (genesisResult.kind !== 'Verified') { return genesisResult; }
++      requireReplay(this.validator.ownsGenesis(genesisResult.value), 'GenesisCapabilityUntrusted');
++      const genesis = genesisResult.value.genesis;
++      const genesisHash = genesisResult.value.genesisSha256;
++      const parent = await this.readParent(request.parentCheckpoint, genesisHash, policy);
++      let closure: ValidatedSharedClosure | null = parent === null ? null : parent.closure;
++      if (request.developerClosure !== null) {
++        const result = await this.validator.validateClosure(request.developerClosure);
++        if (result.kind !== 'Verified') { return result; }
++        requireReplay(this.validator.ownsClosure(result.value), 'ClosureCapabilityUntrusted');
++        if (closure !== null) { requireReplay(closure.receiptSha256 === result.value.receiptSha256, 'ClosureConflict'); }
++        else if (parent !== null) { requireReplay(result.value.closure.effectiveAtServerEpochMs > parent.checkpoint.coveredThroughEpochMs, 'ClosureBackdated'); }
++        closure = result.value;
++      }
++      let seal: ValidatedSharedSeal | null = null;
++      if (request.settlementSeal !== null) {
++        const result = await this.validator.validateSeal(request.settlementSeal, policy, parent === null ? null : parent.seal);
++        if (result.kind !== 'Verified') { return result; }
++        requireReplay(this.validator.ownsSeal(result.value), 'SealCapabilityUntrusted'); seal = result.value;
++      }
++      const parentCoverage = parent === null ? [] : parent.checkpoint.coverage;
++      const coverage = new Map<string, MutableCoverage>(parentCoverage.map(entry => [identityKey(entry.identity), { ...entry }]));
++      const revisions = new Map<number, string>(parentCoverage.map(entry => [entry.admissionRevision, identityKey(entry.identity)]));
++      const entries = new Map<string, ValidatedSharedCommit>();
++      for (const raw of request.commits) {
++        // An exact, previously verified re-delivery inherits local parent trust without old epoch keys.
++        // Changed receipts/proofs still follow the complete validation path; a claimed digest is insufficient.
++        if (parent !== null) {
++          const candidate = sharedCodec.validate('AdmittedWorldCommit', raw);
++          const candidateKey = identityKey(candidate.admissionReceipt.payload.identity);
++          const knownWire = parent.admittedWireSha256.get(candidateKey);
++          if (knownWire !== undefined && knownWire === await this.hash(candidate)) { continue; }
++        }
++        const result = await this.validator.validateCommit(raw);
++        if (result.kind !== 'Verified') { return result; }
++        const entry = result.value;
++        requireReplay(this.validator.ownsCommit(entry), 'CommitCapabilityUntrusted');
++        const key = identityKey(entry.identity);
++        const covered = coverage.get(key);
++        if (covered !== undefined) {
++          requireReplay(covered.envelopeSha256 === entry.envelopeSha256 && covered.admissionRevision === entry.admissionRevision
++            && covered.appendedAt.epochMs === entry.appendedAt.epochMs, 'IdentityConflict');
++          continue;
++        }
++        requireReplay(parent === null || entry.appendedAt.epochMs > parent.checkpoint.coveredThroughEpochMs, 'SealedPrefixInsertion');
++        const existing = entries.get(key);
++        if (existing !== undefined) {
++          requireReplay(existing.envelopeSha256 === entry.envelopeSha256 && existing.admissionRevision === entry.admissionRevision
++            && existing.appendedAt.epochMs === entry.appendedAt.epochMs, 'IdentityConflict');
++          continue;
++        }
++        requireReplay(!revisions.has(entry.admissionRevision) || revisions.get(entry.admissionRevision) === key, 'AdmissionRevisionConflict');
++        revisions.set(entry.admissionRevision, key); entries.set(key, entry);
++      }
++      const ordered = Array.from(entries.values()).sort(compareEntry);
++      this.verifyObservedAllocations(ordered, parent === null ? null : parent.observedAllocations);
++      const working = stateFrom(parent === null ? genesis.initialState : parent.checkpoint.state);
++      let checkpoint: WorldCheckpointWire | null = null;
++      let nextTrusted: TrustedCheckpoint | null = null;
++      let tail = ordered;
++      if (seal !== null) {
++        const cutoff = seal.seal.sealedThroughEpochMs;
++        const prefix = ordered.filter(entry => entry.appendedAt.epochMs <= cutoff);
++        tail = ordered.filter(entry => entry.appendedAt.epochMs > cutoff);
++        for (const entry of prefix) { this.apply(working, coverage, entry, closure, true); }
++        const covered = Array.from(coverage.values()).sort(compareEntry);
++        requireReplay(covered.every(entry => entry.appendedAt.epochMs <= cutoff), 'CoverageBeyondSeal');
++        const prefixDigest = await this.hash(covered.map(entry => ({ identity: entry.identity,
++          envelopeSha256: entry.envelopeSha256, appendedAt: entry.appendedAt })));
++        requireReplay(covered.length === seal.seal.admittedCommitCount && prefixDigest === seal.seal.admittedPrefixSha256, 'MissingAdmittedPrefix');
++        const coveredClosure = closure !== null && closure.closure.effectiveAtServerEpochMs <= cutoff ? closure : null;
++        requireReplay(seal.seal.developerClosureSha256 === (coveredClosure === null ? null : coveredClosure.receiptSha256), 'ClosureSealMismatch');
++        if (coveredClosure !== null) { working.frozen = true; }
++        const state = stateSnapshot(working);
++        const unsignedCheckpoint = { schemaVersion: 1 as const, profile: 'ExternalSharedOnlineV1' as const,
++          worldId: genesis.worldId, genesisSha256: genesisHash,
++          parentCheckpointSha256: parent === null ? null : parent.checkpoint.checkpointSha256,
++          coveredThroughEpochMs: cutoff, settlementSeal: seal.wire,
++          developerClosure: coveredClosure === null ? null : coveredClosure.wire,
++          coverage: covered, coverageSha256: await this.hash(covered), state, stateSha256: await this.hash(state) };
++        checkpoint = sharedCodec.validate('WorldCheckpointWire', { ...unsignedCheckpoint,
++          checkpointSha256: await this.hash(unsignedCheckpoint) });
++        // Same seal re-delivery is a duplicate, not a new checkpoint with a different parent.
++        if (parent !== null && cutoff === parent.checkpoint.coveredThroughEpochMs) {
++          requireReplay(sameData(state, parent.checkpoint.state) && sameData(covered, parent.checkpoint.coverage), 'SealPrefixConflict');
++          checkpoint = parent.checkpoint;
++        }
++        const admittedWireSha256 = new Map(parent === null ? [] : parent.admittedWireSha256);
++        for (const entry of prefix) { admittedWireSha256.set(identityKey(entry.identity), await this.hash(entry.wire)); }
++        nextTrusted = { checkpoint, seal, closure: coveredClosure, admittedWireSha256,
++          observedAllocations: this.verifyObservedAllocations(prefix, parent === null ? null : parent.observedAllocations) };
++      }
++      const provisional = new Map<string, MutableCoverage>();
++      for (const entry of tail) { this.apply(working, provisional, entry, closure, false); }
++      // Closure is an independent fact; even an empty tail must project its effect outside an earlier seal.
++      if (closure !== null) { working.frozen = true; }
++      const snapshot = stateSnapshot(working);
++      const settled = Array.from(coverage.values()).sort(compareEntry);
++      const diagnostics: SharedReplayDiagnostic[] = settled.filter(entry => entry.finalDiagnostic !== null
++        && !parentCoverage.some(old => identityKey(old.identity) === identityKey(entry.identity) && old.finalDiagnostic === entry.finalDiagnostic))
++        .map(entry => ({ identity: entry.identity, cause: entry.finalDiagnostic as SharedReplayDiagnostic['cause'], scope: 'PersonalDiagnosticBoundary' }));
++      if (nextTrusted !== null) { this.checkpoints.set(nextTrusted.checkpoint.checkpointSha256, nextTrusted); }
++      return Object.freeze({ kind: 'Replayed', state: snapshot,
++        coverage: Object.freeze(settled.map(entry => Object.freeze({ ...entry }))),
++        provisionalCoverage: Object.freeze(Array.from(provisional.values()).sort(compareEntry).map(entry => Object.freeze({ ...entry, finalDiagnostic: null }))),
++        checkpoint, diagnostics: Object.freeze(diagnostics.map(diagnostic => Object.freeze(diagnostic))), selfContribution: Object.freeze({ kind: 'Unknown' }) });
++    } catch (error: unknown) {
++      if (error instanceof SharedReplayGap) { return { kind: 'Gap', reason: error.message }; }
++      if (error instanceof SharedSchemaError) { return { kind: 'Gap', reason: error.code }; }
++      return { kind: 'HostFailure', reason: 'ReplayHostFailure' };
++    }
++  }
++
++  private async hash(value: unknown): Promise<string> {
++    const digest = await this.crypto.sha256(SharedCanonicalBytes.encode(value));
++    if (!/^[0-9a-f]{64}$/.test(digest)) { throw new Error('InvalidCryptoDigest'); }
++    return digest;
++  }
++  private async readParent(input: unknown | null, genesisHash: string, policy: SharedSettlementPolicy): Promise<TrustedCheckpoint | null> {
++    if (input === null) { return null; }
++    const value = sharedCodec.validate('WorldCheckpointWire', input);
++    const existing = this.checkpoints.get(value.checkpointSha256);
++    requireReplay(existing !== undefined && sameData(existing.checkpoint, value), 'CheckpointUnverifiable');
++    const parent = existing as TrustedCheckpoint;
++    requireReplay(parent.checkpoint.genesisSha256 === genesisHash && parent.seal.seal.policySha256 === await this.hash(policy), 'CheckpointContextMismatch');
++    requireReplay(this.validator.ownsSeal(parent.seal) && (parent.closure === null || this.validator.ownsClosure(parent.closure)), 'CheckpointCapabilityUntrusted');
++    return parent;
++  }
++  private apply(state: ReplayState, coverage: Map<string, MutableCoverage>, entry: ValidatedSharedCommit,
++    closure: ValidatedSharedClosure | null, settled: boolean): void {
++    if (closure !== null && entry.appendedAt.epochMs >= closure.closure.effectiveAtServerEpochMs) { state.frozen = true; }
++    const change = applyCommit(state, entry);
++    if (settled && change.superseded !== null) {
++      const previous = coverage.get(identityKey(change.superseded));
++      requireReplay(previous !== undefined && previous.applyResult === 'Applied', 'MissingEditCoverage');
++      if (previous.finalDiagnostic === null) { previous.finalDiagnostic = 'MergeConflict'; }
++    }
++    coverage.set(identityKey(entry.identity), { identity: entry.identity, envelopeSha256: entry.envelopeSha256,
++      appendedAt: entry.appendedAt, admissionRevision: entry.admissionRevision,
++      applyResult: change.result, finalDiagnostic: settled ? change.diagnostic : null });
++  }
++  private verifyObservedAllocations(entries: readonly ValidatedSharedCommit[], parent: ObservedAllocations | null): ObservedAllocations {
++    const segments = new Map(parent === null ? [] : parent.segments);
++    const permits = new Map(parent === null ? [] : parent.permits);
++    for (const entry of entries) {
++      const segment = entry.sequenceSegment;
++      const previous = segments.get(segment.segmentId);
++      if (previous !== undefined) { requireReplay(sameData(previous, segment), 'SequenceSegmentConflict'); }
++      else {
++        for (const known of segments.values()) {
++          requireReplay(known.authorAccountId !== segment.authorAccountId || known.lastSequence < segment.firstSequence
++            || segment.lastSequence < known.firstSequence, 'SequenceSegmentOverlap');
++        }
++        segments.set(segment.segmentId, segment);
++      }
++      const owner = permits.get(entry.header.permitId);
++      requireReplay(owner === undefined || owner === identityKey(entry.identity), 'PermitIdentityConflict');
++      permits.set(entry.header.permitId, identityKey(entry.identity));
++    }
++    return { segments, permits };
++  }
++}

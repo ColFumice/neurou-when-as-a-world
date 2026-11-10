@@ -1,0 +1,77 @@
+{
+  "scope": "Copied harness inputs/expected tiers/deadlines only; no production rule changes and no changes to earlier evidence.",
+  "adaptations": [
+    {
+      "harness": "b-regression",
+      "before": "verdict(p, 'tap-b', 'Miss', 3120)",
+      "after": "verdict(p, 'tap-b', 'Miss', 3000 + GOOD_WINDOW_MS)",
+      "reason": "The expired Tap resolves at target + the widened Good window."
+    },
+    {
+      "harness": "b-regression",
+      "before": "command: 'node quality-review/guidance-editor/b-regression.cjs'",
+      "after": "command: 'node quality-review/judgement-window-2026-10-10/b-regression.cjs'",
+      "reason": "Report the current reproduction command."
+    },
+    {
+      "harness": "c-regression",
+      "before": "assert.deepEqual(tiers(q),[[null],['Good']])",
+      "after": "assert.deepEqual(tiers(q),[[null],['Perfect']])",
+      "reason": "The unchanged 62.5 ms tie is now inside Perfect 100 ms. Candidate identity is unchanged."
+    },
+    {
+      "harness": "c-regression",
+      "before": "find(n=>n.node.id==='a-node').tier,'Good'",
+      "after": "find(n=>n.node.id==='a-node').tier,'Perfect'",
+      "reason": "The unchanged 51 ms input is now Perfect; the same node still wins the identity tie."
+    },
+    {
+      "harness": "pad-regression",
+      "before": "remote.advance(3121)",
+      "after": "remote.advance(3000 + GOOD_WINDOW_MS + 1)",
+      "reason": "Wrong-key Tap expires strictly after the new Good endpoint."
+    },
+    {
+      "harness": "pad-regression",
+      "before": "verdict(remote, 'tap', 'Miss', 3120)",
+      "after": "verdict(remote, 'tap', 'Miss', 3000 + GOOD_WINDOW_MS)",
+      "reason": "The deadline is the new Good endpoint."
+    },
+    {
+      "harness": "pad-regression",
+      "before": "space.advance(3121)",
+      "after": "space.advance(3000 + GOOD_WINDOW_MS + 1)",
+      "reason": "Space still cannot consume Tap; advance past the new deadline."
+    },
+    {
+      "harness": "pad-regression",
+      "before": "verdict(space, 'tap', 'Miss', 3120)",
+      "after": "verdict(space, 'tap', 'Miss', 3000 + GOOD_WINDOW_MS)",
+      "reason": "The deadline is the new Good endpoint."
+    },
+    {
+      "harness": "pad-regression",
+      "before": "[[-120, 'Good'], [-50, 'Perfect'], [0, 'Perfect'], [50, 'Perfect'], [120, 'Good'], [120.001, 'Miss']]",
+      "after": "[[-200, 'Good'], [-100, 'Perfect'], [0, 'Perfect'], [100, 'Perfect'], [200, 'Good'], [200.001, 'Miss']]",
+      "reason": "Update only the numeric endpoints and just-outside probe; neighbor matching rules remain intact."
+    },
+    {
+      "harness": "pad-regression",
+      "before": "p.advance(3121); assert.equal(p.getMissCount(), 1)",
+      "after": "p.advance(3000 + GOOD_WINDOW_MS + 1); assert.equal(p.getMissCount(), 1)",
+      "reason": "The unconsumed earlier legacy Note now expires after 3200 ms."
+    },
+    {
+      "harness": "editor-regression",
+      "before": "[[-120,'Good'],[-50,'Perfect'],[0,'Perfect'],[50,'Perfect'],[120,'Good'],[121,'Miss']]",
+      "after": "[[-200,'Good'],[-100,'Perfect'],[0,'Perfect'],[100,'Perfect'],[200,'Good'],[201,'Miss']]",
+      "reason": "Use the authorized new absolute-time Perfect/Good endpoints in v3."
+    },
+    {
+      "harness": "editor-regression",
+      "before": "p.advance(12121)",
+      "after": "p.advance(12201)",
+      "reason": "The unresolved last absolute-time Tap now expires strictly after 12000 + 200 ms."
+    }
+  ]
+}

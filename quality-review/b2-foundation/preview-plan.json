@@ -1,0 +1,52 @@
+{
+  "status": "Completed: both actual resolutions; 8 fresh unmodified PNGs, all visually inspected, production UI only; sourcemaps current and unchanged.",
+  "classification": "Production UI acceptance; no FirstWorldCleared fixture injection or real gameplay clear",
+  "previewUrl": "http://localhost:7456/",
+  "resolutions": [
+    [
+      1920,
+      1080
+    ],
+    [
+      2560,
+      1440
+    ]
+  ],
+  "isolation": "New temporary Electron userData; one persistent partition per resolution; fixed dedicated test account; no existing user browser/profile touched",
+  "policy": "Use actual Creator-served app and compiled production sources. Login/prologue through existing product UI. No storage fixture seed, state mutation, component patch, runtime hook or screenshot edits. Read-only Cocos component, DOM and localStorage observation. Screenshot PNGs are direct Page.captureScreenshot bytes.",
+  "screenshots": [
+    {
+      "name": "00-directory-permission-derived-false",
+      "evidence": "New B2.2 directory shows permission not obtained and WorldFork NotImplemented separately; FirstWorldCleared and derived CopyPermission are false"
+    },
+    {
+      "name": "01-incomplete-diagnostics",
+      "evidence": "Actual product state-inspection button produces Incomplete and each missing world-state section, without starting gameplay or persisting a false complete snapshot"
+    },
+    {
+      "name": "02-complete-restore-rejected",
+      "evidence": "Product restore-availability button reports Rejected; no full gameplay restore succeeds and storage is unchanged"
+    },
+    {
+      "name": "03-copy-permission-derived-read",
+      "evidence": "Product directory refresh reads AccountMilestoneReader; derived permission remains false and storage bytes equal the pre-inspection state"
+    }
+  ],
+  "checks": [
+    "Exact current source strings present in Creator source maps",
+    "HTTP-served compiled chunk bytes equal Creator preview compiler disk output",
+    "Compilation unchanged before and after preview run",
+    "No FirstWorldCleared storage key or complete world-state key written",
+    "Existing prologue and directory storage retained",
+    "Capture and refresh preserve every storage byte",
+    "WorldFolderBuilder does not instantiate a gameplay runtime during inspection",
+    "Window close/reopen retains existing account data without new clear facts",
+    "Viewport, Cocos canvas, CSS canvas and raw PNG dimensions match both requested resolutions",
+    "No horizontal overflow, renderer errors, runtime errors or external network requests"
+  ],
+  "excludedEvidence": [
+    "CopyPermission=true production gameplay flow: unavailable until B2.2c; true adapter/view inputs belong only to separately labeled contract tests",
+    "Complete gameplay restore success: unavailable until B2.2d; explicit refusal belongs to contract verification",
+    "B2.1 screenshots: not reused"
+  ]
+}

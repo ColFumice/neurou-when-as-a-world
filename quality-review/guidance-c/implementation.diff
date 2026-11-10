@@ -1,0 +1,630 @@
+diff --git a/src/chart/GuidanceChart.ts b/src/chart/GuidanceChart.ts
+index b0364ef..48eb5a8 100644
+--- a/src/chart/GuidanceChart.ts
++++ b/src/chart/GuidanceChart.ts
+@@ -1,5 +1,5 @@
+ // 独立引导线谱面数据；冻结名依据名库 v2.6 / v2.7。
+-// 纯数据与路径数学，零 cc。技术版本 schemaVersion = 1。
++// 纯数据与路径数学，零 cc。版本化多线格式：v1 单线，v2 非空多线。
+ import type { ChartTier } from '../../constants';
+ import { HEAD_WINDOW_MS } from '../../constants';
+ import type { ChartKeyId, KeyboardPadLayout } from './KeyboardPadLayout';
+@@ -58,7 +58,7 @@ export interface GuidanceLine {
+ }
+ 
+ export interface GuidanceChart {
+-  readonly schemaVersion: 1;
++  readonly schemaVersion: 1 | 2;
+   readonly chartId: string;
+   readonly tier: ChartTier;
+   readonly layoutVersion: string;
+@@ -265,14 +265,14 @@ function assertTurnsHaveNodes(path: NodePath, aspectRatio: number, nodes: readon
+ }
+ 
+ /**
+- * 严格加载 B 步单线 Polyline 与多个 Tap / Drag / Hold。
++ * 严格加载版本化多线 Polyline 与多个 Tap / Drag / Hold。
+  * 复制、按弧长及 ID 确定性排序并深度冻结，不修改原始输入。
+  */
+ export function parseGuidanceChart(raw: unknown, layout: KeyboardPadLayout): GuidanceChart {
+   const source = requireRecord(raw, '谱面');
+   requireFields(source, ['schemaVersion', 'chartId', 'tier', 'layoutVersion', 'aspectRatio', 'lines'], '谱面');
+-  if (source.schemaVersion !== 1) {
+-    throw new Error('GuidanceChart: B 步仅支持 schemaVersion=1');
++  if (source.schemaVersion !== 1 && source.schemaVersion !== 2) {
++    throw new Error('GuidanceChart: 仅支持 schemaVersion=1 或 2');
+   }
+   if (source.layoutVersion !== layout.layoutVersion) {
+     throw new Error(`GuidanceChart: 布局版本不匹配，拒绝加载 (${String(source.layoutVersion)} / ${layout.layoutVersion})`);
+@@ -286,72 +286,76 @@ export function parseGuidanceChart(raw: unknown, layout: KeyboardPadLayout): Gui
+   if (aspectRatio <= 0) {
+     throw new Error('GuidanceChart: aspectRatio 必须为正');
+   }
+-  if (!Array.isArray(source.lines) || source.lines.length !== 1) {
+-    throw new Error('GuidanceChart: B 步仅接收一条引导线，拒绝多线或空谱面');
++  if (!Array.isArray(source.lines) || source.lines.length === 0 ||
++      (source.schemaVersion === 1 && source.lines.length !== 1)) {
++    throw new Error('GuidanceChart: v1 必须恰一条线，v2 至少一条线');
+   }
+   const identities = new Set<string>();
+-  const lineSource = requireRecord(source.lines[0], '引导线');
+-  requireFields(lineSource, ['id', 'head', 'path', 'speed', 'nodes'], '引导线');
+-  const id = requireId(lineSource.id, 'line.id', identities);
+-  const headSource = requireRecord(lineSource.head, 'Head');
+-  requireFields(headSource, ['id', 'spawnTimeMs'], 'Head');
+-  const headId = requireId(headSource.id, 'head.id', identities);
+-  const spawnTimeMs = requireFinite(headSource.spawnTimeMs, 'spawnTimeMs');
+-  if (spawnTimeMs < 0) {
+-    throw new Error('GuidanceChart: spawnTimeMs 不得为负');
+-  }
+-  const pathSource = requireRecord(lineSource.path, 'path');
+-  requireFields(pathSource, ['kind', 'points'], 'path');
+-  if (pathSource.kind !== 'Polyline') {
+-    throw new Error('GuidanceChart: B 步仅支持 Polyline，拒绝曲线');
+-  }
+-  if (!Array.isArray(pathSource.points) || pathSource.points.length < 2) {
+-    throw new Error('GuidanceChart: Polyline 必须至少包含两个点');
+-  }
+-  const path: NodePath = Object.freeze({
+-    kind: 'Polyline',
+-    points: Object.freeze(pathSource.points.map(parsePosition)),
+-  });
+-  for (let index = 1; index < path.points.length; index += 1) {
+-    const previous = path.points[index - 1];
+-    const next = path.points[index];
+-    if (previous.u === next.u && previous.v === next.v) {
+-      throw new Error(`GuidanceChart: 相邻路径点 ${index - 1} / ${index} 不得重合`);
++  const lines = source.lines.map(rawLine => {
++    const lineSource = requireRecord(rawLine, '引导线');
++    requireFields(lineSource, ['id', 'head', 'path', 'speed', 'nodes'], '引导线');
++    const id = requireId(lineSource.id, 'line.id', identities);
++    const headSource = requireRecord(lineSource.head, 'Head');
++    requireFields(headSource, ['id', 'spawnTimeMs'], 'Head');
++    const headId = requireId(headSource.id, 'head.id', identities);
++    const spawnTimeMs = requireFinite(headSource.spawnTimeMs, 'spawnTimeMs');
++    if (spawnTimeMs < 0) {
++      throw new Error('GuidanceChart: spawnTimeMs 不得为负');
+     }
+-    const segmentLength = Math.hypot((next.u - previous.u) * aspectRatio, next.v - previous.v);
+-    if (!Number.isFinite(segmentLength) || segmentLength <= 0) {
+-      throw new Error(`GuidanceChart: 路径段 ${index - 1} 长度必须有限且为正`);
++    const pathSource = requireRecord(lineSource.path, 'path');
++    requireFields(pathSource, ['kind', 'points'], 'path');
++    if (pathSource.kind !== 'Polyline') {
++      throw new Error('GuidanceChart: B 步仅支持 Polyline，拒绝曲线');
+     }
+-  }
+-  const length = measurePathLength(path, aspectRatio);
+-  if (!Number.isFinite(length) || length <= 0) {
+-    throw new Error('GuidanceChart: 路径必须包含两个不同点且弧长有限');
+-  }
+-  const speed = requireFinite(lineSource.speed, 'speed');
+-  if (speed <= 0) {
+-    throw new Error('GuidanceChart: speed 必须为正');
+-  }
+-  if (!Array.isArray(lineSource.nodes) || lineSource.nodes.length === 0) {
+-    throw new Error('GuidanceChart: nodes 必须包含至少一个 Tap / Drag / Hold');
+-  }
+-  const nodes = lineSource.nodes.map(node => parseGuidanceNode(node, layout, length, identities));
+-  nodes.sort((left, right) => left.pathDistance - right.pathDistance ||
+-    (left.id < right.id ? -1 : left.id > right.id ? 1 : 0));
+-  assertTurnsHaveNodes(path, aspectRatio, nodes);
+-  if (!Number.isFinite((length / speed) * 1000) ||
+-      !Number.isFinite(spawnTimeMs + HEAD_WINDOW_MS + (length / speed) * 1000)) {
+-    throw new Error('GuidanceChart: 路径运行时间超出有限数值范围');
+-  }
+-  const head: HeadNode = Object.freeze({ id: headId, spawnTimeMs });
+-  const line: GuidanceLine = Object.freeze({
+-    id, head, path, speed, nodes: Object.freeze(nodes),
++    if (!Array.isArray(pathSource.points) || pathSource.points.length < 2) {
++      throw new Error('GuidanceChart: Polyline 必须至少包含两个点');
++    }
++    const path: NodePath = Object.freeze({
++      kind: 'Polyline',
++      points: Object.freeze(pathSource.points.map(parsePosition)),
++    });
++    for (let index = 1; index < path.points.length; index += 1) {
++      const previous = path.points[index - 1];
++      const next = path.points[index];
++      if (previous.u === next.u && previous.v === next.v) {
++        throw new Error(`GuidanceChart: 相邻路径点 ${index - 1} / ${index} 不得重合`);
++      }
++      const segmentLength = Math.hypot((next.u - previous.u) * aspectRatio, next.v - previous.v);
++      if (!Number.isFinite(segmentLength) || segmentLength <= 0) {
++        throw new Error(`GuidanceChart: 路径段 ${index - 1} 长度必须有限且为正`);
++      }
++    }
++    const length = measurePathLength(path, aspectRatio);
++    if (!Number.isFinite(length) || length <= 0) {
++      throw new Error('GuidanceChart: 路径必须包含两个不同点且弧长有限');
++    }
++    const speed = requireFinite(lineSource.speed, 'speed');
++    if (speed <= 0) {
++      throw new Error('GuidanceChart: speed 必须为正');
++    }
++    if (!Array.isArray(lineSource.nodes) || lineSource.nodes.length === 0) {
++      throw new Error('GuidanceChart: nodes 必须包含至少一个 Tap / Drag / Hold');
++    }
++    const nodes = lineSource.nodes.map(node => parseGuidanceNode(node, layout, length, identities));
++    nodes.sort((left, right) => left.pathDistance - right.pathDistance ||
++      (left.id < right.id ? -1 : left.id > right.id ? 1 : 0));
++    assertTurnsHaveNodes(path, aspectRatio, nodes);
++    if (!Number.isFinite((length / speed) * 1000) ||
++        !Number.isFinite(spawnTimeMs + HEAD_WINDOW_MS + (length / speed) * 1000)) {
++      throw new Error('GuidanceChart: 路径运行时间超出有限数值范围');
++    }
++    const head: HeadNode = Object.freeze({ id: headId, spawnTimeMs });
++    const line: GuidanceLine = Object.freeze({
++      id, head, path, speed, nodes: Object.freeze(nodes),
++    });
++    return line;
+   });
+   return Object.freeze({
+-    schemaVersion: 1,
++    schemaVersion: source.schemaVersion,
+     chartId,
+     tier,
+     layoutVersion: layout.layoutVersion,
+     aspectRatio,
+-    lines: Object.freeze([line]),
++    lines: Object.freeze(lines),
+   });
+ }
+diff --git a/src/chart/GuidanceLineRuntime.ts b/src/chart/GuidanceLineRuntime.ts
+index cef5181..d4697b5 100644
+--- a/src/chart/GuidanceLineRuntime.ts
++++ b/src/chart/GuidanceLineRuntime.ts
+@@ -37,6 +37,7 @@ export interface GuidanceLineSnapshot {
+   readonly id: string;
+   readonly state: GuidanceLineState;
+   readonly head: HeadNode;
++  readonly headPosition: GuidancePosition;
+   readonly startedAtMs: number | null;
+   readonly judgmentPoint: JudgmentPoint | null;
+   readonly remainingPoints: readonly GuidancePosition[];
+@@ -74,9 +75,11 @@ export class GuidanceLineRuntime {
+   private judgmentPoint: JudgmentPoint | null = null;
+   private readonly keysDown = new Set<ChartKeyId>();
+ 
+-  constructor(data: GuidanceChart, private readonly layout: KeyboardPadLayout) {
++  constructor(data: GuidanceChart, private readonly layout: KeyboardPadLayout, lineId?: string) {
+     const chart = parseGuidanceChart(data, layout);
+-    this.line = chart.lines[0];
++    const line = lineId === undefined ? chart.lines[0] : chart.lines.find(item => item.id === lineId);
++    if (line === undefined) { throw new Error('GuidanceLineRuntime: 未知引导线 ID'); }
++    this.line = line;
+     this.statuses = this.line.nodes.map(node => ({
+       node, tier: null, resolvedAtMs: null, holdStarted: false, holdInterrupted: false,
+     }));
+@@ -88,7 +91,7 @@ export class GuidanceLineRuntime {
+     return this.advanceTimeline(timeMs, true);
+   }
+ 
+-  submitStrike(strike: Strike): readonly GuidanceJudgement[] {
++  submitStrike(strike: Strike, allowTap = true, allowHead = true): readonly GuidanceJudgement[] {
+     const timeMs = strike.videoTimeMs;
+     const keyId = strike.keyId;
+     if (!Number.isFinite(timeMs) || timeMs < 0 || keyId === undefined ||
+@@ -123,7 +126,7 @@ export class GuidanceLineRuntime {
+     const repeated = this.keysDown.has(keyId);
+     this.keysDown.add(keyId);
+     if (keyId === 'Space') {
+-      if (!repeated && (this.state === 'Pending' || this.state === 'Waiting') &&
++      if (allowHead && !repeated && (this.state === 'Pending' || this.state === 'Waiting') &&
+           timeMs >= this.line.head.spawnTimeMs && timeMs <= this.line.head.spawnTimeMs + HEAD_WINDOW_MS) {
+         this.startedAtMs = timeMs;
+         this.state = 'Running';
+@@ -132,7 +135,7 @@ export class GuidanceLineRuntime {
+       return Object.freeze(judgements);
+     }
+     judgements.push(...this.advanceTimeline(timeMs, true));
+-    if (repeated || this.state !== 'Running' || this.startedAtMs === null || timeMs < this.startedAtMs) {
++    if (!allowTap || repeated || this.state !== 'Running' || this.startedAtMs === null || timeMs < this.startedAtMs) {
+       return Object.freeze(judgements);
+     }
+     const position = positionAtPathDistance(this.line.path, this.aspectRatio,
+@@ -158,6 +161,24 @@ export class GuidanceLineRuntime {
+     return Object.freeze(judgements);
+   }
+ 
++  /** 只读仲裁候选：不推进时间，不消费节点。 */
++  getTapCandidate(strike: Strike): { readonly targetTimeMs: number; readonly nodeId: string } | null {
++    const timeMs = strike.videoTimeMs;
++    const keyId = strike.keyId;
++    if (this.state !== 'Running' || this.startedAtMs === null || keyId === undefined ||
++        this.keysDown.has(keyId) || timeMs < this.currentTimeMs) { return null; }
++    const position = positionAtPathDistance(this.line.path, this.aspectRatio,
++      this.line.speed * (timeMs - this.startedAtMs) / 1000);
++    const required = resolveGridKeyAt(this.layout, position);
++    if (required === null || !isMatchingGridKey(this.layout, required, keyId)) { return null; }
++    const candidates = this.statuses.filter(item => item.node.kind === 'Tap' && item.tier === null)
++      .map(item => ({ targetTimeMs: this.getTimeAtDistance(item.node.pathDistance), nodeId: item.node.id }))
++      .filter(item => Math.abs(timeMs - item.targetTimeMs) <= GOOD_WINDOW_MS)
++      .sort((a, b) => Math.abs(timeMs - a.targetTimeMs) - Math.abs(timeMs - b.targetTimeMs) ||
++        a.targetTimeMs - b.targetTimeMs || compareIdentity(a.nodeId, b.nodeId));
++    return candidates[0] ?? null;
++  }
++
+   /** 暂停期间只记录释放；判定和计时冻结，中断后的 Hold 仍在尾端一次性记 Miss。 */
+   releaseWhilePaused(strike: Strike): void {
+     if (strike.phase !== 'Up' || strike.keyId === undefined || this.state === 'Exited') { return; }
+@@ -223,6 +244,7 @@ export class GuidanceLineRuntime {
+         : slicePathByDistance(this.line.path, this.aspectRatio, this.judgmentPoint.pathDistance);
+     }
+     return Object.freeze({ id: this.line.id, state: this.state, head: this.line.head,
++      headPosition: this.line.path.points[0],
+       startedAtMs: this.startedAtMs, judgmentPoint: this.judgmentPoint, remainingPoints, nodes });
+   }
+ 
+diff --git a/src/chart/ChartPremiere.ts b/src/chart/ChartPremiere.ts
+index 7368e32..7474696 100644
+--- a/src/chart/ChartPremiere.ts
++++ b/src/chart/ChartPremiere.ts
+@@ -24,7 +24,7 @@ import type { Strike } from './Strike';
+ import type { ChartPlaybackState } from './ChartPlaybackState';
+ import { parseGuidanceChart } from './GuidanceChart';
+ import type { GuidanceChart } from './GuidanceChart';
+-import { GuidanceLineRuntime } from './GuidanceLineRuntime';
++import { GuidanceChartRuntime } from './GuidanceChartRuntime';
+ import type { GuidanceLineSnapshot, GuidanceJudgement } from './GuidanceLineRuntime';
+ import {
+   ChartScore,
+@@ -109,6 +109,7 @@ export interface ChartPremiereReader {
+   getResult(): ChartPlaybackResult | null;
+   /** 引导线只读逻辑快照；兼容旧 ChartData 时返回 null。 */
+   getGuidanceSnapshot(): GuidanceLineSnapshot | null;
++  getGuidanceSnapshots(): readonly GuidanceLineSnapshot[];
+ }
+ 
+ /**
+@@ -119,7 +120,7 @@ export class ChartPremiere implements ChartPremiereReader {
+   private readonly tier: ChartTier;
+   private readonly layout: KeyboardPadLayout;
+   private readonly noteStatuses: NoteStatus[] = [];
+-  private readonly guidance: GuidanceLineRuntime | null;
++  private readonly guidance: GuidanceChartRuntime | null;
+ 
+   private state: ChartPlaybackState = 'Ready';
+   private score = new ChartScore();
+@@ -152,7 +153,7 @@ export class ChartPremiere implements ChartPremiereReader {
+       throw new Error('ChartPremiere: chartId 不能为空');
+     }
+     this.guidance = 'lines' in data
+-      ? new GuidanceLineRuntime(parseGuidanceChart(data, layout), layout) : null;
++      ? new GuidanceChartRuntime(parseGuidanceChart(data, layout), layout) : null;
+     if ('lines' in data) { return; }
+     const ordered = data.notes
+       .slice()
+@@ -237,8 +238,12 @@ export class ChartPremiere implements ChartPremiereReader {
+     return this.result;
+   }
+ 
++  getGuidanceSnapshots(): readonly GuidanceLineSnapshot[] {
++    return this.guidance?.getGuidanceSnapshots() ?? Object.freeze([]);
++  }
++
+   getGuidanceSnapshot(): GuidanceLineSnapshot | null {
+-    return this.guidance?.getSnapshot() ?? null;
++    return this.getGuidanceSnapshots()[0] ?? null;
+   }
+ 
+   // —— 状态迁移 ——
+diff --git a/src/presentation/LineEraseEffect.ts b/src/presentation/LineEraseEffect.ts
+index 82861cc..73c55e8 100644
+--- a/src/presentation/LineEraseEffect.ts
++++ b/src/presentation/LineEraseEffect.ts
+@@ -22,6 +22,7 @@ export class LineEraseEffect extends Component implements FrameRefreshable {
+   private premiere: ChartPremiereReader | null = null;
+   private graphics: Graphics | null = null;
+   private headSprite: Sprite | null = null;
++  private readonly headSprites = new Map<string, Sprite>();
+   private headLogo: SpriteFrame | null = null;
+   private headPosition: { readonly u: number; readonly v: number } | null = null;
+ 
+@@ -66,6 +67,7 @@ export class LineEraseEffect extends Component implements FrameRefreshable {
+ 
+   clearVisuals(): void {
+     this.graphics?.clear();
++    for (const sprite of this.headSprites.values()) { sprite.node.active = false; }
+     if (this.headSprite !== null) {
+       this.headSprite.node.active = false;
+       this.headSprite.node.setScale(1, 1, 1);
+@@ -82,6 +84,7 @@ export class LineEraseEffect extends Component implements FrameRefreshable {
+     this.headSprite = null;
+     this.headLogo = null;
+     this.headPosition = null;
++    this.headSprites.clear();
+   }
+ 
+   onFrameRefresh(): void {
+@@ -90,15 +93,18 @@ export class LineEraseEffect extends Component implements FrameRefreshable {
+       return;
+     }
+     const state = this.premiere.getState();
+-    const snapshot = this.premiere.getGuidanceSnapshot();
+-    if (state === 'Ready' || state === 'Exited' || snapshot === null ||
+-        snapshot.state === 'Pending' || snapshot.state === 'TimedOut' || snapshot.state === 'Exited') {
++    const snapshots = this.premiere.getGuidanceSnapshots();
++    if (state === 'Ready' || state === 'Exited' || snapshots.length === 0) {
+       this.clearVisuals();
+       return;
+     }
+     this.ensureBuilt();
+     this.clearVisuals();
+-    this.drawSnapshot(snapshot);
++    for (const snapshot of snapshots) {
++      if (snapshot.state !== 'Pending' && snapshot.state !== 'TimedOut' && snapshot.state !== 'Exited') {
++        this.drawSnapshot(snapshot);
++      }
++    }
+   }
+ 
+   private drawSnapshot(snapshot: GuidanceLineSnapshot): void {
+@@ -230,8 +236,22 @@ export class LineEraseEffect extends Component implements FrameRefreshable {
+     mapX: (u: number) => number,
+     mapY: (v: number) => number,
+   ): void {
+-    const sprite = this.headSprite;
+-    const position = this.headPosition;
++    let sprite = this.headSprites.get(snapshot.id);
++    if (sprite === undefined && this.headSprites.size === 0 && this.headSprite !== null) {
++      sprite = this.headSprite;
++      this.headSprites.set(snapshot.id, sprite);
++    }
++    if (sprite === undefined) {
++      const headNode = new Node('GuidanceHeadLogo');
++      headNode.layer = this.node.layer;
++      this.node.addChild(headNode);
++      headNode.addComponent(UITransform);
++      sprite = headNode.addComponent(Sprite);
++      sprite.sizeMode = Sprite.SizeMode.CUSTOM;
++      this.headSprites.set(snapshot.id, sprite);
++    }
++    sprite.spriteFrame = this.headLogo;
++    const position = snapshot.headPosition;
+     if (sprite === null || this.headLogo === null || position === null) {
+       return;
+     }
+diff --git a/assets/scripts/SceneBuilder.ts b/assets/scripts/SceneBuilder.ts
+index 520a978..099d4f7 100644
+--- a/assets/scripts/SceneBuilder.ts
++++ b/assets/scripts/SceneBuilder.ts
+@@ -867,7 +867,7 @@ export class SceneBuilder extends Component {
+ 
+     // —— 独立谱面 JSON：引导线严格拒绝非法/超范围数据；旧 T7 保留 ——
+     resources.load(
+-      this.UseGuidanceChart ? 'chart/guidance_b' : 'chart/chart_placeholder',
++      this.UseGuidanceChart ? 'chart/guidance_c' : 'chart/chart_placeholder',
+       JsonAsset,
+       (err: Error | null, asset: JsonAsset | null) => {
+         if (!isValid(this, true)) { return; }
+diff --git a/src/chart/GuidanceChartRuntime.ts b/src/chart/GuidanceChartRuntime.ts
+new file mode 100644
+index 0000000..5421034
+--- /dev/null
++++ b/src/chart/GuidanceChartRuntime.ts
+@@ -0,0 +1,56 @@
++// 多线协调器：统一媒体时间，Head/Tap 仲裁，按住边沿与生命周期广播。
++import { HEAD_WINDOW_MS } from '../../constants';
++import type { GuidanceChart } from './GuidanceChart';
++import { parseGuidanceChart } from './GuidanceChart';
++import type { KeyboardPadLayout } from './KeyboardPadLayout';
++import { getSlot } from './KeyboardPadLayout';
++import type { Strike } from './Strike';
++import { GuidanceLineRuntime } from './GuidanceLineRuntime';
++import type { GuidanceJudgement, GuidanceLineSnapshot } from './GuidanceLineRuntime';
++
++const compareIdentity = (a: string, b: string): number => a < b ? -1 : a > b ? 1 : 0;
++
++export class GuidanceChartRuntime {
++  private readonly lines: readonly GuidanceLineRuntime[];
++  private currentTimeMs = 0;
++
++  constructor(data: GuidanceChart, private readonly layout: KeyboardPadLayout) {
++    const chart = parseGuidanceChart(data, layout);
++    this.lines = chart.lines.map(line => new GuidanceLineRuntime(chart, layout, line.id));
++  }
++
++  advance(timeMs: number): readonly GuidanceJudgement[] {
++    if (!Number.isFinite(timeMs) || timeMs < this.currentTimeMs) { return []; }
++    this.currentTimeMs = timeMs;
++    return Object.freeze(this.lines.flatMap(line => line.advance(timeMs)));
++  }
++
++  submitStrike(strike: Strike): readonly GuidanceJudgement[] {
++    const timeMs = strike.videoTimeMs;
++    if (!Number.isFinite(timeMs) || timeMs < this.currentTimeMs || strike.keyId === undefined ||
++        (strike.keyId !== 'Space' && getSlot(this.layout, strike.keyId) === undefined)) { return []; }
++    this.currentTimeMs = timeMs;
++    const heads = this.lines.map(line => ({ line, snapshot: line.getSnapshot() }))
++      .filter(item => (item.snapshot.state === 'Pending' || item.snapshot.state === 'Waiting') &&
++        timeMs >= item.snapshot.head.spawnTimeMs && timeMs <= item.snapshot.head.spawnTimeMs + HEAD_WINDOW_MS)
++      .sort((a, b) => a.snapshot.head.spawnTimeMs - b.snapshot.head.spawnTimeMs ||
++        compareIdentity(a.snapshot.id, b.snapshot.id) || compareIdentity(a.snapshot.head.id, b.snapshot.head.id));
++    const taps = this.lines.map(line => ({ line, candidate: line.getTapCandidate(strike), id: line.getSnapshot().id }))
++      .filter((item): item is typeof item & { candidate: NonNullable<typeof item.candidate> } => item.candidate !== null)
++      .sort((a, b) => Math.abs(timeMs - a.candidate.targetTimeMs) - Math.abs(timeMs - b.candidate.targetTimeMs) ||
++        a.candidate.targetTimeMs - b.candidate.targetTimeMs || compareIdentity(a.id, b.id) ||
++        compareIdentity(a.candidate.nodeId, b.candidate.nodeId));
++    return Object.freeze(this.lines.flatMap(line => line.submitStrike(strike,
++      line === taps[0]?.line, line === heads[0]?.line)));
++  }
++
++  releaseWhilePaused(strike: Strike): void { this.lines.forEach(line => line.releaseWhilePaused(strike)); }
++  reset(): void { this.currentTimeMs = 0; this.lines.forEach(line => line.reset()); }
++  exit(): void { this.lines.forEach(line => line.exit()); }
++  getTotalNodeCount(): number { return this.lines.reduce((count, line) => count + line.getTotalNodeCount(), 0); }
++  getResolvedCount(): number { return this.lines.reduce((count, line) => count + line.getResolvedCount(), 0); }
++  isSettled(): boolean { return this.lines.every(line => line.isSettled()); }
++  getGuidanceSnapshots(): readonly GuidanceLineSnapshot[] {
++    return Object.freeze(this.lines.map(line => line.getSnapshot()));
++  }
++}
+diff --git a/src/chart/GuidanceChartRuntime.ts.meta b/src/chart/GuidanceChartRuntime.ts.meta
+new file mode 100644
+index 0000000..6b4af18
+--- /dev/null
++++ b/src/chart/GuidanceChartRuntime.ts.meta
+@@ -0,0 +1,9 @@
++{
++  "ver": "4.0.24",
++  "importer": "typescript",
++  "imported": true,
++  "uuid": "fd0b5bec-f828-42d7-8147-135c013d677a",
++  "files": [],
++  "subMetas": {},
++  "userData": {}
++}
+\ No newline at end of file
+diff --git a/assets/resources/chart/guidance_c.json b/assets/resources/chart/guidance_c.json
+new file mode 100644
+index 0000000..c5ac52d
+--- /dev/null
++++ b/assets/resources/chart/guidance_c.json
+@@ -0,0 +1,127 @@
++{
++  "schemaVersion": 2,
++  "chartId": "guidance-c-1",
++  "tier": "Regular",
++  "layoutVersion": "pad-layout-2",
++  "aspectRatio": 1.7777777777777777,
++  "lines": [
++    {
++      "id": "line-c-a",
++      "head": {
++        "id": "head-c-a",
++        "spawnTimeMs": 2000
++      },
++      "path": {
++        "kind": "Polyline",
++        "points": [
++          {
++            "u": 0.18,
++            "v": 0.5
++          },
++          {
++            "u": 0.34,
++            "v": 0.5
++          },
++          {
++            "u": 0.5,
++            "v": 0.7
++          },
++          {
++            "u": 0.82,
++            "v": 0.7
++          }
++        ]
++      },
++      "speed": 0.17777777777777778,
++      "nodes": [
++        {
++          "id": "line-c-a-conflict",
++          "kind": "Tap",
++          "pathDistance": 0.07
++        },
++        {
++          "id": "drag-c-a-1",
++          "kind": "Drag",
++          "pathDistance": 0.14222222222222225,
++          "keyId": "KeyS"
++        },
++        {
++          "id": "hold-c-a-1",
++          "kind": "Hold",
++          "pathDistance": 0.2844444444444445,
++          "endPathDistance": 0.8988303110056648,
++          "keyId": "KeyF"
++        },
++        {
++          "id": "tap-c-a-corner",
++          "kind": "Tap",
++          "pathDistance": 0.6321636443389982
++        },
++        {
++          "id": "tap-c-a-end",
++          "kind": "Tap",
++          "pathDistance": 1.0943858665612205
++        }
++      ]
++    },
++    {
++      "id": "line-c-b",
++      "head": {
++        "id": "head-c-b",
++        "spawnTimeMs": 2020
++      },
++      "path": {
++        "kind": "Polyline",
++        "points": [
++          {
++            "u": 0.18,
++            "v": 0.5
++          },
++          {
++            "u": 0.34,
++            "v": 0.5
++          },
++          {
++            "u": 0.5,
++            "v": 0.30000000000000004
++          },
++          {
++            "u": 0.82,
++            "v": 0.8
++          }
++        ]
++      },
++      "speed": 0.17777777777777778,
++      "nodes": [
++        {
++          "id": "line-c-b-conflict",
++          "kind": "Tap",
++          "pathDistance": 0.07
++        },
++        {
++          "id": "drag-c-b-1",
++          "kind": "Drag",
++          "pathDistance": 0.14222222222222225,
++          "keyId": "KeyS"
++        },
++        {
++          "id": "hold-c-b-1",
++          "kind": "Hold",
++          "pathDistance": 0.2844444444444445,
++          "endPathDistance": 0.8988303110056648,
++          "keyId": "KeyF"
++        },
++        {
++          "id": "tap-c-b-corner",
++          "kind": "Tap",
++          "pathDistance": 0.6321636443389982
++        },
++        {
++          "id": "tap-c-b-end",
++          "kind": "Tap",
++          "pathDistance": 1.3895503143439796
++        }
++      ]
++    }
++  ]
++}
+\ No newline at end of file
+diff --git a/assets/resources/chart/guidance_c.json.meta b/assets/resources/chart/guidance_c.json.meta
+new file mode 100644
+index 0000000..013f0b4
+--- /dev/null
++++ b/assets/resources/chart/guidance_c.json.meta
+@@ -0,0 +1,11 @@
++{
++  "ver": "2.0.1",
++  "importer": "json",
++  "imported": true,
++  "uuid": "2bfb3cb9-6590-4a58-9bc2-a9939ef7a2d2",
++  "files": [
++    ".json"
++  ],
++  "subMetas": {},
++  "userData": {}
++}
+\ No newline at end of file

@@ -1,0 +1,695 @@
+{
+  "generatedAt": "2026-10-10T11:15:31.548Z",
+  "pass": true,
+  "batch": "B2.2d-1",
+  "verdicts": "VERDICT-241 through VERDICT-255",
+  "completeWorldStateImplemented": false,
+  "coreImplemented": [
+    "Ledger",
+    "PuzzleProgress",
+    "FormatTime"
+  ],
+  "remainingNotImplemented": [
+    "RecallCount",
+    "WorldLink",
+    "ChartSnapshot",
+    "ChartScore"
+  ],
+  "worldForkAvailability": "NotImplemented",
+  "evidence": {
+    "generatedAt": "2026-10-10T11:13:59.559Z",
+    "pass": true,
+    "contractTests": {
+      "evidenceKind": "ContractTests",
+      "total": 292,
+      "new": 119,
+      "regression": 173,
+      "suites": [
+        {
+          "name": "Ledger",
+          "file": "ledger.contract-results.json",
+          "category": "New",
+          "count": 44,
+          "pass": true
+        },
+        {
+          "name": "Puzzle",
+          "file": "puzzle.contract-results.json",
+          "category": "New",
+          "count": 14,
+          "pass": true
+        },
+        {
+          "name": "CoreStorage",
+          "file": "storage.contract-results.json",
+          "category": "New",
+          "count": 40,
+          "pass": true
+        },
+        {
+          "name": "Aggregation",
+          "file": "aggregation.contract-results.json",
+          "category": "New",
+          "count": 12,
+          "pass": true
+        },
+        {
+          "name": "RuntimeWiring",
+          "file": "runtime-wiring.contract-results.json",
+          "category": "New",
+          "count": 9,
+          "pass": true
+        },
+        {
+          "name": "B2aAccount",
+          "file": "b2a-account-regression-results.json",
+          "category": "Regression",
+          "count": 26,
+          "pass": true
+        },
+        {
+          "name": "B2bWorldState",
+          "file": "b2b-world-state-regression-results.json",
+          "category": "Regression",
+          "count": 42,
+          "pass": true
+        },
+        {
+          "name": "B2cDomain",
+          "file": "b2c-domain-regression-results.json",
+          "category": "Regression",
+          "count": 49,
+          "pass": true
+        },
+        {
+          "name": "B2cStorage",
+          "file": "b2c-storage-regression-results.json",
+          "category": "Regression",
+          "count": 56,
+          "pass": true
+        }
+      ],
+      "note": "B2b regression changes only three ownership codec expectations to Implemented; all original 42 checks remain. Controlled fixtures and inert component imports are not production evidence."
+    },
+    "productionAcceptance": {
+      "evidenceKind": "ProductionAcceptance",
+      "pass": true,
+      "resolutions": [
+        {
+          "resolution": "1920x1080",
+          "checks": 14,
+          "screenshots": 13,
+          "cumulativeLedger": 4,
+          "revision": 8,
+          "formatTime": {
+            "epochMs": 1791630358719
+          },
+          "account": "b22d1-production-1920-1791630357351",
+          "pass": true
+        },
+        {
+          "resolution": "2560x1440",
+          "checks": 14,
+          "screenshots": 13,
+          "cumulativeLedger": 4,
+          "revision": 8,
+          "formatTime": {
+            "epochMs": 1791630395920
+          },
+          "account": "b22d1-production-2560-1791630357351",
+          "pass": true
+        }
+      ],
+      "sourceMaps": 27,
+      "rawScreenshotCount": 26,
+      "sourceAndHarnessHashesMatchCurrent": true,
+      "rendererErrorCount": 0,
+      "runtimeErrorCount": 0,
+      "externalRequestCount": 0,
+      "exitCode": 0,
+      "note": "Actual localhost Creator compiled game and native media; product controls and GameCanvas keyboard edges only. Same persistent isolated profile, fresh BrowserWindow; no fixture gameplay/storage writes. No active timer/media resume or full world restore claim."
+    },
+    "gates": {
+      "pass": true,
+      "namingErrors": 0,
+      "namingWarnings": 22,
+      "dependenciesErrors": 0,
+      "typecheckExitCode": 0
+    },
+    "protection": {
+      "pass": true,
+      "baseline": 285,
+      "unchanged": 274,
+      "productionChanges": 23,
+      "docsNamebookReferenceArchiveUnchanged": true
+    }
+  },
+  "production": [
+    {
+      "path": "src/director/IntentPort.ts",
+      "kind": "Modified",
+      "bytes": 45291,
+      "sha256": "dec9218a4084e5e5a13450e04b9b660c0ed632e88d96c1d3af575284030b9a57"
+    },
+    {
+      "path": "src/director/SphereCrossing.ts",
+      "kind": "Modified",
+      "bytes": 1907,
+      "sha256": "d00362639fc51a1bc367c587231dcfd1ad606c0f96654e6b77bd1b1098a58db6"
+    },
+    {
+      "path": "src/director/WorldClearSession.ts",
+      "kind": "Modified",
+      "bytes": 21078,
+      "sha256": "bc44d9c70f713cc100271d0795b5248f59c0a890178450dc72e1c34f6bc9fddc"
+    },
+    {
+      "path": "src/director/WorldStateSession.ts",
+      "kind": "Modified",
+      "bytes": 15339,
+      "sha256": "9085af46ee34c6651876c020d2e898d96bdd3e0fc632006279e8307a63aa2b58"
+    },
+    {
+      "path": "src/presentation/DeepTraceRevealSequence.ts",
+      "kind": "Modified",
+      "bytes": 3700,
+      "sha256": "079d660a3a232489e388a65c428507af1d01ded900388c5f9d17da93d790281d"
+    },
+    {
+      "path": "src/trace/DeepTrace.ts",
+      "kind": "Modified",
+      "bytes": 3648,
+      "sha256": "00fc0694f927cae6a63055bbf60fbd407598f4d7c0c95b98e8cc254b6bdc644c"
+    },
+    {
+      "path": "src/trace/PuzzleChain.ts",
+      "kind": "Modified",
+      "bytes": 14448,
+      "sha256": "875448d1fb3d91c35a49deee1973a453abeed27931537ea26ec04fb817d55f76"
+    },
+    {
+      "path": "src/trace/PuzzleProgress.ts",
+      "kind": "Modified",
+      "bytes": 3072,
+      "sha256": "835fa748d0751e2f240043ccb39490a40bf847c8d562dbd0d4eaf332d0320208"
+    },
+    {
+      "path": "src/world/WorldInstance.ts",
+      "kind": "Modified",
+      "bytes": 2706,
+      "sha256": "9a4dfd7c33e1e889513b7800367f5dfb3ef43459b2172d6fc3393d85478e842e"
+    },
+    {
+      "path": "assets/scripts/SceneBuilder.ts",
+      "kind": "Modified",
+      "bytes": 82465,
+      "sha256": "29127e27d7363d0174fd5c3852c4f45b51b6108bb5bec44f1ba8bb18cf7c13e8"
+    },
+    {
+      "path": "assets/scripts/WorldFolderBuilder.ts",
+      "kind": "Modified",
+      "bytes": 21859,
+      "sha256": "58191d6a28da48327e821dc26cec9f621d4f9d77cc8c0361c861a5bd82252923"
+    },
+    {
+      "path": "src/director/LedgerHydration.ts",
+      "kind": "Added",
+      "bytes": 15031,
+      "sha256": "e8dc01ee89ab01367de4d6a5dd23a8c3eeb72ac426658ff6c0f3eba9121cdc99"
+    },
+    {
+      "path": "src/director/LedgerHydration.ts.meta",
+      "kind": "Added",
+      "bytes": 180,
+      "sha256": "10f542818a9904dcfc783f0170bbd701a1f8e5ff86b40267261ea3302c524863"
+    },
+    {
+      "path": "src/director/PuzzleHydration.ts",
+      "kind": "Added",
+      "bytes": 7454,
+      "sha256": "8160a7a1fa2de741582423c2ecc8f6b3e7791b1dd802d2821ba29c82dd837254"
+    },
+    {
+      "path": "src/director/PuzzleHydration.ts.meta",
+      "kind": "Added",
+      "bytes": 171,
+      "sha256": "01306a6b419f39d55b00387fd50bab43de3a6d2e4b80e5ae9106b4fb3bb610c7"
+    },
+    {
+      "path": "src/director/WorldStateCodec.ts",
+      "kind": "Added",
+      "bytes": 9266,
+      "sha256": "1355fa1eb523f66c4f390ea4c7eed1a2eec9a3922a130be0c2b9019e36ee56cf"
+    },
+    {
+      "path": "src/director/WorldStateCodec.ts.meta",
+      "kind": "Added",
+      "bytes": 171,
+      "sha256": "774289b9c3df686b1c4556b6218f56ca711da4ea85822bce11c727867e913507"
+    },
+    {
+      "path": "src/presentation/FormatTimeStorage.ts",
+      "kind": "Added",
+      "bytes": 1211,
+      "sha256": "ae88dcec14d85510b0c1ffb5b275cbcb4daee5eb8ecca958a72aba6b7bf0e4bd"
+    },
+    {
+      "path": "src/presentation/FormatTimeStorage.ts.meta",
+      "kind": "Added",
+      "bytes": 171,
+      "sha256": "bac4072832f75a7177823b21c85f76d57198cf623daee1437d5beb3848ff260c"
+    },
+    {
+      "path": "src/presentation/WorldCoreStateStorage.ts",
+      "kind": "Added",
+      "bytes": 10706,
+      "sha256": "cbb4bdd5e436cf291bbdda83aa2e9761e4e8bd754af439acdbd9c56dbe1e8bee"
+    },
+    {
+      "path": "src/presentation/WorldCoreStateStorage.ts.meta",
+      "kind": "Added",
+      "bytes": 171,
+      "sha256": "d2e8f77a6a8cbfa3bd6523de130c59c8f491cb58723e7637d7bdfcda940b7009"
+    },
+    {
+      "path": "src/presentation/WorldCoreStateView.ts",
+      "kind": "Added",
+      "bytes": 2454,
+      "sha256": "649aa670338dd4b12ae442b18ee24ec0ea08eaf4f902a9f13a70823ab97ba665"
+    },
+    {
+      "path": "src/presentation/WorldCoreStateView.ts.meta",
+      "kind": "Added",
+      "bytes": 180,
+      "sha256": "0cb01c278fc12e40a0d7e74d0d7c35445c0a391f3f470b6bd41d7bde78aae82e"
+    }
+  ],
+  "quality": [
+    {
+      "path": "quality-review/b2-state-core/1920x1080-00-new-account-created-format-time.png",
+      "kind": "DeliveryArtifact",
+      "bytes": 39528,
+      "sha256": "9f1a55deaca405de6bdbeacbaa31414bb3590d2c9d50c1b13c634a700beec275"
+    },
+    {
+      "path": "quality-review/b2-state-core/1920x1080-01-primary-empty-stable-core.png",
+      "kind": "DeliveryArtifact",
+      "bytes": 163235,
+      "sha256": "5fb640367a18fd5079868d30c0fc0f95dc20e061252d5e2ffd87b7eaf9707e47"
+    },
+    {
+      "path": "quality-review/b2-state-core/1920x1080-02-player-choice-durable-ledger-sphere-entry.png",
+      "kind": "DeliveryArtifact",
+      "bytes": 169699,
+      "sha256": "9c321b77ddad1a931c5d399180071bb237908fb1e88a30917597a3ea7deec2a1"
+    },
+    {
+      "path": "quality-review/b2-state-core/1920x1080-03-world-chart-native-media.png",
+      "kind": "DeliveryArtifact",
+      "bytes": 558452,
+      "sha256": "3ece23ea828871a1ac797eac5d51f80a563888bbf1ff4937108284aced50b9bc"
+    },
+    {
+      "path": "quality-review/b2-state-core/1920x1080-04-world-completed-durable-ledger-account-record.png",
+      "kind": "DeliveryArtifact",
+      "bytes": 171842,
+      "sha256": "5865276e135a8583a858517e7e035d64d530bdfaa4f3de2c91c8213c50a9328a"
+    },
+    {
+      "path": "quality-review/b2-state-core/1920x1080-05-directory-after-world-clear-durable-core.png",
+      "kind": "DeliveryArtifact",
+      "bytes": 39567,
+      "sha256": "029a3c221c618d635dac149c673c4e7099c8b5d2c161230c75bf7bb0e90868da"
+    },
+    {
+      "path": "quality-review/b2-state-core/1920x1080-06-world-ledger-seeded-reentry-byte-preserved.png",
+      "kind": "DeliveryArtifact",
+      "bytes": 171940,
+      "sha256": "6fba6d4363e31351a3698c77407e34d12f96d0239e73af7cdb0a6ffeeea73eb1"
+    },
+    {
+      "path": "quality-review/b2-state-core/1920x1080-07-natural-t6-entry-cumulative-three-ledger-events.png",
+      "kind": "DeliveryArtifact",
+      "bytes": 66395,
+      "sha256": "a098bca7d6f3f867ec30a6a269d40b5c47d6d92010c578e78205d6b044e1c0a0"
+    },
+    {
+      "path": "quality-review/b2-state-core/1920x1080-08-natural-t7-completed-stable-puzzle-ledger-format-time.png",
+      "kind": "DeliveryArtifact",
+      "bytes": 159976,
+      "sha256": "c1fcb15624086f9f2c35c0ed04988cf95b1c3a71ae9c2a6533c45e6ecabd2e62"
+    },
+    {
+      "path": "quality-review/b2-state-core/1920x1080-09-directory-completed-puzzle-persisted.png",
+      "kind": "DeliveryArtifact",
+      "bytes": 39567,
+      "sha256": "029a3c221c618d635dac149c673c4e7099c8b5d2c161230c75bf7bb0e90868da"
+    },
+    {
+      "path": "quality-review/b2-state-core/1920x1080-10-puzzle-completed-seeded-reentry-format-time-preserved.png",
+      "kind": "DeliveryArtifact",
+      "bytes": 162417,
+      "sha256": "63597474fc54f53a38262fabdb21416b78bce686ae244cd3eb5ece6025d61227"
+    },
+    {
+      "path": "quality-review/b2-state-core/1920x1080-11-fresh-window-same-profile-directory-preserved.png",
+      "kind": "DeliveryArtifact",
+      "bytes": 39567,
+      "sha256": "029a3c221c618d635dac149c673c4e7099c8b5d2c161230c75bf7bb0e90868da"
+    },
+    {
+      "path": "quality-review/b2-state-core/1920x1080-12-fresh-window-puzzle-ledger-format-time-restored.png",
+      "kind": "DeliveryArtifact",
+      "bytes": 162417,
+      "sha256": "63597474fc54f53a38262fabdb21416b78bce686ae244cd3eb5ece6025d61227"
+    },
+    {
+      "path": "quality-review/b2-state-core/2560x1440-00-new-account-created-format-time.png",
+      "kind": "DeliveryArtifact",
+      "bytes": 45412,
+      "sha256": "7e3c672af8c67d293705effb9c60b202df4ce2a1ffdb6a4f6fa5dc23e0ee0bab"
+    },
+    {
+      "path": "quality-review/b2-state-core/2560x1440-01-primary-empty-stable-core.png",
+      "kind": "DeliveryArtifact",
+      "bytes": 240385,
+      "sha256": "f822f93b3bd837588c2b62133960352ef01ab31f7e397a313f2891d91ae64ad7"
+    },
+    {
+      "path": "quality-review/b2-state-core/2560x1440-02-player-choice-durable-ledger-sphere-entry.png",
+      "kind": "DeliveryArtifact",
+      "bytes": 251340,
+      "sha256": "9f5a30941c84bc2f97a3128cdefb1728156642bebd21ebe732a7361ccf092f28"
+    },
+    {
+      "path": "quality-review/b2-state-core/2560x1440-03-world-chart-native-media.png",
+      "kind": "DeliveryArtifact",
+      "bytes": 855623,
+      "sha256": "7e5e71f8e4081e92166a9707b256c10a839fb5ae15158b8fe80ba2eb9dac19e1"
+    },
+    {
+      "path": "quality-review/b2-state-core/2560x1440-04-world-completed-durable-ledger-account-record.png",
+      "kind": "DeliveryArtifact",
+      "bytes": 250022,
+      "sha256": "bd820828a21ddfd529b7533c9169e9af2a4958ed740869878870d65ef32e8941"
+    },
+    {
+      "path": "quality-review/b2-state-core/2560x1440-05-directory-after-world-clear-durable-core.png",
+      "kind": "DeliveryArtifact",
+      "bytes": 45448,
+      "sha256": "8238ca69c1b3f1ba42810bd88ef508be28cf135b76ed0a0eb2a24052084ba81f"
+    },
+    {
+      "path": "quality-review/b2-state-core/2560x1440-06-world-ledger-seeded-reentry-byte-preserved.png",
+      "kind": "DeliveryArtifact",
+      "bytes": 250129,
+      "sha256": "825331093e5fc1cd9e46196100acba5a6bae55b61f0a5dec8527ae303d7d129a"
+    },
+    {
+      "path": "quality-review/b2-state-core/2560x1440-07-natural-t6-entry-cumulative-three-ledger-events.png",
+      "kind": "DeliveryArtifact",
+      "bytes": 89406,
+      "sha256": "b8d5e3340cbd9a6a89f04d258d92caae47150167dec560300d56718b84f239a5"
+    },
+    {
+      "path": "quality-review/b2-state-core/2560x1440-08-natural-t7-completed-stable-puzzle-ledger-format-time.png",
+      "kind": "DeliveryArtifact",
+      "bytes": 228268,
+      "sha256": "acdb431e34fdfa36e0ef4710d9729da13a844dc58e50bc4e2ed4cee965fdb635"
+    },
+    {
+      "path": "quality-review/b2-state-core/2560x1440-09-directory-completed-puzzle-persisted.png",
+      "kind": "DeliveryArtifact",
+      "bytes": 45448,
+      "sha256": "8238ca69c1b3f1ba42810bd88ef508be28cf135b76ed0a0eb2a24052084ba81f"
+    },
+    {
+      "path": "quality-review/b2-state-core/2560x1440-10-puzzle-completed-seeded-reentry-format-time-preserved.png",
+      "kind": "DeliveryArtifact",
+      "bytes": 232768,
+      "sha256": "7573ec892ae602ba26e98c14ec31c497012f85320cb560ec5ce3514a08f87b41"
+    },
+    {
+      "path": "quality-review/b2-state-core/2560x1440-11-fresh-window-same-profile-directory-preserved.png",
+      "kind": "DeliveryArtifact",
+      "bytes": 45448,
+      "sha256": "8238ca69c1b3f1ba42810bd88ef508be28cf135b76ed0a0eb2a24052084ba81f"
+    },
+    {
+      "path": "quality-review/b2-state-core/2560x1440-12-fresh-window-puzzle-ledger-format-time-restored.png",
+      "kind": "DeliveryArtifact",
+      "bytes": 232768,
+      "sha256": "7573ec892ae602ba26e98c14ec31c497012f85320cb560ec5ce3514a08f87b41"
+    },
+    {
+      "path": "quality-review/b2-state-core/acceptance-summary.json",
+      "kind": "DeliveryArtifact",
+      "bytes": 3468,
+      "sha256": "84c8ca4a45539fba23cf7bb597e1ec53ccb9aebd4a2bd8e842af11d6694634cf"
+    },
+    {
+      "path": "quality-review/b2-state-core/aggregation.contract-results.json",
+      "kind": "DeliveryArtifact",
+      "bytes": 2493,
+      "sha256": "2324d8ea423e60364313f29bb6652d3d20666375eecde71701486d708dab1829"
+    },
+    {
+      "path": "quality-review/b2-state-core/aggregation.contract.cjs",
+      "kind": "DeliveryArtifact",
+      "bytes": 13488,
+      "sha256": "e7afb0409cddb43a767002bd98858ae12bd9ba013b180f4c79d5d36dc8634df1"
+    },
+    {
+      "path": "quality-review/b2-state-core/b2a-account-regression-results.json",
+      "kind": "DeliveryArtifact",
+      "bytes": 4066,
+      "sha256": "a141ee268580702ae02fee534b4c19e4130280151b59658c0fd4a6b952a2064f"
+    },
+    {
+      "path": "quality-review/b2-state-core/b2a-account-regression.cjs",
+      "kind": "DeliveryArtifact",
+      "bytes": 10852,
+      "sha256": "ce7c6129d04ef7b9108764005ade9aeb1c447d58560deeb7293812fb76051052"
+    },
+    {
+      "path": "quality-review/b2-state-core/b2b-world-state-regression-results.json",
+      "kind": "DeliveryArtifact",
+      "bytes": 4846,
+      "sha256": "a187f3c14b71ca18cb8ca64a218e232221427a2d9b052ceea7b2047fd6e07be9"
+    },
+    {
+      "path": "quality-review/b2-state-core/b2b-world-state-regression.cjs",
+      "kind": "DeliveryArtifact",
+      "bytes": 15940,
+      "sha256": "6b314e2fca362613624933005d9efa1c382831ecd18eb7a90f3f93f111f3ed15"
+    },
+    {
+      "path": "quality-review/b2-state-core/b2c-domain-regression-results.json",
+      "kind": "DeliveryArtifact",
+      "bytes": 8929,
+      "sha256": "2ee748625a92ad5b7da1d88e69d6857618f7a701aabdfbb94c64fcf724de79cf"
+    },
+    {
+      "path": "quality-review/b2-state-core/b2c-domain-regression.cjs",
+      "kind": "DeliveryArtifact",
+      "bytes": 31521,
+      "sha256": "a7d8cde43c8f7509c0034064cb204c9cd612a40f9d9acb56aa89905b87b471c1"
+    },
+    {
+      "path": "quality-review/b2-state-core/b2c-storage-regression-results.json",
+      "kind": "DeliveryArtifact",
+      "bytes": 9391,
+      "sha256": "43e7f1a9d75fe08d226851c490b25085657fa6bb57e888713d6e102fec3dae28"
+    },
+    {
+      "path": "quality-review/b2-state-core/b2c-storage-regression.cjs",
+      "kind": "DeliveryArtifact",
+      "bytes": 20509,
+      "sha256": "d927239f6762aa422fbe8bdf30ebc503d9331e0c8265770ce5311a3a1a031d1d"
+    },
+    {
+      "path": "quality-review/b2-state-core/build-manifest.cjs",
+      "kind": "DeliveryArtifact",
+      "bytes": 2723,
+      "sha256": "04ce693ded3bd4ed10a42a5d7c30650bbe633165a7e3638fe359e6319b2ad2d2"
+    },
+    {
+      "path": "quality-review/b2-state-core/creator-preview-lifecycle.json",
+      "kind": "DeliveryArtifact",
+      "bytes": 152,
+      "sha256": "912f4cdb12a0a149a16c0be78ac197c3ac628384800f0a4010b005f59f539247"
+    },
+    {
+      "path": "quality-review/b2-state-core/creator-preview-results.json",
+      "kind": "DeliveryArtifact",
+      "bytes": 1215998,
+      "sha256": "b98501325c71eff72772588be0c712fb3fbbed4cf4433554e33e110af998d825"
+    },
+    {
+      "path": "quality-review/b2-state-core/creator-preview.cjs",
+      "kind": "DeliveryArtifact",
+      "bytes": 32348,
+      "sha256": "8def415bd4d27b7e153c56e5bc10b8be172117804849c71f8b8f165ef7541d14"
+    },
+    {
+      "path": "quality-review/b2-state-core/creator-preview.log",
+      "kind": "DeliveryArtifact",
+      "bytes": 2908,
+      "sha256": "e3cda880ccb8e5486ed38219d09703cb7a66a8667a8c567a6aafd8f5cbec6fba"
+    },
+    {
+      "path": "quality-review/b2-state-core/diagnostic-hidden-entry-assertion/creator-preview-lifecycle.json",
+      "kind": "ArchivedHarnessDiagnostic",
+      "bytes": 153,
+      "sha256": "6fe625b154006d448c44c85e0444110d9ded5efebb6d4c708bc0938be1feb0f1"
+    },
+    {
+      "path": "quality-review/b2-state-core/diagnostic-hidden-entry-assertion/creator-preview-results.json",
+      "kind": "ArchivedHarnessDiagnostic",
+      "bytes": 253463,
+      "sha256": "4abda20d9330a0e1cae36342f3a7b6cfd23a1224ab781e94214937c200d9f955"
+    },
+    {
+      "path": "quality-review/b2-state-core/diagnostic-hidden-entry-assertion/creator-preview.log",
+      "kind": "ArchivedHarnessDiagnostic",
+      "bytes": 1664,
+      "sha256": "bb294a4250a3869efde55183a45680f0add17c62fc3f584658a9b5ad071dcaa3"
+    },
+    {
+      "path": "quality-review/b2-state-core/gates-results.json",
+      "kind": "DeliveryArtifact",
+      "bytes": 6115,
+      "sha256": "40b7521ee3326d09e8b3a9370234f439d05f5581bc93fff9adc3e8a13d1fdcc6"
+    },
+    {
+      "path": "quality-review/b2-state-core/ledger.contract-results.json",
+      "kind": "DeliveryArtifact",
+      "bytes": 7782,
+      "sha256": "dfd79f1424c0afa0e046a49e9be506cc95bedfb469e150d24ef31601474f662b"
+    },
+    {
+      "path": "quality-review/b2-state-core/ledger.contract.cjs",
+      "kind": "DeliveryArtifact",
+      "bytes": 18318,
+      "sha256": "127e2c733998d98ee063494e5f316085556e2a6560fafdbd5405bb0f4801cc70"
+    },
+    {
+      "path": "quality-review/b2-state-core/production.diff",
+      "kind": "DeliveryArtifact",
+      "bytes": 130491,
+      "sha256": "63cf8775bcb88b26f9b2b35d86769aaa79fb495e293db1727f8ca0b501de9171"
+    },
+    {
+      "path": "quality-review/b2-state-core/protected-baseline.json",
+      "kind": "DeliveryArtifact",
+      "bytes": 48022,
+      "sha256": "fe158ab43b99c9ed0da107c8c880dfa0c35f35c12663d811e0ee546ee8d589d9"
+    },
+    {
+      "path": "quality-review/b2-state-core/protected-final-audit.json",
+      "kind": "DeliveryArtifact",
+      "bytes": 7127,
+      "sha256": "9c90f650eda32a15264ef4dfbe265f77977d7d810e01ed46285b287f938b3dc2"
+    },
+    {
+      "path": "quality-review/b2-state-core/puzzle.contract-results.json",
+      "kind": "DeliveryArtifact",
+      "bytes": 2026,
+      "sha256": "5d76f59052ca8fb0b2e7389ed917f00c9742c81986e6d41c3a7a78d22368aa61"
+    },
+    {
+      "path": "quality-review/b2-state-core/puzzle.contract.cjs",
+      "kind": "DeliveryArtifact",
+      "bytes": 14019,
+      "sha256": "5f7868e1a3ceaf7dd87c6e2b9ad6c71fef52c90833165fbff7b86bd819c03e2d"
+    },
+    {
+      "path": "quality-review/b2-state-core/run-preview.cjs",
+      "kind": "DeliveryArtifact",
+      "bytes": 845,
+      "sha256": "ba2ba9e0a717bee063060c513cab8b87c2221cba723d433f1491fc6c7221a023"
+    },
+    {
+      "path": "quality-review/b2-state-core/runtime-wiring.contract-results.json",
+      "kind": "DeliveryArtifact",
+      "bytes": 2022,
+      "sha256": "0aff5a444521fde3b60ae8dd1b10a8890960ecb1bb7b4a0105a544e0582bf586"
+    },
+    {
+      "path": "quality-review/b2-state-core/runtime-wiring.contract.cjs",
+      "kind": "DeliveryArtifact",
+      "bytes": 14016,
+      "sha256": "0cf850933e29e4b16020f12dafb0588bd2ba930593c340de781fc8c616e3d5f6"
+    },
+    {
+      "path": "quality-review/b2-state-core/storage.contract-results.json",
+      "kind": "DeliveryArtifact",
+      "bytes": 6547,
+      "sha256": "ff8fce8f764ae3616e0b34f2dc6c61d72f17b55370af60c7638b6683ed8a7c4f"
+    },
+    {
+      "path": "quality-review/b2-state-core/storage.contract.cjs",
+      "kind": "DeliveryArtifact",
+      "bytes": 19898,
+      "sha256": "32ed9556ba06288e7317cbd3fc6a21f8a3f9f7111fd4fd53a0f0ad5e2f85c5b8"
+    },
+    {
+      "path": "quality-review/b2-state-core/summarize-evidence.cjs",
+      "kind": "DeliveryArtifact",
+      "bytes": 4731,
+      "sha256": "fa10a62a9b06fdc31b7053e38cbf833f6548cb9c7437501f7789644b543964f4"
+    },
+    {
+      "path": "quality-review/b2-state-core/verify-delivery.cjs",
+      "kind": "DeliveryArtifact",
+      "bytes": 8438,
+      "sha256": "cab27833b32ef4e3688b556699f8e5ee099b0613eb6547df449633dfb157848b"
+    },
+    {
+      "path": "quality-review/b2-state-core/交付报告.md",
+      "kind": "DeliveryArtifact",
+      "bytes": 3503,
+      "sha256": "c232da71f3268e6745af30d6219d4fc745a6e81861290db0bbde09664af54700"
+    },
+    {
+      "path": "quality-review/b2-state-core/依赖矩阵扩展提案.md",
+      "kind": "DeliveryArtifact",
+      "bytes": 1272,
+      "sha256": "634ebc34bc001010de661f6891212c871ffc5d1021720358b950034a9a6c91a8"
+    },
+    {
+      "path": "quality-review/b2-state-core/修改文件清单.md",
+      "kind": "DeliveryArtifact",
+      "bytes": 4969,
+      "sha256": "7e99f37a980e7dc3284fd21801236ddd5e3f1f1235a9db9d104a24c20a1a8395"
+    },
+    {
+      "path": "quality-review/b2-state-core/名库-v3.9-附录提案.md",
+      "kind": "DeliveryArtifact",
+      "bytes": 3798,
+      "sha256": "b831f77ec6e09d0a335e00f3b4ef420146a2ffd6765c361ca1b71e0a493f631c"
+    },
+    {
+      "path": "quality-review/b2-state-core/正式裁定书-VERDICT-241-255.md",
+      "kind": "DeliveryArtifact",
+      "bytes": 7408,
+      "sha256": "3227acdfd75447b0386b9c6c9bdee796f433f3b853c280b6f6facda3753e1699"
+    },
+    {
+      "path": "quality-review/b2-state-core/遗留问题与待裁定.md",
+      "kind": "DeliveryArtifact",
+      "bytes": 1917,
+      "sha256": "61e506f23bd049a2b125e8cd5e57918b380126b1198af863c9259467efb94dd7"
+    },
+    {
+      "path": "quality-review/b2-state-core/验收证据逐条对应.md",
+      "kind": "DeliveryArtifact",
+      "bytes": 5901,
+      "sha256": "f14d93b933150d3b705bdcba50a3ad2182f2ee48fbb1eba6c9c8cc7c254ef186"
+    }
+  ],
+  "productionFileCount": 23,
+  "qualityFileCount": 67,
+  "baselinePolicy": "285 original files and all backup bytes were verified by verify-delivery.cjs. Baseline duplicates are excluded from this artifact list; their hashes remain in protected-baseline.json.",
+  "diagnosticPolicy": "Archived first harness assertion failure is retained and labeled, excluded from passing acceptance. Current fresh profile run and raw images alone substantiate production PASS."
+}

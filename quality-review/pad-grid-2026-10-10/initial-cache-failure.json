@@ -1,0 +1,12 @@
+{
+  "creator": "3.8.8",
+  "url": "http://localhost:7456/",
+  "fixture": "Only DirectorSession.endpointSettled=true to bypass the already-tested T6 entrance. No score/node/media clock replacement. GameCanvas receives DOM KeyboardEvent edges through the Cocos web input source, InputCollector, FrameDriver and director.",
+  "resolutions": [],
+  "rendererErrors": [],
+  "pass": false,
+  "failure": {
+    "message": "KeyboardPadLayout.ts lacks final marker: pad-layout-2",
+    "stack": "AssertionError [ERR_ASSERTION]: KeyboardPadLayout.ts lacks final marker: pad-layout-2\n    at D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\pad-grid-2026-10-10\\creator-preview.cjs:34:47\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async Promise.all (index 4)\n    at async captureCompilation (D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\pad-grid-2026-10-10\\creator-preview.cjs:24:17)\n    at async D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\pad-grid-2026-10-10\\creator-preview.cjs:290:25"
+  }
+}

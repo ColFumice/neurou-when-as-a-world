@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-10T13:17:38.751Z",
+  "phase": "B2.4a",
+  "algorithm": "sha256",
+  "before": "baseline-before.json",
+  "after": "baseline-after.json",
+  "scopedFilePathCount": 564,
+  "uniquePhysicalFileCount": 337,
+  "scope": {
+    "directories": [
+      "src",
+      "constants",
+      "assets",
+      "scripts",
+      "types",
+      "docs",
+      "settings",
+      "profiles",
+      ".trae",
+      ".creator"
+    ],
+    "rootFiles": [
+      "package.json",
+      "package-lock.json",
+      "tsconfig.json",
+      "雨若_Neurou_main_describe.docx",
+      "雨若_Neurou_core_gameplay.docx",
+      "big logo.png",
+      "small logo.png",
+      "641f3d33-4bab-4769-8f46-62a03315d1b1.jsonl"
+    ],
+    "excludedDirectoryNames": [
+      "node_modules",
+      ".git",
+      "library",
+      "temp",
+      "tmp"
+    ]
+  },
+  "changed": [],
+  "removed": [],
+  "added": [],
+  "linksUnchanged": true,
+  "unreadableBefore": [],
+  "unreadableAfter": [],
+  "pass": true,
+  "limitation": "Protected scope listed explicitly. Evidence directory is intentionally excluded. This workspace has no Git repository; no Git diff claim is made."
+}

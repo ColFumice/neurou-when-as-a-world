@@ -1,0 +1,56 @@
+{
+  "kind": "B2.5c-2a frozen document index",
+  "generatedUtc": "2026-10-11T06:56:40.444Z",
+  "files": [
+    {
+      "path": "clock-storage-audit.md",
+      "bytes": 13391,
+      "sha256": "bb6d7747d6e389915bf1a004489374677c8b9ec2f754b32dbaca0ac4dc94f061"
+    },
+    {
+      "path": "delivery-report.md",
+      "bytes": 5824,
+      "sha256": "491f7f8e789bda03329a5aec0423d55fe7a5ca0c8baf7b2f2b9d9ad0dca9eb69"
+    },
+    {
+      "path": "http-and-port-draft.md",
+      "bytes": 30853,
+      "sha256": "5fc764baac80ddc8c27ee2ef7e565741d81b507eb23fbddcf1706ad0f2c31b5b"
+    },
+    {
+      "path": "key-delivery-and-pins.md",
+      "bytes": 25796,
+      "sha256": "c15833cec97f929c7968f0590804f51bb8ad164838f6242175fb5ed6fa4d2856"
+    },
+    {
+      "path": "namebook-v3.19-appendix-proposal.md",
+      "bytes": 8022,
+      "sha256": "e6afe0eae1833f90bffb92759a77cd9b9b36577d1c4b9d2b0a76f370a4a0e360"
+    },
+    {
+      "path": "port-network-audit.md",
+      "bytes": 9458,
+      "sha256": "b196d9b88cb19a2bc4f12b62fd066125fb5d35c299af0f89dfc5a4133c26fc7f"
+    },
+    {
+      "path": "protocol-prerequisites.md",
+      "bytes": 5137,
+      "sha256": "e0d122ba38be07a1b051d3a6138280493a6232a8fecf35d7faf8a426b83b7936"
+    },
+    {
+      "path": "stages-and-open-items.md",
+      "bytes": 7130,
+      "sha256": "66676b812f51f41e952ea4febc8f288dd4569921430865d938427ddf757d8627"
+    },
+    {
+      "path": "storage-and-clock-contract.md",
+      "bytes": 6835,
+      "sha256": "8da528360bde381250c97ad52984be297cff7ea5a81f37b684153514b0161cc4"
+    },
+    {
+      "path": "verdicts-426-440.md",
+      "bytes": 14584,
+      "sha256": "facf7fec66dfd0e5c3e1ae0b8fb530868786ed915094cba691393361447c684f"
+    }
+  ]
+}

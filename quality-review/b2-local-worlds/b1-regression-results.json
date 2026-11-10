@@ -1,0 +1,22 @@
+{
+  "generatedAt": "2026-10-10T08:38:48.803Z",
+  "pass": true,
+  "runs": [
+    {
+      "name": "logic-acceptance",
+      "original": "quality-review\\b1-editor-game\\logic-acceptance.cjs",
+      "originalSha256": "da701985f08b06101adc7cc150ed4fff93befe44b14fdea3e2b40d1408a0dd11",
+      "adaptation": "Only renamed output result filename; all executable assertions unchanged.",
+      "exitCode": 0,
+      "pass": true
+    },
+    {
+      "name": "resource-boundary",
+      "original": "quality-review\\b1-editor-game\\resource-boundary.cjs",
+      "originalSha256": "ee26d29766e42898de339538399c3d6f2c5bf09d55bf1828571c9e120ed37127",
+      "adaptation": "Only renamed output result filename; all executable assertions unchanged.",
+      "exitCode": 0,
+      "pass": true
+    }
+  ]
+}

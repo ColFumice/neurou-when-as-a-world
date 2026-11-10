@@ -1,0 +1,211 @@
+{
+  "phase": "B2.5c-2b final independent server validation",
+  "generatedUtc": "2026-10-11T08:07:18.128Z",
+  "nodeVersion": "v24.19.0",
+  "nodeRequiredMajor": 24,
+  "database": {
+    "host": "127.0.0.1",
+    "port": 55437,
+    "name": "c2b_authority_final",
+    "pgMajor": 17,
+    "pgVersion": "17.11",
+    "realPostgreSQL": true,
+    "credentialsRecorded": false
+  },
+  "runs": [
+    {
+      "name": "build",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "SharedBuild.mjs"
+      ],
+      "log": "server-shared-build-version-final.log",
+      "cwd": "D:\\Project\\A_New_Begin\\Neurou_official\\server",
+      "exitCode": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "logBytes": 0
+    },
+    {
+      "name": "typecheck",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "node_modules/typescript/bin/tsc",
+        "-p",
+        "tsconfig.shared.json",
+        "--noEmit"
+      ],
+      "log": "server-shared-typecheck-version-final.log",
+      "cwd": "D:\\Project\\A_New_Begin\\Neurou_official\\server",
+      "exitCode": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "logBytes": 0
+    },
+    {
+      "name": "test",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "--test",
+        "shared-dist/test/shared-clock-migration.test.js",
+        "shared-dist/test/shared-http.test.js"
+      ],
+      "log": "server-shared-tests-version-final.log",
+      "cwd": "D:\\Project\\A_New_Begin\\Neurou_official\\server",
+      "exitCode": 0,
+      "sha256": "140d48c0710f43daa94613dd048f1a2b92c1d40ff31b0f5e4718a6284f08cb71",
+      "logBytes": 2459
+    }
+  ],
+  "counts": {
+    "tests": 20,
+    "pass": 20,
+    "fail": 0,
+    "realHttpPG": 18,
+    "productionClockHttpPG": 17,
+    "explicitIsolatedClockHttpPG": 1,
+    "pgMigration": 1,
+    "isolatedClockPG": 1
+  },
+  "cases": [
+    {
+      "name": "002 checksum runner serializes concurrent migration and rejects changed source instead of permissive IF NOT EXISTS",
+      "result": "PASS",
+      "category": "RealPGMigration"
+    },
+    {
+      "name": "isolated clock durable floor, equal milliseconds, rollback/drift latch and explicit new trust generation",
+      "result": "PASS",
+      "category": "IsolatedClockRealPG"
+    },
+    {
+      "name": "real PG17 migrates exact 18 shared tables, separate authority no Relay routes",
+      "result": "PASS",
+      "category": "ProductionClockRealHttpPG"
+    },
+    {
+      "name": "status uses same real PG session and precise signature/policy/clock, bad CSRF/extra fields reject",
+      "result": "PASS",
+      "category": "ProductionClockRealHttpPG"
+    },
+    {
+      "name": "new shared envelope preserves old exact Host/Origin/content-type guard and rejects bare LAN builder",
+      "result": "PASS",
+      "category": "ProductionClockRealHttpPG"
+    },
+    {
+      "name": "outer unsupported safe integer version has exact VersionUnsupported wire without masking canonical failures",
+      "result": "PASS",
+      "category": "ProductionClockRealHttpPG"
+    },
+    {
+      "name": "operator approved world exact tuple and dual root/registered signatures, missing pin/tamper reject",
+      "result": "PASS",
+      "category": "ProductionClockRealHttpPG"
+    },
+    {
+      "name": "real six digit code CAS, wrong code terminal consumption, correct code automatic ordinary Observer",
+      "result": "PASS",
+      "category": "ProductionClockRealHttpPG"
+    },
+    {
+      "name": "independent actual ECDH/HKDF/GCM decrypt+HMAC+registered ES256 proof, bad tag consumes challenge",
+      "result": "PASS",
+      "category": "ProductionClockRealHttpPG"
+    },
+    {
+      "name": "root-signed Initial epoch validates actual proved credentials; nonce canonical exact retry and conflict",
+      "result": "PASS",
+      "category": "ProductionClockRealHttpPG"
+    },
+    {
+      "name": "membership target account locks observe concurrent disable before activation without reverse auth locks",
+      "result": "PASS",
+      "category": "ProductionClockRealHttpPG"
+    },
+    {
+      "name": "global author allocator reserves 1024 and concurrent independent original receipts, segments never overlap",
+      "result": "PASS",
+      "category": "ProductionClockRealHttpPG"
+    },
+    {
+      "name": "30-second server permit and signed digest-only claim admission; original facts rewrapped across nonce",
+      "result": "PASS",
+      "category": "ProductionClockRealHttpPG"
+    },
+    {
+      "name": "empty real old-time seal derives prefix; too recent seal and old CAS reject",
+      "result": "PASS",
+      "category": "ProductionClockRealHttpPG"
+    },
+    {
+      "name": "membership rekey excludes revoked credential; old admitted survives and old epoch new permit rejects",
+      "result": "PASS",
+      "category": "ProductionClockRealHttpPG"
+    },
+    {
+      "name": "server restart keeps PG sessions, shared clock generation/floor, author counters and original receipt bytes",
+      "result": "PASS",
+      "category": "ProductionClockRealHttpPG"
+    },
+    {
+      "name": "lost/tombstoned nonce result cannot reexecute; runtime no bodies/state/keys/packages in authority",
+      "result": "PASS",
+      "category": "ProductionClockRealHttpPG"
+    },
+    {
+      "name": "real code failures persist account/world and global source-IP budgets across service restart",
+      "result": "PASS",
+      "category": "ProductionClockRealHttpPG"
+    },
+    {
+      "name": "logout invalidates PG family for shared calls without revoking registered credential",
+      "result": "PASS",
+      "category": "ProductionClockRealHttpPG"
+    },
+    {
+      "name": "isolated clock rollback latches durably: signed status null time and new facts forbidden, historical readable",
+      "result": "PASS",
+      "category": "IsolatedClockRealHttpPGMixedBoundary"
+    }
+  ],
+  "sources": [
+    {
+      "path": "server/SharedBuild.mjs",
+      "sha256": "a3cc9d9073be378093e0969b1b3bdbf6a61db96e6668ca3eb815183540db9c01"
+    },
+    {
+      "path": "server/tsconfig.shared.json",
+      "sha256": "7a152e46c1d4c92f15e5e0f8b1dd776315223e3f1b8c5274446f6671b26fb031"
+    },
+    {
+      "path": "server/sql/002_shared_authority.sql",
+      "sha256": "8891dc04fc4c9c6aa35eabcfc2c3241176a6c6960fc9aef52edb1f4a288a2a59"
+    },
+    {
+      "path": "server/src/AuthorityRoute.ts",
+      "sha256": "1490b475447f7a8cb6cbf93763c1e32b5f36624729e5bfae52904def39ff6f0e"
+    },
+    {
+      "path": "server/src/RealAuthorityClock.ts",
+      "sha256": "ef385ef705626a7269dd171e6491ee3523819d515427effb25ec70bfa657efda"
+    },
+    {
+      "path": "server/src/SharedSessionVerifier.ts",
+      "sha256": "674b5411364bfaa42728885d94453c1468564690b81aa519e7b40a7f6f1439b9"
+    },
+    {
+      "path": "server/test/shared-http.test.ts",
+      "sha256": "1040fb1057b2f199e2df0e71c874ddeff9f4ef0797b3a649ddcc23af0c7a021a"
+    },
+    {
+      "path": "server/test/shared-clock-migration.test.ts",
+      "sha256": "1a045ff129e8a68142c20af04cadcca55ec62de1d1c07e9cdbcd4d1249c58d95"
+    }
+  ],
+  "priorRawPreserved": [
+    "server-shared-build.log",
+    "server-shared-typecheck.log",
+    "server-shared-tests.log"
+  ],
+  "pass": true,
+  "scope": "Independent incremental server package: unchanged old auth plus new shared authority on real Fastify.listen/TCP loopback and PostgreSQL17. Production clocks apply to 17 HTTP cases; one HTTP case and one PG clock case explicitly inject isolated authority wall/monotonic sources. Nonempty seal, expired permit/proof and rollback use isolation only. No relay, complete FileCarry, physical device, native OfflineGrace, dual-client relay chain or LAN deployment acceptance."
+}

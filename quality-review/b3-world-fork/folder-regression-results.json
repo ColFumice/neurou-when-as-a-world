@@ -1,0 +1,70 @@
+{
+  "batch": "B2.3-existing-folder-regression",
+  "category": "ContractTest",
+  "productionClaim": false,
+  "note": "Actual startup/create/delete/GC/exit root and real persistence with async resource/lock/lifecycle adapters; no game runtime is mocked as production acceptance.",
+  "passed": 12,
+  "failed": 0,
+  "results": [
+    {
+      "name": "actual asynchronous startup publishes only initial metadata/FormatTime and no gameplay before selection",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "actual create writes new leased FormatTime before directory and preserves EmptyWorld minimal factory",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "actual initial selection and rapid duplicate opens invoke configured factory once",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "actual open rechecks stale tombstone/foreign card and preserves stored bytes without runtime creation",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "actual queued create re-reads latest directory under lock and retains another tab record",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "actual create directory quota failure publishes no ghost and a later fresh create succeeds",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "actual delete publishes tombstone first and leased GC removes only chart collections",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "actual GC quota failure keeps durable tombstone and current active list then refresh retries cleanup",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "actual corrupt directory remains unavailable, untouched and editors accessible",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "actual exit deactivates/destroys once, keeps lease through draw, then refreshes latest external directory",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "actual composition failure rolls back runtime and lease with visible error then permits retry",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "actual destruction cancels pending draw callback and prevents asynchronous view reconstruction",
+      "result": "PASS",
+      "category": "ContractTest"
+    }
+  ]
+}

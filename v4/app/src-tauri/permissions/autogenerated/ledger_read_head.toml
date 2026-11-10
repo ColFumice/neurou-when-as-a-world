@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-ledger-read-head"
+description = "Enables the ledger_read_head command without any pre-configured scope."
+commands.allow = ["ledger_read_head"]
+
+[[permission]]
+identifier = "deny-ledger-read-head"
+description = "Denies the ledger_read_head command without any pre-configured scope."
+commands.deny = ["ledger_read_head"]

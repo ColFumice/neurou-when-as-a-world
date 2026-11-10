@@ -1,0 +1,253 @@
+{
+  "category": "ContractTest",
+  "note": "Isolated logic tests with actual shipped ChartPremiere and maker-published editor export; media clocks/ended are explicit controlled fixtures. No test is production/Cocos preview acceptance.",
+  "passed": 49,
+  "failed": 0,
+  "results": [
+    {
+      "name": "deriveLedgerPosition sums all 20 dimensions in authoritative append order including Player and Autopilot",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "coordinate accumulation preserves actual append order without sorting or window truncation",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "invalid vector/version and cumulative overflow fail instead of clipping, padding or publishing coordinates",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "sphere equality is crossing after Player append; reads and below-surface Player do not trigger",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "Autopilot outside never grants entry; next successful Player append can trigger even with a zero vector",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "cross-character append cannot cross for protagonist and crossing remains one-way once granted",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "sphere validates fixed finite positive geometry and uses the complete 20-dimensional norm",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "route classifies unique positive Red maximum using its frozen dimension",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "route classifies unique positive Green maximum using its frozen dimension",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "route classifies unique positive Blue maximum using its frozen dimension",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "route classifies unique positive Black maximum using its frozen dimension",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "route classifies unique positive White maximum using its frozen dimension",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "route classifies unique positive Grey maximum using its frozen dimension",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "positive emotion ties use Red to Grey order and all-six-zero nonzero route keeps null",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "route is a cloned immutable completion-time snapshot with no caller alias",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "maker-published content and formal World chart equal a fresh existing editor export",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "content publication rejects unknown schema before player choice parsing",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "content publication rejects wrong kind before player choice parsing",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "content publication rejects nonzero center before player choice parsing",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "content publication rejects zero radius before player choice parsing",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "content publication rejects nonfinite radius before player choice parsing",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "content publication rejects source version mismatch before player choice parsing",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "content publication rejects chart version mismatch before player choice parsing",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "content publication rejects duplicate choice before player choice parsing",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "content publication rejects short choice vector before player choice parsing",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "content publication rejects missing meaning before player choice parsing",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "content publication rejects resource traversal before player choice parsing",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "content publication rejects extra permission field before player choice parsing",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "new Entry reference is not a premiere fact; only explicit completed target reference is",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "known legacy grey-box T6/T7 are read-only classified without rewriting old fields",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "unknown old producer and legacy impostors remain unclassified; invalid explicit state cannot downgrade",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "chart reference rejects structural/accessor/prototype/state corruption without executing getters",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "unknown choice ID writes nothing; valid choice resolves published vector once and grants unique SphereCrossing entry",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "session refuses World entry before crossing or before formally bound World media/chart",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "all-Miss complete actual ChartPremiere emits unique completed event and valid WorldClearRecord with no score gate",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "all nodes resolved without media ending remains Playing and writes no completion fact",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "early truncated media end advances exceptional timeline through real ChartPremiere judgements before completing",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "unavailable stopped media waits the frozen timeout then uses real judgement/timeout path to complete",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "pause freezes exceptional-media timeout accumulation and logical timeline",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "early exit/reentry clears prior exceptional timeout and never carries elapsed outage into new premiere",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "early exit retains same entry; reenter resets actual premiere and later completes once",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "pause never advances completion; resumed normal media end resolves the same World premiere",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "completion-time route incorporates later authoritative protagonist events and excludes other characters",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "failed append cannot publish crossing or extra records; successful autopilot then Player sequence crosses legally",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "World gate freezes entire entry/exit batch and legacy movement; subsequent world frame resumes old intent route",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "repeated Completed frames/reentry/retry cannot create a second completion or callback after successful commit",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "persistence failure publishes Failed without success; retry preserves single completed event and frozen route",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "already persisted world record closes future narrative/entry/completion path without hydrating world state",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "read-only World snapshot exposes choice IDs and meaning without vector write payload or account permission values",
+      "result": "PASS",
+      "category": "ContractTest"
+    }
+  ]
+}

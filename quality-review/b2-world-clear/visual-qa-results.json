@@ -1,0 +1,57 @@
+{
+  "category": "ProductionScreenshotQA",
+  "checkedAt": "2026-10-10T10:25:52.261Z",
+  "rawScreenshotCount": 20,
+  "programmaticAll": {
+    "PNG_IHDR_viewport_canvas_and_css_match": true,
+    "DPR1": true,
+    "noHorizontalOverflow": true,
+    "noRuntimeErrors": true
+  },
+  "visuallyInspected": [
+    {
+      "file": "1920x1080-06-premiere-completed-record-route-account-permission.png",
+      "sha256": "b2e3edf8781e875f828c380dd599386f0fdbb36fbcbe5a69d0f4c65df7081fd5",
+      "pass": true
+    },
+    {
+      "file": "2560x1440-03-world-boss-chart-native-performance.png",
+      "sha256": "2618914ec3165f13c3d7de14f29adaf63785524e1e58595d0c7dd8928307d2cc",
+      "pass": true
+    },
+    {
+      "file": "1920x1080-07-directory-first-world-cleared-copy-permission-true.png",
+      "sha256": "3ade51683d424192ca7adcf9681c18a5597b2752c617fb734a30e4169c4fef69",
+      "pass": true
+    },
+    {
+      "file": "2560x1440-01-primary-player-choices.png",
+      "sha256": "af363dcc40dc195fdff9f4f28f9343eb6c140d340b085ba4e255639cbebb13b4",
+      "pass": true
+    },
+    {
+      "file": "2560x1440-05-midway-exit-entry-retained-no-clear.png",
+      "sha256": "80c89df71a0ab0b2df21fc1623f4b827e13994e6cd8605fa465332ee10220f9a",
+      "pass": true
+    },
+    {
+      "file": "2560x1440-06-premiere-completed-record-route-account-permission.png",
+      "sha256": "be1e95bd18d0e5cbbf82e66d9adbfda12add621409c25c47bf0563817f40bd18",
+      "pass": true
+    },
+    {
+      "file": "1920x1080-03-world-boss-chart-native-performance.png",
+      "sha256": "79d3214f562fa00059fe3ae56b0ec9bb462382165012bfb37981ea30e293e6cf",
+      "pass": true
+    }
+  ],
+  "visualFindings": [
+    "Primary narrative panel and all choice labels readable inside viewport",
+    "Full World chart displays actual exported line and five nodes with score/media controls",
+    "Midway exit preserves story outcome and World entry, account remains incomplete",
+    "Both completed-world panels show saved record, FirstWorldCleared and CopyPermission success",
+    "Directory permission text and WorldFork NotImplemented remain distinct",
+    "Existing greybox/puzzle diagnostics remain unchanged behind the new overlay"
+  ],
+  "pass": true
+}

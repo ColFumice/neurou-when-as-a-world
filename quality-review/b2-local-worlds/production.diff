@@ -1,0 +1,652 @@
+diff --git a/assets/scripts/WorldFolderBuilder.ts b/assets/scripts/WorldFolderBuilder.ts
+index 98db235..460e572 100644
+--- a/assets/scripts/WorldFolderBuilder.ts
++++ b/assets/scripts/WorldFolderBuilder.ts
+@@ -1,5 +1,7 @@
+ import { _decorator, Component, Node, UITransform, Canvas, Camera, director, Director, isValid } from 'cc';
+ import { AccountStartupSession } from './src/director/AccountStartupSession';
++import { WorldFolderSession } from './src/director/WorldFolderSession';
++import { WorldLocalStorage } from './src/presentation/WorldLocalStorage';
+ import { WorldFolderView } from './src/presentation/WorldFolderView';
+ import { EditorFolderView } from './src/presentation/EditorFolderView';
+ import { AccountStartupStorage, FolderStartupView } from './src/presentation/FolderStartupView';
+@@ -8,6 +10,7 @@ import { createWorldFolderReader, editorCatalog } from './src/presentation/Folde
+ import type { EditorFolderEntry, WorldFolderEntry } from './src/presentation/FolderCatalog';
+ import { GuidanceEditorBuilder } from './GuidanceEditorBuilder';
+ import { MusicEditorBuilder } from './MusicEditorBuilder';
++import { MinimalWorldBuilder } from './MinimalWorldBuilder';
+ 
+ const { ccclass } = _decorator;
+ 
+@@ -24,6 +27,8 @@ export class WorldFolderBuilder extends Component {
+   private exitControl: HTMLButtonElement | null = null;
+   private retiring = false;
+   private folderPending = false;
++  private folderSession: WorldFolderSession | null = null;
++  private readonly worldStorage = new WorldLocalStorage();
+ 
+   bindWorldFactory(factory: (node: Node) => void): void { this.worldFactory = factory; }
+ 
+@@ -50,12 +55,29 @@ export class WorldFolderBuilder extends Component {
+   }
+ 
+   private showWorldFolder(): void {
+-    this.clearViews();
+     const accountId = this.startup.getStartupSnapshot().accountId;
+     if (accountId === null) { return; }
+-    this.folderView = new WorldFolderView(createWorldFolderReader(accountId),
+-      entry => this.openWorld(entry), () => this.showEditorFolder());
++    let error: unknown = null;
++    try { this.folderSession = this.loadFolderSession(accountId); }
++    catch (failure) { this.folderSession = null; error = failure; }
++    this.clearViews();
++    this.folderView = new WorldFolderView(createWorldFolderReader(accountId,
++      () => this.folderSession?.getWorlds() ?? []),
++      entry => this.openWorld(entry), () => this.showEditorFolder(),
++      { submitWorldFolderIntent: intent => {
++        if (!this.folderSession) { throw new Error('世界目录尚未加载，请刷新后重试'); }
++        this.folderSession.submitWorldFolderIntent(intent);
++      } }, () => this.showWorldFolder());
+     this.folderView.mount();
++    if (error !== null) { this.folderView.showStatus('世界目录未能加载：' + String(error)); }
++  }
++
++  private loadFolderSession(accountId: string): WorldFolderSession {
++    let expected = this.worldStorage.readSnapshot(accountId);
++    return new WorldFolderSession(accountId, expected, snapshot => {
++      this.worldStorage.saveSnapshot(snapshot, expected);
++      expected = snapshot;
++    }, () => 'world-' + globalThis.crypto.randomUUID(), () => Date.now());
+   }
+ 
+   private showEditorFolder(): void {
+@@ -73,8 +95,27 @@ export class WorldFolderBuilder extends Component {
+   }
+ 
+   private openWorld(entry: WorldFolderEntry): void {
+-    if (this.retiring || this.runtimeNode || entry.worldId !== 'InitialWorld' || !this.worldFactory) { return; }
+-    this.clearViews(); this.worldFactory(this.createRuntime('InitialWorld'));
++    if (this.retiring || this.runtimeNode) { return; }
++    const accountId = this.startup.getStartupSnapshot().accountId;
++    if (accountId === null) { return; }
++    try {
++      // Never trust an old card: re-read the account metadata immediately before opening.
++      this.folderSession = this.loadFolderSession(accountId);
++      const record = this.folderSession.getWorldRecord(entry.worldId);
++      if (record.template === 'InitialWorld' && !this.worldFactory) { throw new Error('初始世界入口尚未接线'); }
++      const runtime = this.createRuntime(record.worldId);
++      if (record.template === 'InitialWorld') { this.worldFactory!(runtime); }
++      else { runtime.addComponent(MinimalWorldBuilder).bindEntry(record); }
++      this.clearViews();
++    } catch (error) {
++      if (this.runtimeNode) {
++        this.exitRuntime();
++        // Keep the existing folder and its error visible while deferred destruction finishes.
++        this.folderPending = false;
++      }
++      this.folderView?.showStatus('世界未能打开：' + String(error));
++      return;
++    }
+     this.showExitControl('退出世界 · 返回世界文件夹');
+   }
+ 
+diff --git a/src/director/IntentPort.ts b/src/director/IntentPort.ts
+index b16c715..dd3d217 100644
+--- a/src/director/IntentPort.ts
++++ b/src/director/IntentPort.ts
+@@ -943,3 +943,5 @@ export class DirectorSession implements IntentPort {
+ }
+ // VERDICT-158: presentation reads/submits account startup through the existing narrow route.
+ export type { AccountStartupReader, AccountStartupPort, AccountStartupIntent, AccountStartupSnapshot } from './AccountStartupSession';
++// B2.1 metadata intents use the existing presentation -> director type-only route.
++export type { WorldFolderRecord, WorldFolderSnapshot, WorldFolderIntent, WorldFolderPort } from './WorldFolderSession';
+diff --git a/src/presentation/FolderCatalog.ts b/src/presentation/FolderCatalog.ts
+index d7da4ed..1d5c366 100644
+--- a/src/presentation/FolderCatalog.ts
++++ b/src/presentation/FolderCatalog.ts
+@@ -1,6 +1,6 @@
+ // 世界与编辑器目录的只读 presentation 数据；组合根注入，零引擎依赖。
+ export type WorldFolderEntry = {
+-  readonly worldId: 'InitialWorld';
++  readonly worldId: string;
+   readonly title: string;
+   readonly description: string;
+ };
+@@ -27,11 +27,15 @@ export const InitialWorld: WorldFolderEntry = Object.freeze({
+   description: '箱庭 · 深痕 · 解谜链 · 引导线演奏',
+ });
+ 
+-export function createWorldFolderReader(accountId: string): WorldFolderReader {
+-  const worlds: readonly WorldFolderEntry[] = Object.freeze([InitialWorld]);
++export function createWorldFolderReader(
++  accountId: string,
++  readWorlds: () => readonly WorldFolderEntry[] = () => [InitialWorld],
++): WorldFolderReader {
+   return Object.freeze({
+     getAccountId: (): string => accountId,
+-    getWorlds: (): readonly WorldFolderEntry[] => worlds,
++    getWorlds: (): readonly WorldFolderEntry[] => Object.freeze(readWorlds().map(entry => Object.freeze({
++      worldId: entry.worldId, title: entry.title, description: entry.description,
++    }))),
+   });
+ }
+ 
+diff --git a/src/presentation/WorldFolderView.ts b/src/presentation/WorldFolderView.ts
+index 06a4d41..75ef8e3 100644
+--- a/src/presentation/WorldFolderView.ts
++++ b/src/presentation/WorldFolderView.ts
+@@ -1,4 +1,5 @@
+ import type { WorldFolderEntry, WorldFolderReader } from './FolderCatalog';
++import type { WorldFolderPort } from '../director/IntentPort';
+ import { applyFolderTheme } from './FolderTheme';
+ 
+ // AC-29 灰盒：只读取目录并发出导航回调，不持有世界运行实例。
+@@ -9,6 +10,8 @@ export class WorldFolderView {
+     private readonly reader: WorldFolderReader,
+     private readonly openWorld: (entry: WorldFolderEntry) => void,
+     private readonly openEditors: () => void,
++    private readonly port: WorldFolderPort,
++    private readonly reload: () => void,
+   ) {}
+ 
+   mount(): void {
+@@ -32,21 +35,79 @@ export class WorldFolderView {
+       #world-folder .folder-title{display:block;font-size:24px;font-weight:500;margin-bottom:14px}
+       #world-folder .folder-description{display:block;font-size:15px}
+       #world-folder .folder-worlds{display:grid;gap:16px}#world-folder footer{border-top:1px solid var(--folder-border);padding-top:20px;font-size:14px}
++      #world-folder [hidden]{display:none!important}
++      #world-folder main{margin:24px 0 32px;padding:0}#world-folder h2{margin:0}
++      #world-folder .folder-toolbar{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap}#world-folder .folder-toolbar h2{margin-right:auto}
++      #world-folder button.folder-small{padding:8px 14px;min-height:0;width:auto}
++      #world-folder .folder-world-card{background:var(--folder-panel);border:1px solid var(--folder-border);border-radius:4px;overflow:hidden}
++      #world-folder button.folder-open{display:block;min-height:116px;border:0;border-radius:0;padding:20px 24px}
++      #world-folder .folder-actions{display:flex;gap:10px;padding:10px 24px;border-top:1px solid var(--folder-border)}
++      #world-folder .folder-title{overflow-wrap:anywhere}#world-folder .folder-description{overflow-wrap:anywhere;white-space:pre-wrap}
++      #world-folder .folder-panel{padding:20px;background:var(--folder-panel);border:1px solid var(--folder-muted);border-radius:4px;margin-bottom:16px}
++      #world-folder .folder-panel h3{margin:0 0 12px;font-size:19px}#world-folder label{display:grid;gap:6px;margin-bottom:12px}
++      #world-folder input,#world-folder textarea{width:100%;font:inherit;color:inherit;background:var(--folder-bg);border:1px solid var(--folder-border);border-radius:4px;padding:9px}
++      #world-folder textarea{resize:vertical;min-height:72px}#world-folder .folder-panel-actions{display:flex;gap:10px}
++      #world-folder #world-folder-status{min-height:24px;margin:0 0 12px;color:#f0d3a0;overflow-wrap:anywhere}
++      #world-folder .folder-editor{margin-top:16px}#world-folder footer{margin-top:auto}
+       @media(max-width:760px){#world-folder .folder-shell{width:calc(100% - 32px);padding:24px 0}#world-folder header{align-items:flex-start}#world-folder h1{font-size:23px}#world-folder main{grid-template-columns:1fr;gap:28px}#world-folder button{min-height:140px;padding:20px}#world-folder .folder-title{font-size:21px}}
+       @media(max-height:600px){#world-folder .folder-shell{padding:18px 0}#world-folder main{padding:20px 0}#world-folder button{min-height:135px}}
+       </style>
+       <div class="folder-shell">
+         <header><div><div class="folder-brand">雨若</div><h1>世界文件夹</h1></div><div class="folder-account" id="folder-account"></div></header>
+-        <main><div><h2>我的世界</h2><div class="folder-worlds" id="folder-worlds"></div></div><div><h2>创作</h2><button id="open-editor-folder" type="button"><span class="folder-title">世界编辑器文件夹</span><span class="folder-description">打开编辑器目录</span></button></div></main>
+-        <footer>选择世界继续，或打开世界编辑器文件夹。</footer>
++        <main><div>
++          <div class="folder-toolbar"><h2>我的世界</h2><button class="folder-small" id="refresh-worlds" type="button">刷新</button><button class="folder-small" id="create-world" type="button">新建世界</button></div>
++          <p id="world-folder-status" role="status" aria-live="polite"></p>
++          <form id="world-create-form" class="folder-panel" hidden>
++            <h3>新建世界</h3>
++            <label for="world-title">名称<input id="world-title" maxlength="80" required autocomplete="off"></label>
++            <label for="world-description">说明<textarea id="world-description" maxlength="300"></textarea></label>
++            <div class="folder-panel-actions"><button class="folder-small" id="confirm-create-world" type="submit">创建</button><button class="folder-small" id="cancel-create-world" type="button">取消</button></div>
++          </form>
++          <section id="world-delete-confirm" class="folder-panel" role="alertdialog" aria-labelledby="world-delete-title" hidden>
++            <h3 id="world-delete-title">删除世界</h3><p id="world-delete-message"></p>
++            <p>从列表移除，保留已产生的账户通关记录。</p>
++            <div class="folder-panel-actions"><button class="folder-small" id="confirm-delete-world" type="button">确认删除</button><button class="folder-small" id="cancel-delete-world" type="button">取消</button></div>
++          </section>
++          <div class="folder-worlds" id="folder-worlds"></div>
++        </div><div><h2>创作</h2><button class="folder-editor" id="open-editor-folder" type="button"><span class="folder-title">世界编辑器文件夹</span><span class="folder-description">打开编辑器目录</span></button></div></main>
++        <footer>选择世界继续，或新建一个世界。世界编辑器文件夹独立于世界。</footer>
+       </div>`;
+     this.root = root;
+     root.querySelector('#folder-account')!.textContent = '当前账号：' + this.reader.getAccountId();
+-    const worlds = root.querySelector('#folder-worlds')!;
++    const form = root.querySelector<HTMLFormElement>('#world-create-form')!;
++    const confirmation = root.querySelector<HTMLElement>('#world-delete-confirm')!;
++    root.querySelector<HTMLButtonElement>('#create-world')!.onclick = () => {
++      confirmation.hidden = true; form.hidden = false;
++      root.querySelector<HTMLInputElement>('#world-title')!.focus();
++    };
++    root.querySelector<HTMLButtonElement>('#cancel-create-world')!.onclick = () => { form.hidden = true; };
++    form.onsubmit = event => {
++      event.preventDefault();
++      try {
++        this.port.submitWorldFolderIntent({ kind: 'CreateWorld',
++          title: root.querySelector<HTMLInputElement>('#world-title')!.value,
++          description: root.querySelector<HTMLTextAreaElement>('#world-description')!.value });
++        form.reset(); form.hidden = true; this.refresh(); this.showStatus('世界已创建');
++      } catch (error) { this.showStatus(String(error)); }
++    };
++    root.querySelector<HTMLButtonElement>('#cancel-delete-world')!.onclick = () => { confirmation.hidden = true; };
++    root.querySelector<HTMLButtonElement>('#refresh-worlds')!.onclick = () => this.reload();
++    root.querySelector<HTMLButtonElement>('#open-editor-folder')!.onclick = () => this.openEditors();
++    this.refresh();
++    document.body.appendChild(root);
++  }
++
++  refresh(): void {
++    if (!this.root) { return; }
++    const worlds = this.root.querySelector('#folder-worlds')!;
++    worlds.replaceChildren();
+     for (const entry of this.reader.getWorlds()) {
++      const card = document.createElement('article');
++      card.className = 'folder-world-card'; card.dataset.worldId = entry.worldId;
+       const button = document.createElement('button');
+-      button.type = 'button';
+-      button.id = 'open-initial-world';
++      button.type = 'button'; button.className = 'folder-open';
++      if (entry.worldId === 'InitialWorld') { button.id = 'open-initial-world'; }
++      button.dataset.action = 'open-world';
+       button.dataset.worldId = entry.worldId;
+       const title = document.createElement('span');
+       title.className = 'folder-title';
+@@ -56,10 +117,44 @@ export class WorldFolderView {
+       description.textContent = entry.description;
+       button.append(title, description);
+       button.onclick = () => this.openWorld(entry);
+-      worlds.appendChild(button);
++      const actions = document.createElement('div'); actions.className = 'folder-actions';
++      const fork = this.actionButton('分叉', 'fork-world', entry.worldId);
++      fork.onclick = () => {
++        try { this.port.submitWorldFolderIntent({ kind: 'WorldFork', worldId: entry.worldId }); }
++        catch (error) { this.showStatus(String(error)); }
++      };
++      const remove = this.actionButton('删除', 'delete-world', entry.worldId);
++      remove.onclick = () => this.confirmDelete(entry);
++      actions.append(fork, remove); card.append(button, actions); worlds.appendChild(card);
+     }
+-    root.querySelector<HTMLButtonElement>('#open-editor-folder')!.onclick = () => this.openEditors();
+-    document.body.appendChild(root);
++    if (!worlds.childElementCount) { worlds.textContent = '还没有世界，创建一个开始。'; }
++  }
++
++  showStatus(message: string): void {
++    const status = this.root?.querySelector('#world-folder-status');
++    if (status) { status.textContent = message; }
++  }
++
++  private actionButton(title: string, action: string, worldId: string): HTMLButtonElement {
++    const button = document.createElement('button');
++    button.type = 'button'; button.className = 'folder-small'; button.textContent = title;
++    button.dataset.action = action; button.dataset.worldId = worldId;
++    return button;
++  }
++
++  private confirmDelete(entry: WorldFolderEntry): void {
++    if (!this.root) { return; }
++    this.root.querySelector<HTMLFormElement>('#world-create-form')!.hidden = true;
++    const confirmation = this.root.querySelector<HTMLElement>('#world-delete-confirm')!;
++    confirmation.querySelector('#world-delete-message')!.textContent = '删除“' + entry.title + '”？';
++    confirmation.hidden = false;
++    confirmation.querySelector<HTMLButtonElement>('#confirm-delete-world')!.onclick = () => {
++      try {
++        this.port.submitWorldFolderIntent({ kind: 'DeleteWorld', worldId: entry.worldId });
++        confirmation.hidden = true; this.refresh(); this.showStatus('世界已从列表移除');
++      } catch (error) { this.showStatus(String(error)); }
++    };
++    confirmation.querySelector<HTMLButtonElement>('#cancel-delete-world')!.focus();
+   }
+ 
+   destroy(): void {
+diff --git a/assets/scripts/MinimalWorldBuilder.ts b/assets/scripts/MinimalWorldBuilder.ts
+new file mode 100644
+index 0000000..1df9ee0
+--- /dev/null
++++ b/assets/scripts/MinimalWorldBuilder.ts
+@@ -0,0 +1,118 @@
++import {
++  _decorator, Component, Node, Camera, Canvas, Color, Mesh, Material,
++  MeshRenderer, primitives, utils, UITransform, isValid,
++} from 'cc';
++import { Bootstrap } from './Bootstrap';
++import type { RuntimeGraph } from './Bootstrap';
++import { FrameDriver } from './src/presentation/FrameDriver';
++import { InputCollector } from './src/presentation/InputCollector';
++import { CameraRig } from './src/presentation/CameraRig';
++import { ProtagonistView } from './src/presentation/ProtagonistView';
++import { applyFolderTheme } from './src/presentation/FolderTheme';
++import type { WorldFolderEntry } from './src/presentation/FolderCatalog';
++
++const { ccclass } = _decorator;
++const WORLD_LAYER = 1 << 30;
++
++/** A fresh local sandbox: existing movement/vertical rules, no traces, chart or narrative writes. */
++@ccclass('MinimalWorldBuilder')
++export class MinimalWorldBuilder extends Component {
++  private entry: WorldFolderEntry | null = null;
++  private graph: RuntimeGraph | null = null;
++  private worldRoot: Node | null = null;
++  private cameraRig: CameraRig | null = null;
++  private camera: Camera | null = null;
++  private info: HTMLElement | null = null;
++  private readonly visualAssets: Array<Mesh | Material> = [];
++
++  bindEntry(entry: WorldFolderEntry): void { this.entry = entry; }
++
++  start(): void {
++    this.graph = this.node.addComponent(Bootstrap).ensureRuntime();
++    const worldRoot = new Node('MinimalWorld3D');
++    (this.node.parent?.parent ?? this.node).addChild(worldRoot);
++    worldRoot.layer = WORLD_LAYER;
++    this.worldRoot = worldRoot;
++    const uiCamera = this.node.parent?.getComponent(Canvas)?.cameraComponent ??
++      this.node.getComponent(Canvas)?.cameraComponent;
++    if (uiCamera) { uiCamera.clearFlags = Camera.ClearFlag.DEPTH_ONLY; }
++
++    const rig = new Node('CameraRig');
++    rig.layer = WORLD_LAYER; worldRoot.addChild(rig);
++    this.cameraRig = rig.addComponent(CameraRig);
++    this.cameraRig.bindProtagonist(this.graph.protagonist);
++    const cameraNode = new Node('MinimalWorldCamera');
++    cameraNode.layer = WORLD_LAYER; rig.addChild(cameraNode);
++    cameraNode.setPosition(0, 7, 15); cameraNode.setRotationFromEuler(-24, 0, 0);
++    const camera = cameraNode.addComponent(Camera);
++    camera.near = 0.1; camera.far = 200; camera.fov = 45;
++    camera.priority = -1; camera.visibility = WORLD_LAYER;
++    camera.clearColor = new Color(135, 175, 220, 255);
++    camera.clearFlags = Camera.ClearFlag.SOLID_COLOR;
++    this.camera = camera;
++
++    this.addBox('Ground', 60, 0.2, 60, 0, -0.9, 0, new Color(83, 94, 105));
++    this.addBox('SpawnPoint', 2.6, 0.05, 2.6, 0, -0.775, 0, new Color(170, 185, 170));
++    this.addBox('LateralGuide', 60, 0.025, 0.04, 0, -0.785, -2, new Color(123, 139, 150));
++    this.addBox('DepthGuide', 0.04, 0.025, 60, -2, -0.785, 0, new Color(123, 139, 150));
++    const protagonistNode = this.addBox('Protagonist', 1, 1, 1, 0, 0, 0, new Color(220, 70, 70));
++    const protagonistView = protagonistNode.addComponent(ProtagonistView);
++    protagonistView.bindSource(this.graph.protagonist);
++
++    const input = this.node.addComponent(InputCollector);
++    input.bindCameraRig(this.cameraRig);
++    input.bindChartStateProvider(() => this.graph!.session.getChartPlaybackState());
++    input.bindChartContextProvider(() => false);
++    input.bindWorldMotionProvider(() => this.graph!.session.isWorldMotionGated());
++    const frames = this.node.addComponent(FrameDriver);
++    frames.bindWiring(input, this.graph.session);
++    frames.addRefreshable(protagonistView);
++    frames.addRefreshable(this.cameraRig);
++    frames.addRefreshable(this);
++
++    this.info = document.createElement('aside');
++    this.info.id = 'minimal-world-info';
++    this.info.style.cssText = 'position:fixed;top:24px;left:24px;max-width:calc(100% - 48px);padding:16px 22px;background:var(--folder-panel);color:var(--folder-ink);font:16px/1.6 var(--folder-font);border:1px solid var(--folder-border);border-radius:4px;z-index:100;overflow-wrap:anywhere';
++    applyFolderTheme(this.info);
++    const title = document.createElement('strong'); title.textContent = this.entry?.title ?? '新世界';
++    const hint = document.createElement('div'); hint.textContent = '出生点 · WASD 移动 · 空格跳跃 · 滚轮调整视距';
++    this.info.append(title, hint); document.body.appendChild(this.info);
++  }
++
++  onFrameRefresh(): void {
++    if (this.camera && this.cameraRig) { this.camera.fov = this.cameraRig.getViewDistance() * 4.5; }
++    const transform = this.node.getComponent(UITransform);
++    const parent = this.node.parent?.getComponent(UITransform);
++    if (transform && parent) { transform.setContentSize(parent.width, parent.height); }
++  }
++
++  onDisable(): void {
++    if (this.worldRoot && isValid(this.worldRoot, true)) { this.worldRoot.active = false; }
++    this.info?.remove();
++  }
++
++  onDestroy(): void {
++    this.info?.remove(); this.info = null;
++    if (this.worldRoot && isValid(this.worldRoot, true)) { this.worldRoot.destroy(); }
++    this.worldRoot = null;
++    for (const asset of this.visualAssets) { if (isValid(asset, true)) { asset.destroy(); } }
++    this.visualAssets.length = 0;
++  }
++
++  private addBox(
++    name: string, width: number, height: number, length: number,
++    x: number, y: number, z: number, color: Color,
++  ): Node {
++    const node = new Node(name); node.layer = WORLD_LAYER; this.worldRoot!.addChild(node);
++    node.setPosition(x, y, z);
++    const renderer = node.addComponent(MeshRenderer);
++    const mesh = utils.createMesh(primitives.box({ width, height, length }));
++    const material = new Material();
++    material.initialize({ effectName: 'builtin-unlit' });
++    material.setProperty('mainColor', color);
++    renderer.mesh = mesh; renderer.setMaterial(material, 0);
++    this.visualAssets.push(mesh, material);
++    return node;
++  }
++}
++
+diff --git a/assets/scripts/MinimalWorldBuilder.ts.meta b/assets/scripts/MinimalWorldBuilder.ts.meta
+new file mode 100644
+index 0000000..4191e17
+--- /dev/null
++++ b/assets/scripts/MinimalWorldBuilder.ts.meta
+@@ -0,0 +1,9 @@
++{
++  "ver": "4.0.24",
++  "importer": "typescript",
++  "imported": true,
++  "uuid": "ae9b0c27-494d-49f1-ac47-cee523c6d1c3",
++  "files": [],
++  "subMetas": {},
++  "userData": {}
++}
+diff --git a/src/director/WorldFolderSession.ts b/src/director/WorldFolderSession.ts
+new file mode 100644
+index 0000000..3777b33
+--- /dev/null
++++ b/src/director/WorldFolderSession.ts
+@@ -0,0 +1,159 @@
++// B2.1 directory metadata only. Gameplay state and WorldFork remain outside this session.
++export interface WorldFolderRecord {
++  readonly worldId: string;
++  readonly title: string;
++  readonly description: string;
++  readonly createdAt: number;
++  readonly deletedAt: number | null;
++  readonly template: 'InitialWorld' | 'EmptyWorld';
++}
++
++export interface WorldFolderSnapshot {
++  readonly schemaVersion: 1;
++  readonly accountId: string;
++  readonly records: readonly WorldFolderRecord[];
++}
++
++export type WorldFolderIntent =
++  | { readonly kind: 'CreateWorld'; readonly title: string; readonly description: string }
++  | { readonly kind: 'DeleteWorld'; readonly worldId: string }
++  | { readonly kind: 'WorldFork'; readonly worldId: string };
++
++export interface WorldFolderPort {
++  submitWorldFolderIntent(intent: WorldFolderIntent): void;
++}
++
++/** Director owns directory decisions; platform persistence is injected, never imported. */
++export class WorldFolderSession implements WorldFolderPort {
++  private snapshot: WorldFolderSnapshot;
++
++  constructor(
++    private readonly accountId: string,
++    stored: unknown | null,
++    private readonly persist: (snapshot: WorldFolderSnapshot) => void,
++    private readonly createId: () => string,
++    private readonly now: () => number,
++  ) {
++    if (!accountId.trim() || accountId !== accountId.trim() || accountId.length > 64) {
++      throw new Error('账号标识须为 1～64 个字符');
++    }
++    if (stored !== null) {
++      this.snapshot = parseSnapshot(stored, accountId);
++      return;
++    }
++    const initial: WorldFolderRecord = Object.freeze({
++      worldId: 'InitialWorld', title: '初始世界',
++      description: '箱庭 · 深痕 · 解谜链 · 引导线演奏',
++      createdAt: validTime(now()), deletedAt: null, template: 'InitialWorld',
++    });
++    const candidate = freezeSnapshot(accountId, [initial]);
++    persist(candidate);
++    this.snapshot = candidate;
++  }
++
++  getWorlds(): readonly WorldFolderRecord[] {
++    return Object.freeze(this.snapshot.records.filter(record => record.deletedAt === null));
++  }
++
++  getSnapshot(): WorldFolderSnapshot { return this.snapshot; }
++
++  getWorldRecord(worldId: string): WorldFolderRecord {
++    const record = this.snapshot.records.find(item => item.worldId === worldId && item.deletedAt === null);
++    if (!record) { throw new Error('世界不存在或已删除，请刷新列表'); }
++    return record;
++  }
++
++  submitWorldFolderIntent(intent: WorldFolderIntent): void {
++    if (intent.kind === 'WorldFork') {
++      this.getWorldRecord(intent.worldId);
++      throw new Error('分叉尚未开放');
++    }
++    if (intent.kind === 'DeleteWorld') {
++      const record = this.snapshot.records.find(item => item.worldId === intent.worldId);
++      if (!record) { throw new Error('世界不存在或已删除，请刷新列表'); }
++      if (record.deletedAt !== null) { return; }
++      const deletedAt = Math.max(record.createdAt, validTime(this.now()));
++      this.commit(this.snapshot.records.map(item => item === record
++        ? Object.freeze({ ...item, deletedAt }) : item));
++      return;
++    }
++    if (intent.kind !== 'CreateWorld') { throw new Error('未知世界目录操作'); }
++    const title = validText(intent.title.trim(), 1, 80, '世界名称');
++    const description = validText(intent.description.trim(), 0, 300, '世界说明');
++    const worldId = this.createId();
++    if (!/^world-[A-Za-z0-9-]{1,80}$/.test(worldId) ||
++        this.snapshot.records.some(record => record.worldId === worldId)) {
++      throw new Error('世界标识无效或重复，请重试');
++    }
++    this.commit([...this.snapshot.records, Object.freeze({
++      worldId, title, description, createdAt: validTime(this.now()),
++      deletedAt: null, template: 'EmptyWorld' as const,
++    })]);
++  }
++
++  private commit(records: readonly WorldFolderRecord[]): void {
++    const candidate = freezeSnapshot(this.accountId, records);
++    this.persist(candidate);
++    this.snapshot = candidate;
++  }
++}
++
++function freezeSnapshot(accountId: string, records: readonly WorldFolderRecord[]): WorldFolderSnapshot {
++  return Object.freeze({ schemaVersion: 1 as const, accountId, records: Object.freeze([...records]) });
++}
++
++function validTime(value: unknown): number {
++  if (typeof value !== 'number' || !Number.isSafeInteger(value) || value < 0) {
++    throw new Error('世界目录时间无效');
++  }
++  return value;
++}
++
++function validText(value: unknown, min: number, max: number, label: string): string {
++  if (typeof value !== 'string' || value !== value.trim() || value.length < min || value.length > max) {
++    throw new Error(label + '长度须为 ' + min + '～' + max + ' 个字符');
++  }
++  return value;
++}
++
++function objectWithKeys(value: unknown, keys: readonly string[]): Record<string, unknown> {
++  if (value === null || typeof value !== 'object' || Array.isArray(value)) {
++    throw new Error('世界目录数据格式无效');
++  }
++  const data = value as Record<string, unknown>;
++  if (Object.keys(data).length !== keys.length || !keys.every(key => Object.prototype.hasOwnProperty.call(data, key))) {
++    throw new Error('世界目录字段无效');
++  }
++  return data;
++}
++
++function parseSnapshot(raw: unknown, accountId: string): WorldFolderSnapshot {
++  const data = objectWithKeys(raw, ['schemaVersion', 'accountId', 'records']);
++  if (data.schemaVersion !== 1 || data.accountId !== accountId || !Array.isArray(data.records)) {
++    throw new Error('世界目录版本或账号不匹配');
++  }
++  const ids = new Set<string>();
++  const records = data.records.map((rawRecord: unknown): WorldFolderRecord => {
++    const item = objectWithKeys(rawRecord, ['worldId', 'title', 'description', 'createdAt', 'deletedAt', 'template']);
++    const worldId = item.worldId;
++    if (typeof worldId !== 'string' ||
++        !(worldId === 'InitialWorld' || /^world-[A-Za-z0-9-]{1,80}$/.test(worldId)) || ids.has(worldId)) {
++      throw new Error('世界标识无效或重复');
++    }
++    ids.add(worldId);
++    const template = worldId === 'InitialWorld' ? 'InitialWorld' : 'EmptyWorld';
++    if (item.template !== template) {
++      throw new Error('世界模板无效');
++    }
++    const createdAt = validTime(item.createdAt);
++    const deletedAt = item.deletedAt === null ? null : validTime(item.deletedAt);
++    if (deletedAt !== null && deletedAt < createdAt) { throw new Error('世界删除时间无效'); }
++    return Object.freeze({
++      worldId, title: validText(item.title, 1, 80, '世界名称'),
++      description: validText(item.description, 0, 300, '世界说明'),
++      createdAt, deletedAt, template,
++    });
++  });
++  return freezeSnapshot(accountId, records);
++}
++
+diff --git a/src/director/WorldFolderSession.ts.meta b/src/director/WorldFolderSession.ts.meta
+new file mode 100644
+index 0000000..c56abb7
+--- /dev/null
++++ b/src/director/WorldFolderSession.ts.meta
+@@ -0,0 +1,9 @@
++{
++  "ver": "4.0.24",
++  "importer": "typescript",
++  "imported": true,
++  "uuid": "f3d84597-b396-4155-a9f9-654e7d199c0d",
++  "files": [],
++  "subMetas": {},
++  "userData": {}
++}
+diff --git a/src/presentation/WorldLocalStorage.ts b/src/presentation/WorldLocalStorage.ts
+new file mode 100644
+index 0000000..b8063d3
+--- /dev/null
++++ b/src/presentation/WorldLocalStorage.ts
+@@ -0,0 +1,27 @@
++import type { WorldFolderSnapshot } from '../director/IntentPort';
++
++/** Browser metadata adapter; no gameplay state, milestones or editor drafts are stored here. */
++export class WorldLocalStorage {
++  constructor(private readonly storage: Pick<Storage, 'getItem' | 'setItem'> = localStorage) {}
++
++  readSnapshot(accountId: string): unknown | null {
++    const text = this.storage.getItem(this.key(accountId));
++    if (text === null) { return null; }
++    const parsed: unknown = JSON.parse(text);
++    if (parsed === null) { throw new Error('世界目录数据无效'); }
++    return parsed;
++  }
++
++  saveSnapshot(snapshot: WorldFolderSnapshot, expected: unknown | null): void {
++    const current = this.readSnapshot(snapshot.accountId);
++    if (JSON.stringify(current) !== JSON.stringify(expected)) {
++      throw new Error('世界目录已在其他页面更新，请刷新后重试');
++    }
++    this.storage.setItem(this.key(snapshot.accountId), JSON.stringify(snapshot));
++  }
++
++  private key(accountId: string): string {
++    return 'neurou-world-folder-v1:' + encodeURIComponent(accountId);
++  }
++}
++
+diff --git a/src/presentation/WorldLocalStorage.ts.meta b/src/presentation/WorldLocalStorage.ts.meta
+new file mode 100644
+index 0000000..db42d91
+--- /dev/null
++++ b/src/presentation/WorldLocalStorage.ts.meta
+@@ -0,0 +1,9 @@
++{
++  "ver": "4.0.24",
++  "importer": "typescript",
++  "imported": true,
++  "uuid": "dd52d2cc-4b83-4316-aed3-83ba184721f6",
++  "files": [],
++  "subMetas": {},
++  "userData": {}
++}

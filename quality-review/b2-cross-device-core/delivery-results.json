@@ -1,0 +1,62 @@
+{
+  "phase": "B2.4c",
+  "status": "Complete",
+  "prototype": "RestrictedCoreTransfer",
+  "mode": "ContractAdapter",
+  "pass": true,
+  "contractGroups": [
+    {
+      "passed": 59,
+      "total": 59
+    },
+    {
+      "passed": 22,
+      "total": 22
+    },
+    {
+      "passed": 6,
+      "total": 6
+    }
+  ],
+  "creatorResolutions": [
+    {
+      "resolution": "1920x1080",
+      "pass": true
+    },
+    {
+      "resolution": "2560x1440",
+      "pass": true
+    }
+  ],
+  "gates": [
+    {
+      "command": "npm run check:naming",
+      "pass": true
+    },
+    {
+      "command": "npm run typecheck",
+      "pass": true
+    },
+    {
+      "command": "npm run check:dependencies",
+      "pass": true
+    }
+  ],
+  "protectedPaths": {
+    "before": 603,
+    "after": 621,
+    "pass": true
+  },
+  "staleContractSources": [],
+  "staleCreatorSources": [],
+  "deliveryReport": "delivery-report.md",
+  "diff": "code.diff",
+  "namebook": "namebook-v3.13-frozen-appendix.md",
+  "verdicts": "verdicts-311-325.md",
+  "remainingScope": [
+    "real services/persistent authority",
+    "full FileCarry",
+    "Migration/RealityPause",
+    "Trae official namebook landing"
+  ]
+}

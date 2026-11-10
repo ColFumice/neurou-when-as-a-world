@@ -1,0 +1,18 @@
+{
+  "category": "ContractTestRegression",
+  "runAt": "2026-10-10T10:20:22.779Z",
+  "scope": "Existing B2.2a/b contract scripts executed against current production source; isolated fixtures, not Cocos acceptance",
+  "accountMilestone": {
+    "passed": 26,
+    "failed": 0,
+    "sourceSha256": "ea937e6676b97cafd8a726d051db54d16077a9fe82438cce8374a4635d1b846e",
+    "storageSha256": "ec36e1490443d5ca59c983119e56f5273a0d62e8522f9171fb21be7b05c0ac19"
+  },
+  "worldState": {
+    "passed": 42,
+    "failed": 0,
+    "sourceSha256": "dee799181f9216ce6244c0087ba5dba830ea481cd8140591ec0f7ad099ecfecb",
+    "storageSha256": "95e03b7610946041e0aa635d37cf5790b17cdd37d3ed7272080a5b69815e8056"
+  },
+  "pass": true
+}

@@ -1,0 +1,103 @@
+{
+  "generatedAt": "2026-10-10T07:35:50.265Z",
+  "reviewer": "architecture_audit independent subagent",
+  "scope": "Read-only production code review of assets/scripts/SceneBuilder.ts and src/presentation/ChartPadView.ts against the B1 byte backups; protected file hashing; only this review and protection evidence files written.",
+  "pass": true,
+  "blockingFindings": [],
+  "actionableFindings": [],
+  "checks": [
+    {
+      "name": "Default guidance C and legacy T7 resource branches retained",
+      "pass": true
+    },
+    {
+      "name": "Inspector resource selection copied through actual world factory",
+      "pass": true
+    },
+    {
+      "name": "Main guidance chart binds before optional visual load",
+      "pass": true
+    },
+    {
+      "name": "Sidecar existence checked; missing visual does not reject gameplay",
+      "pass": true
+    },
+    {
+      "name": "Color parser runs only in composition root; presentation only imports its type",
+      "pass": true
+    },
+    {
+      "name": "Colors clear on bindChart and are cached through lazy rendering construction",
+      "pass": true
+    },
+    {
+      "name": "Main and visual callbacks both ignore a destroyed component",
+      "pass": true
+    },
+    {
+      "name": "Main invalid or missing chart rejects rather than selecting another guidance chart",
+      "pass": true
+    },
+    {
+      "name": "Existing director completion uniquely records then automatically returns to world",
+      "pass": true
+    },
+    {
+      "name": "All protected core files and external references retain B1 baseline hashes",
+      "pass": true
+    },
+    {
+      "name": "Legacy A/B/C resources retain inspected historical baseline bytes",
+      "pass": true
+    },
+    {
+      "name": "New resource pair is byte-identical to real editor UI exports",
+      "pass": true
+    }
+  ],
+  "productionHashes": [
+    {
+      "path": "assets/scripts/SceneBuilder.ts",
+      "baselineSha256": "221d6069895058358d3b70774377e0336332a1e628cfb540eb13ab674b89294b",
+      "currentSha256": "10371fdc3d2a1d66f63d87d019d8777d0bb8e80191788e65bf8eb2b6002c09c9"
+    },
+    {
+      "path": "src/presentation/ChartPadView.ts",
+      "baselineSha256": "426f0888c6bbb7e3cfc1d609bc942e353ee6503af54d27c9942e7d83db9b2160",
+      "currentSha256": "9f7286486c4672ad4359c7a2fb531e2f120af4ca0ffe507507761f07fa8e2818"
+    }
+  ],
+  "referencedValidation": {
+    "gateResults": {
+      "path": "quality-review\\b1-editor-game\\gate-results.json",
+      "recordedPass": true,
+      "note": "Existing root gate artifacts inspected; independent review did not rerun gates."
+    },
+    "resourceBoundary": {
+      "path": "quality-review\\b1-editor-game\\resource-boundary-results.json",
+      "recordedPassCount": 12,
+      "recordedFailureCount": 0,
+      "note": "Injected Cocos boundary harness; does not alone prove engine rendering."
+    }
+  },
+  "knownScopeBoundaries": [
+    "Game media remains video/chart_video_placeholder; matching exported timing is required.",
+    "Resource selection is pre-world Inspector configuration; runtime catalogs and completed-premiere re-entry are outside B1.",
+    "Optional visual can arrive during playback; it changes rendering only.",
+    "Real Cocos complete-chain acceptance must use freshly compiled sources and imported resources; this review is not a replacement for preview evidence."
+  ],
+  "sceneBaselineLimitation": [
+    {
+      "path": "assets/scenes/T2Graybox.scene",
+      "currentSha256": "e1f15b181d6e446184294c4102c7b99dca98f1540219be3c86557de3b5de74c8",
+      "unchanged": null,
+      "reason": "No pre-B1 scene hash found in inspected prior manifests; current hash records inventory only, without claiming byte-identical protection."
+    },
+    {
+      "path": "assets/scenes/T2Graybox.scene.meta",
+      "currentSha256": "daba0fe51bdfa66f38e43908342e09ec7ef67e9f348b1e8a7baa8425e008edab",
+      "unchanged": null,
+      "reason": "No pre-B1 scene hash found in inspected prior manifests; current hash records inventory only, without claiming byte-identical protection."
+    }
+  ]
+}

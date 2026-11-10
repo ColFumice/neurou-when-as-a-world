@@ -1,0 +1,20 @@
+{
+  "generatedUtc": "2026-10-11T07:56:52.136Z",
+  "nodeVersion": "v24.19.0",
+  "command": [
+    "C:\\Program Files\\nodejs\\node.exe",
+    "--test",
+    "--test-reporter=tap",
+    "quality-review/b2-5c-2b/client-contract-tests.cjs"
+  ],
+  "testSourceSha256": "c10847c7616e0eff30a16f3fbc9c6f113797bf90c749c79e1f57ab157e4f9786",
+  "scope": "ContractOracle: fixed-purpose registered author signatures using independent Node ES256/P1363 verification and explicit transport oracle, no actual shared HTTP or PG authority acceptance",
+  "rawLogSha256": "92e1b2f5a11fbf2bfdf5e7e9b5d705c9c05457db571fb1eecdd49a3f48a357e1",
+  "summary": {
+    "kind": "ContractOracle",
+    "passed": 18,
+    "realHttp": false,
+    "realPostgreSQL": false
+  },
+  "pass": true
+}

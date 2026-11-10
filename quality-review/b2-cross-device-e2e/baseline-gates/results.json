@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "phase": "B2.4e baseline",
+  "generatedAt": "2026-10-10T16:04:04.821Z",
+  "pass": true,
+  "runs": [
+    {
+      "command": "npm run check:naming",
+      "startedAt": "2026-10-10T16:04:02.263Z",
+      "finishedAt": "2026-10-10T16:04:02.822Z",
+      "exitCode": 0,
+      "pass": true,
+      "log": "baseline-gates/check-naming.log",
+      "summary": [
+        "汇总: 0 ERROR / 22 WARN"
+      ]
+    },
+    {
+      "command": "npm run typecheck",
+      "startedAt": "2026-10-10T16:04:02.285Z",
+      "finishedAt": "2026-10-10T16:04:04.821Z",
+      "exitCode": 0,
+      "pass": true,
+      "log": "baseline-gates/typecheck.log",
+      "summary": []
+    },
+    {
+      "command": "npm run check:dependencies",
+      "startedAt": "2026-10-10T16:04:02.306Z",
+      "finishedAt": "2026-10-10T16:04:02.874Z",
+      "exitCode": 0,
+      "pass": true,
+      "log": "baseline-gates/check-dependencies.log",
+      "summary": [
+        "扫描: 120 个 .ts 文件，约 423 条静态依赖子句",
+        "汇总: 0 ERROR"
+      ]
+    }
+  ],
+  "validationLimit": "Static gates only. ContractAdapter and Creator production acceptance require separate evidence."
+}

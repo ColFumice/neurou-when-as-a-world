@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+	<testcase name="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\run-tests.cjs" time="0.628390" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\run-tests.cjs"/>
+	<testcase name="native-HMAC RFC5869 vector and native AES-GCM backend are independent cryptographic evidence" time="0.017548" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="installed Genesis trust succeeds and serialized/runtime brands confer no trust" time="0.003237" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="real registered author proof and epoch accept developer" time="0.007497" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="real registered author proof and epoch accept coDeveloper" time="0.008443" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="real registered author proof and epoch accept observer" time="0.006892" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="real registered author proof and epoch accept observerDevice2" time="0.007850" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="old admitted permit stays valid by signed acceptance time; no current wall clock exists in validator" time="0.006261" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="repeated historical receipt validates without reconstructing a physical identity" time="0.012961" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="wrong installed service public key never bootstraps from receipt" time="0.001625" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="wrong installed developer pin fails before trusting membership publisher" time="0.001653" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="tampered authenticated service receipt is Gap, never a technical-invalid body capability" time="0.004091" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="wrong receipt purpose cannot reuse a service signature from another protocol purpose" time="0.003016" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="signed admission request nonce must match author-signed admission claim nonce" time="0.004083" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="author claim signature cannot be replaced by service assertion" time="0.003194" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="claim/admission final digest disagreement is missing provenance" time="0.002673" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="tampered exact envelope bytes do not turn into trustworthy InvalidChange" time="0.005491" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="valid signed claim + admission binds exact malformed envelope bytes as technical InvalidChange" time="0.004974" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="duplicate JSON keys in exact admitted envelope are technical-invalid rather than silently parsed" time="0.005123" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="bad envelope ES256 signature with valid independent claim is technical-invalid" time="0.007281" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="wrong wrapping AAD cannot yield a body or shared change" time="0.006546" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="wrong body AAD cannot yield a body or shared change" time="0.006717" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="authenticated body duplicate keys fail strict decoding" time="0.006480" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="authenticated inner appended time must equal signed public header" time="0.005956" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="authenticated body cannot change content manifest context" time="0.005833" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="map entity content approval is required even for an authenticated developer body" time="0.007125" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="missing epoch key stays Gap even if exact bytes are admitted" time="0.005405" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="missing key plus exact bad bytes cannot advance settlement as InvalidChange" time="0.004772" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="key capability returning wrong committed group key is Gap" time="0.005727" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="membership activated after logical append cannot authorize it" time="0.002796" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="forged author credential absent from signed epoch is Gap" time="0.002928" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="permit acceptance at exact expiry endpoint is rejected" time="0.002952" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="unknown future clock generation is Gap; signed historical generation remains accepted" time="0.004621" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="untrusted signed clock status does not become trusted because signature verifies" time="0.002685" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="AddCoDeveloper requires signed active Observer fact at AppendedAt" time="0.013558" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="RemoveCoDeveloper accepts old valid admission source without requiring target still active" time="0.007161" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="roster cannot use another observer admission fact as target provenance" time="0.003321" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="missing observer fact is Gap, not author narrative evidence" time="0.002683" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="injected crypto outage and producer outage are HostFailure, never technical InvalidChange" time="0.007515" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="bad cryptography return shape cannot be mistaken for trustworthy digest or key" time="0.005627" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="signed seal must satisfy S-H and policy fingerprint" time="0.003163" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="seal chain needs runtime-trusted prior receipt and increasing boundary" time="0.005259" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs"/>
+	<testcase name="developer closure and rejection proofs stay separate from shared change/body" time="0.003845" classname="test" file="D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs" failure="Receipt predates payload fact&#10;&#10;'Gap' !== 'Verified'&#10;">
+		<failure type="testCodeFailure" message="Receipt predates payload fact&#10;&#10;'Gap' !== 'Verified'">
+[Error [ERR_TEST_FAILURE]: Receipt predates payload fact
+
+'Gap' !== 'Verified'
+] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: Receipt predates payload fact
+  
+  'Gap' !== 'Verified'
+  
+      at verified (D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs:7:37)
+      at TestContext.&lt;anonymous> (D:\Project\A_New_Begin\Neurou_official\quality-review\b2-5c-1\evidence\validator-tests.cjs:220:69)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'Gap',
+    expected: 'Verified',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+}
+		</failure>
+	</testcase>
+	<!-- tests 43 -->
+	<!-- suites 0 -->
+	<!-- pass 42 -->
+	<!-- fail 1 -->
+	<!-- cancelled 0 -->
+	<!-- skipped 0 -->
+	<!-- todo 0 -->
+	<!-- duration_ms 638.3207 -->
+</testsuites>

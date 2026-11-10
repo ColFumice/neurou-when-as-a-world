@@ -1,0 +1,60 @@
+{
+  "stage": "B2.5c-1 source attribution",
+  "generatedUtc": "2026-10-11T04:54:30.771Z",
+  "baselineCapturedUtc": "2026-10-11T04:05:40.542Z",
+  "baselineSha256": "004da1c8a9f7d78e081f0d130e3401bb728d7240d581805427b1cd364a0047cb",
+  "firstFailureSha256": "eeb6af99ca6b035174971a9522ddc7eddea993ff942b8107191afe4ebd17107c",
+  "rawComparisonSha256": "eeb6af99ca6b035174971a9522ddc7eddea993ff942b8107191afe4ebd17107c",
+  "recheckSha256": "222dedf64675ded4517e6dc52512c23a72e5f7191015eb9663dcf711ceee3f00",
+  "recheckedUtc": "2026-10-11T04:53:14.366Z",
+  "questionItemId": [
+    "request_user_input_async",
+    "call_3ceb5cdebb034f7dafc0ea72c3d11894",
+    0
+  ],
+  "questionText": "本轮 c-1 SHA 基线后，docs/NAMEBOOK.md 与 docs/spec/stage-1.md 再次被外部更新，名库内容包含 v3.17/P3 同步。请确认这次两项修改是否同样由 Trae 按“交 Trae 落盘”授权完成？此次归因独立于上轮确认；原始 SHA FAIL 将保留。",
+  "exactUserResponse": "确认：Trae 授权同步 v3.17/P3",
+  "responseEvidence": "Root agent relayed the new human response and its exact asynchronous question item; this is distinct from the prior P3 confirmation.",
+  "changes": [
+    {
+      "path": "docs/NAMEBOOK.md",
+      "beforeBytes": 101742,
+      "beforeSha256": "cf1e686fcf56e1f05c9b897a94872da1195390694a7a31b4c1da16cea159850e",
+      "attributedAfterBytes": 133013,
+      "attributedAfterSha256": "150978462ee718a717d46abd846a8d27556cd539e1d8bc66cad27ad8c469c619",
+      "rawHashEquality": false,
+      "source": "Trae",
+      "userConfirmed": true
+    },
+    {
+      "path": "docs/spec/stage-1.md",
+      "beforeBytes": 75156,
+      "beforeSha256": "a11d5be896857a7586d59c3f9dcd6feb1e13861b1a7c279972cc968f23f25aaf",
+      "attributedAfterBytes": 87732,
+      "attributedAfterSha256": "94c186628f23e12a18d6bb28acaa6c66caef8c6e8e43da71a8da592f661a5340",
+      "rawHashEquality": false,
+      "source": "Trae",
+      "userConfirmed": true
+    }
+  ],
+  "rawProtectionPass": false,
+  "rawHashEquality": false,
+  "reviewedClosurePass": true,
+  "attributionPending": false,
+  "remainingUnauthorizedChanged": [],
+  "remainingUnauthorizedAdded": [],
+  "removed": [],
+  "authorizedNewSourceFiles": [
+    "src/director/SharedCanonicalBytes.ts",
+    "src/director/SharedCommitCodec.ts",
+    "src/director/SharedCommitContracts.ts",
+    "src/director/SharedCommitValidator.ts",
+    "src/director/SharedWorldReducer.ts"
+  ],
+  "authorizedModified": "src/director/IntentPort.ts",
+  "intentOriginalPrefixPreserved": true,
+  "intentTypeOnlyAppend": true,
+  "intentTailBytes": 1425,
+  "limits": "All pre-existing non-excluded files are protected, including prior P3 and B2.5b evidence, docs/namebook/reference, archive/core/source, server source/package. IntentPort permits only original byte-prefix-preserved type-only export append. Exactly five new director files are allowed. Junction targets are hashed without traversal. Dependencies/caches/compiled outputs/private local data/keys/runtime binaries and this new delivery directory are excluded; private files are never read.",
+  "scope": "Two exact path/hash changes were externally synchronized by Trae under the new user confirmation. Baseline and raw FAIL records are unchanged; the new reviewed closure does not claim unchanged docs and does not cover future mutations. All other protected changes are exactly the authorized five additions plus original-byte-prefix-preserved type-only IntentPort append."
+}

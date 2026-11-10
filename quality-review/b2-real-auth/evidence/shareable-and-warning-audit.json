@@ -1,0 +1,57 @@
+{
+  "auditedUtc": "2026-10-11T03:00:41.2064028Z",
+  "phase": "Final source after client asynchronous verification-deadline review fix",
+  "shareableKnownCredentialPass": true,
+  "checks": [
+    {
+      "file": "code.diff",
+      "knownCredentialValueFound": false,
+      "privateKeyBlockFound": false
+    },
+    {
+      "file": "changed-files.json",
+      "knownCredentialValueFound": false,
+      "privateKeyBlockFound": false
+    },
+    {
+      "file": "protected-comparison.json",
+      "knownCredentialValueFound": false,
+      "privateKeyBlockFound": false
+    },
+    {
+      "file": "server-build.log",
+      "knownCredentialValueFound": false,
+      "privateKeyBlockFound": false
+    },
+    {
+      "file": "server-contract-and-http.log",
+      "knownCredentialValueFound": false,
+      "privateKeyBlockFound": false
+    },
+    {
+      "file": "server-test-results.json",
+      "knownCredentialValueFound": false,
+      "privateKeyBlockFound": false
+    },
+    {
+      "file": "../client-tests/results-contract.json",
+      "knownCredentialValueFound": false,
+      "privateKeyBlockFound": false
+    },
+    {
+      "file": "../client-tests/results-contract-and-http.json",
+      "knownCredentialValueFound": false,
+      "privateKeyBlockFound": false
+    },
+    {
+      "file": "../client-tests/http-requests.json",
+      "knownCredentialValueFound": false,
+      "privateKeyBlockFound": false
+    }
+  ],
+  "namingWarningsBefore": 22,
+  "namingWarningsAfter": 22,
+  "warningTextDeltaCount": 0,
+  "warningDelta": [],
+  "limit": "Checks known local DB credentials and private PEM material; ephemeral auth values are not printed by the test harness and not independently enumerated here."
+}

@@ -1,0 +1,38 @@
+{
+  "deletedScripts": [
+    {
+      "file": "D:/Project/A_New_Begin/Neurou_official/temp/quality-regression.cjs",
+      "deleted": true
+    },
+    {
+      "file": "D:/Project/A_New_Begin/Neurou_official/temp/quality-reload.cjs",
+      "deleted": true
+    },
+    {
+      "file": "D:/Project/A_New_Begin/Neurou_official/temp/quality-runtime.cjs",
+      "deleted": true
+    },
+    {
+      "file": "D:/Project/A_New_Begin/Neurou_official/temp/quality-sync.cjs",
+      "deleted": true
+    },
+    {
+      "file": "D:/Project/A_New_Begin/Neurou_official/temp/quality-finalize.cjs",
+      "deleted": true
+    }
+  ],
+  "profilesArchived": [
+    {
+      "file": "D:/Project/A_New_Begin/Neurou_official/quality-review/test-browser-profiles/quality-runtime-profile",
+      "archived": true,
+      "absentFromTemp": true
+    },
+    {
+      "file": "D:/Project/A_New_Begin/Neurou_official/quality-review/test-browser-profiles/quality-sync-profile",
+      "archived": true,
+      "absentFromTemp": true
+    }
+  ],
+  "creatorDeclarationsPreserved": true,
+  "creatorPreviewPreserved": true
+}

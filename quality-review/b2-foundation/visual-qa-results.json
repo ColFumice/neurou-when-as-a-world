@@ -1,0 +1,104 @@
+{
+  "reviewedAt": "2026-10-10T09:29:36.555Z",
+  "classification": "Production UI acceptance. No FirstWorldCleared fixture injection.",
+  "policy": "Eight final raw PNGs directly inspected; diagnostic archive screenshots excluded. 1080 restore screenshot uses normal page scrolling; 1440 shows all panel content without scrolling. No raster edits.",
+  "pass": true,
+  "images": [
+    {
+      "file": "1920x1080-00-directory-permission-derived-false.png",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "3c6b176718f517b5959024437d56d12a1d02100b23b619df6c3ea066bf53932a",
+      "matchesCapturedHash": true,
+      "visuallyInspected": true,
+      "notes": "Summary visibly separates permission not obtained and fork not implemented; readable directory/account/buttons.",
+      "pass": true
+    },
+    {
+      "file": "1920x1080-01-incomplete-diagnostics.png",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "566bdaf3546b7a7d19504333f97d2391d3c913669040e138bf5c9c04ccae4bbf",
+      "matchesCapturedHash": true,
+      "visuallyInspected": true,
+      "notes": "Incomplete and seven component diagnostics visible. 1080 continues vertically to restore controls; 1440 entire panel fits.",
+      "pass": true
+    },
+    {
+      "file": "1920x1080-02-complete-restore-rejected.png",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "e266bec368c378c34b2905aeb15d02c295454586265643092340eb358cd9c2f9",
+      "matchesCapturedHash": true,
+      "visuallyInspected": true,
+      "notes": "Restore rejection text visibly readable; full Incomplete list remains visible. 1080 page was normally scrolled; 1440 whole directory and rejection visible.",
+      "pass": true
+    },
+    {
+      "file": "1920x1080-03-copy-permission-derived-read.png",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "3c6b176718f517b5959024437d56d12a1d02100b23b619df6c3ea066bf53932a",
+      "matchesCapturedHash": true,
+      "visuallyInspected": true,
+      "notes": "After UI refresh permission summary visible; paired read-only milestone snapshot FirstWorldCleared=false CopyPermission=false and unchanged storage.",
+      "pass": true
+    },
+    {
+      "file": "2560x1440-00-directory-permission-derived-false.png",
+      "dimensions": [
+        2560,
+        1440
+      ],
+      "sha256": "ba77830f678826430b2947161e44e1e79c1a8eab84cac6383bf765ad0c07df76",
+      "matchesCapturedHash": true,
+      "visuallyInspected": true,
+      "notes": "Summary visibly separates permission not obtained and fork not implemented; readable directory/account/buttons.",
+      "pass": true
+    },
+    {
+      "file": "2560x1440-01-incomplete-diagnostics.png",
+      "dimensions": [
+        2560,
+        1440
+      ],
+      "sha256": "12aa02736a93dedfacf6d0d1809156bbc888d810fa4cf93f8f687c7f0ae4d1d1",
+      "matchesCapturedHash": true,
+      "visuallyInspected": true,
+      "notes": "Incomplete and seven component diagnostics visible. 1080 continues vertically to restore controls; 1440 entire panel fits.",
+      "pass": true
+    },
+    {
+      "file": "2560x1440-02-complete-restore-rejected.png",
+      "dimensions": [
+        2560,
+        1440
+      ],
+      "sha256": "44b776428c0b453a04ce4be40b8366debc2c7fbfe4c44dc5b2bbcc97489be41e",
+      "matchesCapturedHash": true,
+      "visuallyInspected": true,
+      "notes": "Restore rejection text visibly readable; full Incomplete list remains visible. 1080 page was normally scrolled; 1440 whole directory and rejection visible.",
+      "pass": true
+    },
+    {
+      "file": "2560x1440-03-copy-permission-derived-read.png",
+      "dimensions": [
+        2560,
+        1440
+      ],
+      "sha256": "ba77830f678826430b2947161e44e1e79c1a8eab84cac6383bf765ad0c07df76",
+      "matchesCapturedHash": true,
+      "visuallyInspected": true,
+      "notes": "After UI refresh permission summary visible; paired read-only milestone snapshot FirstWorldCleared=false CopyPermission=false and unchanged storage.",
+      "pass": true
+    }
+  ]
+}

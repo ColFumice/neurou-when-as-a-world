@@ -1,0 +1,16 @@
+{
+  "date": "2026-10-10",
+  "scope": "B2.2c full batch + formally authored minimal narrative content producer",
+  "protocol": "User directly authorized continuation and froze v3.8 names/structures; prior PROTOCOL-B2.2c-001 resolved",
+  "excluded": [
+    "B2.2d hydration",
+    "WorldFork",
+    "FileCarryPayload",
+    "WorldRegistry",
+    "cross-device",
+    "observer-sync",
+    "service",
+    "AccessCode"
+  ],
+  "sourceProtection": "Baseline captured before any production changes; no docs/archive/reference modification allowed"
+}

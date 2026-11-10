@@ -1,0 +1,385 @@
+{
+  "schemaVersion": 1,
+  "evidenceKind": "ContractTest",
+  "adapterMode": "ContractAdapter",
+  "capturedAt": "2026-10-10T16:06:29.234Z",
+  "policy": "Controlled clocks, identity bindings, storage faults and locks. Real published content/ChartPremiere fixture, production codecs/ownership adapter/import transaction. Not Creator production acceptance, physical-device authentication, full FileCarry or real external services.",
+  "sources": [
+    {
+      "file": "src/director/CoreTransfer.ts",
+      "sha256": "f8af59dc687e605fc7640ae15d8c57857e49d31708ebaead858913cce30fdcc7"
+    },
+    {
+      "file": "src/director/CoreTransferContent.ts",
+      "sha256": "790ab438725e552628497cc097196c245c13f748d2688c409cc05128613a3346"
+    },
+    {
+      "file": "src/presentation/CrossDeviceContractAdapter.ts",
+      "sha256": "94804bc16bc78c175fd683611574ceb70d95a1cf1cd6a751372d81a018b02406"
+    },
+    {
+      "file": "src/presentation/CrossDeviceImportStorage.ts",
+      "sha256": "15b16c12daae586a6f7a8bdffbc6289fe42307c4a62140fb91617e2b0a94c4c2"
+    }
+  ],
+  "sourcesUnchanged": true,
+  "tests": [
+    {
+      "name": "C01 seven-section JSON round-trip carries only data, receiver reacquires complete certification",
+      "result": "PASS",
+      "category": "ContractAdapter",
+      "elapsedMs": 131.757
+    },
+    {
+      "name": "C02 receiver complete validator is mandatory; unchecked JSON callback cannot certify a transfer",
+      "result": "PASS",
+      "category": "ContractAdapter",
+      "elapsedMs": 22.611
+    },
+    {
+      "name": "C03 each missing/null gameplay section and partial extension group rejects without mutation",
+      "result": "PASS",
+      "category": "ContractAdapter",
+      "elapsedMs": 56.341
+    },
+    {
+      "name": "C04 strict schema rejects FileCarry naming, unsupported versions, extra account facts and fake brand",
+      "result": "PASS",
+      "category": "ContractAdapter",
+      "elapsedMs": 18.349
+    },
+    {
+      "name": "C05 data-only boundary rejects getters without evaluating them, symbols, sparse arrays, prototype and cycles",
+      "result": "PASS",
+      "category": "ContractAdapter",
+      "elapsedMs": 0.403
+    },
+    {
+      "name": "C06 published narrative vector and referenced ChartRef tampering fail receiver revalidation",
+      "result": "PASS",
+      "category": "ContractAdapter",
+      "elapsedMs": 24.137
+    },
+    {
+      "name": "C07 internally recomputed media digest cannot substitute another published media reference",
+      "result": "PASS",
+      "category": "ContractAdapter",
+      "elapsedMs": 34.543
+    },
+    {
+      "name": "C08 published chart/visual replacement remains rejected after recomputing the internal content digest",
+      "result": "PASS",
+      "category": "ContractAdapter",
+      "elapsedMs": 46.524
+    },
+    {
+      "name": "C09 source HomeDevice alone may publish; receiver cannot impersonate sender",
+      "result": "PASS",
+      "category": "ContractAdapter",
+      "elapsedMs": 66.236
+    },
+    {
+      "name": "C10 unknown transfer and same-account self-asserted device header are not source authority",
+      "result": "PASS",
+      "category": "ContractAdapter",
+      "elapsedMs": 83.044
+    },
+    {
+      "name": "C11 exact publication binds transfer identity; legal same-Core change cannot replace or verify old transfer",
+      "result": "PASS",
+      "category": "ContractAdapter",
+      "elapsedMs": 64.711
+    },
+    {
+      "name": "C12 source proof rejects every changed identity and changed full-state digest",
+      "result": "PASS",
+      "category": "ContractAdapter",
+      "elapsedMs": 36.488
+    },
+    {
+      "name": "C13 two devices share one authority: source Homed, receiver CrossDeviceDuplicate, account isolation",
+      "result": "PASS",
+      "category": "ContractAdapter",
+      "elapsedMs": 88.984
+    },
+    {
+      "name": "C14 InitialWorld is excluded before authority queries and all ID factories",
+      "result": "PASS",
+      "category": "ContractAdapter",
+      "elapsedMs": 9.011
+    },
+    {
+      "name": "C15 unavailable authority and wrongly bound account/device never become a duplicate",
+      "result": "PASS",
+      "category": "ContractAdapter",
+      "elapsedMs": 128.455
+    },
+    {
+      "name": "C16 released/future ownership dispatch rejects copy; c never invents Migrated evidence",
+      "result": "PASS",
+      "category": "ContractAdapter",
+      "elapsedMs": 104.81
+    },
+    {
+      "name": "C17 no CopyPermission refuses as 档案损坏 before authority/UUID allocation and leaves input intact",
+      "result": "PASS",
+      "category": "ContractAdapter",
+      "elapsedMs": 37.528
+    },
+    {
+      "name": "C18 permission account mismatch or inconsistent FirstWorldCleared/CopyPermission is rejected",
+      "result": "PASS",
+      "category": "ContractAdapter",
+      "elapsedMs": 98.543
+    },
+    {
+      "name": "C19 independent remote adapter needs only receiver directory, never local source directory/lease/read",
+      "result": "PASS",
+      "category": "ContractAdapter",
+      "elapsedMs": 108.895
+    },
+    {
+      "name": "C20 new UUID and seven carrier rekeys preserve exact nonidentity values and original FormatTime",
+      "result": "PASS",
+      "category": "ContractAdapter",
+      "elapsedMs": 90.716
+    },
+    {
+      "name": "C21 source payload/sections are unchanged and account facts never become transfer or target fields",
+      "result": "PASS",
+      "category": "ContractAdapter",
+      "elapsedMs": 81.583
+    },
+    {
+      "name": "C22 actual inherited World session suppresses account clear writes and repeated premiere intents",
+      "result": "PASS",
+      "category": "ContractAdapter",
+      "elapsedMs": 86.33
+    },
+    {
+      "name": "C23 unfinished Complete source imports without manufacturing a completed account/world fact",
+      "result": "PASS",
+      "category": "ContractAdapter",
+      "elapsedMs": 12.346
+    },
+    {
+      "name": "C24 receiver target collision and tombstone reject before transaction/time factories",
+      "result": "PASS",
+      "category": "ContractAdapter",
+      "elapsedMs": 102.489
+    },
+    {
+      "name": "C25 strict request, directory identity and malformed UUID/transaction/time refuse preparation",
+      "result": "PASS",
+      "category": "ContractAdapter",
+      "elapsedMs": 220.174
+    },
+    {
+      "name": "C26 serialized plan is independently revalidated; changed score/FormatTime/provenance cannot enter journal",
+      "result": "PASS",
+      "category": "ContractAdapter",
+      "elapsedMs": 172.184
+    },
+    {
+      "name": "C27 journal exact phases enforce reply identity, one pending transaction and unique target/registration IDs",
+      "result": "PASS",
+      "category": "ContractAdapter",
+      "elapsedMs": 295.081
+    },
+    {
+      "name": "C28 target registration is idempotent and homes B without mutating source home A",
+      "result": "PASS",
+      "category": "ContractAdapter",
+      "elapsedMs": 80.451
+    },
+    {
+      "name": "S01 target lease plus import→target→directory lock publishes service-first, retains Published receipt and all seven Core",
+      "result": "PASS",
+      "category": "ContractAdapter",
+      "elapsedMs": 584.354
+    },
+    {
+      "name": "S02 unprepared plan, missing import lock and missing true target lease never register or write",
+      "result": "PASS",
+      "category": "ContractAdapter",
+      "elapsedMs": 157.891
+    },
+    {
+      "name": "S03 absent Web Locks explicitly refuses without journal, authority registration or publication",
+      "result": "PASS",
+      "category": "ContractAdapter",
+      "elapsedMs": 84.61
+    },
+    {
+      "name": "S04 Prepared journal write failure has no service/target/directory side effect and retries same plan",
+      "result": "PASS",
+      "category": "ContractAdapter",
+      "elapsedMs": 622.889
+    },
+    {
+      "name": "S05 service unavailable after durable Prepared keeps journal, does not append directory, recovery reuses IDs",
+      "result": "PASS",
+      "category": "ContractAdapter",
+      "elapsedMs": 695.032
+    },
+    {
+      "name": "S06 service accepted but response lost: Prepared replay makes one target home and publishes once",
+      "result": "PASS",
+      "category": "ContractAdapter",
+      "elapsedMs": 666.323
+    },
+    {
+      "name": "S07 service success then HomeRegistered journal failure preserves Prepared for idempotent retry",
+      "result": "PASS",
+      "category": "ContractAdapter",
+      "elapsedMs": 874.241
+    },
+    {
+      "name": "S08 service target HomeConflict never overwrites winner or locally publishes, journal remains diagnostic",
+      "result": "PASS",
+      "category": "ContractAdapter",
+      "elapsedMs": 267.112
+    },
+    {
+      "name": "S09 Core write failure after service success retains HomeRegistered; retry writes target once successfully",
+      "result": "PASS",
+      "category": "ContractAdapter",
+      "elapsedMs": 798.289
+    },
+    {
+      "name": "S10 service success/local directory failure retains exact staged Core, never deletes it, recovery appends once",
+      "result": "PASS",
+      "category": "ContractAdapter",
+      "elapsedMs": 795.223
+    },
+    {
+      "name": "S11 adapter throws after atomic Core write: durable exact target remains recoverable",
+      "result": "PASS",
+      "category": "ContractAdapter",
+      "elapsedMs": 730.394
+    },
+    {
+      "name": "S12 adapter throws after atomic directory append: readback recognizes sole local publication point",
+      "result": "PASS",
+      "category": "ContractAdapter",
+      "elapsedMs": 514.642
+    },
+    {
+      "name": "S13 directory published but Published receipt write fails: deny open until reconciliation, never remove world",
+      "result": "PASS",
+      "category": "ContractAdapter",
+      "elapsedMs": 841.08
+    },
+    {
+      "name": "S14 adapter throws after atomic Published receipt: committed result remains Published",
+      "result": "PASS",
+      "category": "ContractAdapter",
+      "elapsedMs": 521.217
+    },
+    {
+      "name": "S15 all five durable write prefixes survive fresh storage process recovery with same target, registration and content",
+      "result": "PASS",
+      "category": "ContractAdapter",
+      "elapsedMs": 2316.467
+    },
+    {
+      "name": "S16 Published world with currently unavailable authority cannot open; data remains for online retry",
+      "result": "PASS",
+      "category": "ContractAdapter",
+      "elapsedMs": 871.226
+    },
+    {
+      "name": "S17 local published/service missing denies opening; re-register same ID reconciles without deleting or republishing Core",
+      "result": "PASS",
+      "category": "ContractAdapter",
+      "elapsedMs": 747.073
+    },
+    {
+      "name": "S18 local published/service conflict never opens and reconciliation preserves published world",
+      "result": "PASS",
+      "category": "ContractAdapter",
+      "elapsedMs": 548.493
+    },
+    {
+      "name": "S19 corrupted/mismatched-device journals retain raw bytes and block reads/preparation/recovery",
+      "result": "PASS",
+      "category": "ContractAdapter",
+      "elapsedMs": 605.058
+    },
+    {
+      "name": "S20 unexpected staged Core mutation blocks retry without overwrite; source/account data remains",
+      "result": "PASS",
+      "category": "ContractAdapter",
+      "elapsedMs": 577.536
+    },
+    {
+      "name": "S21 published receipt allows legitimate later target revision, while immutable provenance and FormatTime guard opening",
+      "result": "PASS",
+      "category": "ContractAdapter",
+      "elapsedMs": 589.329
+    },
+    {
+      "name": "S22 tombstoned published target stays deleted; recovery cannot recreate it or erase retained Core",
+      "result": "PASS",
+      "category": "ContractAdapter",
+      "elapsedMs": 577.92
+    },
+    {
+      "name": "S23 pending/Published replay does not duplicate targets and conflicting transaction plans are rejected",
+      "result": "PASS",
+      "category": "ContractAdapter",
+      "elapsedMs": 840.873
+    },
+    {
+      "name": "S24 only one pending import per bound account; a different UUID/registration cannot bypass the journal",
+      "result": "PASS",
+      "category": "ContractAdapter",
+      "elapsedMs": 241.633
+    },
+    {
+      "name": "S25 account isolation refuses cross-account key reads or locks before touching any data",
+      "result": "PASS",
+      "category": "ContractAdapter",
+      "elapsedMs": 69.339
+    },
+    {
+      "name": "S26 import lock is nonreentrant and held across service; directory lock is acquired only after service resolves",
+      "result": "PASS",
+      "category": "ContractAdapter",
+      "elapsedMs": 499.154
+    },
+    {
+      "name": "S27 Promise target-write callback cannot masquerade as durable synchronous publication",
+      "result": "PASS",
+      "category": "ContractAdapter",
+      "elapsedMs": 340.132
+    },
+    {
+      "name": "S28 missing or mismatched Published receipt never authorizes another local world",
+      "result": "PASS",
+      "category": "ContractAdapter",
+      "elapsedMs": 455.116
+    },
+    {
+      "name": "S29 another valid revision-zero Core cannot replace Published plan; genuine revision-one recalled state may progress",
+      "result": "PASS",
+      "category": "ContractAdapter",
+      "elapsedMs": 538.161
+    },
+    {
+      "name": "S30 Prepared source becoming Released or future ownership refuses target registration, despite historical transfer proof",
+      "result": "PASS",
+      "category": "ContractAdapter",
+      "elapsedMs": 509.306
+    },
+    {
+      "name": "E01 production source hashes remain identical across loaded-contract verification",
+      "result": "PASS",
+      "category": "ContractAdapter",
+      "elapsedMs": 0.397
+    }
+  ],
+  "passed": 59,
+  "failed": 0,
+  "pass": true
+}

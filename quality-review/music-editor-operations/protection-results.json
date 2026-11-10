@@ -1,0 +1,26 @@
+{
+  "pass": true,
+  "productionChanges": [
+    "src/musicEditor/MusicEditorSession.ts",
+    "src/presentation/MusicEditorView.ts"
+  ],
+  "unchangedBaselineFiles": 171,
+  "unchangedCurrentProtected": 9,
+  "verifiedPriorProtectedAtApplicableBaseline": 31,
+  "preExistingDifferences": [
+    {
+      "path": "docs/NAMEBOOK.md",
+      "previousBatchSha256": "e7d43750f96cef360b83f1711679e49b4f0cf0c4332559d07784782a56db8350",
+      "thisBatchBaselineSha256": "22eebce4f190056276c053a457f20b42d3cdb6b6637e1d5301b950129097706f"
+    },
+    {
+      "path": "docs/spec/stage-1.md",
+      "previousBatchSha256": "c0a0a81c172389bc0509221b2fc337ff9e12c2a3502f2d1c9e2e1b35aeac2b02",
+      "thisBatchBaselineSha256": "afc05d1409039551800c458b26a7c464354e39219a218535eacf1d76e9403f06"
+    }
+  ],
+  "unchangedExternalReferences": 12,
+  "sessionPublicMethodsAndReaderPortUnchanged": true,
+  "projectTrackNoteFieldsAndSourceBuilderUnchanged": true,
+  "dependenciesMatrixUnchanged": true
+}

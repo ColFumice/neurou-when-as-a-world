@@ -1,0 +1,140 @@
+{
+  "kind": "ContractOracle",
+  "passed": 32,
+  "failed": 0,
+  "realHttp": false,
+  "realPostgreSQL": false,
+  "actualSharedCommitValidator": true,
+  "nativeCrypto": true,
+  "testOnlyAtomicCipherCache": true,
+  "results": [
+    {
+      "label": "mode ExternalService and relay use exactly submit path",
+      "passed": true
+    },
+    {
+      "label": "submit binds server fact to original identity/digest/admission",
+      "passed": true
+    },
+    {
+      "label": "submit rejects additional fields before HTTP capability",
+      "passed": true
+    },
+    {
+      "label": "pull freezes defaults and preserves empty cursor without claiming completeness",
+      "passed": true
+    },
+    {
+      "label": "pull retains signed Gap RetentionExpired and original after",
+      "passed": true
+    },
+    {
+      "label": "pull retains signed Gap RelayGenerationChanged and original after",
+      "passed": true
+    },
+    {
+      "label": "pull retains signed Gap MissingAdmittedEnvelope and original after",
+      "passed": true
+    },
+    {
+      "label": "pull rejects inconsistent signed batch wrongWorld",
+      "passed": true
+    },
+    {
+      "label": "pull rejects inconsistent signed batch emptyAdvance",
+      "passed": true
+    },
+    {
+      "label": "nonempty signed batch next is exactly after+count without Number cursor truncation",
+      "passed": true
+    },
+    {
+      "label": "nonempty signed batch cannot skip an unseen cursor position",
+      "passed": true
+    },
+    {
+      "label": "pull limits reject 0/0 before transport",
+      "passed": true
+    },
+    {
+      "label": "pull limits reject 257/0 before transport",
+      "passed": true
+    },
+    {
+      "label": "pull limits reject 128/-1 before transport",
+      "passed": true
+    },
+    {
+      "label": "pull limits reject 128/25001 before transport",
+      "passed": true
+    },
+    {
+      "label": "full c-1 native validator plus atomic fsync/rename exact readback precedes fresh-nonce ACK",
+      "passed": true
+    },
+    {
+      "label": "complete provenance technical InvalidChange bytes may be durably ACKed",
+      "passed": true
+    },
+    {
+      "label": "unsafe ACK missingSource stops before network",
+      "passed": true
+    },
+    {
+      "label": "unsafe ACK noKey stops before network",
+      "passed": true
+    },
+    {
+      "label": "unsafe ACK cryptoPort stops before network",
+      "passed": true
+    },
+    {
+      "label": "unsafe ACK forgedCapability stops before network",
+      "passed": true
+    },
+    {
+      "label": "unsafe ACK cacheThrows stops before network",
+      "passed": true
+    },
+    {
+      "label": "unsafe ACK lieSha stops before network",
+      "passed": true
+    },
+    {
+      "label": "unsafe ACK changedReadBack stops before network",
+      "passed": true
+    },
+    {
+      "label": "unsafe ACK missingReadBack stops before network",
+      "passed": true
+    },
+    {
+      "label": "unsafe ACK signerThrows stops before network",
+      "passed": true
+    },
+    {
+      "label": "unsafe ACK logoutAfterRead stops before network",
+      "passed": true
+    },
+    {
+      "label": "missing source receipts are Gap and never become persisted/ACKed facts",
+      "passed": true
+    },
+    {
+      "label": "ACK device binding rejected before cache or signing",
+      "passed": true
+    },
+    {
+      "label": "ACK wrong receipt count rejected after transport without fake success",
+      "passed": true
+    },
+    {
+      "label": "network failure stays a local Relay rejection and leaves auth context intact",
+      "passed": true
+    },
+    {
+      "label": "real owner local timeout fault is attributed to Relay and leaves auth context intact",
+      "passed": true
+    }
+  ]
+}

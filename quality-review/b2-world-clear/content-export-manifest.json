@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "contentRevision": "1.0.0",
+  "authoredAt": "2026-10-10",
+  "author": "雨若制作方 / B2.2c 原创内容",
+  "originalNarrative": true,
+  "originalMusicAndMedia": true,
+  "publicationChain": [
+    "MusicEditorSession.LoadProject",
+    "MusicEditorSession.exportSource",
+    "GuidanceEditorSession.LoadDraft(tier=World)",
+    "GuidanceEditorSession.exportChart"
+  ],
+  "editorSourceFiles": [
+    "src/musicEditor/MusicEditorSession.ts",
+    "src/editor/GuidanceEditorSession.ts"
+  ],
+  "chart": {
+    "chartId": "primary-rain-world-1",
+    "schemaVersion": 3,
+    "tier": "World",
+    "lineCount": 1,
+    "nodeCount": 5
+  },
+  "media": {
+    "format": "PCM WAV",
+    "sampleRate": 22050,
+    "channels": 1,
+    "bitsPerSample": 16,
+    "durationMs": 6000,
+    "construction": "原创音乐工程的音高/力度/绝对时间驱动钟音合成，加确定性低电平雨声；正常媒体 ended，非挂钟模拟。"
+  },
+  "narrative": {
+    "contentId": "primary-rain-memory",
+    "EventDistance": 3,
+    "choiceDistances": [
+      {
+        "choiceId": "share-shelter",
+        "distance": 4.018706259482024
+      },
+      {
+        "choiceId": "read-ticket",
+        "distance": 4.115823125451335
+      },
+      {
+        "choiceId": "keep-promise",
+        "distance": 4.092676385936225
+      }
+    ]
+  },
+  "hashes": {
+    "quality-review/b2-world-clear/content-music-project.json": "befefcc354a4b681497b2d21fdf890aac7fe7cf91638ec464772efe1371b9754",
+    "quality-review/b2-world-clear/content-chart-source.json": "1bbdb2b2d927e9083766444593ace0d89f54b28528e68de34a835866e8e1cd58",
+    "quality-review/b2-world-clear/content-world-draft.json": "1a87b576f19a73135a74ae603321f7baa7fc5e3328fe08081b7c5a00d053c57e",
+    "assets/resources/world/primary-rain-dialogue.json": "a58c73e31e90d012334fe53a572ba044cd8cf766c85a06e041fe2911972d80a5",
+    "assets/resources/chart/primary-rain-world-1.json": "9cc9eea989860e08219515fa974906f340089bf65c95aedb87ac1593cbfca8d6",
+    "assets/resources/chart/primary-rain-world-1.visual.json": "2fcc2dab5f24da1d2e8ad9c845003f82e064aee91b42cdc42312a21ee563c8be",
+    "assets/resources/audio/primary-rain-world-1.wav": "b4cde7512f630f9739dc6f6423bad7a1092914bf4fa2f72ff977f0226566943c"
+  }
+}

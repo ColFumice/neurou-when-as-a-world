@@ -1,0 +1,36 @@
+{
+  "phase": "B2.5c P3 documentation-only protection",
+  "comparedUtc": "2026-10-11T03:38:08.574Z",
+  "baselineCapturedUtc": "2026-10-11T03:22:00.381Z",
+  "baselineSha256": "b3cdbde22a9823fb547e1ac882094709de6d96603679675737920698c486f66d",
+  "beforeCount": 7042,
+  "afterCount": 7042,
+  "changed": [
+    "docs/NAMEBOOK.md",
+    "docs/spec/stage-1.md"
+  ],
+  "removed": [],
+  "added": [],
+  "pass": false,
+  "excludedDirectoryNames": [
+    "node_modules",
+    "library",
+    "temp",
+    "tmp",
+    "dist",
+    ".git",
+    ".local",
+    ".secret",
+    "secrets"
+  ],
+  "excludedPrefixes": [
+    "quality-review/b2-shared-contract-freeze",
+    "quality-review/b2-real-auth/evidence/runtime/pgsql"
+  ],
+  "excludedFilePatterns": [
+    ".env",
+    "*.(pem|key|p12|pfx)",
+    "*.(zip|exe|dll|pdb|lib|o|obj|tar|gz|bz2|7z)"
+  ],
+  "limits": "Byte-stability scope is all pre-existing non-excluded files, including docs, namebook/reference materials, archive, source, server package source, settings and historical quality evidence. Symlink/junction targets are hashed as link text without traversal; their in-workspace canonical source directories are independently covered. Dependencies, generated caches/compiled outputs, PostgreSQL executable payload, private local data/key files and this new delivery directory are excluded; secret files are never read."
+}

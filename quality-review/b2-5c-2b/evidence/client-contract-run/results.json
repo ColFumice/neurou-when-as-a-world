@@ -1,0 +1,19 @@
+{
+  "generatedUtc": "2026-10-11T07:53:01.016Z",
+  "nodeVersion": "v24.19.0",
+  "command": [
+    "C:\\Program Files\\nodejs\\node.exe",
+    "--test",
+    "--test-reporter=tap",
+    "quality-review/b2-5c-2b/client-contract-tests.cjs"
+  ],
+  "scope": "ContractOracle: native-memory cryptography with explicit transport oracle, no actual shared HTTP or PG authority acceptance",
+  "rawLogSha256": "8259bb2f5ab33806dc96653ba12e11d89085c404f80575510031caa0b4bbe048",
+  "summary": {
+    "kind": "ContractOracle",
+    "passed": 17,
+    "realHttp": false,
+    "realPostgreSQL": false
+  },
+  "pass": true
+}

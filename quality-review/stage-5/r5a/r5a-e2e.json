@@ -1,0 +1,17 @@
+{
+  "analyze": {
+    "text": "MUSIC / BEATS\nchart-w1\n×\nAnalyze Beats\nManual Tap\nRemove Beats\nSTATUS / READY\nBPM / 119.94\nOFFSET / 0 ms\nMETER / 4\nCONF / 97%\nSOURCE / Detected\nBPM\nOFFSET\nms\n−10\n+10\nTAP (先点 Manual Tap)\nSave Manual\nTAPS 0/4\n16 beats\n4 downbeats\n8.0s\nImport JSON\nExport JSON\n\nsidecar 已保存\n\n氛围 / 持续低音素材建议 Manual；Analyzer 的 LowConfidence 不会被隐藏。\n\n只写 charts/<chartId>.beats.json；不影响判定 / NEU。",
+    "ready": true,
+    "sidecar": true,
+    "sidecarExists": true
+  },
+  "hud": {
+    "beats": "BPM 119.94\n4/4",
+    "pulses": [
+      18519
+    ]
+  },
+  "error": null,
+  "restored": true,
+  "finishedAt": "2026-10-26T05:01:57.715Z"
+}

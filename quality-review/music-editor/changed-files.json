@@ -1,0 +1,102 @@
+[
+  {
+    "path": "编辑器/打开音乐编辑器.cmd",
+    "kind": "Added",
+    "sha256": "78f76f19b4e75aa327200d6986e34fcce5fa7613ba89ae76b8a69f66cd80cacc"
+  },
+  {
+    "path": "编辑器/启动音乐编辑器.ps1",
+    "kind": "Added",
+    "sha256": "9879012aa619addbd64b313cbd0c8fccf1890fe4a4efb3f4e901a7b097494f5c"
+  },
+  {
+    "path": "assets/scripts/MusicEditorBuilder.ts",
+    "kind": "Added",
+    "sha256": "ee326b12bd4dcdac03779502d1fd39ba04d0e78bd21af943071a8fbc9851c124"
+  },
+  {
+    "path": "assets/scripts/MusicEditorBuilder.ts.meta",
+    "kind": "Added",
+    "sha256": "10c680739941adbe8d18a87284b8ef7cd7aecccf61e70664ea85171cee01425f"
+  },
+  {
+    "path": "assets/scripts/WorldFolderBuilder.ts",
+    "kind": "Modified",
+    "sha256": "c0b7214d85a9eee4a244d870a369e366909734ea1ab5b0f0f6c5743d8430962b"
+  },
+  {
+    "path": "scripts/check-dependencies.js",
+    "kind": "Modified",
+    "sha256": "80d01582e9f95f1717d2167adfb3dd1aed379f032e8cfca58cc18981d535f27b"
+  },
+  {
+    "path": "src/musicEditor.meta",
+    "kind": "Added",
+    "sha256": "a15a347292e997bbe6ea2ad605b7cab2e80ca1ba2549a826ad2b10a289560a91"
+  },
+  {
+    "path": "src/musicEditor/ChartSourceBuilder.ts",
+    "kind": "Added",
+    "sha256": "2cbe0e42768a890745806a7c4edcd68ed8197ac88ad198982d7df60b6793221b"
+  },
+  {
+    "path": "src/musicEditor/ChartSourceBuilder.ts.meta",
+    "kind": "Added",
+    "sha256": "27c60854074bf1b3efdb8a90956e622f6418aeebaacac2a55a075e4ea0db4d45"
+  },
+  {
+    "path": "src/musicEditor/MusicEditorSession.ts",
+    "kind": "Added",
+    "sha256": "ed1824e4de15e711d39bfce770f63f1a7351ab10732d9511db1324b49fca379f"
+  },
+  {
+    "path": "src/musicEditor/MusicEditorSession.ts.meta",
+    "kind": "Added",
+    "sha256": "4f784f2b095b19764f6c4bf2dde8b982c2107a4a806f714c456012eee8178e2c"
+  },
+  {
+    "path": "src/musicEditor/MusicProjectData.ts",
+    "kind": "Added",
+    "sha256": "0cbf532438e377d80f4e3452e831e5769c0e5df6fea3e15455b24e53b7c0c424"
+  },
+  {
+    "path": "src/musicEditor/MusicProjectData.ts.meta",
+    "kind": "Added",
+    "sha256": "ec5c2336d81ac72af496ae533f567ad451627c7b11025ad016aff1edb6da1ce1"
+  },
+  {
+    "path": "src/musicEditor/MusicTiming.ts",
+    "kind": "Added",
+    "sha256": "8bdc2f6ce19ab8b85ea4178f54329e3707c6b429a00872e6fbd409da13981ac1"
+  },
+  {
+    "path": "src/musicEditor/MusicTiming.ts.meta",
+    "kind": "Added",
+    "sha256": "e3cc91656e265f4f0e82ac8d5b5ecd63d7839e6d904f268282e9ce8b2d30cb9b"
+  },
+  {
+    "path": "src/presentation/FolderCatalog.ts",
+    "kind": "Modified",
+    "sha256": "96668acbc55d190e87b74779a51a2fb4584d685d6cf95820d32a6baaa93540c0"
+  },
+  {
+    "path": "src/presentation/MusicEditorView.ts",
+    "kind": "Added",
+    "sha256": "2a39acfeb9d77ec6b0a149d7cb1f5705002faacd33a31419547dd288130e4128"
+  },
+  {
+    "path": "src/presentation/MusicEditorView.ts.meta",
+    "kind": "Added",
+    "sha256": "83e475b9ba7b97659385169c6a16dbf9ed15c82397f0feb257347d6a510a8780"
+  },
+  {
+    "path": "src/presentation/MusicPreviewAudio.ts",
+    "kind": "Added",
+    "sha256": "95b2b483fc035031a56709c817d8da97498657b49d203d8bb2d368e507aad997"
+  },
+  {
+    "path": "src/presentation/MusicPreviewAudio.ts.meta",
+    "kind": "Added",
+    "sha256": "669bb91347096e72f6ca031f25b41ad052a73d4f7ddcdd03a4171273734f1b8a"
+  }
+]

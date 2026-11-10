@@ -1,0 +1,16 @@
+'use strict';
+const fs = require('node:fs');
+const path = require('node:path');
+const root = path.resolve(__dirname, '../../..');
+const intent = path.join(root, 'src/director/IntentPort.ts');
+const before = fs.readFileSync(path.join(__dirname, 'IntentPort.before.ts'));
+const current = fs.readFileSync(intent);
+if (!current.equals(before)) throw new Error('Append requires the exact captured original IntentPort.');
+const contracts = fs.readFileSync(path.join(root, 'src/director/SharedCommitContracts.ts'), 'utf8');
+const names = [...contracts.matchAll(/^export\s+(?:interface|type)\s+(\w+)/gm)].map(match => match[1]);
+if (names.length === 0 || new Set(names).size !== names.length) throw new Error('Invalid contract exports.');
+const lines = [];
+for (let index = 0; index < names.length; index += 4) lines.push('  ' + names.slice(index, index + 4).join(', ') + ',');
+const suffix = '\n// B2.5c-1: shared wire types only; no runtime replay, service or product connection.\nexport type {\n' + lines.join('\n') + '\n} from \'./SharedCommitContracts\';\n';
+fs.appendFileSync(intent, suffix, 'utf8');
+console.log(JSON.stringify({ originalBytes: before.length, appendedBytes: Buffer.byteLength(suffix), names }, null, 2));

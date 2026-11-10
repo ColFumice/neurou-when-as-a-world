@@ -1,0 +1,31 @@
+R26 完整演奏口径 B
+
+修改源码（仅三处）：
+- src/chart/ChartPremiere.ts：媒体结束标志；Note 全已决 + 媒体结束才完成；媒体不可用时独立帧时间累计 30 秒兜底；重入复位标志和计时。
+- src/presentation/AudioOutputClock.ts：读取 HTMLVideoElement.ended / error / 播放可用性；ended 时保存最终媒体时间；解绑 ended 监听。
+- assets/scripts/SceneBuilder.ts：组合根将媒体状态、帧时长送入首演；持续不可用 30 秒后启用独立兜底谱面时钟（保证加载失败时 Note 仍能判定）；暂停冻结两个计时器，退出复位。director 完成账本流程保持既有接口。
+
+门禁：check:naming / check:dependencies / typecheck 均退出 0。命名扫描 0 ERROR / 15 WARN，既有 Trace/Window 语义告警；依赖 0 ERROR。六项逻辑回归全部通过。
+
+Creator 3.8.8 实播（localhost:7456）：
+- 使用现有占位视频，真实 duration=12 秒；现有谱面最后 Note=10000ms。
+- 临时测量探针绕过解谜入口、按实际媒体时钟自动提交 20 次 Note 判定；未替换视频、完成条件和账本完成路径。
+- 10006.239ms：resolved=20，Playing，result=null，ledger=0。
+- 11912.148ms：resolved=20，Playing，result=null，ledger=0。
+- ended 后：finishedAtMs=12000.000000000002，completed=true，perfectCount=20；director 转为 Exited，entered=false，ledger=1（恰好一条完成记录）。结束后播放器被回收，所以最终样本 ended=false / 媒体时间=-1；结果快照保留 12 秒。
+- 已恢复无探针最终源码，Creator 重新导入 scripts 后预览加载成功，未出现 error 日志，#r26-evidence 元素不存在。
+- docs/ 全部文件哈希一致（2 个文件），未修改。
+
+兜底占位值：CHART_MEDIA_END_TIMEOUT_MS=30000。Note 全已决后媒体连续不可用累计 30 秒才结算；恢复正常播放清零，暂停不计。若视频完全无法加载，先等待 30 秒加载/停滞宽限，再独立推进 Note，最后等待 Note 全已决后的 30 秒兜底。正常媒体仍在播放时不会仅因达到超时值而结算。
+
+新增命名待追认：
+- CHART_MEDIA_END_TIMEOUT_MS（常量及 30000ms 占位数值）
+- ChartPremiere.mediaEnded（媒体结束标志）
+- ChartPremiere.mediaUnavailableElapsedMs（异常兜底计时）
+- ChartPremiere.advanceMediaStatus（媒体状态推进接口）
+- AudioOutputClock.onMediaEnded（结束回调）
+- AudioOutputClock.hasChartMediaEnded（结束探针）
+- AudioOutputClock.isChartMediaUnavailable（不可用探针）
+- SceneBuilder.chartMediaUnavailableElapsedMs（加载/停滞宽限计时）
+
+证据：creator-preview-results.json / creator-preview.jpg / regression-results.json / gates-results.json / final-verification.json；三条门禁完整日志在同目录。

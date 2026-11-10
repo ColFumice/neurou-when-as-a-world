@@ -1,0 +1,330 @@
+{
+  "generatedAt": "2026-10-10T10:24:55.180Z",
+  "scope": "B2.2c authorized production increments; external document writes separately observed, never attributed to this implementation",
+  "protectedFiles": 254,
+  "allowedExistingFiles": [
+    "constants/index.ts",
+    "src/director/IntentPort.ts",
+    "src/director/PlayerIntent.ts",
+    "assets/scripts/SceneBuilder.ts",
+    "assets/scripts/WorldFolderBuilder.ts"
+  ],
+  "baselineBackupFailures": [],
+  "authorizedChanges": [
+    {
+      "path": "assets/scripts/SceneBuilder.ts",
+      "before": "10371fdc3d2a1d66f63d87d019d8777d0bb8e80191788e65bf8eb2b6002c09c9",
+      "after": "1d97da14b1957d1c598a626315c0e524841613a48ee9e49e43c711195bc92bc3",
+      "beforeBytes": 64927,
+      "afterBytes": 72258
+    },
+    {
+      "path": "assets/scripts/WorldFolderBuilder.ts",
+      "before": "1f27ca70c8ce82fefca4731fb3655edb8d542937933313faf3985362bbab52d2",
+      "after": "343565a6a3e7fc2ef1ef6314e8cb1b68621e764558323d589c1146e940b167ce",
+      "beforeBytes": 10457,
+      "afterBytes": 11330
+    },
+    {
+      "path": "constants/index.ts",
+      "before": "ebc4b8b2fdaf25d4f0372458cf8e0245da4397a2de05cafc5ea59a3c70518674",
+      "after": "ea654d191ab4e23552ee5d37580bfc00a607b7b790367656fa7d00a3ea27bbad",
+      "beforeBytes": 12341,
+      "afterBytes": 12489
+    },
+    {
+      "path": "src/director/IntentPort.ts",
+      "before": "b6ec38dbf2e9915cfc3a70d9ab41ac501dd14d22ec49ba94af5763caf3f1365c",
+      "after": "50affce8f2c5c8874ba4cd36b3b32c82f61369e566a0eac10c6dac65208cf1ef",
+      "beforeBytes": 40815,
+      "afterBytes": 41608
+    },
+    {
+      "path": "src/director/PlayerIntent.ts",
+      "before": "731ae4eb2bf26729f028912b28401546da9fcdf80108a1bc7e5f21798105a3cd",
+      "after": "c82bdd6a32e01bd68a46bad5164289f26b5e6e0cdf2892dc246cb490648e083b",
+      "beforeBytes": 5275,
+      "afterBytes": 5430
+    }
+  ],
+  "authorizedAdded": [
+    "assets/resources/audio/primary-rain-world-1.wav",
+    "assets/resources/audio/primary-rain-world-1.wav.meta",
+    "assets/resources/chart/primary-rain-world-1.json",
+    "assets/resources/chart/primary-rain-world-1.json.meta",
+    "assets/resources/chart/primary-rain-world-1.visual.json",
+    "assets/resources/chart/primary-rain-world-1.visual.json.meta",
+    "assets/resources/world.meta",
+    "assets/resources/world/primary-rain-dialogue.json",
+    "assets/resources/world/primary-rain-dialogue.json.meta",
+    "src/chart/ChartEntry.ts",
+    "src/chart/ChartEntry.ts.meta",
+    "src/chart/WorldBossChartSource.ts",
+    "src/chart/WorldBossChartSource.ts.meta",
+    "src/director/ChartReference.ts",
+    "src/director/ChartReference.ts.meta",
+    "src/director/RouteSignature.ts",
+    "src/director/RouteSignature.ts.meta",
+    "src/director/SphereCrossing.ts",
+    "src/director/SphereCrossing.ts.meta",
+    "src/director/WorldClearSession.ts",
+    "src/director/WorldClearSession.ts.meta",
+    "src/director/WorldNarrativeContent.ts",
+    "src/director/WorldNarrativeContent.ts.meta",
+    "src/ledger/deriveLedgerPosition.ts",
+    "src/ledger/deriveLedgerPosition.ts.meta",
+    "src/presentation/WorldChartView.ts",
+    "src/presentation/WorldChartView.ts.meta",
+    "src/presentation/WorldClearStorage.ts",
+    "src/presentation/WorldClearStorage.ts.meta",
+    "src/presentation/WorldClearView.ts",
+    "src/presentation/WorldClearView.ts.meta"
+  ],
+  "missing": [],
+  "unexpectedProtectedChanges": [],
+  "unauthorizedAdded": [],
+  "omittedAuthorizedNewFiles": [],
+  "observedExternalDocumentChanges": [
+    {
+      "path": "docs/NAMEBOOK.md",
+      "before": "1f9f2c7ad622f7551f8539d1882aa47e7c73cf5014cad02ba5c8439c7c8ad170",
+      "after": "af7f70e3699e2fa435974da425384e5d6e3aca1e525f9518be58761c14cd5141",
+      "beforeBytes": 47972,
+      "afterBytes": 50731
+    },
+    {
+      "path": "docs/spec/stage-1.md",
+      "before": "2169145d5bcc0ead9da062cd0170ddfa85044679d8dfa811ce65fa158b3c4b88",
+      "after": "14ffdad24abc59bc3771c2109cca43a4905267c61cbfc973542fef3847a7b9af",
+      "beforeBytes": 35323,
+      "afterBytes": 35405
+    }
+  ],
+  "unchangedBaselineFiles": 247,
+  "unchangedProtectedFilesOutsideAuthorizedIncrements": 247,
+  "protectedBaselineUnchanged": false,
+  "observedExternalDocumentAttribution": "Unconfirmed external parallel write; not reverted",
+  "auditRequiresAttribution": true,
+  "implementationScopePass": true,
+  "pass": true,
+  "productionDiffBytes": 119004,
+  "externalDocumentDiffBytes": 4043,
+  "productionChanges": [
+    {
+      "path": "assets/scripts/SceneBuilder.ts",
+      "bytes": 72258,
+      "sha256": "1d97da14b1957d1c598a626315c0e524841613a48ee9e49e43c711195bc92bc3",
+      "kind": "Modified"
+    },
+    {
+      "path": "assets/scripts/WorldFolderBuilder.ts",
+      "bytes": 11330,
+      "sha256": "343565a6a3e7fc2ef1ef6314e8cb1b68621e764558323d589c1146e940b167ce",
+      "kind": "Modified"
+    },
+    {
+      "path": "constants/index.ts",
+      "bytes": 12489,
+      "sha256": "ea654d191ab4e23552ee5d37580bfc00a607b7b790367656fa7d00a3ea27bbad",
+      "kind": "Modified"
+    },
+    {
+      "path": "src/director/IntentPort.ts",
+      "bytes": 41608,
+      "sha256": "50affce8f2c5c8874ba4cd36b3b32c82f61369e566a0eac10c6dac65208cf1ef",
+      "kind": "Modified"
+    },
+    {
+      "path": "src/director/PlayerIntent.ts",
+      "bytes": 5430,
+      "sha256": "c82bdd6a32e01bd68a46bad5164289f26b5e6e0cdf2892dc246cb490648e083b",
+      "kind": "Modified"
+    },
+    {
+      "path": "assets/resources/audio/primary-rain-world-1.wav",
+      "bytes": 264644,
+      "sha256": "b4cde7512f630f9739dc6f6423bad7a1092914bf4fa2f72ff977f0226566943c",
+      "kind": "Added"
+    },
+    {
+      "path": "assets/resources/audio/primary-rain-world-1.wav.meta",
+      "bytes": 204,
+      "sha256": "fc77aed7cc5e6e83b6bae26c4dabbcef3b32767a1d5942b996db4a155c3d9e45",
+      "kind": "Added"
+    },
+    {
+      "path": "assets/resources/chart/primary-rain-world-1.json",
+      "bytes": 2063,
+      "sha256": "9cc9eea989860e08219515fa974906f340089bf65c95aedb87ac1593cbfca8d6",
+      "kind": "Added"
+    },
+    {
+      "path": "assets/resources/chart/primary-rain-world-1.json.meta",
+      "bytes": 171,
+      "sha256": "80dfc8bad11eb438a21250c64856a88c0edf7f7db88bf9795bff36cb586078d7",
+      "kind": "Added"
+    },
+    {
+      "path": "assets/resources/chart/primary-rain-world-1.visual.json",
+      "bytes": 714,
+      "sha256": "2fcc2dab5f24da1d2e8ad9c845003f82e064aee91b42cdc42312a21ee563c8be",
+      "kind": "Added"
+    },
+    {
+      "path": "assets/resources/chart/primary-rain-world-1.visual.json.meta",
+      "bytes": 171,
+      "sha256": "82749f06aa17faaef3fd414bc21e1b23d27acc9234fc92626350a4ede8011cbf",
+      "kind": "Added"
+    },
+    {
+      "path": "assets/resources/world.meta",
+      "bytes": 169,
+      "sha256": "8f21cd0c1bca65f2f23caad656ab45453ae9d367698edad88566dc7f5601a130",
+      "kind": "Added"
+    },
+    {
+      "path": "assets/resources/world/primary-rain-dialogue.json",
+      "bytes": 3047,
+      "sha256": "a58c73e31e90d012334fe53a572ba044cd8cf766c85a06e041fe2911972d80a5",
+      "kind": "Added"
+    },
+    {
+      "path": "assets/resources/world/primary-rain-dialogue.json.meta",
+      "bytes": 171,
+      "sha256": "40dc46ed43b697efa5eede0bc071b6efccc4a975b7ce099eb723ab16f1587666",
+      "kind": "Added"
+    },
+    {
+      "path": "src/chart/ChartEntry.ts",
+      "bytes": 375,
+      "sha256": "87be2d6ea98d7077b645720521dd41a4095a7f76a0ede81127f059b3808e40ec",
+      "kind": "Added"
+    },
+    {
+      "path": "src/chart/ChartEntry.ts.meta",
+      "bytes": 180,
+      "sha256": "4553f1075d74b2f0f161a5b2001afedcbabc90c686659952c87d038d86c3402c",
+      "kind": "Added"
+    },
+    {
+      "path": "src/chart/WorldBossChartSource.ts",
+      "bytes": 310,
+      "sha256": "67d647386160707837ed9750690ee70da8b38e1fbc28a076225a49acf105637e",
+      "kind": "Added"
+    },
+    {
+      "path": "src/chart/WorldBossChartSource.ts.meta",
+      "bytes": 180,
+      "sha256": "3df024e957cce542768b1978857ac6dcc524d3d928e2785912a75dcdaf59c73d",
+      "kind": "Added"
+    },
+    {
+      "path": "src/director/ChartReference.ts",
+      "bytes": 3926,
+      "sha256": "e6d8db4168c39acfa8a39fc23b9222e540664d35068a412f28a1eb696bb10046",
+      "kind": "Added"
+    },
+    {
+      "path": "src/director/ChartReference.ts.meta",
+      "bytes": 171,
+      "sha256": "d41c778bd572650eb6e13b1cb3ee7b56bbe884f742697033c51006de393362ea",
+      "kind": "Added"
+    },
+    {
+      "path": "src/director/RouteSignature.ts",
+      "bytes": 7595,
+      "sha256": "e2a2e0254687b16750d999953e17e57f781fd9084f46c7c4af339a41903903b7",
+      "kind": "Added"
+    },
+    {
+      "path": "src/director/RouteSignature.ts.meta",
+      "bytes": 180,
+      "sha256": "076e01a4c1afb8d07d2fa895152d8bbb3fdc5c38212d3dd493d3eba9aeae16d6",
+      "kind": "Added"
+    },
+    {
+      "path": "src/director/SphereCrossing.ts",
+      "bytes": 1739,
+      "sha256": "133963ef2ab6f725b0402c712cd0dc078f74e946414cc269c6b0f5e256149fb1",
+      "kind": "Added"
+    },
+    {
+      "path": "src/director/SphereCrossing.ts.meta",
+      "bytes": 180,
+      "sha256": "a62e948e63d803004cb4b41c38f76a656edf1252afd679381721a0d8c039f923",
+      "kind": "Added"
+    },
+    {
+      "path": "src/director/WorldClearSession.ts",
+      "bytes": 19090,
+      "sha256": "245af19f6780bd0a97757f9de842009800fba0287be8bea2e37d4181564df78f",
+      "kind": "Added"
+    },
+    {
+      "path": "src/director/WorldClearSession.ts.meta",
+      "bytes": 180,
+      "sha256": "bdcacf02dd42e43c75d17a9ba2dfc4b74b1cbdf4e0f23ae3a17b98aa7b28edbb",
+      "kind": "Added"
+    },
+    {
+      "path": "src/director/WorldNarrativeContent.ts",
+      "bytes": 6638,
+      "sha256": "d37af19361d2408ba80d67a7d9cc8d67b1b3a67b7b8446260d0e7ea930ff939e",
+      "kind": "Added"
+    },
+    {
+      "path": "src/director/WorldNarrativeContent.ts.meta",
+      "bytes": 180,
+      "sha256": "7d1f46a70b4e7c85612347b0c03c260747519d9e14c8b87fa4998043e7a4727d",
+      "kind": "Added"
+    },
+    {
+      "path": "src/ledger/deriveLedgerPosition.ts",
+      "bytes": 2318,
+      "sha256": "b0cac832326f65940c021ab036327a00e983aced51f9494747084773505fce43",
+      "kind": "Added"
+    },
+    {
+      "path": "src/ledger/deriveLedgerPosition.ts.meta",
+      "bytes": 180,
+      "sha256": "29aff257010d1e8b91193d5fa0fb00f72ce79dbf23a37c2c41bb57c13bebdeb8",
+      "kind": "Added"
+    },
+    {
+      "path": "src/presentation/WorldChartView.ts",
+      "bytes": 16336,
+      "sha256": "49f0ae5244e2e2faf07ce9f6c3b59d4703dbdecfaa963ed5811a10b4cf9c7890",
+      "kind": "Added"
+    },
+    {
+      "path": "src/presentation/WorldChartView.ts.meta",
+      "bytes": 171,
+      "sha256": "e9faf8c8f48991da22d8aec6d2d9069febdf351b5bfdefcf66bf49af190e36cf",
+      "kind": "Added"
+    },
+    {
+      "path": "src/presentation/WorldClearStorage.ts",
+      "bytes": 13912,
+      "sha256": "39fab9c2672af8a2052f0a90190b6ea20efc02f10150add963b5918b1d701bef",
+      "kind": "Added"
+    },
+    {
+      "path": "src/presentation/WorldClearStorage.ts.meta",
+      "bytes": 171,
+      "sha256": "5d92d0bb117c93a00cbba6a53ad256c3e16f303f9210a97d6e619e624cd9e09a",
+      "kind": "Added"
+    },
+    {
+      "path": "src/presentation/WorldClearView.ts",
+      "bytes": 10211,
+      "sha256": "9bee1ff0f36c4aec115f3afd5835077e8f8f8fbd8ac92766cff5ba2249a867c3",
+      "kind": "Added"
+    },
+    {
+      "path": "src/presentation/WorldClearView.ts.meta",
+      "bytes": 171,
+      "sha256": "cae839edf5d1b5fce23c22bfdf36b227b12d9c9ea6431e4a474d754f59e75734",
+      "kind": "Added"
+    }
+  ]
+}

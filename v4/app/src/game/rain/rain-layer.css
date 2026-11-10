@@ -1,0 +1,95 @@
+.rain-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 3;
+  overflow: hidden;
+  pointer-events: none;
+  isolation: isolate;
+  opacity: var(--rain-opacity);
+  filter: blur(var(--rain-blur));
+  contain: strict;
+}
+
+.rain-layer__streak {
+  position: absolute;
+  inset: -18% -12%;
+  background-image:
+    repeating-linear-gradient(
+      105deg,
+      transparent 0 4px,
+      rgba(210, 242, 255, 0.18) 4px 5px,
+      transparent 5px 11px
+    ),
+    repeating-linear-gradient(
+      102deg,
+      transparent 0 15px,
+      rgba(175, 225, 245, 0.1) 15px 16px,
+      transparent 16px 30px
+    );
+  background-repeat: repeat;
+  background-size: var(--rain-size-1) var(--rain-size-1);
+  mix-blend-mode: screen;
+  will-change: transform;
+  animation: rain-layer-fall var(--rain-duration-1) linear infinite;
+}
+
+.rain-layer__streak--2 {
+  background-size: var(--rain-size-2) var(--rain-size-2);
+  opacity: var(--rain-opacity-2);
+  animation-duration: var(--rain-duration-2);
+  animation-direction: reverse;
+}
+
+.rain-layer__streak--3 {
+  background-size: var(--rain-size-3) var(--rain-size-3);
+  opacity: var(--rain-opacity-3);
+  animation-duration: var(--rain-duration-3);
+}
+
+.rain-layer__tint {
+  position: absolute;
+  inset: 0;
+  background: var(--rain-tint-source);
+  mix-blend-mode: var(--rain-tint-mode);
+  opacity: 0.58;
+}
+
+.rain-layer__edge {
+  position: absolute;
+  inset: 0;
+  box-shadow:
+    inset 0 0 7vw rgba(150, 224, 255, 0.08),
+    inset 0 0 1.1vw rgba(190, 242, 255, 0.12);
+  border: 1px solid rgba(160, 225, 244, 0.08);
+}
+
+@keyframes rain-layer-fall {
+  0% { transform: translate3d(-3%, -7%, 0); }
+  50% { transform: translate3d(2%, 3%, 0); }
+  100% { transform: translate3d(-1%, 9%, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rain-layer__streak {
+    animation: none;
+  }
+}
+
+/* R4e.2b · NoteLogoGlow on the R4a logo wrapper (visual only) */
+.game-note-logo--rain .game-logo:not(.game-logo--hit):not(.game-logo--miss) img {
+  filter: var(--rain-logo-glow);
+  transition: filter 240ms ease-out;
+}
+
+/* R4e.2b · external wrapper tint hook; GameStage internals stay untouched. */
+.game-content--rain::before,
+.game-stage--rain::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background: var(--rain-tint-source);
+  mix-blend-mode: var(--rain-tint-mode);
+  opacity: var(--rain-tint-opacity, 0.22);
+  pointer-events: none;
+}

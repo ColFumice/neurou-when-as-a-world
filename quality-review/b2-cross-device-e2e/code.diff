@@ -1,0 +1,1302 @@
+--- a/quality-review/b2-world-migration/capture-baseline.cjs
++++ b/quality-review/b2-cross-device-e2e/capture-baseline.cjs
+@@ -24,7 +24,7 @@
+     const canonical = normalize(path.relative(root, realPath));
+     const sha256 = crypto.createHash('sha256').update(bytes).digest('hex');
+     files.push({path: relative, canonicalPath: canonical, bytes: bytes.length, sha256});
+-    if (captureOriginals && sourceExtensions.has(path.extname(file).toLowerCase()) && !seenOriginalPaths.has(canonical)) {
++    if (captureOriginals && (sourceExtensions.has(path.extname(file).toLowerCase()) || (relative.startsWith('docs/') && path.extname(file).toLowerCase() === '.md')) && !seenOriginalPaths.has(canonical)) {
+       if (canonical.startsWith('../') || path.isAbsolute(canonical)) throw new Error('Original source resolved outside workspace');
+       seenOriginalPaths.add(canonical);
+       const copy = path.join(__dirname, 'original-source', canonical);
+@@ -65,8 +65,8 @@
+ for (const file of rootFiles) capture(path.join(root, file));
+ files.sort((a, b) => a.path.localeCompare(b.path, 'en'));
+ originals.sort((a, b) => a.path.localeCompare(b.path, 'en'));
+-const report = {schemaVersion: 1, phase: 'B2.4d', capturedAt: new Date().toISOString(), root, algorithm: 'sha256', scope: {directories, rootFiles, excludedDirectoryNames: [...excluded]}, fileCount: files.length, symbolicLinks, unreadable, files};
++const report = {schemaVersion: 1, phase: 'B2.4e', capturedAt: new Date().toISOString(), root, algorithm: 'sha256', scope: {directories, rootFiles, excludedDirectoryNames: [...excluded]}, fileCount: files.length, symbolicLinks, unreadable, files};
+ fs.writeFileSync(path.join(__dirname, target), JSON.stringify(report, null, 2) + '\n', 'utf8');
+-if (captureOriginals) fs.writeFileSync(path.join(__dirname, 'original-source-index.json'), JSON.stringify({schemaVersion: 1, phase: 'B2.4d', copiedAt: report.capturedAt, sourceExtensions: [...sourceExtensions], fileCount: originals.length, files: originals}, null, 2) + '\n', 'utf8');
++if (captureOriginals) fs.writeFileSync(path.join(__dirname, 'original-source-index.json'), JSON.stringify({schemaVersion: 1, phase: 'B2.4e', copiedAt: report.capturedAt, sourceExtensions: [...sourceExtensions], officialDocumentSnapshotPolicy: 'Additionally capture original bytes for .md files within docs/. All snapshots remain immutable.', fileCount: originals.length, files: originals}, null, 2) + '\n', 'utf8');
+ console.log(JSON.stringify({target, fileCount: files.length, originalSourceCount: originals.length, symbolicLinks, unreadable}));
+ process.exitCode = unreadable.length === 0 ? 0 : 1;
+
+--- /dev/null
++++ b/quality-review/b2-cross-device-e2e/check-baseline-freeze.cjs
+@@ -0,0 +1,35 @@
++'use strict';
++const fs = require('node:fs'), path = require('node:path'), crypto = require('node:crypto');
++const root = path.resolve(__dirname, '../..'), hash = bytes => crypto.createHash('sha256').update(bytes).digest('hex');
++const baselineBytes = fs.readFileSync(path.join(__dirname, 'baseline-before.json'));
++const indexBytes = fs.readFileSync(path.join(__dirname, 'original-source-index.json'));
++const baseline = JSON.parse(baselineBytes.toString('utf8')), index = JSON.parse(indexBytes.toString('utf8'));
++const snapshotFailures = index.files.filter(file => {
++  const bytes = fs.readFileSync(path.join(__dirname, file.copy)); return bytes.length !== file.bytes || hash(bytes) !== file.sha256;
++}).map(file => file.path);
++const rootProductionFiles = ['assets/scripts/WorldFolderBuilder.ts', 'assets/scripts/SceneBuilder.ts',
++  'assets/scripts/CrossDevicePrototype.ts', 'assets/scripts/WorldMigrationPrototype.ts',
++  'src/director/CoreTransfer.ts', 'src/director/WorldMigration.ts', 'src/director/RealityPauseBoundary.ts',
++  'src/presentation/SafePointDrainStorage.ts', 'src/presentation/CrossDeviceImportStorage.ts',
++  'src/presentation/WorldMigrationStorage.ts', 'src/presentation/WorldMigrationContractAdapter.ts'];
++const rootReadHashes = rootProductionFiles.map(file => {
++  const original = baseline.files.find(value => value.path === file), bytes = fs.readFileSync(path.join(root, file));
++  const readSha256 = hash(bytes); return { file, baselineSha256: original.sha256, readSha256,
++    matchesFrozenBaseline: original.sha256 === readSha256, readAtUtc: new Date().toISOString() };
++});
++const evidenceScripts = ['creator-preview.cjs', 'prepare-preview-harness.cjs', 'run-preview.cjs', 'run-contract-regressions.cjs'];
++const evidenceReadHashes = evidenceScripts.filter(file => fs.existsSync(path.join(__dirname, file))).map(file => {
++  const bytes = fs.readFileSync(path.join(__dirname, file)); return { file: 'quality-review/b2-cross-device-e2e/' + file,
++    readSha256: hash(bytes), bytes: bytes.length, readAtUtc: new Date().toISOString(),
++    baselineScope: false, meaning: 'Read observation of root acceptance evidence script, not part of immutable protected production baseline.' };
++});
++const result = { schemaVersion: 1, phase: 'B2.4e baseline integrity', generatedAtUtc: new Date().toISOString(),
++  frozenAtUtc: baseline.capturedAt, baselineManifestSha256: hash(baselineBytes), originalIndexSha256: hash(indexBytes),
++  protectedPathCount: baseline.fileCount, canonicalSnapshotCount: index.fileCount, snapshotFailures,
++  rootReadHashes, evidenceReadHashes,
++  pass: snapshotFailures.length === 0 && rootReadHashes.every(value => value.matchesFrozenBaseline),
++  limit: 'Checks the immutable original snapshots and read hashes. Evidence scripts may continue to be authored; final source and document drift require the separate end-of-batch audit.' };
++fs.writeFileSync(path.join(__dirname, 'baseline-freeze-integrity.json'), JSON.stringify(result, null, 2) + '\n');
++console.log(JSON.stringify({ pass: result.pass, protectedPathCount: result.protectedPathCount,
++  canonicalSnapshotCount: result.canonicalSnapshotCount, snapshotFailures,
++  rootReadMismatches: rootReadHashes.filter(value => !value.matchesFrozenBaseline), evidenceReadCount: evidenceReadHashes.length }));
+
+--- /dev/null
++++ b/quality-review/b2-cross-device-e2e/close-d-audit-protocol.cjs
+@@ -0,0 +1,27 @@
++'use strict';
++// Additive closure only. Historical d baselines and raw FAIL reports are never rewritten.
++const fs = require('node:fs'), path = require('node:path'), crypto = require('node:crypto');
++const d = path.resolve(__dirname, '../b2-world-migration');
++const read = file => JSON.parse(fs.readFileSync(path.join(d, file), 'utf8'));
++const before = read('baseline-before.json'), after = read('baseline-after.json'), audit = read('protected-final-audit.json');
++const records = ['docs/NAMEBOOK.md', 'docs/spec/stage-1.md'].map(file => {
++  const original = before.files.find(value => value.path === file), final = after.files.find(value => value.path === file);
++  return { path: file, baselineSha256: original.sha256, baselineBytes: original.bytes,
++    finalSha256: final.sha256, finalBytes: final.bytes, rawHashEquality: original.sha256 === final.sha256,
++    attribution: 'TraeAuthorized', protocolAttributionAccepted: true };
++});
++const sourceHashes = ['baseline-before.json', 'baseline-after.json', 'protected-final-audit.json'].map(file => ({
++  path: '../b2-world-migration/' + file, sha256: crypto.createHash('sha256').update(fs.readFileSync(path.join(d, file))).digest('hex'),
++}));
++const result = { schemaVersion: 1, phase: 'B2.4e protocol closure for historical B2.4d audit',
++  generatedAtUtc: new Date().toISOString(), rawHashEquality: false, protocolAttributionAccepted: true,
++  violationResolved: true, attribution: 'TraeAuthorized',
++  authorization: { source: 'User PROTOCOL confirmation and subsequent concurrent-documents attribution authorization, relayed by the root implementer in this team task.',
++    confirmation: '用户确认 d 两份 docs 变化来自 Trae PROTOCOL授权，并声明后续并发docs均可按Trae授权同步归因。',
++    acceptedMeaning: 'User confirmation resolves attribution and the alleged unauthorized-documents violation. It does not restore byte equality or alter the historical raw hash result.' },
++  historicalRawAuditPass: audit.pass, baselineCapturedAtUtc: before.capturedAt, historicalFinalCapturedAtUtc: after.capturedAt,
++  paths: records, immutableHistoricalArtifacts: sourceHashes, historicalArtifactsRewritten: false,
++  limits: 'This closure records explicit user authorization, not filesystem/process forensics. Historical protected-final-audit.json remains FAIL and original SHA manifests remain unchanged.' };
++fs.writeFileSync(path.join(__dirname, 'd-audit-protocol-closure.json'), JSON.stringify(result, null, 2) + '\n');
++console.log(JSON.stringify({ rawHashEquality: result.rawHashEquality, protocolAttributionAccepted: result.protocolAttributionAccepted,
++  violationResolved: result.violationResolved, historicalRawAuditPass: result.historicalRawAuditPass, paths: records }));
+
+--- a/quality-review/b2-cross-device-core/contract-tests.cjs
++++ b/quality-review/b2-cross-device-e2e/contract-regressions/b2-cross-device-core/contract-tests.cjs
+@@ -2,7 +2,7 @@
+ // Actual production codecs/adapters and lease storage with explicit ContractAdapter fixtures.
+ // This suite is not Cocos production acceptance and never seeds the preview profile.
+ const fs = require('node:fs'), path = require('node:path'), assert = require('node:assert/strict'), crypto = require('node:crypto');
+-const workspaceRoot = path.resolve(__dirname, '../..');
++const workspaceRoot = "D:\\Project\\A_New_Begin\\Neurou_official";
+ const productionSources = ['src/director/CoreTransfer.ts', 'src/director/CoreTransferContent.ts', 'src/presentation/CrossDeviceContractAdapter.ts', 'src/presentation/CrossDeviceImportStorage.ts'];
+ const sourceHashes = () => productionSources.filter(file => fs.existsSync(path.join(workspaceRoot, file))).map(file => ({ file,
+   sha256: crypto.createHash('sha256').update(fs.readFileSync(path.join(workspaceRoot, file))).digest('hex') }));
+
+--- a/quality-review/b2-state-extensions/state-test-fixture.cjs
++++ b/quality-review/b2-cross-device-e2e/contract-regressions/b2-state-extensions/state-test-fixture.cjs
+@@ -1,7 +1,7 @@
+ 'use strict';
+ // Shared controlled-contract fixture: formal published World content and real ChartPremiere results.
+ const fs = require('node:fs'), path = require('node:path'), crypto = require('node:crypto'), ts = require('typescript');
+-const root = path.resolve(__dirname, '../..');
++const root = "D:\\Project\\A_New_Begin\\Neurou_official";
+ require.extensions['.ts'] = (loaded, filename) => loaded._compile(ts.transpileModule(fs.readFileSync(filename, 'utf8'), {
+   compilerOptions: { target: ts.ScriptTarget.ES2020, module: ts.ModuleKind.CommonJS, strict: true },
+ }).outputText, filename);
+
+--- a/quality-review/b2-world-home-registry/contract-tests.cjs
++++ b/quality-review/b2-cross-device-e2e/contract-regressions/b2-world-home-registry/contract-tests.cjs
+@@ -5,7 +5,7 @@
+ const Module = require('node:module');
+ const ts = require('typescript');
+ const crypto = require('node:crypto');
+-const root = path.resolve(__dirname, '../..');
++const root = "D:\\Project\\A_New_Begin\\Neurou_official";
+ const sources = ['src/director/WorldHomeRegistry.ts', 'src/presentation/WorldHomeContractAdapter.ts', 'src/director/WorldFolderSession.ts'];
+ function load(relative) {
+   const file = path.join(root, relative), text = fs.readFileSync(file, 'utf8');
+
+--- a/quality-review/b2-world-migration/creator-preview.cjs
++++ b/quality-review/b2-cross-device-e2e/creator-preview.cjs
+@@ -8,6 +8,19 @@
+ const baseline = path.join(__dirname, 'original-source');
+ const runId = Date.now();
+ const requiredSources = [
++  "assets/scripts/CrossDevicePrototype.ts",
++  "assets/scripts/WorldMigrationPrototype.ts",
++  "src/director/WorldHomeRegistry.ts",
++  "src/director/CoreTransfer.ts",
++  "src/director/CoreTransferContent.ts",
++  "src/director/WorldMigration.ts",
++  "src/director/RealityPauseBoundary.ts",
++  "src/presentation/WorldHomeContractAdapter.ts",
++  "src/presentation/CrossDeviceContractAdapter.ts",
++  "src/presentation/CrossDeviceImportStorage.ts",
++  "src/presentation/SafePointDrainStorage.ts",
++  "src/presentation/WorldMigrationContractAdapter.ts",
++  "src/presentation/WorldMigrationStorage.ts",
+   'assets/scripts/SceneBuilder.ts', 'assets/scripts/WorldFolderBuilder.ts',
+   'src/director/LedgerHydration.ts', 'src/director/PuzzleHydration.ts', 'src/director/WorldStateCodec.ts',
+   'src/director/WorldClearSession.ts', 'src/director/IntentPort.ts', 'src/director/WorldStateSession.ts',
+@@ -42,8 +55,8 @@
+ }
+ const report = {
+   schemaVersion: 1, evidenceKind: 'ProductionAcceptance', capturedAt: new Date().toISOString(),
+-  scope: 'B2.4d same-ID WorldMigration and account-wide RealityPause, persistent shared ContractAdapter and source SafePoint drain', previewUrl: url,
+-  profile: path.join(os.tmpdir(), 'neurou-b24d-evidence-' + runId), harnessSha256: sha(fs.readFileSync(__filename)),
++  scope: 'B2.4e integrated WorldHomeRegistry, restricted Core copy and same-ID migration, account-wide pause and natural peer activity retirement', previewUrl: url,
++  profile: path.join(os.tmpdir(), 'neurou-b24e-evidence-' + runId), harnessSha256: sha(fs.readFileSync(__filename)),
+   policy: 'Actual Creator preview; fresh isolated profile per resolution; product login/prologue/native World audio/local Fork/Release/Claim/open controls. Two logical devices share a persistent ContractAdapter service fixture. The harness explicitly advances its independent service clock, never client time or gameplay state: this does not prove an actual elapsed hour or an external service. Read-only game/storage observations, direct CDP PNG; no game/file seeding, full FileCarry or physical-device authentication claim.',
+   resolutions: [], rendererErrors: [], runtimeErrors: [], requests: [], actions: [],
+ };
+@@ -125,7 +138,7 @@
+   const png = Buffer.from(shot.data, 'base64'); assert.deepEqual([png.readUInt32BE(16), png.readUInt32BE(20)], state.viewport);
+   const file = res.resolution + '-' + name + '.png'; fs.writeFileSync(path.join(__dirname, file), png);
+   res.screenshots.push({ name, file, sha256: sha(png), state });
+-  console.log('B2.4d ' + res.resolution + ' ' + name + ' ' + JSON.stringify({ ledger: state.ledger?.length, puzzle: state.legacy?.puzzle, restored: state.restoredCore, revision: state.coreSnapshot?.revision })); return state;
++  console.log('B2.4e ' + res.resolution + ' ' + name + ' ' + JSON.stringify({ ledger: state.ledger?.length, puzzle: state.legacy?.puzzle, restored: state.restoredCore, revision: state.coreSnapshot?.revision })); return state;
+ }
+ async function open(res) {
+   current = res; res.windowOpens = (res.windowOpens ?? 0) + 1;
+@@ -281,7 +294,7 @@
+       const p=document.querySelector('#world-migration-prototype');if(p?.dataset.error)throw Error(p.dataset.error);
+       return p?.dataset.phase==='PauseActive'?p.dataset.migrationId:false;
+     });
+-    await capture('14-other-window-source-drain-and-account-pause',res);
++    await capture('17-other-window-release-closes-account',res);
+     win=replayWin;const first=await replayObservation();
+     assert.equal(first.closed,true);assert.equal(first.active,true);assert.equal(first.runtime,sourceId);
+     assert.equal(first.media.paused,false);assert.equal(first.media.seeking,false);assert.ok(first.media.time>playing.media.time);
+@@ -289,9 +302,9 @@
+     const continuing=await replayObservation();assert.equal(continuing.active,true);assert.equal(continuing.runtime,sourceId);
+     assert.equal(continuing.media.paused,false);assert.ok(continuing.media.time>first.media.time);
+     assert.deepEqual(continuing.events.filter(e=>['pause','seeking'].includes(e.type)),[]);
+-    await capture('15-active-b-replay-preserves-native-timeline',res);
++    await capture('18-b-active-replay-keeps-native-timeline',res);
+     await until(()=>!!document.querySelector('#world-folder'),15000);
+-    const retired=await capture('16-native-ended-then-safe-retirement',res),ended=await replayObservation();
++    const retired=await capture('19-native-ended-and-core-settled-before-retirement',res),ended=await replayObservation();
+     assert.equal(retired.runtimeNode,null);assert.equal(retired.frameDrivers,0);assert.equal(retired.inputCollectors,0);
+     assert.ok(ended.events.some(e=>e.type==='ended'&&e.ended&&e.time===e.duration&&e.duration===6));
+     assert.deepEqual(ended.events.filter(e=>e.type==='seeking'),[]);
+@@ -316,8 +329,8 @@
+   }
+ }
+ async function migrationResolution(width,height) {
+-  const res={width,height,resolution:width+'x'+height,account:'b24d-production-'+width+'-'+runId,
+-    partition:'persist:b24d-'+width+'-'+runId,screenshots:[]}; report.resolutions.push(res);
++  const res={width,height,resolution:width+'x'+height,account:'b24e-production-'+width+'-'+runId,
++    partition:'persist:b24e-'+width+'-'+runId,screenshots:[]}; report.resolutions.push(res);
+   await worldClear(res); await exitWorld();
+   await click('[data-action="fork-world"][data-world-id="InitialWorld"]');
+   const sourceId=await until(()=>document.querySelector('#world-migration-source')?.value||false);
+@@ -327,12 +340,51 @@
+   const before=await read(), sourceBytes=before.storage[sourceKey],source=JSON.parse(sourceBytes);
+   const folderBytes=before.storage[folderKey],recordBytes=before.storage[keys(res.account).record],projectionBytes=before.storage[keys(res.account).projection];
+   await click('#cross-device-export');await until(()=>document.querySelector('#cross-device-status')?.textContent.includes('A 已发送'));
++  await capture('07-a-home-registered-restricted-core-export',res);
++  await click('#cross-device-import');
++  const copyId=await until(()=>{
++    const panel=document.querySelector('#cross-device-prototype');if(panel?.dataset.error)throw Error(panel.dataset.error);
++    return panel?.dataset.receipt==='Published'?panel.dataset.targetWorldId:false;
++  });
++  assert.match(copyId,/^world-[0-9a-f-]{36}$/);assert.notEqual(copyId,sourceId);
++  const copyKey=bKey('neurou-world-state-v1:'+encodeURIComponent(res.account)+':'+encodeURIComponent(copyId));
++  const copyJournalKey=bKey('neurou-cross-device-import-v1:'+encodeURIComponent(res.account));
++  const copied=await capture('08-b-copy-new-uuid-seven-parts-published',res);
++  const copyBytes=copied.storage[copyKey],copyJournalBytes=copied.storage[copyJournalKey],copy=JSON.parse(copyBytes);
++  const parts=['Ledger','PuzzleProgress','FormatTime','RecallCount','WorldLink','ChartSnapshot','ChartScore'];
++  assert.deepEqual(Object.keys(copy.sections),parts);assert.equal(copy.revision,0);
++  assert.equal(copy.forkOrigin.sourceWorldId,sourceId);assert.match(copy.forkOrigin.transactionId,/^import-/);
++  assert.deepEqual(copy.sections.FormatTime,source.sections.FormatTime);assert.deepEqual(ledgerOf(copy),ledgerOf(source));
++  for(const name of parts){
++    if(name==='FormatTime')continue;
++    if(name==='PuzzleProgress'){assert.ok(copy.sections[name].every(x=>x.worldId===copyId&&x.accountId===res.account));continue;}
++    assert.equal(copy.sections[name].worldId,copyId);assert.equal(copy.sections[name].accountId,res.account);
++  }
++  assert.deepEqual(copy.sections.ChartSnapshot.records,source.sections.ChartSnapshot.records);
++  assert.deepEqual(copy.sections.ChartScore.records,source.sections.ChartScore.records);
++  const copyJournal=JSON.parse(copyJournalBytes);assert.equal(copyJournal.entries[0].phase,'Published');
++  assert.equal(copyJournal.entries[0].homeReply.record.homeDeviceId,'logical-device-b');
++  const homes=JSON.parse(copied.storage['neurou-migration-contract-authority-v1']).registries.find(x=>x.accountId===res.account);
++  assert.equal(homes.records.length,2);assert.ok(!homes.records.some(x=>x.worldId==='InitialWorld'));
++  assert.equal(homes.records.find(x=>x.worldId===sourceId).homeDeviceId,'logical-device-a');
++  assert.equal(homes.records.find(x=>x.worldId===copyId).homeDeviceId,'logical-device-b');
++  assert.equal(copied.storage[sourceKey],sourceBytes);assert.equal(copied.storage[folderKey],folderBytes);
++  assert.equal(copied.storage[keys(res.account).record],recordBytes);assert.equal(copied.storage[keys(res.account).projection],projectionBytes);
++  await click('#cross-device-open');await until(()=>document.querySelector('#world-clear-view')?.dataset.completionStatus==='Inherited');
++  const copyOpened=await capture('09-b-copy-formal-complete-restored',res);
++  assert.equal(copyOpened.runtimeNode,copyId);assert.equal(copyOpened.restoreKind,'Restored');assert.equal(copyOpened.capture.kind,'Complete');
++  assert.equal(copyOpened.coreView.data.capturedParts,'7');assert.equal(copyOpened.storage[copyKey],copyBytes);
++  await exitWorld();
++  res.transferAcceptance={pass:true,mode:'ContractAdapter',sourceWorldId:sourceId,targetWorldId:copyId,newUuid:true,
++    parts,sourceBytesUnchanged:true,accountFactsNotCopied:true,receiptPhase:'Published',restoreKind:'Restored',captureKind:'Complete',
++    sharedMigrationAuthority:true,initialWorldNotRegistered:true};
++
+   await click('#world-migration-release');
+   const migration=await until(()=>{
+     const p=document.querySelector('#world-migration-prototype');if(p?.dataset.error)throw Error(p.dataset.error);
+     return p?.dataset.phase==='PauseActive'?p.dataset.migrationId:false;
+   });
+-  const paused=await capture('07-active-reality-pause-source-drained',res);
++  const paused=await capture('10-reality-pause-after-all-source-worlds-drained',res);
+   const authority=JSON.parse(paused.storage['neurou-migration-contract-authority-v1']);
+   const m=authority.migrations.find(x=>x.payload.migrationId===migration);
+   assert.equal(m.receipt.pause.resumeNotBeforeServerEpochMs-m.receipt.pause.startedAtServerEpochMs,3600000);
+@@ -344,11 +396,13 @@
+   await expectRefused('[data-action="open-world"][data-world-id="'+sourceId+'"]');
+   await click('#cross-device-import');await until(()=>document.querySelector('#cross-device-status')?.textContent.includes('PauseActive'));
+   await click('#world-migration-claim');await until(()=>document.querySelector('#world-migration-prototype')?.dataset.error?.includes('PauseActive'));
+-  await capture('08-account-pause-a-and-b-entry-rejected',res);
++  await click('#cross-device-open');await until(()=>document.querySelector('#cross-device-prototype')?.dataset.error?.includes('PauseActive'));
++  assert.equal((await read()).runtimeNode,null);assert.equal((await read()).storage[copyKey],copyBytes);
++  await capture('11-pause-rejects-a-b-and-existing-copy',res);
+   await close(); await open(res);
+   await set('#folder-account',res.account+'-other');await click('#folder-login');
+   await until(()=>document.querySelector('#folder-startup [role=status]')?.textContent.includes('DeviceAccountBinding'));
+-  assert.equal((await read()).folder,false);await capture('09-restart-device-account-binding',res);
++  assert.equal((await read()).folder,false);await capture('12-rebuilt-client-preserves-device-binding',res);
+   await login(res.account,false);
+   assert.equal(await ev(()=>document.querySelector('#world-migration-prototype').dataset.phase),'PauseActive');
+   await ev(()=>{
+@@ -364,22 +418,29 @@
+   });
+   report.actions.push({resolution:res.resolution,type:'ContractAdapterServiceFixtureClock',advanceMs:1,realElapsedHour:false});
+   await click('#world-migration-refresh');await until(()=>document.querySelector('#world-migration-prototype')?.dataset.phase==='Released');
+-  await capture('10-service-time-released',res);
++  await capture('13-service-fixture-cutoff-released',res);
+   await click('#world-migration-claim');await until(()=>{
+     const p=document.querySelector('#world-migration-prototype');if(p?.dataset.error)throw Error(p.dataset.error);return p?.dataset.phase==='Claimed';
+   });
+-  const claimed=await capture('11-device-b-same-id-local-published',res);
++  const claimed=await capture('14-b-same-id-published-alongside-copy',res);
+   const targetKey=bKey(sourceKey), journalKey=bKey('neurou-migration-v1:'+encodeURIComponent(res.account));
+   assert.equal(claimed.storage[targetKey],sourceBytes);assert.equal(claimed.storage[sourceKey],sourceBytes);
+   assert.equal(claimed.storage[folderKey],folderBytes);assert.equal(claimed.storage[keys(res.account).record],recordBytes);
+   assert.equal(claimed.storage[keys(res.account).projection],projectionBytes);
+   const journal=JSON.parse(claimed.storage[journalKey]);assert.equal(journal.entries[0].phase,'LocalPublished');
++  assert.notEqual(journalKey,copyJournalKey);assert.equal(claimed.storage[copyKey],copyBytes);
++  assert.equal(claimed.storage[copyJournalKey],copyJournalBytes);
++  const targetDirectory=JSON.parse(claimed.storage[bKey(folderKey)]);
++  assert.deepEqual(new Set(targetDirectory.records.map(x=>x.worldId)),new Set(['InitialWorld',copyId,sourceId]));
++  const currentHomes=JSON.parse(claimed.storage['neurou-migration-contract-authority-v1']).registries.find(x=>x.accountId===res.account);
++  assert.equal(currentHomes.records.find(x=>x.worldId===copyId).homeRevision,1);
++  assert.ok(currentHomes.records.every(x=>x.homeDeviceId==='logical-device-b'));
+   const r=journal.entries[0].receipt;assert.equal(r.record.homeDeviceId,'logical-device-b');assert.equal(r.record.homeRevision,3);
+   assert.deepEqual(JSON.parse(claimed.storage[bKey(folderKey)]).records.find(x=>x.worldId===sourceId),m.payload.record);
+   assert.equal(claimed.storage[bKey(keys(res.account).record)],undefined);assert.equal(claimed.storage[bKey(keys(res.account).projection)],undefined);
+   await expectRefused('[data-action="open-world"][data-world-id="'+sourceId+'"]');
+   await click('#world-migration-open');await until(()=>document.querySelector('#world-clear-view')?.dataset.completionStatus==='Inherited');
+-  const opened=await capture('12-device-b-same-id-formal-restored-runtime',res);
++  const opened=await capture('15-b-same-id-formal-complete-restored',res);
+   assert.equal(opened.runtimeNode,sourceId);assert.equal(opened.restoreKind,'Restored');assert.equal(opened.capture.kind,'Complete');
+   assert.equal(opened.frameDrivers,1);assert.equal(opened.inputCollectors,1);assert.equal(opened.coreView.data.capturedParts,'7');
+   assert.equal(opened.coreView.data.formatTime,String(source.sections.FormatTime.epochMs));
+@@ -388,11 +449,15 @@
+   const reconciled=await read();assert.equal(JSON.parse(reconciled.storage['neurou-migration-v1:'+encodeURIComponent(res.account)]).entries[0].phase,'Claimed');
+   await close();await open(res);await login(res.account,false);
+   await click('#world-migration-open');await until(()=>document.querySelector('#world-clear-view')?.dataset.completionStatus==='Inherited');
+-  const reopened=await capture('13-client-rebuild-same-id-reopened',res);
++  const reopened=await capture('16-rebuilt-client-same-id-reopened',res);
+   assert.equal(reopened.restoreKind,'Restored');assert.equal(reopened.storage[targetKey],sourceBytes);assert.equal(reopened.storage[sourceKey],sourceBytes);
+   assert.equal(reopened.storage[keys(res.account).record],recordBytes);assert.equal(reopened.storage[keys(res.account).projection],projectionBytes);
+   await exitWorld();
+   await activeReplayPause(res,sourceId,sourceKey);
++  const end=await read();assert.equal(end.storage[copyKey],copyBytes);assert.equal(end.storage[copyJournalKey],copyJournalBytes);
++  res.integratedAcceptance={pass:true,sharedAuthority:true,copyTargetWorldId:copyId,migratedWorldId:sourceId,
++    idsDistinct:true,copySurvivesMigrationAndPause:true,journalsIndependent:true,sourceCoreAndDirectoryPreserved:true,
++    fixtureTimeOnly:true,realElapsedHour:false,productionSourceChanges:0};
+   res.migrationAcceptance={pass:true,mode:'ContractAdapter',prototype:'RestrictedMigrationCore',worldId:sourceId,migrationId:migration,
+     sameWorldId:true,sevenSectionsExact:true,sourceCoreDirectoryUnchanged:true,accountFactsNotCopied:true,homeRevision:3,
+     formatTimeRevisionForkOriginPreserved:true,allAccountNewAdmissionRejected:true,initiatingDeviceBindingSurvivesRebuild:true,
+@@ -406,6 +471,10 @@
+     assert.deepEqual(report.rendererErrors,[]);assert.deepEqual(report.runtimeErrors,[]);
+     report.externalRequests=report.requests.filter(r=>{try{const u=new URL(r.url);return ['http:','https:','ws:','wss:'].includes(u.protocol)&&!['localhost','127.0.0.1','[::1]'].includes(u.hostname)}catch{return false}});
+     assert.deepEqual(report.externalRequests,[]);assert.deepEqual(await compilation(),report.compilation);
++    report.resolutionComparison={pass:true,dimensions:['1920x1080','2560x1440'],
++      equivalentCopyAndSameIdMigration:true,equivalentPauseBindingAndSafeRetirement:true,
++      completeRestoredSevenParts:true,sourceAndAccountBytesPreserved:true};
++    report.compilationUnchanged=true;
+     report.pass=true;
+   } catch(error) {report.pass=false;report.failure={message:String(error),stack:error.stack};try{report.lastState=await read()}catch{} console.error(error.stack||error);}
+   finally {
+
+--- /dev/null
++++ b/quality-review/b2-cross-device-e2e/generate-delivery-diff.py
+@@ -0,0 +1,50 @@
++"""Review deltas for e acceptance scripts; inherited test code is compared with its accepted parent."""
++import difflib
++import hashlib
++import json
++from pathlib import Path
++
++evidence = Path(__file__).resolve().parent
++root = evidence.parent.parent
++contracts = json.loads((evidence / 'contract-regression-results.json').read_text(encoding='utf-8'))
++protection = json.loads((evidence / 'protected-final-audit.json').read_text(encoding='utf-8'))
++copied_from = {item['copy']: root / item['source'] for item in contracts['copies']}
++scripts = sorted([p for p in evidence.rglob('*') if p.is_file() and p.suffix in {'.cjs', '.py'}
++                  and not any(part in {'original-source', 'prior-205-contract-evidence'} for part in p.relative_to(evidence).parts)])
++diffs, harness_diffs, records = [], [], []
++for script in scripts:
++    relative = script.relative_to(root).as_posix()
++    comparison = copied_from.get(relative)
++    if comparison is None and script.parent == evidence:
++        candidate = evidence.parent / 'b2-world-migration' / script.name
++        comparison = candidate if candidate.exists() else None
++    current_bytes = script.read_bytes()
++    old_bytes = comparison.read_bytes() if comparison else b''
++    lines = list(difflib.unified_diff(old_bytes.decode('utf-8').splitlines(), current_bytes.decode('utf-8').splitlines(),
++        fromfile='a/' + comparison.relative_to(root).as_posix() if comparison else '/dev/null',
++        tofile='b/' + relative, lineterm=''))
++    if lines:
++        diffs.extend(lines + [''])
++        if script.name in {'creator-preview.cjs', 'prepare-preview-harness.cjs', 'run-preview.cjs'}:
++            harness_diffs.extend(lines + [''])
++    records.append({'path': relative, 'kind': 'AddedAcceptanceTest', 'bytes': len(current_bytes),
++        'finalSha256': hashlib.sha256(current_bytes).hexdigest(),
++        'comparisonBase': comparison.relative_to(root).as_posix() if comparison else None,
++        'comparisonSha256': hashlib.sha256(old_bytes).hexdigest() if comparison else None,
++        'sameBytesAsAcceptedParent': bool(comparison) and current_bytes == old_bytes,
++        'diffLines': len(lines)})
++(evidence / 'code.diff').write_bytes(('\n'.join(diffs) + '\n').encode('utf-8'))
++(evidence / 'acceptance-harness.diff').write_bytes(('\n'.join(harness_diffs) + '\n').encode('utf-8'))
++artifacts = sorted(p.relative_to(root).as_posix() for p in evidence.rglob('*') if p.is_file()
++    and not any(part in {'original-source', 'prior-205-contract-evidence'} for part in p.relative_to(evidence).parts)
++    and p not in scripts and p.name not in {'change-files.json', 'validation-summary.json'})
++manifest = {'schemaVersion': 1, 'phase': 'B2.4e', 'productionFileCount': 0, 'productionFiles': [],
++    'productionCodeDiff': 'production-code.diff', 'testCodeDiff': 'code.diff', 'integratedHarnessDiff': 'acceptance-harness.diff',
++    'diffMeaning': 'Review comparisons only: e files are newly added. Accepted parent paths expose inherited-test deltas without repeating unchanged source. No Git repository or production patch.',
++    'testFiles': records, 'evidenceFiles': artifacts,
++    'excludedPreservedMaterial': ['original-source/ (369 immutable protected originals)', 'prior-205-contract-evidence/ (superseded run preserved)'],
++    'concurrentOfficialDocs': protection['authorizedDocumentChanges'],
++    'authoredScope': 'quality-review/b2-cross-device-e2e/ only; official docs changes attributed to Trae, not this implementation'}
++(evidence / 'change-files.json').write_bytes((json.dumps(manifest, ensure_ascii=False, indent=2) + '\n').encode('utf-8'))
++print(json.dumps({'productionFileCount': 0, 'testFiles': len(records), 'evidenceFiles': len(artifacts),
++                  'testDiffLines': len(diffs), 'integratedHarnessDiffLines': len(harness_diffs)}))
+
+--- a/quality-review/b2-world-migration/generate-diff.py
++++ b/quality-review/b2-cross-device-e2e/generate-diff.py
+@@ -1,6 +1,5 @@
+-"""Emit original-source unified B2.4d diffs; junction aliases collapse to canonical paths."""
++"""B2.4e original-byte diffs: source and authorized official-document drift remain separate."""
+ from __future__ import annotations
+-
+ import difflib
+ import json
+ from pathlib import Path
+@@ -10,32 +9,40 @@
+ report = json.loads((evidence / 'protected-final-audit.json').read_text(encoding='utf-8'))
+ before = json.loads((evidence / 'baseline-before.json').read_text(encoding='utf-8'))
+ after = json.loads((evidence / 'baseline-after.json').read_text(encoding='utf-8'))
+-before_paths = {item['path']: item for item in before['files']}
+-after_paths = {item['path']: item for item in after['files']}
+-extensions = {'.ts', '.tsx', '.js', '.cjs', '.mjs', '.json', '.meta'}
+-canonical_paths = set()
+-for relative in report['changed'] + report['added'] + report['removed']:
+-    item = after_paths.get(relative) or before_paths[relative]
+-    if Path(item['canonicalPath']).suffix.lower() in extensions:
+-        canonical_paths.add(item['canonicalPath'])
+-
+-output = []
+-records = []
+-for relative in sorted(canonical_paths):
+-    saved = evidence / 'original-source' / relative
+-    current = root / relative
+-    old = saved.read_bytes().decode('utf-8').splitlines() if saved.exists() else []
++old_records = {item['path']: item for item in before['files']}
++new_records = {item['path']: item for item in after['files']}
++paths = sorted({(new_records.get(name) or old_records[name])['canonicalPath']
++                for name in report['changed'] + report['added'] + report['removed']})
++source_diff, document_diff, records = [], [], []
++document_paths = set(report['authorizedOfficialDocumentPaths'])
++for name in paths:
++    original = evidence / 'original-source' / name
++    current = root / name
++    if current.suffix.lower() not in {'.ts', '.tsx', '.js', '.cjs', '.mjs', '.json', '.meta', '.md'}:
++        records.append({'path': name, 'textDiffAvailable': False, 'reason': 'Binary/reference drift retained in SHA manifest'})
++        continue
++    if name in old_records and not original.exists():
++        records.append({'path': name, 'textDiffAvailable': False, 'reason': 'No original text snapshot for this protected reference'})
++        continue
++    old = original.read_bytes().decode('utf-8').splitlines() if original.exists() else []
+     new = current.read_bytes().decode('utf-8').splitlines() if current.exists() else []
+-    diff = list(difflib.unified_diff(old, new, fromfile='a/' + relative if saved.exists() else '/dev/null',
+-                                  tofile='b/' + relative if current.exists() else '/dev/null', lineterm=''))
+-    output.extend(diff)
++    diff = list(difflib.unified_diff(old, new, fromfile='a/' + name if original.exists() else '/dev/null',
++                                  tofile='b/' + name if current.exists() else '/dev/null', lineterm=''))
++    target = document_diff if name in document_paths else source_diff
++    target.extend(diff)
+     if diff:
+-        output.append('')
+-    records.append({'path': relative, 'kind': 'changed' if saved.exists() and current.exists() else
+-                    'added' if current.exists() else 'removed', 'originalLines': len(old), 'finalLines': len(new),
+-                    'originalSha256': before_paths.get(relative, {}).get('sha256'),
+-                    'finalSha256': after_paths.get(relative, {}).get('sha256')})
+-(evidence / 'code.diff').write_bytes(('\n'.join(output) + '\n').encode('utf-8'))
+-(evidence / 'change-files.json').write_bytes((json.dumps({'schemaVersion': 1, 'phase': 'B2.4d',
+-    'diff': 'code.diff', 'canonicalSourceCount': len(records), 'files': records}, ensure_ascii=False, indent=2) + '\n').encode('utf-8'))
+-print(json.dumps({'diff': 'code.diff', 'canonicalSourceCount': len(records)}, ensure_ascii=False))
++        target.append('')
++    records.append({'path': name, 'kind': 'Changed' if original.exists() and current.exists() else
++                    'Added' if current.exists() else 'Removed', 'textDiffAvailable': True,
++                    'attribution': 'TraeAuthorized' if name in document_paths else 'UnexpectedProductionChange',
++                    'originalLines': len(old), 'finalLines': len(new),
++                    'baselineSha256': old_records.get(name, {}).get('sha256'),
++                    'finalSha256': new_records.get(name, {}).get('sha256')})
++(evidence / 'production-code.diff').write_bytes(('\n'.join(source_diff) + ('\n' if source_diff else '')).encode('utf-8'))
++(evidence / 'authorized-docs.diff').write_bytes(('\n'.join(document_diff) + ('\n' if document_diff else '')).encode('utf-8'))
++(evidence / 'protected-change-files.json').write_bytes((json.dumps({'schemaVersion': 1, 'phase': 'B2.4e',
++    'expectedProductionMutationCount': 0, 'productionFileCount': report['productionFileCount'],
++    'productionFiles': report['productionFiles'], 'productionCodeDiff': 'production-code.diff', 'authorizedDocsDiff': 'authorized-docs.diff',
++    'files': records}, ensure_ascii=False, indent=2) + '\n').encode('utf-8'))
++print(json.dumps({'productionFileCount': report['productionFileCount'], 'sourceDiffLines': len(source_diff),
++                  'authorizedDocumentDiffLines': len(document_diff)}, ensure_ascii=False))
+
+--- a/quality-review/b2-world-migration/prepare-preview-harness.cjs
++++ b/quality-review/b2-cross-device-e2e/prepare-preview-harness.cjs
+@@ -1,210 +1,104 @@
+ 'use strict';
+-const fs = require('node:fs'), path = require('node:path');
+-const original = fs.readFileSync(path.join(__dirname, '../b2-cross-device-core/creator-preview.cjs'), 'utf8');
+-let prefix = original.slice(0, original.indexOf('function bKey'))
+-  .replaceAll('b24c', 'b24d').replaceAll('B2.4c', 'B2.4d');
+-prefix = prefix.replace(/scope: '[^\n]+', previewUrl/, "scope: 'B2.4d same-ID WorldMigration and account-wide RealityPause, persistent shared ContractAdapter and source SafePoint drain', previewUrl");
+-prefix = prefix.replace(/policy: '[^\n]+',/, "policy: 'Actual Creator preview; fresh isolated profile per resolution; product login/prologue/native World audio/local Fork/Release/Claim/open controls. Two logical devices share a persistent ContractAdapter service fixture. The harness explicitly advances its independent service clock, never client time or gameplay state: this does not prove an actual elapsed hour or an external service. Read-only game/storage observations, direct CDP PNG; no game/file seeding, full FileCarry or physical-device authentication claim.',");
+-const suffix = String.raw`
+-function bKey(key) { return 'neurou-contract-device-b:' + encodeURIComponent(key); }
+-async function expectRefused(selector, runtime = null) {
+-  await click(selector); await delay(200);
+-  assert.equal((await read()).runtimeNode,runtime);
++// Extend the accepted d acceptance harness only; no production module is edited.
++const fs = require('node:fs'), path = require('node:path'), assert = require('node:assert/strict');
++const accepted = fs.readFileSync(path.join(__dirname, '../b2-world-migration/creator-preview.cjs'), 'utf8');
++let source = accepted.replaceAll('B2.4d','B2.4e').replaceAll('b24d','b24e');
++source = source.replace("scope: 'B2.4e same-ID WorldMigration and account-wide RealityPause, persistent shared ContractAdapter and source SafePoint drain'",
++  "scope: 'B2.4e integrated WorldHomeRegistry, restricted Core copy and same-ID migration, account-wide pause and natural peer activity retirement'");
++const extraModules = ['assets/scripts/CrossDevicePrototype.ts', 'assets/scripts/WorldMigrationPrototype.ts',
++  'src/director/WorldHomeRegistry.ts', 'src/director/CoreTransfer.ts', 'src/director/CoreTransferContent.ts',
++  'src/director/WorldMigration.ts', 'src/director/RealityPauseBoundary.ts',
++  'src/presentation/WorldHomeContractAdapter.ts', 'src/presentation/CrossDeviceContractAdapter.ts',
++  'src/presentation/CrossDeviceImportStorage.ts', 'src/presentation/SafePointDrainStorage.ts',
++  'src/presentation/WorldMigrationContractAdapter.ts', 'src/presentation/WorldMigrationStorage.ts'];
++source = source.replace('const requiredSources = [', 'const requiredSources = [\n' + extraModules.map(file=>'  '+JSON.stringify(file)+',').join('\n'));
++const labels = {
++  '07-active-reality-pause-source-drained':'10-reality-pause-after-all-source-worlds-drained',
++  '08-account-pause-a-and-b-entry-rejected':'11-pause-rejects-a-b-and-existing-copy',
++  '09-restart-device-account-binding':'12-rebuilt-client-preserves-device-binding',
++  '10-service-time-released':'13-service-fixture-cutoff-released',
++  '11-device-b-same-id-local-published':'14-b-same-id-published-alongside-copy',
++  '12-device-b-same-id-formal-restored-runtime':'15-b-same-id-formal-complete-restored',
++  '13-client-rebuild-same-id-reopened':'16-rebuilt-client-same-id-reopened',
++  '14-other-window-source-drain-and-account-pause':'17-other-window-release-closes-account',
++  '15-active-b-replay-preserves-native-timeline':'18-b-active-replay-keeps-native-timeline',
++  '16-native-ended-then-safe-retirement':'19-native-ended-and-core-settled-before-retirement',
++};
++for(const [before,after] of Object.entries(labels)) source=source.replaceAll(before,after);
++function replaceOnce(before, after) {
++  assert.equal(source.split(before).length,2,'Expected one accepted harness seam: '+before);
++  source=source.replace(before,after);
+ }
+-async function replayObservation() {
+-  return ev(() => {
+-    const env=window.__b23, scene=env.cc.director.getScene();
+-    const builder=env.all(scene,'SceneBuilder').find(x=>!!x.graph);
+-    const folder=env.all(scene,'WorldFolderBuilder')[0];
+-    const media=document.querySelector('#chart-replay-view [data-role="chart-replay-media"]');
+-    const reader=builder?.replaySession?.getReader();
+-    return {runtime:folder?.runtimeNode?.name??null,closed:folder?.migrationPrototype?.isRuntimeClosed(),
+-      active:builder?.replaySession?.isActive()??false,state:reader?.getState(),timeMs:reader?.getCurrentTimeMs(),
+-      result:reader?.getResult(),events:[...(env.replayPauseEvidence??[])],
+-      media:media?{time:media.currentTime,duration:media.duration,paused:media.paused,ended:media.ended,seeking:media.seeking}:null};
++const copyFlow = String.raw`
++  await capture('07-a-home-registered-restricted-core-export',res);
++  await click('#cross-device-import');
++  const copyId=await until(()=>{
++    const panel=document.querySelector('#cross-device-prototype');if(panel?.dataset.error)throw Error(panel.dataset.error);
++    return panel?.dataset.receipt==='Published'?panel.dataset.targetWorldId:false;
+   });
+-}
+-async function activeReplayPause(res, sourceId, sourceKey) {
+-  const before=await read();
+-  await click('[data-action="fork-world"][data-world-id="InitialWorld"]');
+-  await until(()=>document.querySelector('#world-migration-source')?.options.length===2);
+-  const secondId=await ev(id=>Array.from(document.querySelector('#world-migration-source').options)
+-    .map(x=>x.value).find(x=>x!==id),sourceId);
+-  assert.notEqual(secondId,sourceId);
+-  const secondKey='neurou-world-state-v1:'+encodeURIComponent(res.account)+':'+encodeURIComponent(secondId);
+-  const original=await read(), secondBytes=original.storage[secondKey]; assert.equal(typeof secondBytes,'string');
+-  const folderKey='neurou-world-folder-v1:'+encodeURIComponent(res.account), directoryBytes=original.storage[folderKey];
+-  const replayWin=win; let authorityWin=null;
+-  try {
+-    await open(res); authorityWin=win; await login(res.account,false);
+-    await until(()=>{
+-      const e=window.__b23,f=e.all(e.cc.director.getScene(),'WorldFolderBuilder')[0];
+-      return document.querySelector('#world-migration-source')&&f.migrationPrototype&&!f.migrationPrototype.busy&&
+-        f.migrationPrototype.bindings.isIdle();
+-    });
+-    await set('#world-migration-source',secondId);
+-    win=replayWin; await click('#world-migration-open');
+-    await until(()=>document.querySelector('#world-clear-view')?.dataset.completionStatus==='Inherited');
+-    const targetBefore=JSON.parse((await read()).storage[bKey(sourceKey)]);
+-    await click('[data-action="replay-chart"]');
+-    await until(()=>{
+-      const media=document.querySelector('#chart-replay-view [data-role="chart-replay-media"]');
+-      return media&&!media.paused&&media.currentTime>.4;
+-    });
+-    await ev(()=>{
+-      const media=document.querySelector('#chart-replay-view [data-role="chart-replay-media"]');
+-      window.__b23.replayPauseEvidence=[];
+-      for(const type of ['playing','pause','seeking','ended']) media.addEventListener(type,()=>
+-        window.__b23.replayPauseEvidence.push({type,time:media.currentTime,ended:media.ended,duration:media.duration}));
+-    });
+-    const playing=await replayObservation();assert.equal(playing.active,true);assert.equal(playing.closed,false);
+-    win=authorityWin;
+-    res.activeReplayPauseReleasePreflight=await ev(()=>{
+-      const e=window.__b23,f=e.all(e.cc.director.getScene(),'WorldFolderBuilder')[0],p=f.migrationPrototype;
+-      return {selected:document.querySelector('#world-migration-source')?.value,busy:p.busy,idle:p.bindings.isIdle(),
+-        runtime:f.runtimeNode?.name??null,opening:f.opening,directoryBusy:f.directoryBusy,retiring:f.retiring,
+-        phase:document.querySelector('#world-migration-prototype')?.dataset.phase};
+-    });
+-    assert.equal(res.activeReplayPauseReleasePreflight.selected,secondId);
+-    assert.equal(res.activeReplayPauseReleasePreflight.busy,false);assert.equal(res.activeReplayPauseReleasePreflight.idle,true);
+-    await click('#world-migration-release');
+-    const secondMigration=await until(()=>{
+-      const p=document.querySelector('#world-migration-prototype');if(p?.dataset.error)throw Error(p.dataset.error);
+-      return p?.dataset.phase==='PauseActive'?p.dataset.migrationId:false;
+-    });
+-    await capture('14-other-window-source-drain-and-account-pause',res);
+-    win=replayWin;const first=await replayObservation();
+-    assert.equal(first.closed,true);assert.equal(first.active,true);assert.equal(first.runtime,sourceId);
+-    assert.equal(first.media.paused,false);assert.equal(first.media.seeking,false);assert.ok(first.media.time>playing.media.time);
+-    await click('#folder-runtime-exit'); await delay(250);
+-    const continuing=await replayObservation();assert.equal(continuing.active,true);assert.equal(continuing.runtime,sourceId);
+-    assert.equal(continuing.media.paused,false);assert.ok(continuing.media.time>first.media.time);
+-    assert.deepEqual(continuing.events.filter(e=>['pause','seeking'].includes(e.type)),[]);
+-    await capture('15-active-b-replay-preserves-native-timeline',res);
+-    await until(()=>!!document.querySelector('#world-folder'),15000);
+-    const retired=await capture('16-native-ended-then-safe-retirement',res),ended=await replayObservation();
+-    assert.equal(retired.runtimeNode,null);assert.equal(retired.frameDrivers,0);assert.equal(retired.inputCollectors,0);
+-    assert.ok(ended.events.some(e=>e.type==='ended'&&e.ended&&e.time===e.duration&&e.duration===6));
+-    assert.deepEqual(ended.events.filter(e=>e.type==='seeking'),[]);
+-    const targetAfter=JSON.parse(retired.storage[bKey(sourceKey)]);
+-    assert.deepEqual(targetAfter.sections.Ledger,targetBefore.sections.Ledger);
+-    assert.deepEqual(targetAfter.sections.FormatTime,targetBefore.sections.FormatTime);
+-    assert.deepEqual(targetAfter.forkOrigin,targetBefore.forkOrigin);
+-    assert.equal(targetAfter.sections.ChartScore.records[0].completedPlayCount,targetBefore.sections.ChartScore.records[0].completedPlayCount+1);
+-    assert.equal(retired.storage[secondKey],secondBytes);assert.equal(retired.storage[folderKey],directoryBytes);
+-    assert.equal(retired.storage[keys(res.account).record],before.storage[keys(res.account).record]);
+-    assert.equal(retired.storage[keys(res.account).projection],before.storage[keys(res.account).projection]);
+-    res.activeReplayPauseAcceptance={pass:true,mode:'ContractAdapter',twoClientWindows:true,sourceWorldId:secondId,
+-      replayWorldId:sourceId,migrationId:secondMigration,nativeDurationSeconds:6,observations:[playing,first,continuing,ended],
+-      noForcedMediaEnd:true,noSeekOrTimelineReset:true,naturalSafePointRetirement:true,completedPlayCountIncrement:1,
+-      explicitFolderExitWaitedForSafePoint:true,accountFactsPreserved:true,serviceClockAdvancedMs:0};
+-  } catch(error) {
+-    if(authorityWin&&!authorityWin.isDestroyed()){win=authorityWin;res.activeReplayPauseAuthorityFailure=await read();
+-      res.activeReplayPauseAuthorityStatus=await ev(()=>document.querySelector('#world-migration-prototype')?.outerHTML);}
+-    throw error;
+-  } finally {
+-    if(authorityWin&&!authorityWin.isDestroyed()){win=authorityWin;await close();}win=replayWin;
++  assert.match(copyId,/^world-[0-9a-f-]{36}$/);assert.notEqual(copyId,sourceId);
++  const copyKey=bKey('neurou-world-state-v1:'+encodeURIComponent(res.account)+':'+encodeURIComponent(copyId));
++  const copyJournalKey=bKey('neurou-cross-device-import-v1:'+encodeURIComponent(res.account));
++  const copied=await capture('08-b-copy-new-uuid-seven-parts-published',res);
++  const copyBytes=copied.storage[copyKey],copyJournalBytes=copied.storage[copyJournalKey],copy=JSON.parse(copyBytes);
++  const parts=['Ledger','PuzzleProgress','FormatTime','RecallCount','WorldLink','ChartSnapshot','ChartScore'];
++  assert.deepEqual(Object.keys(copy.sections),parts);assert.equal(copy.revision,0);
++  assert.equal(copy.forkOrigin.sourceWorldId,sourceId);assert.match(copy.forkOrigin.transactionId,/^import-/);
++  assert.deepEqual(copy.sections.FormatTime,source.sections.FormatTime);assert.deepEqual(ledgerOf(copy),ledgerOf(source));
++  for(const name of parts){
++    if(name==='FormatTime')continue;
++    if(name==='PuzzleProgress'){assert.ok(copy.sections[name].every(x=>x.worldId===copyId&&x.accountId===res.account));continue;}
++    assert.equal(copy.sections[name].worldId,copyId);assert.equal(copy.sections[name].accountId,res.account);
+   }
+-}
+-async function migrationResolution(width,height) {
+-  const res={width,height,resolution:width+'x'+height,account:'b24d-production-'+width+'-'+runId,
+-    partition:'persist:b24d-'+width+'-'+runId,screenshots:[]}; report.resolutions.push(res);
+-  await worldClear(res); await exitWorld();
+-  await click('[data-action="fork-world"][data-world-id="InitialWorld"]');
+-  const sourceId=await until(()=>document.querySelector('#world-migration-source')?.value||false);
+-  assert.match(sourceId,/^world-[0-9a-f-]{36}$/);
+-  const sourceKey='neurou-world-state-v1:'+encodeURIComponent(res.account)+':'+encodeURIComponent(sourceId);
+-  const folderKey='neurou-world-folder-v1:'+encodeURIComponent(res.account);
+-  const before=await read(), sourceBytes=before.storage[sourceKey],source=JSON.parse(sourceBytes);
+-  const folderBytes=before.storage[folderKey],recordBytes=before.storage[keys(res.account).record],projectionBytes=before.storage[keys(res.account).projection];
+-  await click('#cross-device-export');await until(()=>document.querySelector('#cross-device-status')?.textContent.includes('A 已发送'));
+-  await click('#world-migration-release');
+-  const migration=await until(()=>{
+-    const p=document.querySelector('#world-migration-prototype');if(p?.dataset.error)throw Error(p.dataset.error);
+-    return p?.dataset.phase==='PauseActive'?p.dataset.migrationId:false;
+-  });
+-  const paused=await capture('07-active-reality-pause-source-drained',res);
+-  const authority=JSON.parse(paused.storage['neurou-migration-contract-authority-v1']);
+-  const m=authority.migrations.find(x=>x.payload.migrationId===migration);
+-  assert.equal(m.receipt.pause.resumeNotBeforeServerEpochMs-m.receipt.pause.startedAtServerEpochMs,3600000);
+-  assert.equal(m.receipt.pause.endedAtServerEpochMs,null);assert.equal(m.receipt.record.homeDeviceId,'logical-device-a');
+-  assert.equal(paused.storage[sourceKey],sourceBytes);assert.equal(paused.storage[folderKey],folderBytes);
+-  const sourceJournal=JSON.parse(paused.storage['neurou-migration-v1:'+encodeURIComponent(res.account)]);
+-  assert.equal(sourceJournal.entries[0].phase,'PauseActive');
+-  await expectRefused('#open-initial-world');
+-  await expectRefused('[data-action="open-world"][data-world-id="'+sourceId+'"]');
+-  await click('#cross-device-import');await until(()=>document.querySelector('#cross-device-status')?.textContent.includes('PauseActive'));
+-  await click('#world-migration-claim');await until(()=>document.querySelector('#world-migration-prototype')?.dataset.error?.includes('PauseActive'));
+-  await capture('08-account-pause-a-and-b-entry-rejected',res);
+-  await close(); await open(res);
+-  await set('#folder-account',res.account+'-other');await click('#folder-login');
+-  await until(()=>document.querySelector('#folder-startup [role=status]')?.textContent.includes('DeviceAccountBinding'));
+-  assert.equal((await read()).folder,false);await capture('09-restart-device-account-binding',res);
+-  await login(res.account,false);
+-  assert.equal(await ev(()=>document.querySelector('#world-migration-prototype').dataset.phase),'PauseActive');
+-  await ev(()=>{
+-    const e=window.__b23,f=e.all(e.cc.director.getScene(),'WorldFolderBuilder')[0];
+-    f.migrationPrototype.serviceClockFixture.advanceServiceFixtureBy(3599999);
+-  });
+-  report.actions.push({resolution:res.resolution,type:'ContractAdapterServiceFixtureClock',advanceMs:3599999,realElapsedHour:false});
+-  await click('#world-migration-refresh');await until(()=>document.querySelector('#world-migration-prototype')?.dataset.phase==='PauseActive');
+-  await expectRefused('#open-initial-world');
+-  await ev(()=>{
+-    const e=window.__b23,f=e.all(e.cc.director.getScene(),'WorldFolderBuilder')[0];
+-    f.migrationPrototype.serviceClockFixture.advanceServiceFixtureBy(1);
+-  });
+-  report.actions.push({resolution:res.resolution,type:'ContractAdapterServiceFixtureClock',advanceMs:1,realElapsedHour:false});
+-  await click('#world-migration-refresh');await until(()=>document.querySelector('#world-migration-prototype')?.dataset.phase==='Released');
+-  await capture('10-service-time-released',res);
+-  await click('#world-migration-claim');await until(()=>{
+-    const p=document.querySelector('#world-migration-prototype');if(p?.dataset.error)throw Error(p.dataset.error);return p?.dataset.phase==='Claimed';
+-  });
+-  const claimed=await capture('11-device-b-same-id-local-published',res);
+-  const targetKey=bKey(sourceKey), journalKey=bKey('neurou-migration-v1:'+encodeURIComponent(res.account));
+-  assert.equal(claimed.storage[targetKey],sourceBytes);assert.equal(claimed.storage[sourceKey],sourceBytes);
+-  assert.equal(claimed.storage[folderKey],folderBytes);assert.equal(claimed.storage[keys(res.account).record],recordBytes);
+-  assert.equal(claimed.storage[keys(res.account).projection],projectionBytes);
+-  const journal=JSON.parse(claimed.storage[journalKey]);assert.equal(journal.entries[0].phase,'LocalPublished');
+-  const r=journal.entries[0].receipt;assert.equal(r.record.homeDeviceId,'logical-device-b');assert.equal(r.record.homeRevision,3);
+-  assert.deepEqual(JSON.parse(claimed.storage[bKey(folderKey)]).records.find(x=>x.worldId===sourceId),m.payload.record);
+-  assert.equal(claimed.storage[bKey(keys(res.account).record)],undefined);assert.equal(claimed.storage[bKey(keys(res.account).projection)],undefined);
+-  await expectRefused('[data-action="open-world"][data-world-id="'+sourceId+'"]');
+-  await click('#world-migration-open');await until(()=>document.querySelector('#world-clear-view')?.dataset.completionStatus==='Inherited');
+-  const opened=await capture('12-device-b-same-id-formal-restored-runtime',res);
+-  assert.equal(opened.runtimeNode,sourceId);assert.equal(opened.restoreKind,'Restored');assert.equal(opened.capture.kind,'Complete');
+-  assert.equal(opened.frameDrivers,1);assert.equal(opened.inputCollectors,1);assert.equal(opened.coreView.data.capturedParts,'7');
+-  assert.equal(opened.coreView.data.formatTime,String(source.sections.FormatTime.epochMs));
+-  assert.equal(opened.storage[targetKey],sourceBytes);assert.equal(opened.storage[sourceKey],sourceBytes);
+-  await exitWorld();await click('#world-migration-recover');await delay(350);
+-  const reconciled=await read();assert.equal(JSON.parse(reconciled.storage['neurou-migration-v1:'+encodeURIComponent(res.account)]).entries[0].phase,'Claimed');
+-  await close();await open(res);await login(res.account,false);
+-  await click('#world-migration-open');await until(()=>document.querySelector('#world-clear-view')?.dataset.completionStatus==='Inherited');
+-  const reopened=await capture('13-client-rebuild-same-id-reopened',res);
+-  assert.equal(reopened.restoreKind,'Restored');assert.equal(reopened.storage[targetKey],sourceBytes);assert.equal(reopened.storage[sourceKey],sourceBytes);
+-  assert.equal(reopened.storage[keys(res.account).record],recordBytes);assert.equal(reopened.storage[keys(res.account).projection],projectionBytes);
++  assert.deepEqual(copy.sections.ChartSnapshot.records,source.sections.ChartSnapshot.records);
++  assert.deepEqual(copy.sections.ChartScore.records,source.sections.ChartScore.records);
++  const copyJournal=JSON.parse(copyJournalBytes);assert.equal(copyJournal.entries[0].phase,'Published');
++  assert.equal(copyJournal.entries[0].homeReply.record.homeDeviceId,'logical-device-b');
++  const homes=JSON.parse(copied.storage['neurou-migration-contract-authority-v1']).registries.find(x=>x.accountId===res.account);
++  assert.equal(homes.records.length,2);assert.ok(!homes.records.some(x=>x.worldId==='InitialWorld'));
++  assert.equal(homes.records.find(x=>x.worldId===sourceId).homeDeviceId,'logical-device-a');
++  assert.equal(homes.records.find(x=>x.worldId===copyId).homeDeviceId,'logical-device-b');
++  assert.equal(copied.storage[sourceKey],sourceBytes);assert.equal(copied.storage[folderKey],folderBytes);
++  assert.equal(copied.storage[keys(res.account).record],recordBytes);assert.equal(copied.storage[keys(res.account).projection],projectionBytes);
++  await click('#cross-device-open');await until(()=>document.querySelector('#world-clear-view')?.dataset.completionStatus==='Inherited');
++  const copyOpened=await capture('09-b-copy-formal-complete-restored',res);
++  assert.equal(copyOpened.runtimeNode,copyId);assert.equal(copyOpened.restoreKind,'Restored');assert.equal(copyOpened.capture.kind,'Complete');
++  assert.equal(copyOpened.coreView.data.capturedParts,'7');assert.equal(copyOpened.storage[copyKey],copyBytes);
+   await exitWorld();
+-  await activeReplayPause(res,sourceId,sourceKey);
+-  res.migrationAcceptance={pass:true,mode:'ContractAdapter',prototype:'RestrictedMigrationCore',worldId:sourceId,migrationId:migration,
+-    sameWorldId:true,sevenSectionsExact:true,sourceCoreDirectoryUnchanged:true,accountFactsNotCopied:true,homeRevision:3,
+-    formatTimeRevisionForkOriginPreserved:true,allAccountNewAdmissionRejected:true,initiatingDeviceBindingSurvivesRebuild:true,
+-    serviceClockAdvancedMs:3600000,realElapsedHour:false,claimPhase:'LocalPublished',restoreKind:'Restored',captureKind:'Complete',
+-    actualDimensions:[width,height]};res.pass=true;await close();
+-}
+-app.whenReady().then(async()=>{
+-  try {
+-    report.compilation=await compilation();
+-    for(const [width,height] of [[1920,1080],[2560,1440]])await migrationResolution(width,height);
+-    assert.deepEqual(report.rendererErrors,[]);assert.deepEqual(report.runtimeErrors,[]);
+-    report.externalRequests=report.requests.filter(r=>{try{const u=new URL(r.url);return ['http:','https:','ws:','wss:'].includes(u.protocol)&&!['localhost','127.0.0.1','[::1]'].includes(u.hostname)}catch{return false}});
+-    assert.deepEqual(report.externalRequests,[]);assert.deepEqual(await compilation(),report.compilation);
+-    report.pass=true;
+-  } catch(error) {report.pass=false;report.failure={message:String(error),stack:error.stack};try{report.lastState=await read()}catch{} console.error(error.stack||error);}
+-  finally {
+-    try{await close()}catch{}
+-    report.finishedAt=new Date().toISOString();fs.writeFileSync(path.join(__dirname,'creator-preview-results.json'),JSON.stringify(report,null,2));
+-    app.exit(report.pass?0:1);
+-  }
+-});
++  res.transferAcceptance={pass:true,mode:'ContractAdapter',sourceWorldId:sourceId,targetWorldId:copyId,newUuid:true,
++    parts,sourceBytesUnchanged:true,accountFactsNotCopied:true,receiptPhase:'Published',restoreKind:'Restored',captureKind:'Complete',
++    sharedMigrationAuthority:true,initialWorldNotRegistered:true};
+ `;
+-fs.writeFileSync(path.join(__dirname, 'creator-preview.cjs'), prefix + suffix);
+-fs.copyFileSync(path.join(__dirname, '../b2-cross-device-core/run-preview.cjs'), path.join(__dirname, 'run-preview.cjs'));
++replaceOnce("  await click('#cross-device-export');await until(()=>document.querySelector('#cross-device-status')?.textContent.includes('A 已发送'));",
++  "  await click('#cross-device-export');await until(()=>document.querySelector('#cross-device-status')?.textContent.includes('A 已发送'));"+copyFlow);
++replaceOnce("  await click('#world-migration-claim');await until(()=>document.querySelector('#world-migration-prototype')?.dataset.error?.includes('PauseActive'));",
++  "  await click('#world-migration-claim');await until(()=>document.querySelector('#world-migration-prototype')?.dataset.error?.includes('PauseActive'));\n"+
++  "  await click('#cross-device-open');await until(()=>document.querySelector('#cross-device-prototype')?.dataset.error?.includes('PauseActive'));\n"+
++  "  assert.equal((await read()).runtimeNode,null);assert.equal((await read()).storage[copyKey],copyBytes);");
++replaceOnce("  const journal=JSON.parse(claimed.storage[journalKey]);assert.equal(journal.entries[0].phase,'LocalPublished');",
++  String.raw`  const journal=JSON.parse(claimed.storage[journalKey]);assert.equal(journal.entries[0].phase,'LocalPublished');
++  assert.notEqual(journalKey,copyJournalKey);assert.equal(claimed.storage[copyKey],copyBytes);
++  assert.equal(claimed.storage[copyJournalKey],copyJournalBytes);
++  const targetDirectory=JSON.parse(claimed.storage[bKey(folderKey)]);
++  assert.deepEqual(new Set(targetDirectory.records.map(x=>x.worldId)),new Set(['InitialWorld',copyId,sourceId]));
++  const currentHomes=JSON.parse(claimed.storage['neurou-migration-contract-authority-v1']).registries.find(x=>x.accountId===res.account);
++  assert.equal(currentHomes.records.find(x=>x.worldId===copyId).homeRevision,1);
++  assert.ok(currentHomes.records.every(x=>x.homeDeviceId==='logical-device-b'));`);
++replaceOnce('  await activeReplayPause(res,sourceId,sourceKey);', String.raw`  await activeReplayPause(res,sourceId,sourceKey);
++  const end=await read();assert.equal(end.storage[copyKey],copyBytes);assert.equal(end.storage[copyJournalKey],copyJournalBytes);
++  res.integratedAcceptance={pass:true,sharedAuthority:true,copyTargetWorldId:copyId,migratedWorldId:sourceId,
++    idsDistinct:true,copySurvivesMigrationAndPause:true,journalsIndependent:true,sourceCoreAndDirectoryPreserved:true,
++    fixtureTimeOnly:true,realElapsedHour:false,productionSourceChanges:0};`);
++replaceOnce('    assert.deepEqual(report.externalRequests,[]);assert.deepEqual(await compilation(),report.compilation);',
++  String.raw`    assert.deepEqual(report.externalRequests,[]);assert.deepEqual(await compilation(),report.compilation);
++    report.resolutionComparison={pass:true,dimensions:['1920x1080','2560x1440'],
++      equivalentCopyAndSameIdMigration:true,equivalentPauseBindingAndSafeRetirement:true,
++      completeRestoredSevenParts:true,sourceAndAccountBytesPreserved:true};
++    report.compilationUnchanged=true;`);
++fs.writeFileSync(path.join(__dirname,'creator-preview.cjs'),source);
++fs.copyFileSync(path.join(__dirname,'../b2-world-migration/run-preview.cjs'),path.join(__dirname,'run-preview.cjs'));
++fs.writeFileSync(path.join(__dirname,'harness-lineage.json'),JSON.stringify({schemaVersion:1,phase:'B2.4e',
++  parent:'../b2-world-migration/creator-preview.cjs',parentAcceptedStage:'B2.4d',productionSourceChanges:0,
++  extensions:['c successful restricted Core copy before same-ID migration','shared authority and independent import/migration journals',
++    'existing B copy also refused during account pause','copy preserved through migration, client rebuild and natural peer retirement'],
++  generatedAt:new Date().toISOString()},null,2)+'\n');
+
+--- /dev/null
++++ b/quality-review/b2-cross-device-e2e/run-contract-regressions.cjs
+@@ -0,0 +1,132 @@
++'use strict';
++// B2.4e reuses accepted contract suites in isolated copies. Production and old reports are read-only.
++const fs = require('node:fs');
++const path = require('node:path');
++const crypto = require('node:crypto');
++const { spawn } = require('node:child_process');
++const assert = require('node:assert/strict');
++
++const workspace = path.resolve(__dirname, '../..');
++const output = path.join(__dirname, 'contract-regressions');
++const sha = bytes => crypto.createHash('sha256').update(bytes).digest('hex');
++const relative = file => path.relative(workspace, file).replaceAll('\\', '/');
++const now = () => new Date().toISOString();
++const suites = [
++  { stage: 'b2-world-home-registry', script: 'contract-tests.cjs', report: 'contract-results.json', expected: 34 },
++  { stage: 'b2-cross-device-core', script: 'contract-tests.cjs', report: 'contract-results.json', expected: 59 },
++  { stage: 'b2-cross-device-core', script: 'prototype-contract-tests.cjs', report: 'prototype-contract-results.json', expected: 6 },
++  { stage: 'b2-cross-device-core', script: 'adapter-content.contract.cjs', report: 'adapter-content.contract-results.json', expected: 22 },
++  { stage: 'b2-world-migration', script: 'drain-contract-tests.cjs', report: 'drain-contract-results.json', expected: 20 },
++  { stage: 'b2-world-migration', script: 'boundary-contract-tests.cjs', report: 'boundary-contract-results.json', expected: 8 },
++  { stage: 'b2-world-migration', script: 'authority-contract-tests.cjs', report: 'authority-contract-results.json', expected: 32 },
++  { stage: 'b2-world-migration', script: 'storage-contract-tests.cjs', report: 'storage-contract-results.json', expected: 34 },
++  { stage: 'b2-world-migration', script: 'prototype-contract-tests.cjs', report: 'prototype-contract-results.json', expected: 12 },
++];
++const supporting = [
++  'b2-cross-device-core/contract-test-helpers.cjs',
++  'b2-cross-device-core/storage-contract-tests.cjs',
++  'b2-state-extensions/state-test-fixture.cjs',
++];
++const originals = [...suites.map(value => value.stage + '/' + value.script), ...supporting];
++const acceptedReports = suites.map(value => value.stage + '/' + value.report);
++
++function originalHashes() {
++  return [...new Set([...originals, ...acceptedReports])].sort().map(name => {
++    const file = path.join(workspace, 'quality-review', name);
++    return { file: relative(file), sha256: sha(fs.readFileSync(file)) };
++  });
++}
++function productionHashes() {
++  const files = [];
++  function walk(directory) {
++    for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
++      const file = path.join(directory, entry.name);
++      if (entry.isDirectory()) walk(file);
++      else if (entry.name.endsWith('.ts')) files.push(file);
++    }
++  }
++  walk(path.join(workspace, 'src')); walk(path.join(workspace, 'assets/scripts'));
++  return files.sort().map(file => ({ file: relative(file), sha256: sha(fs.readFileSync(file)) }));
++}
++function prepareCopies() {
++  return originals.map(name => {
++    const file = path.join(workspace, 'quality-review', name), bytes = fs.readFileSync(file), source = bytes.toString('utf8');
++    const rootAnchor = /path\.resolve\(__dirname, ['"]\.\.\/\.\.['"]\)/g;
++    let rewrites = 0;
++    const copy = source.replace(rootAnchor, () => { rewrites++; return JSON.stringify(workspace); });
++    const destination = path.join(output, name);
++    fs.mkdirSync(path.dirname(destination), { recursive: true });
++    fs.writeFileSync(destination, copy, 'utf8');
++    return { source: relative(file), sourceSha256: sha(bytes), copy: relative(destination), copySha256: sha(Buffer.from(copy)),
++      rewrite: rewrites ? 'Workspace root anchor only; test cases, fixtures, relative requires and report writes remain identical' : 'Exact source copy',
++      workspaceRootAnchorRewrites: rewrites };
++  });
++}
++function runSuite(suite) {
++  const script = path.join(output, suite.stage, suite.script), report = path.join(output, suite.stage, suite.report);
++  const log = path.join(output, suite.stage, suite.script.replace('.cjs', '.log'));
++  if (fs.existsSync(report)) fs.unlinkSync(report);
++  const startedAt = now();
++  return new Promise(resolve => {
++    const sink = fs.createWriteStream(log);
++    const child = spawn(process.execPath, [script], { cwd: workspace, windowsHide: true, stdio: ['ignore', 'pipe', 'pipe'] });
++    child.stdout.on('data', value => sink.write(value)); child.stderr.on('data', value => sink.write(value));
++    let launchError = null;
++    child.on('error', error => { launchError = String(error); });
++    child.on('close', exitCode => {
++      sink.end();
++      let value = null, validationError = null;
++      try {
++        value = JSON.parse(fs.readFileSync(report, 'utf8'));
++        const passed = value.summary?.passed ?? value.passed;
++        const cases = value.cases ?? value.tests ?? value.results;
++        const total = value.summary?.total ?? value.total ?? cases.length;
++        const failed = value.summary?.failed ?? value.failed ?? cases.filter(test => test.result === 'FAIL' || test.pass === false).length;
++        assert.equal(passed, suite.expected); assert.equal(total, suite.expected); assert.equal(failed, 0);
++        assert(cases.every(test => test.result === 'PASS' || test.pass === true));
++        if ('pass' in value) assert.equal(value.pass, true);
++        assert.equal(exitCode, 0); assert.equal(launchError, null);
++      } catch (error) { validationError = String(error); }
++      resolve({ stage: suite.stage, mode: 'ContractAdapter', sourceScript: 'quality-review/' + suite.stage + '/' + suite.script,
++        isolatedScript: relative(script), isolatedReport: relative(report), log: relative(log),
++        startedAt, finishedAt: now(), exitCode, passed: value?.summary?.passed ?? value?.passed ?? 0,
++        expected: suite.expected, pass: validationError === null, launchError, validationError,
++        reportSha256: fs.existsSync(report) ? sha(fs.readFileSync(report)) : null });
++    });
++  });
++}
++
++async function main() {
++  const startedAt = now(), oldBefore = originalHashes(), sourceBefore = productionHashes();
++  const copies = prepareCopies();
++  const settled = await Promise.allSettled(suites.map(runSuite));
++  const runs = settled.map((result, index) => result.status === 'fulfilled' ? result.value :
++    { stage: suites[index].stage, sourceScript: suites[index].script, pass: false, validationError: String(result.reason) });
++  const oldAfter = originalHashes(), sourceAfter = productionHashes();
++  const originalsUnchanged = JSON.stringify(oldBefore) === JSON.stringify(oldAfter);
++  const productionUnchanged = JSON.stringify(sourceBefore) === JSON.stringify(sourceAfter);
++  const storageReportFile = path.join(output, 'b2-world-migration/storage-contract-results.json');
++  const storageCases = fs.existsSync(storageReportFile) ? JSON.parse(fs.readFileSync(storageReportFile, 'utf8')).results : [];
++  const ms27 = storageCases.find(value => value.name.startsWith('MS27 '));
++  const copiedStorage = fs.readFileSync(path.join(output, 'b2-world-migration/storage-contract-tests.cjs'), 'utf8');
++  const ms27Body = copiedStorage.slice(copiedStorage.indexOf("await test('MS27 "), copiedStorage.indexOf("await test('MS28 "));
++  const serverTimeSeamVerified = ms27?.pass === true && ms27Body.includes('f.advanceServiceBy(3600000);') &&
++    copiedStorage.includes('serviceNow: () => serverNow');
++  const report = { schemaVersion: 1, phase: 'B2.4e isolated b/c/d contract regressions', mode: 'ContractAdapter', startedAt, finishedAt: now(),
++    pass: runs.every(value => value.pass) && originalsUnchanged && productionUnchanged && serverTimeSeamVerified,
++    expected: suites.reduce((sum, value) => sum + value.expected, 0), passed: runs.reduce((sum, value) => sum + (value.passed ?? 0), 0),
++    policy: 'Accepted suites run as isolated e copies against current production modules. Only copied workspace-root anchors change. Original scripts, accepted reports and production source are hash-checked and never written. Controlled contract fixtures do not seed Creator.',
++    groups: { bRegistry: 34, cCoreAndComposition: 65, cContentValidation: 22, dFiveSuites: 106 }, runs, copies,
++    originalScriptsAndAcceptedReports: { unchanged: originalsUnchanged, before: oldBefore, after: oldAfter },
++    productionSources: { unchanged: productionUnchanged, count: sourceBefore.length, before: sourceBefore, after: sourceAfter },
++    MS27: { pass: serverTimeSeamVerified, name: ms27?.name ?? null,
++      explanation: 'Historical Claim after migration back uses explicit fixture advanceServiceBy(3600000), consumed by serviceNow closure; no production authority mutation or client wall-clock shortcut.' },
++    limitations: ['ContractAdapter fixtures and logical devices only', 'Current-source regression, separate from Creator production acceptance',
++      'No new protocol names, real external services, complete FileCarry or actual elapsed-hour claim'] };
++  fs.writeFileSync(path.join(__dirname, 'contract-regression-results.json'), JSON.stringify(report, null, 2) + '\n');
++  console.log(JSON.stringify({ pass: report.pass, passed: report.passed, expected: report.expected, groups: report.groups,
++    originalsUnchanged, productionUnchanged, MS27: serverTimeSeamVerified, runs: runs.map(value => ({ stage: value.stage,
++      script: value.sourceScript, passed: value.passed, expected: value.expected, pass: value.pass, error: value.validationError })) }, null, 2));
++  process.exitCode = report.pass ? 0 : 1;
++}
++main().catch(error => { console.error(error.stack || error); process.exitCode = 1; });
+
+--- a/quality-review/b2-world-migration/run-gates.cjs
++++ b/quality-review/b2-cross-device-e2e/run-gates.cjs
+@@ -23,7 +23,7 @@
+   return {command: 'npm run ' + script, startedAt, finishedAt: new Date().toISOString(), exitCode: result.exitCode, pass: result.exitCode === 0, log: phase + '-gates/' + log, summary: raw.split(/\r?\n/).filter(line => /扫描:|汇总:|error TS/.test(line))};
+ }
+ Promise.all(['check:naming', 'typecheck', 'check:dependencies'].map(run)).then(runs => {
+-  const report = {schemaVersion: 1, phase: 'B2.4d ' + phase, generatedAt: new Date().toISOString(), pass: runs.every(run => run.pass), runs, validationLimit: 'Static gates only. ContractAdapter and Creator production acceptance require separate evidence.'};
++  const report = {schemaVersion: 1, phase: 'B2.4e ' + phase, generatedAt: new Date().toISOString(), pass: runs.every(run => run.pass), runs, validationLimit: 'Static gates only. ContractAdapter and Creator production acceptance require separate evidence.'};
+   fs.writeFileSync(path.join(out, 'results.json'), JSON.stringify(report, null, 2) + '\n');
+   if (phase === 'final') fs.writeFileSync(path.join(__dirname, 'gate-results.json'), JSON.stringify(report, null, 2) + '\n');
+   console.log(JSON.stringify(report, null, 2));
+
+--- a/quality-review/b2-world-migration/verify-evidence.cjs
++++ b/quality-review/b2-cross-device-e2e/verify-evidence.cjs
+@@ -1,67 +1,176 @@
+ 'use strict';
+-// Read-only consistency checks of delivered evidence against final source and PNG bytes.
+-const fs = require('node:fs'), path = require('node:path'), crypto = require('node:crypto'), assert = require('node:assert/strict');
++// Read-only checks of the actual e run, current production, and delivered test evidence.
++const fs = require('node:fs'), path = require('node:path'), crypto = require('node:crypto');
++const assert = require('node:assert/strict');
+ const root = path.resolve(__dirname, '../..');
+-const read = file => JSON.parse(fs.readFileSync(path.join(__dirname, file), 'utf8'));
+-const sha = bytes => crypto.createHash('sha256').update(bytes).digest('hex');
+-const suites = [
+-  ['drain-contract-results.json', 20], ['boundary-contract-results.json', 8],
+-  ['authority-contract-results.json', 32], ['storage-contract-results.json', 34],
+-  ['prototype-contract-results.json', 12],
+-].map(([file, expected]) => {
+-  const value = read(file); assert.equal(value.mode, 'ContractAdapter'); assert.equal(value.passed, expected);
+-  assert.equal(value.failed ?? 0, 0); if ('pass' in value) assert.equal(value.pass, true);
+-  for (const source of value.sourceFiles ?? []) assert.equal(sha(fs.readFileSync(path.join(root, source.file))), source.sha256);
+-  return {file, mode: value.mode, passed: expected, sha256: sha(fs.readFileSync(path.join(__dirname, file)))};
+-});
+-const regressions = [
+-  ['../b2-cross-device-core/contract-results.json', 59], ['../b2-cross-device-core/prototype-contract-results.json', 6],
+-].map(([file, expected]) => {
+-  const value = read(file); assert.equal(value.pass, true); assert.equal(value.passed, expected);
+-  return {file, passed: expected, sha256: sha(fs.readFileSync(path.join(__dirname, file)))};
+-});
+-const gates = read('gate-results.json'); assert.equal(gates.pass, true); assert.equal(gates.runs.length, 3);
+-const preview = read('creator-preview-results.json'); assert.equal(preview.pass, true);
+-assert.deepEqual(preview.rendererErrors, []); assert.deepEqual(preview.runtimeErrors, []); assert.deepEqual(preview.externalRequests, []);
+-assert.deepEqual(preview.resolutions.map(value => [value.width, value.height]), [[1920,1080],[2560,1440]]);
+-assert.equal(sha(fs.readFileSync(path.join(__dirname, 'creator-preview.cjs'))), preview.harnessSha256);
+-for (const source of preview.compilation) {
+-  assert.equal(source.sourceMapMatches, true); assert.equal(source.servedEqualsCompilerOutput, true);
+-  assert.equal(sha(fs.readFileSync(path.join(root, source.file))), source.sourceSha256);
+-  assert.equal(sha(fs.readFileSync(path.join(root, 'temp/programming/packer-driver/targets/preview', source.chunk))), source.chunkSha256);
++const bytes = file => fs.readFileSync(path.resolve(__dirname, file));
++const read = file => JSON.parse(bytes(file));
++const sha = value => crypto.createHash('sha256').update(value).digest('hex');
++const checkFile = (file, expected) => assert.equal(sha(fs.readFileSync(path.join(root, file))), expected, file);
++const sections = ['Ledger', 'PuzzleProgress', 'FormatTime', 'RecallCount', 'WorldLink', 'ChartSnapshot', 'ChartScore'];
++
++async function main() {
++  const contracts = read('contract-regression-results.json');
++  assert.equal(contracts.mode, 'ContractAdapter'); assert.equal(contracts.pass, true);
++  assert.equal(contracts.passed, 227); assert.equal(contracts.expected, 227);
++  assert.equal(contracts.runs.length, 9);
++  assert.equal(contracts.originalScriptsAndAcceptedReports.unchanged, true);
++  assert.equal(contracts.productionSources.unchanged, true);
++  for (const group of [contracts.originalScriptsAndAcceptedReports, contracts.productionSources]) {
++    assert.deepEqual(group.before, group.after);
++    for (const file of group.after) checkFile(file.file, file.sha256);
++  }
++  for (const copy of contracts.copies) {
++    checkFile(copy.source, copy.sourceSha256); checkFile(copy.copy, copy.copySha256);
++  }
++  const suites = contracts.runs.map(run => {
++    assert.equal(run.pass, true); assert.equal(run.exitCode, 0);
++    assert.equal(run.passed, run.expected);
++    checkFile(run.isolatedReport, run.reportSha256);
++    const report = JSON.parse(fs.readFileSync(path.join(root, run.isolatedReport), 'utf8'));
++    const cases = report.cases ?? report.tests ?? report.results;
++    assert.equal(report.summary?.passed ?? report.passed, run.passed);
++    assert.equal(cases.length, run.expected);
++    assert(cases.every(test => test.result === 'PASS' || test.pass === true));
++    assert.equal(report.summary?.failed ?? report.failed ?? 0, 0);
++    return {file: run.isolatedReport, passed: run.passed, sha256: run.reportSha256};
++  });
++
++  const gates = read('gate-results.json'); assert.equal(gates.pass, true);
++  assert.deepEqual(gates.runs.map(run => run.command), ['npm run check:naming', 'npm run typecheck', 'npm run check:dependencies']);
++  for (const gate of gates.runs) { assert.equal(gate.pass, true); assert.equal(gate.exitCode, 0); bytes(gate.log); }
++  const preview = read('creator-preview-results.json'); assert.equal(preview.pass, true);
++  assert.deepEqual(preview.rendererErrors, []); assert.deepEqual(preview.runtimeErrors, []); assert.deepEqual(preview.externalRequests, []);
++  assert.equal(preview.resolutionComparison.pass, true); assert.equal(preview.compilationUnchanged, true);
++  assert.equal(read('creator-preview-lifecycle.json').exitCode, 0);
++  assert.equal(sha(bytes('creator-preview.cjs')), preview.harnessSha256);
++  assert.deepEqual(preview.resolutions.map(r => [r.width, r.height]), [[1920, 1080], [2560, 1440]]);
++  assert.equal(preview.compilation.length, 39);
++  for (const source of preview.compilation) {
++    assert.equal(source.sourceMapMatches, true); assert.equal(source.servedEqualsCompilerOutput, true);
++    checkFile(source.file, source.sourceSha256);
++    const compilerFile = path.join(root, 'temp/programming/packer-driver/targets/preview', source.chunk);
++    assert.equal(sha(fs.readFileSync(compilerFile)), source.chunkSha256);
++    const url = new URL('scripting/x/' + source.chunk, preview.previewUrl);
++    const served = await fetch(url, {cache: 'no-store'}); assert.equal(served.ok, true);
++    assert.equal(sha(Buffer.from(await served.arrayBuffer())), source.chunkSha256);
++    const sourceMapResponse = await fetch(url + '.map', {cache: 'no-store'}); assert.equal(sourceMapResponse.ok, true);
++    const map = await sourceMapResponse.json();
++    assert(map.sourcesContent.includes(fs.readFileSync(path.join(root, source.file), 'utf8')), source.file);
++  }
++
++  const pngs = [], observations = [];
++  for (const r of preview.resolutions) {
++    for (const key of ['pass']) assert.equal(r[key], true);
++    for (const key of ['transferAcceptance', 'migrationAcceptance', 'activeReplayPauseAcceptance', 'integratedAcceptance']) assert.equal(r[key].pass, true);
++    assert.equal(r.migrationAcceptance.mode, 'ContractAdapter');
++    assert.equal(r.migrationAcceptance.serviceClockAdvancedMs, 3600000); assert.equal(r.migrationAcceptance.realElapsedHour, false);
++    assert.equal(r.activeReplayPauseAcceptance.serviceClockAdvancedMs, 0);
++    assert.equal(r.screenshots.length, 20);
++    for (const shot of r.screenshots) {
++      const image = bytes(shot.file); assert.equal(sha(image), shot.sha256);
++      assert.equal(image.subarray(0, 8).toString('hex'), '89504e470d0a1a0a');
++      assert.deepEqual([image.readUInt32BE(16), image.readUInt32BE(20)], [r.width, r.height]);
++      assert.deepEqual(shot.state.viewport, [r.width, r.height]);
++      assert.deepEqual(shot.state.canvas, [r.width, r.height]);
++      assert.equal(shot.state.horizontalOverflow, false); assert.deepEqual(shot.state.errors, []);
++      pngs.push({file: shot.file, sha256: shot.sha256, width: r.width, height: r.height});
++    }
++    const state = i => r.screenshots[i].state;
++    const storage = i => state(i).storage;
++    const account = encodeURIComponent(r.account), id = r.transferAcceptance.sourceWorldId, copy = r.transferAcceptance.targetWorldId;
++    assert.notEqual(id, copy); assert.notEqual(id, 'InitialWorld'); assert.equal(id, r.migrationAcceptance.worldId);
++    const sourceKey = 'neurou-world-state-v1:' + account + ':' + encodeURIComponent(id);
++    const folderKey = 'neurou-world-folder-v1:' + account;
++    const bKey = key => 'neurou-contract-device-b:' + encodeURIComponent(key);
++    const copyKey = bKey('neurou-world-state-v1:' + account + ':' + encodeURIComponent(copy));
++    const importKey = bKey('neurou-cross-device-import-v1:' + account);
++    const bMigrationKey = bKey('neurou-migration-v1:' + account);
++    const sourceCore = JSON.parse(storage(7)[sourceKey]), targetCore = JSON.parse(storage(14)[bKey(sourceKey)]);
++    assert.deepEqual(targetCore, sourceCore); assert.deepEqual(Object.keys(sourceCore.sections), sections);
++    const copyCore = JSON.parse(storage(8)[copyKey]);
++    assert.equal(copyCore.worldId, copy); assert.equal(copyCore.accountId, r.account);
++    assert.deepEqual(Object.keys(copyCore.sections), sections);
++    assert.deepEqual(copyCore.sections.FormatTime, sourceCore.sections.FormatTime);
++    for (let i = 8; i < 20; i++) {
++      assert.equal(storage(i)[sourceKey], storage(7)[sourceKey]);
++      assert.equal(storage(i)[copyKey], storage(8)[copyKey]);
++      assert.equal(storage(i)[importKey], storage(8)[importKey]);
++      for (const factKey of Object.keys(storage(7)).filter(k => k.startsWith('neurou-account-'))) assert.equal(storage(i)[factKey], storage(7)[factKey]);
++    }
++    for (let i = 8; i <= 16; i++) assert.equal(storage(i)[folderKey], storage(7)[folderKey]);
++    assert(storage(14)[bMigrationKey]); assert.notEqual(importKey, bMigrationKey);
++    const published = JSON.parse(storage(14)[bKey(folderKey)]).records;
++    assert(published.some(record => record.worldId === copy && record.deletedAt === null));
++    assert(published.some(record => record.worldId === id && record.deletedAt === null));
++    const homes = i => JSON.parse(storage(i)['neurou-migration-contract-authority-v1']).registries.find(v => v.accountId === r.account).records;
++    for (const i of [7, 8, 10, 13, 14, 19]) assert(!homes(i).some(v => v.worldId === 'InitialWorld'));
++    assert.equal(homes(8).find(v => v.worldId === id).homeDeviceId, 'logical-device-a');
++    assert.equal(homes(13).find(v => v.worldId === id).homeState, 'Released');
++    const migratedHome = homes(14).find(v => v.worldId === id), copiedHome = homes(14).find(v => v.worldId === copy);
++    assert.equal(migratedHome.homeDeviceId, 'logical-device-b'); assert.equal(migratedHome.homeRevision, 3);
++    assert.equal(copiedHome.homeDeviceId, 'logical-device-b'); assert.equal(copiedHome.homeRevision, 1);
++    assert.equal(JSON.parse(storage(10)['neurou-contract-service-clock-v1']), 0);
++    assert.equal(JSON.parse(storage(13)['neurou-contract-service-clock-v1']), 3600000);
++    assert.equal(storage(19)['neurou-contract-service-clock-v1'], storage(16)['neurou-contract-service-clock-v1']);
++    for (const i of [9, 15, 16]) {
++      assert.equal(state(i).restoreKind, 'Restored'); assert.equal(state(i).capture.kind, 'Complete');
++      assert.equal(state(i).coreSnapshot.kind, 'Core');
++      assert.equal(state(i).runtimeNode, i === 9 ? copy : id);
++      assert.equal(state(i).capture.snapshot.worldId, i === 9 ? copy : id);
++    }
++    const media = r.activeReplayPauseAcceptance.observations;
++    assert(media[1].media.time > media[0].media.time); assert(media[2].media.time > media[1].media.time);
++    for (const item of media.slice(0, 3)) { assert.equal(item.active, true); assert.equal(item.media.ended, false); assert.equal(item.media.seeking, false); }
++    assert.equal(media.at(-1).runtime, null); assert.equal(media.at(-1).active, false);
++    assert(media.at(-1).events.some(event => event.type === 'ended' && event.ended && event.time === 6));
++    assert.equal(state(19).frameDrivers, 0); assert.equal(state(19).inputCollectors, 0);
++    assert.equal(r.activeReplayPauseAcceptance.completedPlayCountIncrement, 1);
++    observations.push({resolution: r.resolution, copyWorldId: copy, migratedWorldId: id,
++      copyHomeRevision: 1, migratedHomeRevision: 3, sevenSectionsExact: true,
++      sourceAndAccountBytesPreserved: true, copyAndImportJournalBytesPreserved: true, naturalNativeEndSeconds: 6});
++  }
++  assert.equal(new Set(pngs.map(p => p.file)).size, 40);
++  const pngGroups = new Map();
++  for (const shot of pngs) pngGroups.set(shot.sha256, [...(pngGroups.get(shot.sha256) ?? []), shot.file]);
++  const identicalScreenshotBytes = [...pngGroups.values()].filter(files => files.length > 1);
++  const protection = read('protected-final-audit.json'), frozen = read('baseline-freeze-integrity.json');
++  assert.equal(protection.pass, true); assert.equal(protection.sourceProtectionPass, true);
++  assert.equal(protection.productionFileCount, 0); assert.deepEqual(protection.productionFiles, []);
++  for (const key of ['unexpectedChanged', 'unexpectedAdded', 'unexpectedRemoved', 'originalCopyFailures']) assert.deepEqual(protection[key], []);
++  assert.equal(frozen.pass, true); assert.equal(sha(bytes('baseline-before.json')), frozen.baselineManifestSha256);
++  assert.equal(sha(bytes('original-source-index.json')), frozen.originalIndexSha256);
++  for (const change of protection.authorizedDocumentChanges) { assert.equal(change.attribution, 'TraeAuthorized'); checkFile(change.path, change.finalSha256); }
++  assert.equal(bytes('production-code.diff').length, 0);
++  const closure = read('d-audit-protocol-closure.json');
++  assert.equal(closure.protocolAttributionAccepted, true); assert.equal(closure.violationResolved, true);
++  assert.equal(closure.historicalArtifactsRewritten, false);
++  for (const artifact of closure.immutableHistoricalArtifacts) assert.equal(sha(bytes(artifact.path)), artifact.sha256);
++  const changes = read('change-files.json'); assert.equal(changes.productionFileCount, 0);
++  for (const file of changes.testFiles) checkFile(file.path, file.finalSha256);
++  const peer = read('peer-evidence-integrity-results.json'); assert.equal(peer.pass, true);
++  assert.equal(peer.compiledModulesVerified, 39); assert.equal(peer.pngVerified, 40);
++  assert.equal(peer.harnessMatches, true);
++  const summary = {schemaVersion: 1, generatedAt: new Date().toISOString(), phase: 'B2.4e final evidence consistency',
++    pass: true, evidenceIntegrityPass: true, sourceProtectionPass: true, authorizedProtectionPolicyPass: true,
++    rawProtectedHashEquality: protection.rawHashEquality, productionSourceChanges: 0, newRuntimeNames: 0,
++    contractAdapterPassed: 227, suites, gates: gates.runs.map(({command, pass, summary}) => ({command, pass, summary})),
++    creatorPreview: {pass: true, sourceModules: 39, screenshots: 40, finishedAt: preview.finishedAt,
++      authorityMode: 'ContractAdapter', realElapsedHour: false, serviceClockAdvancedMs: 3600000,
++      activeReplayServiceClockAdvancedMs: 0, rendererErrors: 0, runtimeErrors: 0, externalRequests: 0,
++      resolutionComparison: preview.resolutionComparison, observations,
++      uniquePngByteHashes: pngGroups.size, identicalScreenshotBytes,
++      identityEvidence: 'Equal inherited Core content can render identical images. World identity is verified from contemporaneous runtime, Core, directory, Home and journal observations.'}, pngs,
++    historicalDocAttributionClosed: true, historicalRawAuditRewritten: false,
++    authorizedConcurrentDocs: protection.authorizedDocumentChanges.map(v => ({path: v.path, attribution: v.attribution, sha256: v.finalSha256})),
++    evidenceSha256: Object.fromEntries(['creator-preview.cjs', 'creator-preview-results.json', 'contract-regression-results.json',
++      'gate-results.json', 'protected-final-audit.json', 'baseline-before.json', 'original-source-index.json', 'baseline-freeze-integrity.json',
++      'peer-evidence-integrity-results.json', 'd-audit-protocol-closure.json',
++      'code.diff', 'acceptance-harness.diff', 'change-files.json'].map(file => [file, sha(bytes(file))])),
++    limitations: ['Restricted Core prototype; two fixed logical devices', 'Explicit service fixture clock advance; no actual elapsed hour',
++      'No real external services, full FileCarry, platform uptime OfflineGrace, or non-Primary production migration']};
++  fs.writeFileSync(path.join(__dirname, 'validation-summary.json'), JSON.stringify(summary, null, 2) + '\n');
++  console.log(JSON.stringify({pass: true, contracts: 227, screenshots: 40, sourceModules: 39, productionSourceChanges: 0,
++    rawProtectedHashEquality: protection.rawHashEquality, authorizedConcurrentDocs: protection.authorizedDocumentChanges.length}));
+ }
+-for (const value of preview.resolutions) {
+-  assert.equal(value.pass, true); assert.equal(value.migrationAcceptance.pass, true); assert.equal(value.activeReplayPauseAcceptance.pass, true);
+-  assert.equal(value.migrationAcceptance.realElapsedHour, false); assert.equal(value.migrationAcceptance.serviceClockAdvancedMs, 3600000);
+-  assert.equal(value.activeReplayPauseAcceptance.serviceClockAdvancedMs, 0); assert.equal(value.screenshots.length, 17);
+-  for (const shot of value.screenshots) {
+-    const bytes = fs.readFileSync(path.join(__dirname, shot.file)); assert.equal(sha(bytes), shot.sha256);
+-    assert.deepEqual([bytes.readUInt32BE(16),bytes.readUInt32BE(20)], [value.width,value.height]);
+-  }
+-}
+-const changes = read('change-files.json');
+-for (const file of changes.files) assert.equal(sha(fs.readFileSync(path.join(root,file.path))),file.finalSha256);
+-const protection = read('protected-final-audit.json'), drift = read('observed-doc-drift.json');
+-assert.equal(protection.pass, false); assert.deepEqual(protection.unexpectedChanged.sort(), ['docs/NAMEBOOK.md','docs/spec/stage-1.md']);
+-assert.deepEqual(protection.originalCopyFailures, []); assert.deepEqual(protection.unexpectedAdded, []);
+-assert.deepEqual(protection.removed, []); assert.equal(drift.authoredSourceScopePass, true);
+-for (const file of drift.observations) assert.equal(sha(fs.readFileSync(path.join(root,file.path))),file.currentSha256);
+-const summary = {
+-  schemaVersion: 1, generatedAt: new Date().toISOString(), phase: 'B2.4d final evidence consistency',
+-  implementationValidationPass: true, evidenceIntegrityPass: true, completeProtectedAuditPass: false,
+-  protectionException: 'Two official documents drifted after baseline; provenance remains unverified. No allowlist or original baseline changes.',
+-  suites, contractAdapterPassed: suites.reduce((sum,value)=>sum+value.passed,0),
+-  regressions, crossDeviceCRegressionPassed: regressions.reduce((sum,value)=>sum+value.passed,0),
+-  gates: gates.runs.map(({command,pass,summary})=>({command,pass,summary})),
+-  creatorPreview: {pass:true, sourceModules:preview.compilation.length, screenshots:34,
+-    finishedAt:preview.finishedAt, resolutions:preview.resolutions.map(value=>({resolution:value.resolution,
+-      migrationPass:value.migrationAcceptance.pass, activeReplayPausePass:value.activeReplayPauseAcceptance.pass})),
+-    realElapsedHour:false, authorityMode:'ContractAdapter', rendererErrors:0,runtimeErrors:0,externalRequests:0},
+-  canonicalChangedFiles:changes.files.filter(value=>value.kind==='changed').length,
+-  canonicalAddedFiles:changes.files.filter(value=>value.kind==='added').length,
+-  limitations:['Restricted Core prototype','Two fixed logical device identities','Explicit independent service fixture clock advancement',
+-    'No real external services, full FileCarry, platform uptime OfflineGrace, or non-Primary production migration',
+-    'Documentation drift prevents a whole-workspace protection PASS'],
+-};
+-fs.writeFileSync(path.join(__dirname,'validation-summary.json'),JSON.stringify(summary,null,2)+'\n');
+-console.log(JSON.stringify(summary,null,2));
++main().catch(error => {console.error(error); process.exitCode = 1;});
+
+--- a/quality-review/b2-world-migration/verify-protected.cjs
++++ b/quality-review/b2-cross-device-e2e/verify-protected.cjs
+@@ -1,5 +1,5 @@
+ 'use strict';
+-// Fixed allowlist review. This never discovers allowed source changes from the final checkout.
++// B2.4e acceptance expects zero production/source mutations. Only explicit official-document synchronization is authorized.
+ const fs = require('node:fs'), path = require('node:path'), crypto = require('node:crypto'), cp = require('node:child_process');
+ const root = path.resolve(__dirname, '../..');
+ cp.execFileSync(process.execPath, [path.join(__dirname, 'capture-baseline.cjs'), 'baseline-after.json'], { windowsHide: true });
+@@ -7,80 +7,56 @@
+ const after = JSON.parse(fs.readFileSync(path.join(__dirname, 'baseline-after.json'), 'utf8'));
+ const originalIndex = JSON.parse(fs.readFileSync(path.join(__dirname, 'original-source-index.json'), 'utf8'));
+ const previous = new Map(before.files.map(file => [file.path, file])), current = new Map(after.files.map(file => [file.path, file]));
+-const changed = [], removed = [], added = [];
++const changed = [], added = [], removed = [];
+ for (const [file, record] of previous) {
+   const next = current.get(file);
+   if (!next) removed.push(file);
+   else if (next.sha256 !== record.sha256 || next.bytes !== record.bytes) changed.push(file);
+ }
+ for (const file of current.keys()) if (!previous.has(file)) added.push(file);
+-const allowedCanonicalChanged = [
+-  'src/director/IntentPort.ts',
+-  'assets/scripts/SceneBuilder.ts',
+-  'assets/scripts/WorldFolderBuilder.ts',
+-  'assets/scripts/CrossDevicePrototype.ts',
+-];
+-const allowedChanged = [...allowedCanonicalChanged, 'assets/scripts/src/director/IntentPort.ts'];
+-const allowedCanonicalAdded = [
+-  'src/director/WorldMigration.ts', 'src/director/RealityPauseBoundary.ts',
+-  'src/presentation/SafePointDrainStorage.ts', 'src/presentation/WorldMigrationContractAdapter.ts',
+-  'src/presentation/WorldMigrationStorage.ts', 'assets/scripts/WorldMigrationPrototype.ts',
+-].flatMap(file => [file, file + '.meta']);
+-const allowedAdded = [...allowedCanonicalAdded,
+-  ...allowedCanonicalAdded.filter(file => file.startsWith('src/')).map(file => 'assets/scripts/' + file)];
+-const unexpectedChanged = changed.filter(file => !allowedChanged.includes(file));
+-const unexpectedAdded = added.filter(file => !allowedAdded.includes(file));
+-const missingNewFiles = allowedAdded.filter(file => !added.includes(file));
+-const normalizeLines = text => text.replace(/\r\n/g, '\n');
+-const originalText = file => normalizeLines(fs.readFileSync(path.join(__dirname, 'original-source', file), 'utf8'));
+-const currentText = file => normalizeLines(fs.readFileSync(path.join(root, file), 'utf8'));
+-const originalIntent = originalText('src/director/IntentPort.ts'), currentIntent = currentText('src/director/IntentPort.ts');
+-const oldIntentLogicPrefixUnchanged = currentIntent.startsWith(originalIntent);
+-const expectedSuffix = '// B2.4d same-ID migration and account admission contracts, erased at runtime.\n' +
+-  'export type { SafePointDrainWorld, SafePointDrainConfirmation, SafePointDrainCapability,\n' +
+-  '  SafePointDrainAcceptance, SafePointDrainPort, MigrationReleaseRequest, MigrationClaimRequest,\n' +
+-  '  RealityPauseRecord, DeviceAccountBinding, RestrictedMigrationCorePayload, MigrationReceipt,\n' +
+-  '  MigrationAdmission, MigrationAuthorityPort, WorldMigrationPhase, WorldMigrationEntry,\n' +
+-  "  WorldMigrationJournal, WorldMigrationStorageReceipt, MigrationCompleteValidator } from './WorldMigration';\n";
+-const onlyExpectedTypeExports = oldIntentLogicPrefixUnchanged && currentIntent.slice(originalIntent.length) === expectedSuffix;
+-const linksUnchanged = JSON.stringify(before.symbolicLinks) === JSON.stringify(after.symbolicLinks);
++// Existing official .md paths are enumerated, never inferred from final changes or applied to references.
++const authorizedOfficialDocumentPaths = ['docs/NAMEBOOK.md', 'docs/spec/stage-1.md', 'docs/spec/stage-1-acceptance.md'];
++const authorizedDocumentChanges = changed.filter(file => authorizedOfficialDocumentPaths.includes(file)).map(file => {
++  const original = previous.get(file), next = current.get(file), stat = fs.statSync(path.join(root, file));
++  return { path: file, kind: 'Changed', attribution: 'TraeAuthorized', protocolAttributionAccepted: true,
++    baselineSha256: original.sha256, baselineBytes: original.bytes, finalSha256: next.sha256,
++    finalBytes: next.bytes, lastWriteTimeUtc: stat.mtime.toISOString(), rawHashEquality: false,
++    authorization: 'User explicitly authorized attribution of subsequent concurrent official-documents synchronization to Trae. The implementer did not write these official files.' };
++});
++const unexpectedChanged = changed.filter(file => !authorizedOfficialDocumentPaths.includes(file));
++const unexpectedAdded = [...added], unexpectedRemoved = [...removed];
++const productionFiles = [...new Set([...changed, ...added, ...removed].map(file =>
++  (current.get(file) ?? previous.get(file)).canonicalPath))].filter(file => !authorizedOfficialDocumentPaths.includes(file));
+ const originalCopyFailures = originalIndex.files.filter(file => {
+   const bytes = fs.readFileSync(path.join(__dirname, file.copy));
+   return bytes.length !== file.bytes || crypto.createHash('sha256').update(bytes).digest('hex') !== file.sha256;
+ }).map(file => file.path);
+-const immutableOriginals = before.files.filter(file => !allowedChanged.includes(file.path));
+-const immutableFailures = immutableOriginals.filter(file => {
+-  const next = current.get(file.path); return !next || next.sha256 !== file.sha256 || next.bytes !== file.bytes;
+-}).map(file => file.path);
+-const exactGroup = predicate => {
+-  const members = before.files.filter(predicate);
+-  const failures = members.filter(file => immutableFailures.includes(file.path)).map(file => file.path);
+-  return { pathCount: members.length, failures, pass: failures.length === 0 };
+-};
+-const frozenCore = exactGroup(file => /^(src|assets\/scripts\/src)\//.test(file.path) && !allowedChanged.includes(file.path));
+-const docsNamesReferences = exactGroup(file => /^docs\//.test(file.path) || /^(雨若_|archive\/|\.trae\/|编辑器\/)/.test(file.path));
+-const settingsScenes = exactGroup(file => /^(settings|profiles|\.creator)\//.test(file.path) || /\.(scene|prefab)$/.test(file.path));
+-const legacyCrossDeviceCore = exactGroup(file => /\/(CoreTransfer|CoreTransferContent|CrossDeviceContractAdapter|CrossDeviceImportStorage)\.ts(?:\.meta)?$/.test(file.path));
+-const compositionChanges = allowedCanonicalChanged.filter(file => file !== 'src/director/IntentPort.ts').map(file => ({
+-  file, changed: changed.includes(file), originalSha256: previous.get(file)?.sha256,
+-  finalSha256: current.get(file)?.sha256,
+-  review: 'Authorized composition hooks and routing only; exact modifications are disclosed in code.diff. This audit does not claim every original line is preserved.',
+-}));
+-const pass = unexpectedChanged.length === 0 && unexpectedAdded.length === 0 && missingNewFiles.length === 0 &&
+-  removed.length === 0 && oldIntentLogicPrefixUnchanged && onlyExpectedTypeExports && linksUnchanged &&
+-  originalCopyFailures.length === 0 && immutableFailures.length === 0 && before.unreadable.length === 0 && after.unreadable.length === 0;
+-const report = { schemaVersion: 1, phase: 'B2.4d', generatedAt: new Date().toISOString(), algorithm: 'sha256', pass,
++const linksUnchanged = JSON.stringify(before.symbolicLinks) === JSON.stringify(after.symbolicLinks);
++const rawHashEquality = changed.length === 0 && added.length === 0 && removed.length === 0;
++const sourceProtectionPass = unexpectedChanged.length === 0 && unexpectedAdded.length === 0 && unexpectedRemoved.length === 0;
++const groups = {};
++for (const [name, predicate] of [
++  ['coreAndComposition', file => /^(src|assets\/scripts|constants)\//.test(file)],
++  ['settingsAndScenes', file => /^(settings|profiles|\.creator)\//.test(file) || /\.(scene|prefab)$/.test(file)],
++  ['otherReferences', file => !authorizedOfficialDocumentPaths.includes(file) &&
++    (/^(docs|archive|\.trae|编辑器)\//.test(file) || /\.docx$/.test(file))],
++]) {
++  const members = before.files.filter(file => predicate(file.path));
++  const failures = members.filter(file => !current.has(file.path) || current.get(file.path).sha256 !== file.sha256).map(file => file.path);
++  groups[name] = { pathCount: members.length, failures, pass: failures.length === 0 };
++}
++const report = { schemaVersion: 1, phase: 'B2.4e', generatedAtUtc: new Date().toISOString(), algorithm: 'sha256',
++  pass: sourceProtectionPass && originalCopyFailures.length === 0 && linksUnchanged && before.unreadable.length === 0 && after.unreadable.length === 0,
++  rawHashEquality, sourceProtectionPass, productionFileCount: productionFiles.length, productionFiles,
+   baselinePathCount: before.fileCount, finalPathCount: after.fileCount, originalSourceCopyCount: originalIndex.fileCount,
+-  changed, added, removed, allowedCanonicalChanged, allowedChanged, allowedCanonicalAdded, allowedAdded,
+-  unexpectedChanged, unexpectedAdded, missingNewFiles, oldIntentLogicPrefixUnchanged, onlyExpectedTypeExports,
+-  linksUnchanged, originalCopyFailures, immutableOriginalPathCount: immutableOriginals.length, immutableFailures,
+-  protectedGroups: { frozenCore, docsNamesReferences, settingsScenes, legacyCrossDeviceCore }, compositionChanges,
+-  unreadableBefore: before.unreadable, unreadableAfter: after.unreadable, scope: before.scope,
+-  limitation: 'Fixed protected SHA scope and fixed six new module allowlist. Three composition roots have authorized admission/routing changes, fully shown in the original-source diff; IntentPort retains the complete normalized old prefix and appends only exact erased type exports. Every other old path must retain exact bytes. This is not a semantic proof of composition code.' };
++  expectedProductionMutationCount: 0, authorizedOfficialDocumentPaths, authorizedDocumentChanges,
++  changed, added, removed, unexpectedChanged, unexpectedAdded, unexpectedRemoved,
++  linksUnchanged, originalCopyFailures, protectedGroups: groups, unreadableBefore: before.unreadable, unreadableAfter: after.unreadable,
++  scope: before.scope,
++  policy: 'No production/source/config/reference changes are allowed in this acceptance batch. Explicitly enumerated official .md document synchronization is separately attributed as TraeAuthorized under the latest user PROTOCOL. Byte drift remains visible; other references, removals and additions are never generally exempted.' };
+ fs.writeFileSync(path.join(__dirname, 'protected-final-audit.json'), JSON.stringify(report, null, 2) + '\n');
+ cp.execFileSync('python', [path.join(__dirname, 'generate-diff.py')], { cwd: root, windowsHide: true });
+-console.log(JSON.stringify({ pass, baselinePathCount: report.baselinePathCount, finalPathCount: report.finalPathCount,
+-  originalSourceCopyCount: report.originalSourceCopyCount, changed, added, removed,
+-  unexpectedChanged, unexpectedAdded, missingNewFiles, oldIntentLogicPrefixUnchanged, onlyExpectedTypeExports,
+-  originalCopyFailures, immutableFailures, protectedGroups: report.protectedGroups }));
+-process.exitCode = pass ? 0 : 1;
++console.log(JSON.stringify({ pass: report.pass, rawHashEquality, sourceProtectionPass, productionFiles,
++  baselinePathCount: report.baselinePathCount, finalPathCount: report.finalPathCount,
++  authorizedDocumentChanges, unexpectedChanged, unexpectedAdded, unexpectedRemoved, originalCopyFailures }));
++process.exitCode = report.pass ? 0 : 1;
+

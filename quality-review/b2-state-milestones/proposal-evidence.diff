@@ -1,0 +1,615 @@
+diff --git a/quality-review/b2-state-milestones/PROTOCOL-B2.2-001.md b/quality-review/b2-state-milestones/PROTOCOL-B2.2-001.md
+new file mode 100644
+--- /dev/null
++++ b/quality-review/b2-state-milestones/PROTOCOL-B2.2-001.md
+@@ -0,0 +1,51 @@
++# PROTOCOL-B2.2-001 · 世界通关链路与完整恢复的新前置
++
++日期：2026-10-10。状态：等待范围裁定；生产代码未修改。停工来源：本轮用户约束“若发现新的架构冲突或‘前置缺失’，先停止，提交 PROTOCOL”。不是权限工具拒绝，也不是技能附加的审批要求。
++
++## 已先提出的拆分
++
++B2.2a 做账号事实的本地投影与 CopyPermission 派生；真实触发必须保留 WorldBossChart，不能用 T7 普通完成替代。B2.2b 先做世界状态契约和诊断捕获；完整恢复前置必须单列。WorldFork 与 FileCarryPayload 仍归 B2.3。详细十五项设计裁定见 VERDICT-211-225.md。
++
++## 新增缺失与冲突证据
++
++| 问题 | 精确证据 | 为什么不能直接实施交接里的完整验收 |
++| --- | --- | --- |
++| WorldBossChart 不只是换 tier | 历史 JSONL:74 VERDICT-017；:132 VERDICT-042。现行入口要求 Player 追加、主角坐标在球面上/外、角色尚未穿越。src/ledger/LedgerPosition.ts:35 只有基础坐标运算；src 中无 SphereCrossing 业务实现。 | 必须补账本驱动入口、球心/半径来源、世界身份和合法内容装配；把现有 T7 标为 World 会绕过已冻结条件。archive/ledger/SphereCrossing.ts:65 还是旧比较且等号在内，不能直接搬入。 |
++| 通关记录缺少路线签名来源 | 历史 JSONL:62 VERDICT-013；当前 IntentPort.ts:668/930 是零向量灰盒；docs/spec/stage-1.md:404 明许灰盒并将真实向量推迟。 | 世界通关必须生成带 RouteSignature 的账号记录。旧灰盒必须原样保留，不追溯补向量；零向量不会达到正半径，也没有全零/并列方向的合法分类实现。随机方向或把 score 当路线都没有授权；只写布尔不是完整世界通关事实。 |
++| T6 的 ChartRef 与首演判据存在兼容问题 | IntentPort.ts:928/940 在解谜终点尚未完整演奏时已带 ChartRef；:674/682 又在 T7 完成写同谱面引用。VERDICT-030（历史:97）要求完成账本引用作为首演事实。 | 不能扫描到任何 ChartRef 就宣称首演完成/分叉具备快照，更不能据它开放复制。兼容既有 T6/T7 记录需要明确识别方案，用户同时禁止改其核心。 |
++| 账本读取并非必然权威 | IntentPort.ts:261/272 默认数组和 getLedgerEvents；:350/351 bindLedgerAppend 可替换实际 sink；ledger/LedgerRead.ts:35 只有接口。 | 读取默认数组可能漏账本。捕获完整性不能仅由“读口返回数组”判断；必须有同一权威载体和角色归属。 |
++| PuzzleProgress 不是只有 stage | PuzzleChain.ts:88/91/94/97 连续计时与拍点；IntentPort.ts:301/306/309/323 结算/入口/完成闸；DeepTrace.ts:46 触发态。 | 恢复 Completed 到旧逻辑却不恢复结算闸，可再次进入 IntentPort.ts:857→907 的终点结算。七秒进度直接归零同样改变玩法结果。 |
++| 谱面结果不是冻结快照或续演状态 | ChartPremiere.ts:63 ChartPlaybackResult；:122～136 判定/进度/媒体/反馈私有状态；Note.ts:33、GuidanceChart.ts:76、KeyboardPadLayout.ts:132 是输入数据；SceneBuilder.ts:867～911 媒体与谱面加载。 | 只有 chartId/score 不能重玩历史内容；路径变更不能改变已经冻结的快照。Playing/Paused 的完整续演额外涉及逻辑时钟与资源生命周期。 |
++| 新里程碑 key 已被序章占用 | presentation/FolderStartupView.ts:32，AccountStartupStorage 保存 `{PrologueCompleted:true}`。 | 新存储若复用 `neurou-account-milestone-v1:` 独立 setItem 会覆盖序章；本轮裁定使用不同 key，避免要求修改 B1。 |
++| 部分机制仅有名词/空接口 | WorldInstance.ts:39 FormatTime 空接口；RecallCount/WorldLink/ChartSnapshot 无现行载体；Bootstrap.ts:54 RuntimeGraph 没有 WorldInstance 实例身份。 | 最小 JSON 载体可另做，但不能自动等于机制已实装或世界快照已完整。必须建立所有权、合法写入边界和初始化/恢复生命周期。WorldLink 的孤立恢复还依赖最后进入时冻结的 AIProfileSnapshot（历史:51 VERDICT-009），不能只恢复链接 ID。 |
++
++## 推荐范围 A · 独立基础先交付
++
++恢复实施以下明确项目，核心玩法保持既有行为：
++
++1. AccountMilestoneStorage/Reader：独立账号 key、严格版本和账号校验、CopyPermission 派生、失败保留与缺失/损坏区分；不产生真实通关记录。更新口仅预留给未来 director 的合法事实处理，产品 UI 不提供写 true 的按钮。
++2. 目录添加权限读取展示，WorldForkAvailability 仍 NotImplemented；显示权限未取得/已取得与功能未实施的准确区别；已有 WorldFolderRecord、新建/删除逻辑不扩。
++3. WorldStateCaptureResult 的 Complete/Incomplete 契约、七项索引、诊断投影；当前已知缺失保持 Incomplete。部分快照只用于诊断与契约验证，不能作为正常存档，也不能用于分叉。
++4. WorldStateStorage 边界与完整 schema 校验规划，FormatTime 最小载体/初始化规则另附候选；不让空值通过完整性检查，不实施既有 runtime hydration。
++5. 契约级验证覆盖账号隔离、key 不覆盖序章、派生量不保存、非法投影拒绝、捕获缺失诊断、完整恢复拒绝、目录墓碑不改账号投影。Cocos 可验目录读取展示和 Incomplete 提示；不能验真实通关/完整恢复成功。
++
++必须同意把本批验收命名为“B2.2 基础接口”，真实世界通关写入与完整 gameplay 恢复成功移出，另立前置批。测试合法输入存储可以验证适配器，但必须标为契约测试，不能拿测试输入得到的 CopyPermission=true 截图充当生产通关流程。
++
++## 范围 B · 保留完整 B2.2 验收，扩大前置实施
++
++若本轮必须看到真实“通关事实写入 + CopyPermission 解锁 + 完整捕获恢复”，需明确纳入并允许增量接入这些范围：
++
++- 最新 SphereCrossing、账本驱动入口、WorldBossChart 的合法内容来源与装配、WorldInstance/角色身份；球心/半径配置和路线签名输入不能由实施端伪造。
++- 权威账本载体，T6 endpoint ChartRef 与 VERDICT-030 首演判据的兼容处理，稳定事件/角色索引，新增受控 hydration 接口；明确“允许必要接口接入而保留规则”对原“不改核心逻辑”约束的适用边界。
++- RecallCount 合法行为、WorldLink 创建/孤立语义、ChartSnapshot 首演冻结、ChartScore 持久更新语义。
++- 选定稳定保存边界或明确进行中续演要求；恢复时防重闸/深痕/媒体时钟的接入；世界账本/快照与账号通关记录的可恢复提交/对账方案。
++
++以上都保留现行冻结语义，不重新裁定 013/014/030/042/057。不扩进 WorldFork、FileCarryPayload、WorldRegistry、跨设备、服务、观察者同步或 AccessCode。完成这些前置后，B2.3 才能安全实现 WorldFork。
++
++路线分类实现必须核对最新成员冻结和并列规则，不能照搬早期六色标签或 archive 的未完备枚举。当前本轮不实现分类、不追溯改灰盒账本，也不重新选择分歧方向。
++
++## 本次可核实交付
++
++十五项设计裁定、七项归属表、存储/API 提案、名库 v3.7 附录、逐条验收映射、基线三门禁/源码保护哈希/预览编译只读证据已准备。未修改生产代码；没有 B2.2 实现成功 diff 或三张请求场景截图。
++
++需要裁定的是具体实施范围 A 或 B。推荐 A；不能默认把“拆分建议”当作用户已经接受削减真实通关与完整恢复验收。
+diff --git a/quality-review/b2-state-milestones/VERDICT-211-225.md b/quality-review/b2-state-milestones/VERDICT-211-225.md
+new file mode 100644
+--- /dev/null
++++ b/quality-review/b2-state-milestones/VERDICT-211-225.md
+@@ -0,0 +1,64 @@
++# VERDICT-211～225 · B2.2 实施边界裁定书
++
++日期：2026-10-10（Asia/Shanghai）。身份：ARCHITECT + IMPLEMENTER。状态：设计裁定已出具；生产实施因新增前置缺失暂停，范围调整待 PROTOCOL 确认。本文是本轮交付证据，不修改 docs、名库或参照。新结构名为候选，交 Trae 追认落盘；不冒称已冻结或已实装。
++
++## 先行拆分建议
++
++| 分批 | 可以独立实施的内容 | 不能算作本批已具备的能力 |
++| --- | --- | --- |
++| B2.2a · 账号事实投影基础 | 新增独立 AccountMilestoneStorage、AccountMilestoneReader；严格解析 FirstWorldCleared 本地投影；CopyPermission 只读派生；账号隔离、失败保留、幂等、损坏显式错误；目录展示权限与功能开放分别表达。 | 真实通关触发需要 SphereCrossing → WorldBossChart → 首演完成 → WorldClearRecord/RouteSignature。当前缺失，普通 T7、开发按钮或测试注入都不能替代。此基础交付不等于 B2.2a 世界通关端到端完成。 |
++| B2.2b · 状态契约及诊断捕获 | director 聚合捕获/恢复契约；七项归属与完整性定义；独立 WorldStateStorage 边界；已有数据的不可变诊断投影；FormatTime 的最小结构提案；账本、进度、得分受控恢复的后续接入设计。 | 当前不存在能够完整恢复现有 gameplay 的接口。只读阶段/分数/默认数组不是完整状态，Incomplete 不得作为正式世界存档、不得用于分叉。 |
++| 延后 · 完整恢复前置 | 权威账本读写载体与角色身份；PuzzleChain 计时/防重及媒体生命周期 hydration；RecallCount 的合法行为与索引；WorldLink 的来源与孤立处理；ChartSnapshot 的首演冻结和稳定内容引用。 | 必须在 B2.3 启用 WorldFork 前完成；其中真实通关链路宜另立 B2.2a 前置批，不能让 B2.3 分叉实现掩盖其缺失。 |
++| B2.3 及之后 | WorldFork、新 ID、完整继承/验证、FileCarryPayload；B2.4 跨设备及 B2.5 服务。 | 本轮不做 Registry、重复副本识别、观察者同步、AccessCode、网络服务、世界文件导入/导出。 |
++
++本轮实际状态：发现交接中未列出的 SphereCrossing/路线签名前置和恢复控制状态缺失后，按用户停工约束停止生产修改。以上是恢复实施后的明确范围建议；不是完成声明。
++
++## 正式裁定
++
++| 编号 | 结论 | 实施边界 / 验收含义 |
++| --- | --- | --- |
++| 211 | B2.2 分成账号事实投影基础与状态契约基础；真实世界通关和完整恢复单列前置。 | 不把接口存在当作机制实装，不把部分快照当完整。范围收敛见 PROTOCOL-B2.2-001。 |
++| 212 | FirstWorldCleared 不使用现有事件替代。唯一合法触发是账号首次完成一个 Primary 世界中合法开放的 WorldBossChart 首演。 | 普通 T7 完成、T6 终点、Character/Final 谱面、测试写值、重玩均不触发；中途退出不触发；完整演奏与分数无关。WorldBossChart 必须遵守 SphereCrossing 来源条件。 |
++| 213 | 球面穿越沿用最新冻结修订 VERDICT-042：来源 Player 的账本追加后，角色坐标在球面上/外且尚未穿越，才产生一次入口。 | 不是简单移回 archive 的旧 inside→outside 算法；Autopilot 追加参与坐标，但不直接开放入口。半径/球心/真实向量来源不凭空定值。 |
++| 214 | AccountMilestoneStorage 是 FirstWorldCleared 的浏览器本地投影适配；使用独立账号 key。 | `neurou-account-first-world-cleared-v1:` + encodeURIComponent(accountId)。现有序章 key `neurou-account-milestone-v1:` 完全保留，不迁移、不重写；AccountStartupStorage 不承担本次新事实。 |
++| 215 | CopyPermission 只由 AccountMilestoneReader 返回的 FirstWorldCleared 派生，不持久化，不加入 AccountStartupSnapshot。 | 增设 AccountMilestoneSnapshot 读取面，CopyPermission === FirstWorldCleared。错误不能降级为 false 或默认授权。presentation 仅 type 经 IntentPort 窄路，业务更新由 director 的合法通关处理决定。 |
++| 216 | WorldClearRecord 与 FirstWorldCleared 都属于 AccountProfile；通关生成路线签名，世界删除不撤销账号事实。 | 本地投影不能代替带 RouteSignature 的真实通关记录。账号记录不放入世界状态快照，不通过恢复、分叉或刷新生成；新世界不得继承通关记录，继承完成账本也不得重首演刷记录。 |
++| 217 | 世界状态聚合命名 WorldStateSnapshot；操作 captureWorldState / restoreWorldState；承载于现有 director 模块中的 WorldStateSession。 | 不新增模块；world 不反向依赖 ledger/trace/chart；组合根注入对象及平台存储；presentation 仅获取读取面和操作结果，不直接改业务对象或账本。 |
++| 218 | 七项归属采用下表；世界身份和个人状态的索引必须显式。 | `accountId + worldId` 是本地隔离外层；角色、链、谱面 ID 属于内层业务索引，不从目录标题/占位事件 ID 猜测。 |
++| 219 | 区分 Complete 与 Incomplete；只有前者携带 WorldStateSnapshot；后者只有 capturedParts 与缺失诊断。 | 七项及其必要控制状态全部验证后才能 Complete。缺少机制不是“空数据”；未实装 WorldLink 不是已知无链接；结果面不能让调用者手动置 complete/forkReady。 |
++| 220 | 当前账本、PuzzleProgress、ChartScore 可以设计/实现诊断投影，但现有实例的完整持久化 + 恢复均有额外前置。 | 账本必须核对实际读写源；PuzzleProgress 包括链计时/结算语义；ChartScore 结果投影不是 Playing/Paused 续演状态。受控恢复要先生成未激活的新对象图，验证后一次发布，不能改写已有账本。 |
++| 221 | FormatTime 最小结构建议为 readonly `{ epochMs: number }`，代表世界创建的现实纪元毫秒，分叉保留原值。 | 当前 FormatTime 是空接口，故此是结构提案而非已有能力。普通重入不重设，Shore 自有创建时刻，不混用叙事时间或快照 capturedAt。B2.1.createdAt 不直接认作已有 gameplay FormatTime；历史世界缺失时不得静默用 Date.now 补成真实旧值。 |
++| 222 | RecallCount、WorldLink、ChartSnapshot 必须先建立真实载体和合法生产边界，再加入完整捕获/恢复。 | 可先定契约，不用计数按钮、空对象、ChartPlaybackResult 或资源路径清单冒充机制实装。详情见七项表与 PROTOCOL。 |
++| 223 | WorldStateStorage 使用每账号、每世界的独立浏览器本地 key，与 WorldFolderRecord 分离。 | `neurou-world-state-v1:` + encodeURIComponent(accountId) + `:` + encodeURIComponent(worldId)。WorldFolderRecord 不新增状态字段；通过同一 worldId 关联。存储缺失/损坏/版本不支持/身份不匹配须区分；拒绝 Incomplete 正式保存。 |
++| 224 | 权限、快照完整性、产品功能开放分别表达。B2.2 的 WorldForkAvailability 固定为 NotImplemented。 | CopyPermission 为真仍不能执行本轮分叉；不以“权限未取得”解释功能未实装。界面可显示“复制权限已取得；分叉尚未开放”。仅 B2.3 完整验证并实装后才计算可执行性；FinalShore 的不可复制例外保留。 |
++| 225 | 三门禁、保护哈希、契约验证、状态覆盖及真实 Cocos 用户流程分别验收。 | 本次三门禁仅证明现有基线通过。本轮未实施，不宣称通关事实写入、权限新 UI、状态恢复截图通过；验收逐项映射见交付报告。冻结 013/014/030 及其后续既有修订均不重新裁定。 |
++
++## 七项明确归属及实施清单
++
++| 内容 | 所属层及业务索引 | 现状 | 恢复实施后本批最小部分 | 必须延后至完整性成立 |
++| --- | --- | --- | --- | --- |
++| 账本 Ledger | WorldInstance 的观察者个人层；accountId/worldId/characterId；每角色 append-only。 | DirectorSession 默认主角内存数组；可注入另一 LedgerAppend，读取面未随之切换；无角色归属载体。 | 权威来源已核实情况下的不可变事件投影，保留所有冻结附加项、顺序和向量；未核实则返回 Incomplete。 | 权威持久载体、角色账本读取口、无副作用 hydration、稳定 ID 与重复占位 ID 的兼容；不能删除活跃账本后回放 append 冒充恢复。 |
++| PuzzleProgress | 世界观察者个人层；chainId。 | 有 stage；PuzzleChain 持有连续拍点计时；director 持有终点结算与自动进入控制状态。 | stage 和已有公开持续时长的诊断捕获；注明未捕获项。 | 链私有状态、终点防重、DeepTrace、入口和揭示生命周期一致恢复；必要时定义稳定保存边界，不能 silently 归零七秒进度。 |
++| RecallCount | 世界观察者个人层；characterId + NarrativeEventId。 | 仅冻结语义，无正式载体/行为。 | 契约与缺失诊断。 | 自己账本回忆/痕 Replay 共用计数；别人账本的初次经历写自己的账本；ChartReplay 不增加；事件存在性与角色身份校验。本轮不定难度公式。 |
++| FormatTime | 世界自身 immutable 创建现实时间；Shore 自有，分叉继承。 | WorldInstance 空接口字段。 | 最小 epochMs 结构和新世界初始化设计，可独立验证数据载体；历史值没有来源则 Unavailable。 | 挂接世界创建生命周期与历史缺失处理；CacheWarm 和服务时钟另期，不由目录 createdAt 自动推导。 |
++| WorldLink | BugShore 世界自身的单一来源弱引用；sourceWorldId + LinkState；孤立恢复还依赖 AIProfileSnapshot。Primary/FinalShore 不使用此链接。 | 仅 LinkState 枚举，无链接载体/彼岸创建。 | 契约、不适用与未实装分开。 | 来源身份/单层弱引用/来源删除孤立处理与恢复；保存最后进入时冻结的 AIProfileSnapshot 等必要支持状态，缺失则 Incomplete。捕获单个指向而非递归复制来源世界。当前只知目录模板，不足以断言所有实例 kind。 |
++| ChartSnapshot | 世界观察者个人层；ChartRef。Final 也属于 FinalShore 个人层（VERDICT-057 修订）。 | 有谱面输入与媒体路径，无首演冻结快照。 | 数据来源审计、契约与缺失诊断。 | 保存完整谱面内容/布局版本/稳定媒体内容引用/已有表现或 AI 内容；首演完成冻结、重玩复用；不能只保存 chartId 或完成结果。不存在的剪辑/AI 不臆造为捕获成功。 |
++| ChartScore | 世界观察者个人层；ChartRef；Final 同上。 | ChartScore 计数与总分为运行态；ChartPremiere 重入会重建计分器。 | 已有计数/总分/完成结果的只读投影；明确结果域，和首演快照关联。 | 持久计分档案的语义、恢复实例和重玩更新链；若要求进行中续演，还需判定/时钟/媒体状态。保留原评分规则，不擅定最高分或最新分覆盖策略。 |
++
++账号层另列：AccountMilestone.PrologueCompleted、AccountMilestone.FirstWorldCleared、WorldClearRecord/RouteSignature 属于 AccountProfile。CopyPermission 是账号事实的派生量。四者全部不作为 WorldFork 继承载荷。
++
++“完整状态”在这里是七项继承域连同使其恢复后行为一致的必要控制状态，不自动扩成所有任意帧的存档。是否支持七秒挑战中途/Playing/Paused 续演，需要明确保存边界；未确定前不能声称完整恢复。主角坐标、视角、输入队列、cc 对象和媒体句柄不直接序列化，未被用户选入继承清单；若某状态恢复依赖它们，应报告 UnsupportedBoundary，而不是静默补值。
++
++## 存储与提交契约
++
++- 账号投影候选 schema：`{schemaVersion:1, accountId, FirstWorldCleared:boolean}`；读 key 不存在为尚无本地投影，不能据此推断未实现的跨设备账号事实。CopyPermission 不在 JSON 中。通过 director 的真实通关链路更新，View 不获得“设置权限”入口。合法更新只允许 false→true 或 true→true；禁止 true→false，目录删除、恢复、重启都不清零。
++- WorldStateSnapshot 候选头部：schemaVersion、accountId、worldId、worldKind、shoreOrigin、revision、capturedAt；载荷七项及必要恢复支持状态。shoreOrigin 用于区分 BugShore/FinalShore，Primary 则不适用。capturedAt 是诊断挂钟，不替代 FormatTime。未实装项不得以 null 或空数组洗成完整状态。
++- 所有恢复先校验版本、账号/世界身份、事件结构、索引、谱面引用及支持状态，再对未激活新图 hydration。失败保留当前对象图和持久化；成功才发布新图。hydration 不经过普通 LedgerAppend 产生新事实，不产生通关或权限副作用。
++- 保存先成功后发布内存快照；expected/revision 防止已观察到的旧写覆盖。不宣称 localStorage 有跨 key 原子事务或跨 tab CAS。真实通关涉及世界账本、快照和账号记录，必须单列可恢复提交/对账协议；投影适配不能解决这项原子性。
++- B2.1 删除仍只写目录墓碑。worldId 用作独立状态 lookup，不扩展目录元数据。墓碑使入口不可用，但不能清除账号通关事实。一旦开始保存正式 ChartSnapshot/ChartScore，世界删除处理必须逻辑禁用并清理对应世界历史个人状态，保留账号 WorldClearRecord；不能永久把隐藏目录行当作完整删除。本轮仅设计/诊断、不正式保存，故不借 metadata 墓碑偷偷执行状态 GC。
++
++## 既有冻结证据
++
++只读来源：历史 JSONL 第 51 行 VERDICT-010；第 62 行 VERDICT-012/013/014/015；第 74 行 VERDICT-017；第 85 行 VERDICT-022/025；第 97 行 VERDICT-030；第 132 行 VERDICT-042；第 167 行 VERDICT-057。历史文件：`641f3d33-4bab-4769-8f46-62a03315d1b1.jsonl`。
++
++最新修订优先：VERDICT-042 的 Player 条件修订原球面穿越；VERDICT-030 的继承快照/得分修订早期“不继承”；VERDICT-057 将 Final 快照/得分移至终末彼岸个人层。这是沿用既有冻结链，不是本轮重新裁定。
+diff --git a/quality-review/b2-state-milestones/baseline-checks.cjs b/quality-review/b2-state-milestones/baseline-checks.cjs
+new file mode 100644
+--- /dev/null
++++ b/quality-review/b2-state-milestones/baseline-checks.cjs
+@@ -0,0 +1,107 @@
++// Read-only baseline evidence for the B2.2 prerequisite stop.
++// This runner creates evidence only under its own directory. It does not open UI,
++// change product storage, launch Creator, or claim B2.2 implementation acceptance.
++const fs = require('fs');
++const path = require('path');
++const crypto = require('crypto');
++const cp = require('child_process');
++const root = path.resolve(__dirname, '../..');
++const relative = p => path.relative(root, p).replaceAll('\\', '/');
++const digest = bytes => crypto.createHash('sha256').update(bytes).digest('hex');
++const write = (name, content) => fs.writeFileSync(path.join(__dirname, name), content, { flag: 'wx' });
++const json = (name, data) => write(name, JSON.stringify(data, null, 2) + '\n');
++const excluded = new Set(['.git', 'library', 'node_modules', 'temp', 'tmp', 'build']);
++const evidenceRelative = relative(__dirname);
++function visit(dir, found) {
++  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
++    const absolute = path.join(dir, entry.name);
++    if (entry.isDirectory()) {
++      if (!excluded.has(entry.name) && relative(absolute) !== evidenceRelative) visit(absolute, found);
++    } else if (entry.isFile()) found.add(absolute);
++  }
++}
++function collect() {
++  const found = new Set();
++  visit(root, found);
++  const prior = JSON.parse(fs.readFileSync(path.join(root, 'quality-review/b2-local-worlds/baseline-files.json'), 'utf8'));
++  for (const entry of prior) {
++    if (path.isAbsolute(entry.path) && !entry.path.toLowerCase().startsWith(root.toLowerCase())) found.add(entry.path);
++  }
++  return [...found].sort().map(absolute => ({
++    path: absolute.toLowerCase().startsWith(root.toLowerCase()) ? relative(absolute) : absolute.replaceAll('\\', '/'),
++    bytes: fs.statSync(absolute).size,
++    sha256: digest(fs.readFileSync(absolute)),
++    role: 'protected-baseline',
++  }));
++}
++function gate(script, name) {
++  return new Promise(resolve => {
++    const startedAt = new Date().toISOString();
++    const child = cp.spawn('cmd.exe', ['/d', '/s', '/c', `npm run ${script}`], { cwd: root, windowsHide: true, stdio: ['ignore', 'pipe', 'pipe'] });
++    const stdout = [], stderr = [];
++    child.stdout.on('data', data => stdout.push(data));
++    child.stderr.on('data', data => stderr.push(data));
++    child.on('error', error => stderr.push(Buffer.from(String(error.stack))));
++    child.on('close', (exitCode, signal) => {
++      const stdoutFile = `baseline-gate-${name}.stdout.log`, stderrFile = `baseline-gate-${name}.stderr.log`;
++      write(stdoutFile, Buffer.concat(stdout));
++      write(stderrFile, Buffer.concat(stderr));
++      resolve({ script, command: `npm run ${script}`, startedAt, finishedAt: new Date().toISOString(), exitCode, signal, passed: exitCode === 0, stdoutFile, stderrFile, scope: 'Existing project baseline only; not B2.2 implementation acceptance.' });
++    });
++  });
++}
++async function get(url) {
++  const response = await fetch(url, { method: 'GET', cache: 'no-store', signal: AbortSignal.timeout(10000) });
++  return { status: response.status, ok: response.ok, bytes: Buffer.from(await response.arrayBuffer()), url: response.url };
++}
++async function preview() {
++  const server = JSON.parse(fs.readFileSync(path.join(root, 'profiles/v2/packages/server.json'), 'utf8'));
++  const baseUrl = `http://localhost:${server.server_port}/`;
++  const result = { checkedAt: new Date().toISOString(), baseUrl, policy: 'HTTP GET and disk reads only. No browser UI, localStorage, application state, Creator launch, recompilation command, or screenshot manipulation.', b22Screenshots: { status: 'not-produced', reason: 'B2.2 production implementation is stopped for missing prerequisites; existing B2.1 preview cannot substantiate milestone or capture/restore behavior.' } };
++  try {
++    const index = await get(baseUrl);
++    result.index = { url: index.url, status: index.status, bytes: index.bytes.length, sha256: digest(index.bytes) };
++    const importMapUrl = baseUrl + 'scripting/x/import-map.json';
++    const mapResponse = await get(importMapUrl);
++    result.importMap = { url: importMapUrl, status: mapResponse.status, bytes: mapResponse.bytes.length, sha256: digest(mapResponse.bytes) };
++    if (!index.ok || !mapResponse.ok) throw new Error('Preview or import-map GET did not return success.');
++    const map = JSON.parse(mapResponse.bytes.toString('utf8'));
++    const targets = ['assets/scripts/SceneBuilder.ts', 'assets/scripts/WorldFolderBuilder.ts', 'assets/scripts/MinimalWorldBuilder.ts', 'assets/scripts/Bootstrap.ts', 'src/presentation/WorldFolderView.ts', 'src/presentation/FolderCatalog.ts', 'src/presentation/FolderStartupView.ts', 'src/director/AccountStartupSession.ts', 'src/presentation/FrameDriver.ts', 'src/presentation/InputCollector.ts', 'src/director/IntentPort.ts', 'src/director/WorldFolderSession.ts', 'src/presentation/WorldLocalStorage.ts', 'src/presentation/EditorFolderView.ts', 'src/presentation/CameraRig.ts', 'src/presentation/ProtagonistView.ts'];
++    result.compilation = await Promise.all(targets.map(async file => {
++      const suffix = file.startsWith('src/') ? 'assets/scripts/' + file : file;
++      const importId = Object.keys(map.imports).find(key => key.endsWith('/' + suffix));
++      if (!importId) return { file, available: false, reason: 'Not in current preview import map.' };
++      const chunk = map.imports[importId];
++      const chunkUrl = new URL(chunk, baseUrl + 'scripting/x/').href;
++      const [compiled, sourceMap] = await Promise.all([get(chunkUrl), get(chunkUrl + '.map')]);
++      const source = fs.readFileSync(path.join(root, file), 'utf8');
++      const mapData = JSON.parse(sourceMap.bytes.toString('utf8'));
++      const compiledDisk = path.join(root, 'temp/programming/packer-driver/targets/preview', chunk);
++      return { file, importId, chunkUrl, status: compiled.status, sourceMapStatus: sourceMap.status, sourceSha256: digest(Buffer.from(source)), compiledSha256: digest(compiled.bytes), available: compiled.ok && sourceMap.ok, sourceMapMatchesCurrentSource: mapData.sourcesContent?.includes(source) ?? false, servedEqualsCompilerOutput: fs.existsSync(compiledDisk) && digest(compiled.bytes) === digest(fs.readFileSync(compiledDisk)) };
++    }));
++    result.available = true;
++    result.allSelectedCompilationFresh = result.compilation.every(row => row.available && row.sourceMapMatchesCurrentSource && row.servedEqualsCompilerOutput);
++  } catch (error) {
++    result.available = false;
++    result.error = String(error.stack);
++  }
++  json('baseline-preview-readonly.json', result);
++  return result;
++}
++(async () => {
++  const capturedAt = new Date().toISOString();
++  const before = collect();
++  json('baseline-protected-files.json', before);
++  json('baseline-protection-info.json', { capturedAt, algorithm: 'SHA-256 over binary file reads', protectedFileCount: before.length, exclusions: [...excluded, evidenceRelative], coverage: 'Project source, assets, constants, scripts, docs, design DOCX, historical JSONL, editor/reference files, configuration, and existing quality-review evidence. External references recovered from B2.1 protected inventory.', policy: 'No protected file mutations authorized; new evidence only in this directory.', baselineOnly: true });
++  const gates = await Promise.all([gate('check:naming', 'naming'), gate('typecheck', 'typecheck'), gate('check:dependencies', 'dependencies')]);
++  json('baseline-gate-results.json', { baselineOnly: true, b22Acceptance: false, note: 'The existing project passes or fails independently of the unimplemented B2.2 scope. These are not B2.2 delivery gates.', gates });
++  const previewResult = await preview();
++  const after = collect();
++  const old = new Map(before.map(row => [row.path, row]));
++  const current = new Map(after.map(row => [row.path, row]));
++  const changed = after.filter(row => old.has(row.path) && old.get(row.path).sha256 !== row.sha256).map(row => row.path);
++  const added = after.filter(row => !old.has(row.path)).map(row => row.path);
++  const removed = before.filter(row => !current.has(row.path)).map(row => row.path);
++  json('baseline-protection-verification.json', { verifiedAt: new Date().toISOString(), beforeCount: before.length, afterCount: after.length, changed, added, removed, unchanged: changed.length === 0 && added.length === 0 && removed.length === 0, evidenceDirectoryExcluded: evidenceRelative });
++  console.log(JSON.stringify({ baselineOnly: true, protectedFiles: before.length, gates: gates.map(({ script, exitCode, passed }) => ({ script, exitCode, passed })), previewAvailable: previewResult.available, selectedCompilationFresh: previewResult.allSelectedCompilationFresh, changed, added, removed }, null, 2));
++})().catch(error => { console.error(error.stack); process.exitCode = 1; });
+diff --git a/quality-review/b2-state-milestones/finalize-evidence.cjs b/quality-review/b2-state-milestones/finalize-evidence.cjs
+new file mode 100644
+--- /dev/null
++++ b/quality-review/b2-state-milestones/finalize-evidence.cjs
+@@ -0,0 +1,62 @@
++// Evidence only: compare protected baseline, then create an explicit empty
++// production diff and a separate patch for the review proposals.
++'use strict';
++const fs = require('fs');
++const path = require('path');
++const crypto = require('crypto');
++const root = path.resolve(__dirname, '../..');
++const relative = p => path.relative(root, p).replaceAll('\\', '/');
++const digest = bytes => crypto.createHash('sha256').update(bytes).digest('hex');
++const write = (name, bytes) => fs.writeFileSync(path.join(__dirname, name), bytes, { flag: 'wx' });
++const json = (name, value) => write(name, JSON.stringify(value, null, 2) + '\n');
++const excluded = new Set(['.git', 'library', 'node_modules', 'temp', 'tmp', 'build']);
++function visit(dir, found) {
++  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
++    const absolute = path.join(dir, entry.name);
++    if (entry.isDirectory()) {
++      if (!excluded.has(entry.name) && absolute !== __dirname) visit(absolute, found);
++    } else if (entry.isFile()) found.add(absolute);
++  }
++}
++const before = JSON.parse(fs.readFileSync(path.join(__dirname, 'baseline-protected-files.json'), 'utf8'));
++const found = new Set();
++visit(root, found);
++for (const entry of before) if (path.isAbsolute(entry.path)) found.add(entry.path);
++const after = [...found].sort().map(absolute => ({
++  path: absolute.toLowerCase().startsWith(root.toLowerCase()) ? relative(absolute) : absolute.replaceAll('\\', '/'),
++  sha256: digest(fs.readFileSync(absolute)),
++}));
++const beforeByPath = new Map(before.map(row => [row.path, row.sha256]));
++const afterByPath = new Map(after.map(row => [row.path, row.sha256]));
++const changed = after.filter(row => beforeByPath.has(row.path) && beforeByPath.get(row.path) !== row.sha256).map(row => row.path);
++const added = after.filter(row => !beforeByPath.has(row.path)).map(row => row.path);
++const removed = before.filter(row => !afterByPath.has(row.path)).map(row => row.path);
++const unchanged = !changed.length && !added.length && !removed.length;
++json('final-protection-verification.json', {
++  verifiedAt: new Date().toISOString(), beforeCount: before.length, afterCount: after.length,
++  changed, added, removed, unchanged, evidenceDirectoryExcluded: relative(__dirname),
++  b22Implemented: false, b22Acceptance: false,
++});
++if (!unchanged) throw new Error('Protected files changed; inspect final-protection-verification.json');
++write('production-code.diff', '');
++const proposals = fs.readdirSync(__dirname).filter(name => /\.(md|cjs)$/.test(name)).sort();
++const patch = proposals.map(name => {
++  const file = relative(path.join(__dirname, name));
++  const source = fs.readFileSync(path.join(__dirname, name), 'utf8').replaceAll('\r\n', '\n');
++  const lines = source.split('\n');
++  if (lines.at(-1) === '') lines.pop();
++  return `diff --git a/${file} b/${file}\nnew file mode 100644\n--- /dev/null\n+++ b/${file}\n@@ -0,0 +1,${lines.length} @@\n` +
++    lines.map(line => '+' + line + '\n').join('');
++}).join('');
++write('proposal-evidence.diff', patch);
++const files = fs.readdirSync(__dirname).filter(name => name !== 'delivery-manifest.json').sort().map(name => {
++  const bytes = fs.readFileSync(path.join(__dirname, name));
++  return { path: relative(path.join(__dirname, name)), bytes: bytes.length, sha256: digest(bytes) };
++});
++json('delivery-manifest.json', {
++  generatedAt: new Date().toISOString(), status: 'protocol-required',
++  productionCodeChanged: false, b22Implemented: false, b22Acceptance: false,
++  protectedFileCount: before.length, files,
++  note: 'Manifest excludes itself. proposal-evidence.diff contains review artifacts only; production-code.diff is intentionally empty.',
++});
++console.log(JSON.stringify({ protectedFileCount: before.length, unchanged, artifactCount: files.length + 1, productionCodeChanged: false, b22Acceptance: false }, null, 2));
+diff --git a/quality-review/b2-state-milestones/交付报告.md b/quality-review/b2-state-milestones/交付报告.md
+new file mode 100644
+--- /dev/null
++++ b/quality-review/b2-state-milestones/交付报告.md
+@@ -0,0 +1,109 @@
++# B2.2 审计与裁定交付报告
++
++日期：2026-10-10（Asia/Shanghai）。**状态：裁定/拆分/契约提案已交付，生产实施因新的前置缺失暂停。B2.2 未实现、未验收。**
++
++本轮停工依据是用户原约束：“若发现新的架构冲突或‘前置缺失’，先停止，提交 PROTOCOL。”新发现的前置包括最新 SphereCrossing → WorldBossChart 入口链、RouteSignature 的权威来源、T6/T7 ChartRef 兼容及完整恢复控制状态。不是将交接中已知的七项缺失原样退回；具体证据和两种可恢复范围已写入 PROTOCOL-B2.2-001.md。
++
++## 1. 正式裁定书
++
++[VERDICT-211-225.md](VERDICT-211-225.md)：十五项设计结论，沿用冻结 013/014/030 及其既有后续修订，不改变权限/首演/继承语义。新名称和数据形状仍为待追认候选；正式范围收敛尚未获确认，不把提案冒充冻结规格。
++
++核心决定：不能用任意 T7 完成替代世界通关；账号投影新增独立 key；CopyPermission 只读派生；状态跨域聚合归 director；世界目录元数据不扩；部分快照明确 Incomplete；WorldFork 仍未实施。
++
++## 2. 拆分建议
++
++| 分批 | 推荐交付 | 当前实现状态 |
++| --- | --- | --- |
++| B2.2a 基础 | FirstWorldCleared 本地投影、AccountMilestoneReader、CopyPermission 派生、目录权限读取展示；不更改序章 key。 | 未实施。真实世界通关写入链另列前置，基础读写适配不能替代它。 |
++| B2.2b 基础 | WorldStateSession 捕获/恢复契约、七项所有权、完整性结果和独立 WorldStateStorage 边界、已有状态诊断投影。 | 未实施。只有 Complete 可用于正式保存/恢复；现有 runtime 不具备 Complete 条件。 |
++| 完整性前置 | 权威角色账本、T6 控制状态、RecallCount、FormatTime 初始化、WorldLink、ChartSnapshot/持久得分和稳定恢复边界。 | 必须先完成，不能用空值/枚举/结果面代替机制。 |
++| B2.3 | WorldFork + FileCarryPayload 及继承行为验收。 | 本轮排除；依赖上述前置。 |
++| B2.4 / B2.5 | 跨设备/迁移/RealityPause、AuthService/CommitRelay/OfflineGrace。 | 本轮排除。 |
++
++七项逐一归属和可做/延期明细见裁定书；API 签名和 codec 必要校验见 [接口契约草案.md](接口契约草案.md)。
++
++## 3. 名库 v3.7 附录提案
++
++[名库v3.7附录提案.md](名库v3.7附录提案.md) 可交 Trae。没有修改 docs/NAMEBOOK.md。新增生产命名为零；列出的类型、方法、存储名和 key 均为候选。
++
++## 4. 修改文件清单与代码 diff
++
++生产源码修改：**0**。docs、名库、参照、B2.1/B1、编辑器和 A/B/C/T6/T7 现有核心修改：**0**。没有删除或移动文件，没有触碰产品 localStorage，没有权限注入或开发通关按钮。
++
++当前目录不是 Git checkout，`git status --short` 返回 `fatal: not a git repository`。因此使用 SHA-256 前后清单证明保护范围未变化，不伪造 git status/diff。
++
++仅新增本轮证据目录 `quality-review/b2-state-milestones/` 内文件：
++
++| 文件 | 用途 |
++| --- | --- |
++| VERDICT-211-225.md | 裁定、拆分、七项归属及存储边界。 |
++| PROTOCOL-B2.2-001.md | 新前置证据、推荐范围 A 与扩大范围 B。 |
++| 接口契约草案.md | 非生产 API 评审草案、完整性与恢复协议。 |
++| 名库v3.7附录提案.md | 交 Trae 的候选名称。 |
++| 交付报告.md | 本报告与验收映射。 |
++| 截图索引.md | 三张要求场景的未提供状态及原因。 |
++| baseline-checks.cjs | 只读基线门禁、哈希和 GET 预览检查脚本。 |
++| finalize-evidence.cjs | 最终保护复核、文本提案 diff 和交付文件清单生成脚本。 |
++| baseline-protected-files.json | 3,519 文件基线 SHA-256。 |
++| baseline-protection-verification.json | 基线检查前后对比。 |
++| baseline-gate-results.json | 三条门禁退出码，显式 baselineOnly=true / b22Acceptance=false。 |
++| baseline-gate-{naming,typecheck,dependencies}.{stdout,stderr}.log | 三门禁原始 stdout/stderr，共 6 文件。 |
++| baseline-preview-readonly.json | 预览 GET 与 16 个既有编译映射的只读核实。 |
++| production-code.diff | 空 patch，准确表示生产修改为零。 |
++| proposal-evidence.diff | 本轮文本提案和基线脚本新增 diff；不是 B2.2 功能实现 diff。 |
++| final-protection-verification.json | 所有提案落盘后，再复核受保护范围。 |
++| delivery-manifest.json | 本轮交付文件与 SHA-256；自身不自引用。 |
++
++没有引擎 `.meta` 新增，因为没有新增任何生产脚本或资源；没有接入伪存储实现。
++
++## 5. 三条门禁结果
++
++| 门禁 | 结果 | 范围 |
++| --- | --- | --- |
++| `npm run check:naming` | exit 0；83 TS，0 ERROR / 16 既有 WARN。 | 未改工程基线。 |
++| `npm run typecheck` | exit 0；无诊断。 | 未改工程基线。 |
++| `npm run check:dependencies` | exit 0；77 TS / 约 223 静态子句，0 ERROR。 | 未改工程基线；逻辑层 cc 隔离规则保留。 |
++
++这三项通过不能证明 B2.2 业务能力已实现。未进行 B2.2 实现测试，不把旧验收套成本轮成功。原始日志与机器结果随交付保存。
++
++## 6. Cocos 预览截图
++
++请求的三类 B2.2 场景截图均**未提供**，理由见 [截图索引.md](截图索引.md)。现有 `http://localhost:7456/` 与 import-map GET 200；16 个现有脚本源映射与磁盘源码一致，服务 chunk 与磁盘编译产物一致。这只证明现有预览可用。
++
++没有运行改存储的旧 B2.1 harness，没有拿旧截图、测试注入 true、伪造状态面板或编辑后的图片冒充新功能证据。
++
++## 7. 验收证据逐条对应
++
++| 用户事项 / 预期验收 | 本轮可核实证据 | 结果 |
++| --- | --- | --- |
++| 1 / 4：正式通关触发条件 | VERDICT-212/213；PROTOCOL 的 SphereCrossing、Primary 首演和路线签名证据。 | 设计已裁定；生产触发未实现。 |
++| 2：账号存储命名、与序章关系、key | VERDICT-214；既有 FolderStartupView.ts:32；独立 `neurou-account-first-world-cleared-v1:`。 | 设计完成；适配未实现。 |
++| 3：派生读取面 | VERDICT-215；AccountMilestoneReader 草案。 | 不扩 AccountStartupSnapshot，不保存 CopyPermission；实现待范围恢复。 |
++| 5：捕获/恢复命名、归属 | VERDICT-217；接口契约草案。 | director 聚合，不新建模块、不放宽矩阵；无生产恢复口。 |
++| 6：七项所有权 | VERDICT-218 后归属表，含 FinalShore 后续修订。 | 设计证据充分；非持久化完成声明。 |
++| 7：最小可做与延期 | 拆分表、VERDICT-219～222、PROTOCOL 范围 A/B。 | 基础投影与诊断可分开做；现有机制完整恢复须先补前置。 |
++| 8：持久化介质及 key | VERDICT-223；独立账号/世界 key。 | 本地浏览器投影；不冒称文件/跨设备格式。 |
++| 9：本批验收范围 | 接口草案最小验收表、PROTOCOL 范围 A。 | 范围调整未确认；不能把基础契约算完整 B2.2 验收。 |
++| 10：B2.1 元数据边界 | VERDICT-223；保护哈希。 | WorldFolderRecord 未改变；worldId 独立关联。 |
++| 11：分叉可用性与权限 | VERDICT-224；WorldForkAvailability=NotImplemented 提案。 | 无分叉实装/权限注入/存档复制。 |
++| 12：冻结裁定不变 | 历史 JSONL:62/74/97/132/167；十五项设计逐项引用。 | 既有源码与规格无变动；最新修订沿用。 |
++| 13：不做清单 | 修改清单与最终保护哈希。 | WorldFork/FileCarryPayload/Registry/跨设备/服务/观察者同步/AccessCode 均未实施。 |
++| 真通关写入截图、CopyPermission 显示、恢复成功演示 | 截图索引与 baseline-preview-readonly.json。 | 尚未执行，不能验收通过。 |
++| 三门禁与不改受保护内容 | baseline-gate-results.json、保护清单、final-protection-verification.json。 | 基线三项通过；保护范围变化 0。 |
++
++## 8. 新增命名清单
++
++生产新增：**无**。
++
++设计候选：AccountMilestoneStorage、AccountMilestoneProjection、AccountMilestoneSnapshot、AccountMilestoneReader、WorldStateSession、WorldStateSnapshot、WorldStateCaptureResult、WorldStateRestoreResult、WorldStateDiagnostic、WorldStateReader、WorldStateStorage、WorldForkAvailability、captureWorldState、restoreWorldState、getMilestoneSnapshot、readProjection、saveProjection、getLastCaptureResult。各自用途与内部字段候选见名库附录及接口草案。
++
++## 9. 遗留问题 / 待裁定事项
++
++1. 选择 PROTOCOL 范围 A（推荐：先交基础投影/契约/诊断）或 B（保留完整验收并扩大真实通关与恢复前置）。需要确认的来源是用户本轮停工约束和新增事实，不是实现者自行设审批流程。
++2. 若选 B，需明确必要接口接入与“不改核心逻辑”的边界；球心/半径/路线签名的权威来源；真实 WorldBossChart 内容与身份装配。
++3. T6 终点 ChartRef 与冻结首演判断的兼容；稳定事件 ID/角色账本归属；真实通关的世界与账号多 key 提交/对账。
++4. 稳定边界保存或进行中续演；七秒挑战、自动揭示/进入、私有计时和防重如何受控恢复；失败回滚保留原图。
++5. RecallCount、WorldLink、ChartSnapshot 的正式数据结构与合法生产边界，FormatTime 历史缺失策略，成绩档案更新语义。
++6. 本地状态与目录墓碑的后续删除/清理协调；清理不得影响 AccountProfile 通关记录。B2.1 本轮仍只墓碑。
++
++以上前置解决前，B2.3 不能宣称具备完整分叉输入。既有 013/014/030 的权限与继承规则不重新开放讨论。
+diff --git a/quality-review/b2-state-milestones/名库v3.7附录提案.md b/quality-review/b2-state-milestones/名库v3.7附录提案.md
+new file mode 100644
+--- /dev/null
++++ b/quality-review/b2-state-milestones/名库v3.7附录提案.md
+@@ -0,0 +1,40 @@
++# 名库 v3.7 附录提案 · 交 Trae 落盘
++
++日期：2026-10-10。状态：提案，生产未新增这些名称。本文件不是 docs/NAMEBOOK.md 更新，不修改任何已冻结名。依据 VERDICT-211～225 和 PROTOCOL-B2.2-001；新名追认与 scope 决定分开进行。
++
++| 新增候选名称 | 归属 | 职责 / 边界 |
++| --- | --- | --- |
++| AccountMilestoneStorage | presentation | FirstWorldCleared 本地投影的平台适配；独立 key，永不覆盖 AccountStartupStorage。无远程认证含义。 |
++| AccountMilestoneProjection | director 契约 | 持久化结构 schemaVersion/accountId/FirstWorldCleared；不含 CopyPermission。 |
++| AccountMilestoneSnapshot | director 契约 | 只读账号投影结果，包含派生 CopyPermission；区别于持久载荷。 |
++| AccountMilestoneReader | director 契约 | 只读 `getMilestoneSnapshot()`，presentation 经 IntentPort type 转发读取。 |
++| WorldStateSession | director | 七项跨域聚合及完整性/恢复事务协调；不把业务写入给 View。 |
++| WorldStateSnapshot | director 契约 | 完整验证通过的七项世界状态投影及恢复支持状态；不含账号通关记录。不是 FileCarryPayload。 |
++| WorldStateCaptureResult | director 契约 | Complete 携带完整快照；Incomplete 携带已有部分及缺失诊断。 |
++| WorldStateRestoreResult | director 契约 | 恢复成功/明确拒绝/校验失败；只有完整且兼容状态才成功。 |
++| WorldStateDiagnostic | director 契约 | 缺少权威载体、机制、身份或保存边界的原因；只读诊断，不是游戏事实。 |
++| WorldStateReader | director 契约 | 读取状态完整性与操作结果；不暴露删除/改写账本。 |
++| WorldStateStorage | presentation | 按账号与世界隔离的本地完整状态平台适配；不持有目录决策权。 |
++| WorldForkAvailability | director 读取契约 | 产品实现状态；本轮 NotImplemented，与 CopyPermission、状态完整性分别表达。 |
++| captureWorldState | WorldStateSession | 只读 capture 操作，深复制/冻结，无法捕获时返回 Incomplete；不产生叙事事件。 |
++| restoreWorldState | WorldStateSession | 对未激活新图的受控 hydration；不是修改/删除活跃账本，不产生首演/通关事实。 |
++| getMilestoneSnapshot | AccountMilestoneReader | 读取账号里程碑和派生权限。 |
++| readProjection / saveProjection | AccountMilestoneStorage | 平台读写签名候选；业务解析与单向事实检查仍归 director。 |
++| getLastCaptureResult | WorldStateReader | 只读最近捕获结果；不触发副作用。 |
++
++沿用冻结名，不计本轮新增：AccountProfile、AccountMilestone、PrologueCompleted、FirstWorldCleared、CopyPermission、WorldClearRecord、RouteSignature、WorldInstance、WorldKind、FormatTime、WorldLink、LinkState、RecallCount、PuzzleProgress、ChartSnapshot、ChartScore、ChartRef、Ledger、NarrativeEvent、WallClock、SphereCrossing、LedgerPosition、ChartEntry、WorldBossChart、WorldFork、ChartTier。
++
++沿用后续修订：Final 的快照/得分属于 FinalShore 个人层；球面穿越必须由 Player 写入触发；世界分叉继承完成账本/快照/得分而不继承通关记录，不允许重首演刷记录。
++
++必要支持元数据沿用冻结名 ShoreOrigin、AIProfileSnapshot；没有把它们作为本轮新名。前者区分彼岸来源，后者支持 WorldLink 来源删除后的孤立恢复。
++
++存储键不是新增业务实体名：
++
++- 既有序章：`neurou-account-milestone-v1:<encodeURIComponent(accountId)>`。
++- 新首次通关投影：`neurou-account-first-world-cleared-v1:<encodeURIComponent(accountId)>`。
++- 既有目录：`neurou-world-folder-v1:<encodeURIComponent(accountId)>`。
++- 新世界完整状态：`neurou-world-state-v1:<encodeURIComponent(accountId)>:<encodeURIComponent(worldId)>`。
++
++FormatTime `{epochMs}` 是待追认的最小结构提案；createdAt、capturedAt、AppendedAt 与 FormatTime 分别保留其已有/提议用途，不做语义合并。Complete/Incomplete/NotImplemented 是读取结果取值候选，不建立永久业务里程碑。
++
++接口草案中的内部品牌 `validatedWorldState` 只用于说明解析后类型与原始 JSON 的区别，不作为业务实体名。readSnapshot/saveSnapshot 沿用已有存储适配的方法命名习惯。diagnostic 的 section/reason/detail、capturedParts/issues 等为结果 DTO 字段候选，完整目录以接口草案为准；所有名称均尚未加入生产代码。
+diff --git a/quality-review/b2-state-milestones/截图索引.md b/quality-review/b2-state-milestones/截图索引.md
+new file mode 100644
+--- /dev/null
++++ b/quality-review/b2-state-milestones/截图索引.md
+@@ -0,0 +1,13 @@
++# B2.2 Cocos 预览截图状态
++
++日期：2026-10-10。状态：生产实施按 PROTOCOL-B2.2-001 暂停。
++
++| 用户要求场景 | 本轮状态 | 原因 |
++| --- | --- | --- |
++| 世界通关事实写入 | 未提供 | WorldBossChart 合法入口/首演通关/路线签名链路缺失；普通 T7 不能代替。 |
++| CopyPermission 显示 | 未提供 | 新账号投影与目录读取展示尚未实施；不能用注入 true 的 UI 作为真实通关解锁证据。 |
++| 完整状态捕获/恢复示例 | 未提供 | 当前无完整 codec/hydration，七项机制和控制状态存在明确缺失。 |
++
++`baseline-preview-readonly.json` 只记录现有 Cocos 预览 GET 200、import-map 和 16 项旧源码/编译映射一致性。该记录不构成 B2.2 UI 或业务验收，不使用 B2.1 老截图替代本轮截图。
++
++恢复范围 A 后可以生成“权限读取 + Incomplete 诊断”截图，并明确其契约演示性质；真实通关与完整恢复成功场景仍需对应前置批。
+diff --git a/quality-review/b2-state-milestones/接口契约草案.md b/quality-review/b2-state-milestones/接口契约草案.md
+new file mode 100644
+--- /dev/null
++++ b/quality-review/b2-state-milestones/接口契约草案.md
+@@ -0,0 +1,129 @@
++# B2.2 捕获/恢复与账号投影接口草案
++
++日期：2026-10-10。状态：评审提案，仅写在证据文档中，不是已编译的生产 TypeScript。领域载荷尚未冻结的部分不以 `unknown` 冒充完整状态。实际实施前须确定各领域 codec 和保存边界。
++
++## 账号投影
++
++```ts
++// director 契约，presentation 经 IntentPort 仅类型引用。
++interface AccountMilestoneProjection {
++  readonly schemaVersion: 1;
++  readonly accountId: string;
++  readonly FirstWorldCleared: boolean;
++}
++
++interface AccountMilestoneSnapshot {
++  readonly accountId: string;
++  readonly FirstWorldCleared: boolean;
++  readonly CopyPermission: boolean; // 计算值，绝不持久化
++}
++
++interface AccountMilestoneReader {
++  getMilestoneSnapshot(): AccountMilestoneSnapshot;
++}
++
++// presentation 平台适配，不暴露给产品 View 作为写权限。
++class AccountMilestoneStorage {
++  readProjection(accountId: string): unknown | null;
++  saveProjection(
++    projection: AccountMilestoneProjection,
++    expected: unknown | null,
++  ): void;
++}
++```
++
++以上类签名为接口示意，省略方法体，不可直接作为 `.ts` 实现提交。director 校验 accountId、版本、字段、布尔和单向事实。存储 read 返回 unknown；业务解析失败中止，不能把损坏投影解释为新账号。CopyPermission 每次由 FirstWorldCleared 计算。有效重复通关输入必须幂等；产品 View 不获得 CompleteWorld 或 SetPermission 意图。未来的合法首演结果由 director 内部可信链路处理，不能只凭调用者提交 `tier:'World'` 或 `completed:true` 成为通关事实。
++
++事实写入和投影更新分层：AccountMilestoneProjection 只是本地读取面，不包含/替代 WorldClearRecord、RouteSignature 或首演账本。真实提交必须先建立可恢复的一致性协议，避免世界已记首演、账号里程碑却未保存后无法补记。此协议不伪称已被单 key localStorage 解决。
++
++## 捕获结果与恢复边界
++
++```ts
++// WorldStateSnapshot 由内部七项 codec 和关联校验共同产生。
++// 内部品牌不导出构造途径；原始 JSON 不能强转后被当作有效快照。
++declare const validatedWorldState: unique symbol;
++
++interface WorldStateSnapshot {
++  readonly schemaVersion: 1;
++  readonly accountId: string;
++  readonly worldId: string;
++  readonly worldKind: 'Primary' | 'Shore';
++  readonly shoreOrigin: 'BugShore' | 'FinalShore' | null;
++  readonly revision: number;
++  readonly capturedAt: number;
++  readonly [validatedWorldState]: true;
++  // 真实内部结构必须包含七项已验证的载荷和必要恢复支持状态。
++  // 当前不发布未实装机制的伪造 DTO；此头部自身不能产生 Complete。
++}
++
++interface WorldStateDiagnostic {
++  readonly section:
++    | 'Ledger' | 'PuzzleProgress' | 'RecallCount' | 'FormatTime'
++    | 'WorldLink' | 'ChartSnapshot' | 'ChartScore' | 'RuntimeBoundary';
++  readonly reason:
++    | 'MechanismMissing' | 'ProjectionUndefined' | 'AuthorityUnavailable'
++    | 'IdentityUnavailable' | 'RestoreUnsupported' | 'UnsupportedBoundary'
++    | 'InvalidSnapshot' | 'SchemaUnsupported' | 'IdentityMismatch'
++    | 'ReferenceMismatch' | 'StaleRevision';
++  readonly detail: string;
++}
++
++type WorldStateCaptureResult =
++  | { readonly kind: 'Complete'; readonly snapshot: WorldStateSnapshot }
++  | {
++      readonly kind: 'Incomplete';
++      // 诊断投影，不可作为常规世界存档，也不能送入 restore。
++      readonly capturedParts: Readonly<Record<string, unknown>>;
++      readonly issues: readonly WorldStateDiagnostic[];
++    };
++
++type WorldStateRestoreResult =
++  | { readonly kind: 'Restored'; readonly snapshot: WorldStateSnapshot }
++  | { readonly kind: 'Rejected'; readonly issues: readonly WorldStateDiagnostic[] };
++
++interface WorldStateReader {
++  getLastCaptureResult(): WorldStateCaptureResult | null;
++}
++
++// director 聚合仅由组合根装配和业务协调使用；不直接交给 View。
++class WorldStateSession {
++  captureWorldState(): WorldStateCaptureResult;
++  restoreWorldState(raw: unknown): WorldStateRestoreResult;
++}
++
++// presentation 平台适配；逻辑不导入浏览器 API。
++class WorldStateStorage {
++  readSnapshot(accountId: string, worldId: string): unknown | null;
++  saveSnapshot(snapshot: WorldStateSnapshot, expected: unknown | null): void;
++}
++
++type WorldForkAvailability = 'NotImplemented'; // 本轮功能状态
++```
++
++restoreWorldState 的原始 unknown 入口必须重做完整 schema/身份/领域与关联验证；内部才接受品牌快照。品牌不序列化，不信任 JSON 的完整性标签。Incomplete 不能作为 restore 输入被接受；当前未建立七项 codec 和 hydration，所有完整恢复请求都应明确拒绝，不能返回假成功。未来 Restored 只能在未激活新对象图全部准备完成并发布后返回。
++
++shoreOrigin 仅在 worldKind=Shore 时必须有合法来源；Primary 必须为 null。此 null 是经领域验证的不适用，不能用它替代未知来源。
++
++本轮只设计同账号/同世界的恢复，拒绝身份不匹配和已观察到的过期版本；不能通过 restore 任意改 worldId 达成隐式分叉，也不能借旧快照覆盖已有更新账本。B2.3 的合法新 ID 分配与继承须另经 WorldFork，不属于这里的恢复入口。
++
++## 七项 codec 必须验证什么
++
++| 项 | 运行对象到投影的必要条件 | 关联校验 |
++| --- | --- | --- |
++| Ledger | 同一权威读写载体；每角色有序事件；深拷贝向量和所有附加项；VectorSchemaVersion=1、恰 20 维、每维有限且非负；缺维不补零。 | 角色身份、重复占位事件 ID 的处理，保留 append-only 历史；T6 endpoint 引用不能误认成首演完成。 |
++| PuzzleProgress | 阶段、链身份、稳定边界或完整私有计时状态；终点及揭示/入口状态的恢复策略。 | Completed 与已有结算事实一致；恢复不重复写终点；不悬挂门控。 |
++| RecallCount | 合法零值与机制缺失区别；非负安全计数。 | characterId + eventId 存在于该角色账本；ChartReplay 不影响。 |
++| FormatTime | 有权威来源的非负安全纪元毫秒；不可在重入时刷新。 | 分叉继承；历史缺失为 Unavailable，而非 silent Date.now。 |
++| WorldLink | 经世界 kind/shore origin 验证的不适用，或单层来源弱引用；孤立恢复所需 AIProfileSnapshot 必须已捕获并冻结。 | BugShore 指向同一来源，孤立后使用最后进入时的配置快照；FinalShore 不伪造链接；恢复不复制来源世界、不把孤立状态误删。 |
++| ChartSnapshot | 首演完成冻结的实际播放数据及稳定内容引用；不是表现运行快照或 ChartPlaybackResult。 | 和首演账本引用逐项对应；仅入口引用不要求首演快照；修改资源不能改变既有快照。 |
++| ChartScore | 冻结计分规则下的有效成绩载荷；持久档案更新语义另定。 | 对应有效 ChartRef/快照；计分结果不证明通关；进行中分数不冒充可恢复首演。 |
++
++捕获应在同一逻辑边界取得一致投影，不能跨帧拼出 stage 已完成却账本尚未结算的快照。恢复时不提交 PlayerIntent、不调用普通 append 重放历史、不产生新账号事实。只在全部校验、对象构造及必需媒体引用准备成功后发布新图；任何失败保留原图/存储。
++
++## 本批最小验收与后续恢复验收
++
++恢复实施范围 A 后，至少验证：权限读取和派生、序章 key 不变、true 不回退、账号隔离、损坏/未知版本拒绝、保存失败不发布、Incomplete 能准确列缺项、正式存储/restore 拒绝 Incomplete、WorldFork 仍 NotImplemented。
++
++完整性前置完成后额外验证：七项逐个非空/有效零值 round-trip、跨账号/世界拒绝、深拷贝无别名、重复恢复不写新账本/通关、完成链不重复结算、历史谱面冻结内容一致、失败时原图原存储不变。不能只断言 JSON stringify 前后相等，必须推进恢复后的玩法确认行为一致。
++
++本轮没有运行上述 B2.2 测试；三门禁只覆盖未改的现有生产基线。

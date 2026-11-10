@@ -1,0 +1,21 @@
+{
+  "pass": true,
+  "productionFiles": 2,
+  "newDeclarations": 114,
+  "threeGates": true,
+  "realCreatorResolutions": [
+    "1920x1080",
+    "2560x1440"
+  ],
+  "creatorSourceMapsCurrent": true,
+  "frozenSourceBuilderUnchanged": true,
+  "sessionPublicMethodsUnchanged": true,
+  "finalizedAt": "2026-10-10T07:06:24.006Z",
+  "logicChecks": 28,
+  "independentChecks": 21,
+  "coreRegressions": 103,
+  "creatorOperationsPerResolution": 22,
+  "legacyCreatorRegressionPassed": true,
+  "protectionPassed": true,
+  "humanListeningAcceptance": "User reported passed"
+}

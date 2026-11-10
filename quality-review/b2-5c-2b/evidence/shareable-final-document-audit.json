@@ -1,0 +1,1302 @@
+{
+  "phase": "B2.5c-2b shareable known-credential audit",
+  "auditedUtc": "2026-10-11T08:11:35.837Z",
+  "pass": true,
+  "fileCount": 184,
+  "checks": [
+    {
+      "path": "client-and-server-independent-review.md",
+      "bytes": 5183,
+      "sha256": "96a77b55e4a99af4931c84791dd4e7f624ea38e3875bee3c66400e76d46b615b",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "client-contract-tests.cjs",
+      "bytes": 18556,
+      "sha256": "c10847c7616e0eff30a16f3fbc9c6f113797bf90c749c79e1f57ab157e4f9786",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "client-real-http.cjs",
+      "bytes": 21526,
+      "sha256": "482f22b25f86ec99b7a9e8b6f6156f48b706f81e65bf630c3bf2356b500f2b42",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "delivery-report.md",
+      "bytes": 15918,
+      "sha256": "8287b6b46d139f834b73659b4f8671a92d885c75e28d581c2574e013c324f4cb",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/artifact-link-audit.json",
+      "bytes": 1344,
+      "sha256": "98d8b722105dc294df058dd89eaa05d1489df2b1ac314350d8bb917c09cc8d25",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/changed-files.json",
+      "bytes": 6418,
+      "sha256": "e884769f935a49ab6ffa8421c63a604d5ce0cf0fe2b2b0bbc139a802cc345642",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/check-artifact-links.cjs",
+      "bytes": 2543,
+      "sha256": "f704cbba65ccf0188a2674a28fc3f0be5e52873ebc87766dbc38c045d664fb12",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/check-intent-erasure.cjs",
+      "bytes": 2936,
+      "sha256": "56748fc66a6eaa09b4221e802a1b9434ffff6dda9d06a64f03d7dfd4d6a526fe",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/client-compiled/src/director/SharedCanonicalBytes.js",
+      "bytes": 15717,
+      "sha256": "ceaa486b54f0c7ca1096c301149514124940fcdf9b6acca1ece9e902b0c71cb2",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/client-compiled/src/director/SharedCommitCodec.js",
+      "bytes": 43978,
+      "sha256": "7ec12d746e544e095b41dbe4717700e280a38c007bbd77918fabec585d4cef5b",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/client-compiled/src/director/SharedServiceProtocolCodec.js",
+      "bytes": 18211,
+      "sha256": "1182df7457e9d45d91f435ca2f8243657ba5f332da8ad972c3458fcd72a20694",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/client-compiled/src/presentation/RealSharedServiceSessionAdapter.js",
+      "bytes": 45157,
+      "sha256": "791e1b9d1082cc6652deaad0cd585ecdc727ff03263d425ba7f86e433f87abcc",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/client-compiled/src/presentation/RealWorldAuthorityAdapter.js",
+      "bytes": 4413,
+      "sha256": "b20bb581767897293d918347e873967c690d21f80e7a727634eb241db6e91d83",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/client-contract-run/contract.log",
+      "bytes": 1433,
+      "sha256": "8259bb2f5ab33806dc96653ba12e11d89085c404f80575510031caa0b4bbe048",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/client-contract-run/results.json",
+      "bytes": 597,
+      "sha256": "c6d02bbaba105556e3855cd0d15795e685a189d2d541b50dbe4282a1fd2a101d",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/client-contract-run/signing-coverage/contract.log",
+      "bytes": 1533,
+      "sha256": "92e1b2f5a11fbf2bfdf5e7e9b5d705c9c05457db571fb1eecdd49a3f48a357e1",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/client-contract-run/signing-coverage/results.json",
+      "bytes": 750,
+      "sha256": "56ba6a22fc877741ab94e41cd6dff97407ca070e314166e99ab5cbc5a3062591",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/client-real-compiled/assets/scripts/SharedRelayPrototypeBuilder.js",
+      "bytes": 1613,
+      "sha256": "c31f1f793a3cff1e2cd1885c09cadd547d422e28c2b584ad3f8ca8e470f56d00",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/client-real-compiled/src/director/SharedCanonicalBytes.js",
+      "bytes": 15717,
+      "sha256": "ceaa486b54f0c7ca1096c301149514124940fcdf9b6acca1ece9e902b0c71cb2",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/client-real-compiled/src/director/SharedCommitCodec.js",
+      "bytes": 43978,
+      "sha256": "7ec12d746e544e095b41dbe4717700e280a38c007bbd77918fabec585d4cef5b",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/client-real-compiled/src/director/SharedServiceProtocolCodec.js",
+      "bytes": 18211,
+      "sha256": "1182df7457e9d45d91f435ca2f8243657ba5f332da8ad972c3458fcd72a20694",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/client-real-compiled/src/presentation/RealSharedServiceSessionAdapter.js",
+      "bytes": 45157,
+      "sha256": "791e1b9d1082cc6652deaad0cd585ecdc727ff03263d425ba7f86e433f87abcc",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/client-real-compiled/src/presentation/RealWorldAuthorityAdapter.js",
+      "bytes": 4413,
+      "sha256": "b20bb581767897293d918347e873967c690d21f80e7a727634eb241db6e91d83",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/client-real-http-results.json",
+      "bytes": 3494,
+      "sha256": "ce4417349263a9ce265bcbba683828f6a3a00c0e06993c6fb0a32107203fc8b9",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/client-real-http-run/original/results.json",
+      "bytes": 3494,
+      "sha256": "fbda48f7e50f930b5ac81d804db989d413327f57b80dcbada0d1fc3a0ee96a9c",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/client-real-http-run/verified/http.log",
+      "bytes": 1110,
+      "sha256": "b099f6ef4589edb715f49b44600816117dbb707222ed219cb1dd516bc072a6d4",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/client-real-http-run/verified/results.json",
+      "bytes": 3494,
+      "sha256": "ce4417349263a9ce265bcbba683828f6a3a00c0e06993c6fb0a32107203fc8b9",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/client-real-http-run/verified/run-metadata.json",
+      "bytes": 913,
+      "sha256": "fc0c0ac1f0a3128fc5781db6a86799de697192ca6d59bd657c8601bceae31236",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/code.diff",
+      "bytes": 228732,
+      "sha256": "59f422eee4b2ea3a9984e0fbe6e0426b21ee539b9cf372ae6032490b1aafff9d",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/compatibility-source-change-note.json",
+      "bytes": 2649,
+      "sha256": "1aca9fd63ef825af38799b1f98b5b59176a7408b49df7243aa122bac43d90909",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/delivery-artifacts.json",
+      "bytes": 35074,
+      "sha256": "222bc121066bde1a19cfe5b6ed15a771e4f065ba2eda7a5a95372478c3a60c87",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/gate-runs/final/check-dependencies.log",
+      "bytes": 419,
+      "sha256": "d1fa83bd8bf24fd5c6a6306bd66da5a9bd5cfac1373efd3bc895e3b8450662fc",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/gate-runs/final/check-naming.log",
+      "bytes": 9190,
+      "sha256": "bcb6bd716f7aecf0c94edffde9fccccdce26ffd89635929e60b5b1d1ade0475f",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/gate-runs/final/results.json",
+      "bytes": 11916,
+      "sha256": "ad141d15039633f43f127f1f7603115cf545ab781dd3f27fee9a9aa6d122f029",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/gate-runs/final/typecheck.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/gate-runs/interim/check-dependencies.log",
+      "bytes": 419,
+      "sha256": "d1fa83bd8bf24fd5c6a6306bd66da5a9bd5cfac1373efd3bc895e3b8450662fc",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/gate-runs/interim/check-naming.log",
+      "bytes": 9190,
+      "sha256": "bcb6bd716f7aecf0c94edffde9fccccdce26ffd89635929e60b5b1d1ade0475f",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/gate-runs/interim/results.json",
+      "bytes": 11924,
+      "sha256": "fd2169bc5d751c5b4d615abc3ae338a792daf4aacb9b639852cf4aaa003359c4",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/gate-runs/interim/typecheck.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/gate-runs/version-final/check-dependencies.log",
+      "bytes": 419,
+      "sha256": "d1fa83bd8bf24fd5c6a6306bd66da5a9bd5cfac1373efd3bc895e3b8450662fc",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/gate-runs/version-final/check-naming.log",
+      "bytes": 9190,
+      "sha256": "bcb6bd716f7aecf0c94edffde9fccccdce26ffd89635929e60b5b1d1ade0475f",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/gate-runs/version-final/results.json",
+      "bytes": 11948,
+      "sha256": "0e1051eb2b7d65177a19f239cf163ca567adca33d3dc8cd6437097cd845d0673",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/gate-runs/version-final/typecheck.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-b-auth/final/client/http-requests.json",
+      "bytes": 1224,
+      "sha256": "ca6648bc526c44f74f4ef8c805c75676cf17d840bc6465fad53590f46143fe48",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-b-auth/final/client/results-contract-and-http.json",
+      "bytes": 3233,
+      "sha256": "6962a10efc5c7c32bf735dd8015c32507d1bb54ee9feba0d9603fbfbcb3001af",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-b-auth/final/client/run.cjs",
+      "bytes": 20249,
+      "sha256": "33913e6bf51687f6219068ae4850306859236ebf36d5c48d0dc503ecb71ed6b0",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-b-auth/final/old-client-contract-and-http.log",
+      "bytes": 1708,
+      "sha256": "68e58422c00167c344386e8823948994efdad9de48ae3c7c5104a4b3d435aa0d",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-b-auth/final/old-server-http.log",
+      "bytes": 4292,
+      "sha256": "a8210f2c19b57581b84e3e8a2b93f04732703b19de84c5ef8162fee4fccab71e",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-b-auth/final/results.json",
+      "bytes": 6802,
+      "sha256": "fb4fb3b63a9d276064d94ade92b8c16930311da0da06e1f6769435c567d36a9e",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-b-auth/final/server/dist/src/app.js",
+      "bytes": 22607,
+      "sha256": "5b942283350d2addf3858363a691fdf3b7924533a3389cc098a22b8e0886cc51",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-b-auth/final/server/dist/src/cli.js",
+      "bytes": 1713,
+      "sha256": "a817b530bb49bd854d865f2fbf0aa42902ed81f8c908c867fc868e09f01c68d6",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-b-auth/final/server/dist/src/config.js",
+      "bytes": 1177,
+      "sha256": "e1150fe360f327e67e78ba6a3a62143d55638917273728b4069cabadc31582ba",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-b-auth/final/server/dist/src/contracts.js",
+      "bytes": 11,
+      "sha256": "8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-b-auth/final/server/dist/src/crypto.js",
+      "bytes": 4376,
+      "sha256": "0e25a55a857013b10346d35af4d3b07426040f19fc2ba21db0f07bb8032aea1b",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-b-auth/final/server/dist/src/db.js",
+      "bytes": 2134,
+      "sha256": "4b10d77a9f8f002606c48a4cd8a323b7ebdda2984966db592ae36ea9bd1a8486",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-b-auth/final/server/dist/src/main.js",
+      "bytes": 1204,
+      "sha256": "cc30a932f1d0dbdd1043dbd330830b67b71366926582ed6f0104fb42bb55ab40",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-b-auth/final/server/dist/src/strict-json.js",
+      "bytes": 2874,
+      "sha256": "7074c5d639e2c3f84d4c639d2b19f8de36c1bd29de2640d70d17bf6019ace51d",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-b-auth/final/server/dist/test/http.test.js",
+      "bytes": 20031,
+      "sha256": "4411acf80e0b722cb46c86532bd744fa9004c9cf32842736d4dfb24af1172146",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-b-auth/final/server/dist/test/main-process.test.js",
+      "bytes": 6506,
+      "sha256": "133194b6e52fdf8a0e9e60426c540d9b025ab92873847beb9e8c3849ef8e0cb6",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-b-auth/final/server/migrations/001.sql",
+      "bytes": 2326,
+      "sha256": "5468eb425557c8ca1be6c5fb969dbd5bb038e7715b10e9f4842ea15859a30d13",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-b-auth/final/server/package.json",
+      "bytes": 667,
+      "sha256": "2599ae4a12a65e4e46650bea6405f9788b1f4a70a0ceed3f23c6e882b0488f7a",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-b-auth/final/server-isolated-build.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-b-auth/final/tsconfig-history.json",
+      "bytes": 1369,
+      "sha256": "29459052cd0f94cfd8ba632da25348170ba0b9fbc012fdfe4e24179de5e553df",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-b24/final/contract-regression-results.json",
+      "bytes": 66816,
+      "sha256": "4bcde76237237993bafba672b7a85c1f404e4a59f0cd38e1a630121a6c76a65b",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-b24/final/contract-regressions/b2-cross-device-core/adapter-content.contract-results.json",
+      "bytes": 3159,
+      "sha256": "24fefbd50dee4c18c0c9cc02c6a9e6a3b36c39e458f00eb84ef09fa12fde964c",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-b24/final/contract-regressions/b2-cross-device-core/adapter-content.contract.cjs",
+      "bytes": 15044,
+      "sha256": "6945a5a94980165bedca4f0e68228d5df5d24e35fd01e83efa83318332effb79",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-b24/final/contract-regressions/b2-cross-device-core/adapter-content.contract.log",
+      "bytes": 51,
+      "sha256": "ac8f70ef0546115c06fa4defca865b32d52331cecb53ebf96b604b491e3273d9",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-b24/final/contract-regressions/b2-cross-device-core/contract-results.json",
+      "bytes": 13867,
+      "sha256": "702729bea4aa40158950b53475ee80dfdd7b3f97ab55f9fc715695a9161e42b3",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-b24/final/contract-regressions/b2-cross-device-core/contract-test-helpers.cjs",
+      "bytes": 5481,
+      "sha256": "514f57c1200381278c1672fe27dd46f82afc4bace058a805e52216ffb0cabcb2",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-b24/final/contract-regressions/b2-cross-device-core/contract-tests.cjs",
+      "bytes": 25191,
+      "sha256": "4082e9f98c0c7ff66cfbf49e118f043ab5766bbafb489df5187d890c43972573",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-b24/final/contract-regressions/b2-cross-device-core/contract-tests.log",
+      "bytes": 37,
+      "sha256": "6000beafa39602e7100022c40bb736e334c2147f05f540f8bb2bfca5824cec4f",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-b24/final/contract-regressions/b2-cross-device-core/prototype-contract-results.json",
+      "bytes": 2215,
+      "sha256": "2a386d506aca9557425541cd4fd0eeef10c4dd751a769f5695f1641d8b718528",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-b24/final/contract-regressions/b2-cross-device-core/prototype-contract-tests.cjs",
+      "bytes": 11418,
+      "sha256": "b618dda036ed09e2687d5f6c9b63c9f9a894b130d8fc9c01d97ae4e5d8a47c89",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-b24/final/contract-regressions/b2-cross-device-core/prototype-contract-tests.log",
+      "bytes": 49,
+      "sha256": "474043bcf212fff7b497212dc80b636d1c21d274c5a3a41a6b6992ea475c5866",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-b24/final/contract-regressions/b2-cross-device-core/storage-contract-tests.cjs",
+      "bytes": 26840,
+      "sha256": "b55055fc10e52498c3c10278a1ec58334059194839e93d2c29f1759836d2ba32",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-b24/final/contract-regressions/b2-state-extensions/state-test-fixture.cjs",
+      "bytes": 8682,
+      "sha256": "fe9075f7394dd6520b1477575bcc7feb3ad6d3ddc1b33acfdd7861536c956440",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-b24/final/contract-regressions/b2-world-home-registry/contract-results.json",
+      "bytes": 6604,
+      "sha256": "1dee1adb3ce25cbebc67cf8bc9481adf7d65b2233ee3d5a15a9d6a81293ea779",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-b24/final/contract-regressions/b2-world-home-registry/contract-tests.cjs",
+      "bytes": 30951,
+      "sha256": "cc13f861327f123ce74a7aef5f583fe71a3577ce967899070e841b8692ab05e5",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-b24/final/contract-regressions/b2-world-home-registry/contract-tests.log",
+      "bytes": 36,
+      "sha256": "e722846b7f5c377f056d8ed8312796f9568d0107fa47a2299fbb16958df69f08",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-b24/final/contract-regressions/b2-world-migration/authority-contract-results.json",
+      "bytes": 6136,
+      "sha256": "5a2bb52eb72701be975cf715dbbb9a7f1b904ac7b4a19f212a4fdf3b3ecaba3a",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-b24/final/contract-regressions/b2-world-migration/authority-contract-tests.cjs",
+      "bytes": 30882,
+      "sha256": "576f100f43677ff4f877b1ac185484f44f2cc06c5df164be8bab57fa38d8f0b4",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-b24/final/contract-regressions/b2-world-migration/authority-contract-tests.log",
+      "bytes": 61,
+      "sha256": "06acea81a5bb9e3772323f2cd68622dd66501892cea0e85b653e2f65c5ad4bed",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-b24/final/contract-regressions/b2-world-migration/boundary-contract-results.json",
+      "bytes": 1572,
+      "sha256": "0b29c6157d90646743b2d2aec83f14892a4828a96437900de2f233b3fa010b6c",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-b24/final/contract-regressions/b2-world-migration/boundary-contract-tests.cjs",
+      "bytes": 9889,
+      "sha256": "f37e14720be797569030516269fad5aec9a280f921fcfb0f219b49ac04d10fc6",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-b24/final/contract-regressions/b2-world-migration/boundary-contract-tests.log",
+      "bytes": 1572,
+      "sha256": "0b29c6157d90646743b2d2aec83f14892a4828a96437900de2f233b3fa010b6c",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-b24/final/contract-regressions/b2-world-migration/drain-contract-results.json",
+      "bytes": 4093,
+      "sha256": "5f00ce0543885db6334ff638d621171856e3dc80562d12e8c930fc6f6cf86d88",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-b24/final/contract-regressions/b2-world-migration/drain-contract-tests.cjs",
+      "bytes": 21001,
+      "sha256": "1094020e1ca4c48156947a40599185c7243ee20d0a724b7f4c19b29c961bb576",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-b24/final/contract-regressions/b2-world-migration/drain-contract-tests.log",
+      "bytes": 4093,
+      "sha256": "5f00ce0543885db6334ff638d621171856e3dc80562d12e8c930fc6f6cf86d88",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-b24/final/contract-regressions/b2-world-migration/prototype-contract-results.json",
+      "bytes": 3566,
+      "sha256": "295540834293e5e003d100e5a0f2b29c65e5ffe4e7081684ef6ed307df810927",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-b24/final/contract-regressions/b2-world-migration/prototype-contract-tests.cjs",
+      "bytes": 19533,
+      "sha256": "cb268e7e7fb132d127f3b8908fe8dd84de3f9d543979aca6ffc110ee81f37001",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-b24/final/contract-regressions/b2-world-migration/prototype-contract-tests.log",
+      "bytes": 1369,
+      "sha256": "dfb519498da41a489576b7ff37be8157008617deb08b564f5e58324209ea2630",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-b24/final/contract-regressions/b2-world-migration/storage-contract-results.json",
+      "bytes": 5368,
+      "sha256": "09522199056e25e4c9abebf7e6e368e0cf06eed3dae3bd3b1c9099f1f0c0c647",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-b24/final/contract-regressions/b2-world-migration/storage-contract-tests.cjs",
+      "bytes": 36105,
+      "sha256": "350180fd55cf1f84a20be179ade1a1986d769df187bdf44b371dc5657b1f3b04",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-b24/final/contract-regressions/b2-world-migration/storage-contract-tests.log",
+      "bytes": 3561,
+      "sha256": "27a9914870b09dd8bbd153f64725fed778ba83883718d2f80b6adbfdac0f0710",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-b24/final/regression.log",
+      "bytes": 2187,
+      "sha256": "96c029ee5f48aaf3c5f8af148538ec0507e4813b9a12acfc87debb49ada33fe4",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-b24/final/results.json",
+      "bytes": 1486,
+      "sha256": "635593609345f55ccc72948bda00c913de50de0201f59592cb3ca1074ed8fbea",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-b24/final/run-contract-regressions.cjs",
+      "bytes": 9536,
+      "sha256": "0f4e54522c71b00d7da3ed7d85af83fac4cf46e6ad71a6872a4a4c453a8557bb",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-c1/final/evidence/build/SharedCanonicalBytes.js",
+      "bytes": 15717,
+      "sha256": "ceaa486b54f0c7ca1096c301149514124940fcdf9b6acca1ece9e902b0c71cb2",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-c1/final/evidence/build/SharedCommitCodec.js",
+      "bytes": 43978,
+      "sha256": "7ec12d746e544e095b41dbe4717700e280a38c007bbd77918fabec585d4cef5b",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-c1/final/evidence/build/SharedCommitContracts.js",
+      "bytes": 77,
+      "sha256": "d43aa81f5bc89faa359e0f97c814ba25155591ff078fbb9bfd40f8c7c9683230",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-c1/final/evidence/build/SharedCommitValidator.js",
+      "bytes": 29640,
+      "sha256": "cee78e4716cbee619d304e8123bb2a29ee28b5d8698a0bab6edd4829bfebcdbe",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-c1/final/evidence/build/SharedWorldReducer.js",
+      "bytes": 25881,
+      "sha256": "16959cf9c23a56d4dfdcd020c1bf372658087ec7f4e738d456063335a6fbbe61",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-c1/final/evidence/fixtures.cjs",
+      "bytes": 28058,
+      "sha256": "1926c37fcfac3ed12b76c3335148d041961161f606046bc2cbf5575fd1959bbe",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-c1/final/evidence/no-network.cjs",
+      "bytes": 1233,
+      "sha256": "304106476c3437e8366b0419a7fd22fa8a8f217b69696a81c29de123c5934ff4",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-c1/final/evidence/validator-tests.cjs",
+      "bytes": 17591,
+      "sha256": "95977c043fddd391f3a760794dad5c0da880acffacb408a25796761cd2d602c2",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-c1/final/isolated-build.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-c1/final/junit.xml",
+      "bytes": 37766,
+      "sha256": "c2adf46c2e1e6d591837e0ae91e79f7e183277384eda3d36614d479e416cf520",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-c1/final/regression.log",
+      "bytes": 32455,
+      "sha256": "8b685c8e9bb79a742e0159a03a61670b62675cb73e4b8ca695d2746d7585d12a",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-c1/final/results.json",
+      "bytes": 8047,
+      "sha256": "23b28a143393ee322336b25b874ab1e5591534f8c47774e1a47cd4f3d89b081b",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-c1/final/tests/codec-tests.cjs",
+      "bytes": 16594,
+      "sha256": "c4d3e7fd37cdf3d7db60d7fbc0331cc5da40387827d756b05ff7865f62960166",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-c1/final/tests/replay-tests.cjs",
+      "bytes": 27895,
+      "sha256": "b3157f0b0feb71e16bc49cd31a9bfcb8c1317def367823344be0638ca7aa8df7",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/history-regression-summary.md",
+      "bytes": 1672,
+      "sha256": "e5473de654e2431017d6aa00350937c1172e82984fd98b995a2c177eb81a6550",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/intent-type-erasure.json",
+      "bytes": 693,
+      "sha256": "5f557db20af41113611be64a4b8186b5345c503c019d8576cc7415f084568b8e",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/IntentPort.after.emitted.js",
+      "bytes": 17548,
+      "sha256": "a056a6f909f6eed6ff6bbe844eb55b678871fd3c0c705b1cc1f0ef09bd57e734",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/IntentPort.before.emitted.js",
+      "bytes": 17548,
+      "sha256": "a056a6f909f6eed6ff6bbe844eb55b678871fd3c0c705b1cc1f0ef09bd57e734",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/list-delivery-artifacts.cjs",
+      "bytes": 2055,
+      "sha256": "844f928868f925b3e422b945e3feebb91460bccee8918d41ddc27fee7012d6a2",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/list-new-names.cjs",
+      "bytes": 9061,
+      "sha256": "2c522e69cc2f2564611e80e38ad6851c74c14cc673841f16bf389e079dd5862c",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/logic-isolated/build/RealServiceContracts.js",
+      "bytes": 77,
+      "sha256": "d43aa81f5bc89faa359e0f97c814ba25155591ff078fbb9bfd40f8c7c9683230",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/logic-isolated/build/SharedCanonicalBytes.js",
+      "bytes": 15717,
+      "sha256": "ceaa486b54f0c7ca1096c301149514124940fcdf9b6acca1ece9e902b0c71cb2",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/logic-isolated/build/SharedCommitCodec.js",
+      "bytes": 43978,
+      "sha256": "7ec12d746e544e095b41dbe4717700e280a38c007bbd77918fabec585d4cef5b",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/logic-isolated/build/SharedCommitContracts.js",
+      "bytes": 77,
+      "sha256": "d43aa81f5bc89faa359e0f97c814ba25155591ff078fbb9bfd40f8c7c9683230",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/logic-isolated/build/SharedServiceProtocolCodec.js",
+      "bytes": 18211,
+      "sha256": "1182df7457e9d45d91f435ca2f8243657ba5f332da8ad972c3458fcd72a20694",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/logic-isolated/build/SharedServiceProtocolContracts.js",
+      "bytes": 77,
+      "sha256": "d43aa81f5bc89faa359e0f97c814ba25155591ff078fbb9bfd40f8c7c9683230",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/logic-isolated/results.json",
+      "bytes": 803,
+      "sha256": "1102ac234fd2642facf2ca95b20997ff9c2a5814a569825f00a95f8f239a6433",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/logic-isolated/tsconfig.json",
+      "bytes": 774,
+      "sha256": "40dce9d4996a37a227767df73f4cfdc48fded4e019a79a178ffa858089530a20",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/logic-isolated/typecheck-build.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/logic-isolated-final/build/RealServiceContracts.js",
+      "bytes": 77,
+      "sha256": "d43aa81f5bc89faa359e0f97c814ba25155591ff078fbb9bfd40f8c7c9683230",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/logic-isolated-final/build/SharedCanonicalBytes.js",
+      "bytes": 15717,
+      "sha256": "ceaa486b54f0c7ca1096c301149514124940fcdf9b6acca1ece9e902b0c71cb2",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/logic-isolated-final/build/SharedCommitCodec.js",
+      "bytes": 43978,
+      "sha256": "7ec12d746e544e095b41dbe4717700e280a38c007bbd77918fabec585d4cef5b",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/logic-isolated-final/build/SharedCommitContracts.js",
+      "bytes": 77,
+      "sha256": "d43aa81f5bc89faa359e0f97c814ba25155591ff078fbb9bfd40f8c7c9683230",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/logic-isolated-final/build/SharedServiceProtocolCodec.js",
+      "bytes": 18211,
+      "sha256": "1182df7457e9d45d91f435ca2f8243657ba5f332da8ad972c3458fcd72a20694",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/logic-isolated-final/build/SharedServiceProtocolContracts.js",
+      "bytes": 77,
+      "sha256": "d43aa81f5bc89faa359e0f97c814ba25155591ff078fbb9bfd40f8c7c9683230",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/logic-isolated-final/results.json",
+      "bytes": 1013,
+      "sha256": "6095ebd716e1a0c126f5c8b875faffa49949ea2427cd59a70d87ef7cea40a784",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/logic-isolated-final/tsconfig.json",
+      "bytes": 780,
+      "sha256": "6afa6b7649f9f3d12f36faaf0b94bc26a2fd2a6371a75e3e92eb585e8b61d479",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/logic-isolated-final/typecheck-build.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/new-names.json",
+      "bytes": 462315,
+      "sha256": "4c3067924c8b15971735b306791903bb5e26b2675499846c06ceebc85ff83931",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/planned-additions.json",
+      "bytes": 630,
+      "sha256": "bc82f086a65e0249a9c4a6de43d5846a3b39a92d6da619f0031bf52bbc16fdef",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/planned-build-additions.json",
+      "bytes": 491,
+      "sha256": "668cfec5c7a3e30d76940ad05c68f33f3d8184d0b2bf92aed9af630840186165",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/pre-version-archive.json",
+      "bytes": 713,
+      "sha256": "afe689422d886ab9c5716fe45c74f7b46b496f0bfba341401ca9d83cddeb72b6",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/pre-version-changed-files.json",
+      "bytes": 6418,
+      "sha256": "514c803a05b4e72745df48988b593befbd4763835c1b3d05d1abd245c7adcdfa",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/pre-version-code.diff",
+      "bytes": 226812,
+      "sha256": "83d168f74ff3fe4a611778e1df06219662c7855dbf30a3b32a8d2532154cd364",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/pre-version-new-names.json",
+      "bytes": 460879,
+      "sha256": "11a56025396c4d29848c5b62d5044002fc1ce1beee55ab898037c0548c7059ca",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/protect-files.cjs",
+      "bytes": 9308,
+      "sha256": "0bab921f7ff3efe9cf7d1f6ea3def1ad503d721153db24ddd63982b1e8c83b5f",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/protected-baseline.json",
+      "bytes": 1552480,
+      "sha256": "e7ddbe5b1c6ec3815dfcd044f4f8cefe2acef37dd16104e0ebc858102c96972e",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/protected-final-audit.json",
+      "bytes": 10876,
+      "sha256": "790414e97f5ad8cad212e2b806362ae719b6b561aa6798b43ca0408e79996817",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/protected-interim-audit.json",
+      "bytes": 10472,
+      "sha256": "6ee3d487de9014bb5a8c7c40bedc0060f685d7d7bf31a206397c2c950447a1ed",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/protected-pre-version-audit.json",
+      "bytes": 10876,
+      "sha256": "629b848997114d34cf9065859871405ab3ffebbe3c44e1aa4136d39550e1df02",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/protocol/build/RealServiceContracts.js",
+      "bytes": 77,
+      "sha256": "d43aa81f5bc89faa359e0f97c814ba25155591ff078fbb9bfd40f8c7c9683230",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/protocol/build/SharedCanonicalBytes.js",
+      "bytes": 15717,
+      "sha256": "ceaa486b54f0c7ca1096c301149514124940fcdf9b6acca1ece9e902b0c71cb2",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/protocol/build/SharedCommitCodec.js",
+      "bytes": 43978,
+      "sha256": "7ec12d746e544e095b41dbe4717700e280a38c007bbd77918fabec585d4cef5b",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/protocol/build/SharedCommitContracts.js",
+      "bytes": 77,
+      "sha256": "d43aa81f5bc89faa359e0f97c814ba25155591ff078fbb9bfd40f8c7c9683230",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/protocol/build/SharedServiceProtocolCodec.js",
+      "bytes": 18211,
+      "sha256": "1182df7457e9d45d91f435ca2f8243657ba5f332da8ad972c3458fcd72a20694",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/protocol/build/SharedServiceProtocolContracts.js",
+      "bytes": 77,
+      "sha256": "d43aa81f5bc89faa359e0f97c814ba25155591ff078fbb9bfd40f8c7c9683230",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/protocol/results.json",
+      "bytes": 2949,
+      "sha256": "abbaffec74c478efb0f0a609f032e50300fdbd74ce27edbef079d6a338925fa4",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/protocol/tsconfig.json",
+      "bytes": 789,
+      "sha256": "4d09aac199e8c27db802641e38dc4953b2ab03317e75985f711c3a6efcbe151a",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/protocol-final-build-consistency.json",
+      "bytes": 1229,
+      "sha256": "61369819520b3d6a9663b005e578ee05ffbd621261ea8ba192193f8fa9b75386",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/run-b-auth-regression.cjs",
+      "bytes": 8716,
+      "sha256": "8f93e5256ec96bca8e9e3b5e9bd55d4cae1a9e2149c29cfdb2ec7d812bed0659",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/run-b24-regression.cjs",
+      "bytes": 3534,
+      "sha256": "b459aaca85bc4b6c3875f6920b5a41b90525c9ac2a29acae84478c74d3dd1ae7",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/run-c1-regression.cjs",
+      "bytes": 5348,
+      "sha256": "80d0cd43beb92b5c6915cc1687c331eb1148d67b69df63051af8590932943383",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/run-gates.cjs",
+      "bytes": 3502,
+      "sha256": "9e68b291871e35fa1372d0c3453a215cd80fa0bf229748cba17192c3c1399b6b",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/runtime-client-database.json",
+      "bytes": 270,
+      "sha256": "fa3b754abb3697779593beb9697ecba39e8eb62d153817b377f898650849238b",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/runtime-final-database.json",
+      "bytes": 264,
+      "sha256": "ae5d5c2075972d7c0640c79924ecc6d9cb0a86b35ec3503580c60c91d7fe9752",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/runtime-lifecycle.json",
+      "bytes": 225,
+      "sha256": "7851c9ac45cbbe0e35521a0e5300b38b9617a1187cbda9da27e1c9fbd77835df",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/runtime-readiness.json",
+      "bytes": 509,
+      "sha256": "41bdb74ecdaf16daf4d5c700ddb1c2e46f21e541610e8c8d9799476da1ab5f89",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/runtime-reproduction.md",
+      "bytes": 2503,
+      "sha256": "23b81f02170c27ad0ec28302cb1773d5b8a1cb3d8f4be6db7651d157b2131fa6",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/runtime-start-completed.log",
+      "bytes": 713,
+      "sha256": "275db95140cb43c8909977457265a1d8d72896500ba15f887d7f5e4101d4960d",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/runtime-start.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/runtime-stop.log",
+      "bytes": 137,
+      "sha256": "1d50fadb860e9519907411f98cbc2c4a50ad955ddf90c8f2045d449b03a23b90",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/server-shared-build-version-final.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/server-shared-build.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/server-shared-tests-version-final.log",
+      "bytes": 2459,
+      "sha256": "140d48c0710f43daa94613dd048f1a2b92c1d40ff31b0f5e4718a6284f08cb71",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/server-shared-tests.log",
+      "bytes": 2329,
+      "sha256": "ca23eb806eddaa6cd6dd4f4de326833cb7e266438da5483989bb0ba5bf2b1390",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/server-shared-typecheck-version-final.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/server-shared-typecheck.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/server-validation-results.json",
+      "bytes": 7736,
+      "sha256": "4cd24f4274047e82c4c7b6e0aaa8fbdcab3edc45a4a59e1f1b3275be6fa3c2e3",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/shareable-audit.cjs",
+      "bytes": 2978,
+      "sha256": "8d687469d2b8d6ec9f33f8f4660b692eb15c653bd4b55542b9d507ed60953d99",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/shareable-audit.json",
+      "bytes": 48247,
+      "sha256": "30362f5810295c98b4c1621ea15799fe4fa6cf9a7bdc8afcbbb83a5c3dca1f0a",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/source-diff.cjs",
+      "bytes": 3852,
+      "sha256": "eb9bf860dce9f3a8a42d18636015602825245d82eb5af20de1f50629a34aedad",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/start-postgres.ps1",
+      "bytes": 4473,
+      "sha256": "6cda213051294edfaa96c46091df8885b5170ca72890456303d3444755dcd495",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "evidence/stop-postgres.ps1",
+      "bytes": 774,
+      "sha256": "39a4286c2a70829c8616e76812061694cf3ca077992e687da18092c1a10cf580",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "implementation-plan.md",
+      "bytes": 3270,
+      "sha256": "86867a51a46649a08fbf37ba06159158812f7c500b1791d07ae1499b8792301d",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "namebook-v3.20-appendix-proposal.md",
+      "bytes": 9975,
+      "sha256": "503fd5957f1586b36c095d2aa0ef2cb8388ffa410ff655924720f6abb3760bff",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "protocol-contract-tests.cjs",
+      "bytes": 8530,
+      "sha256": "dbb244372130e250d262d8fae1ef1b884e5f47d6a3550f0b0765acfc8d081dac",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    },
+    {
+      "path": "verdicts-441-447.md",
+      "bytes": 6052,
+      "sha256": "00502c2f1e24bee0147e03c00f43870ebc6dd3084fe0dc7a732f20ac861b3ea5",
+      "knownCredentialValueFound": false,
+      "privatePemBlockFound": false
+    }
+  ],
+  "excludedDirectories": [
+    ".local",
+    "node_modules"
+  ],
+  "credentialValuesRecorded": false,
+  "limits": "Checks known local PG URLs/passwords and complete private PEM blocks in non-private c-2b delivery text. Ephemeral auth/device/ECDH/root/group secrets remain memory-only in harnesses and are not independently enumerated by this scan. Public pins/JWKs/signatures/digests are permitted evidence. This is a scoped leak check, not arbitrary-secret detection."
+}

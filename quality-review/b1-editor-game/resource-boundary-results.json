@@ -1,0 +1,191 @@
+{
+  "generatedAt": "2026-10-10T07:25:23.868Z",
+  "scope": "Actual SceneBuilder.start()/factory/callbacks and ChartPadView with injected cc resources/rendering boundary; real Bootstrap, v1/v2/v3 parsers, ChartPremiere, DirectorSession. Does not claim actual engine rendering.",
+  "passed": 12,
+  "failed": 0,
+  "checks": [
+    {
+      "name": "R01 Inspector default loads exactly existing guidance_c; v1/v2 parser and actual Premiere preserved",
+      "pass": true,
+      "evidence": {
+        "default": "chart/guidance_c",
+        "chartId": "guidance-c-1",
+        "schemaVersion": 2,
+        "resources": [
+          "audio/bgm_placeholder_60bpm",
+          "guidance/head-logo/spriteFrame",
+          "video/chart_video_placeholder",
+          "audio/hit_regular",
+          "audio/hit_drum",
+          "audio/hit_heavy",
+          "chart/guidance_c",
+          "chart/guidance_c.visual"
+        ]
+      }
+    },
+    {
+      "name": "R02 world folder factory copies Inspector selection and guidance transparency into each new runtime",
+      "pass": true,
+      "evidence": {
+        "runtimes": 2,
+        "configuredPath": "chart/b1-editor-v3-chart",
+        "copiedByActualFactory": true
+      }
+    },
+    {
+      "name": "R03 selected exported v3 parses before premiere and optional colors reach real view before first draw",
+      "pass": true,
+      "evidence": {
+        "resource": "chart/b1-editor-v3-chart",
+        "schemaVersion": 3,
+        "sidecar": "chart/b1-editor-v3-chart.visual",
+        "cachedColors": 4,
+        "forwardedColors": 4,
+        "loadLedgerDelta": 0
+      }
+    },
+    {
+      "name": "R04 immediate chart and immediate visual callbacks preserve colors through first chart binding and lazy view build",
+      "pass": true,
+      "evidence": {
+        "callbackOrder": "chart then sidecar in same stack",
+        "retainedColors": 4,
+        "lazyViewRetainsColors": true
+      }
+    },
+    {
+      "name": "R05 optional missing/null visual keeps chart usable and default colors",
+      "pass": true,
+      "evidence": [
+        {
+          "reason": "load error",
+          "gameplayUsable": true,
+          "visualCount": 0
+        },
+        {
+          "reason": "null asset",
+          "gameplayUsable": true,
+          "visualCount": 0
+        },
+        {
+          "reason": "resource metadata missing",
+          "gameplayUsable": true,
+          "visualLoadSkipped": true
+        }
+      ]
+    },
+    {
+      "name": "R06 wrong chartId/unknown node/duplicate node/bad RGB sidecars warn and fall back only visual",
+      "pass": true,
+      "evidence": [
+        {
+          "rejected": "wrong chartId",
+          "chartRetained": true,
+          "defaultColors": true
+        },
+        {
+          "rejected": "unknown nodeId",
+          "chartRetained": true,
+          "defaultColors": true
+        },
+        {
+          "rejected": "duplicate nodeId",
+          "chartRetained": true,
+          "defaultColors": true
+        },
+        {
+          "rejected": "RGB out of range",
+          "chartRetained": true,
+          "defaultColors": true
+        },
+        {
+          "rejected": "RGB fraction",
+          "chartRetained": true,
+          "defaultColors": true
+        },
+        {
+          "rejected": "unknown RGB field",
+          "chartRetained": true,
+          "defaultColors": true
+        }
+      ]
+    },
+    {
+      "name": "R07 missing selected chart rejects loading without guidance_c or placeholder fallback",
+      "pass": true,
+      "evidence": {
+        "selectedPath": "chart/absent",
+        "rejected": true,
+        "fallbackRequests": 0,
+        "loadLedgerDelta": 0
+      }
+    },
+    {
+      "name": "R08 malformed chart/timing/layout rejects without loading any other chart or optional visual",
+      "pass": true,
+      "evidence": [
+        {
+          "rejected": "invalid schema",
+          "fallbackRequests": 0
+        },
+        {
+          "rejected": "missing v3 timing",
+          "fallbackRequests": 0
+        },
+        {
+          "rejected": "v3 speed forbidden",
+          "fallbackRequests": 0
+        },
+        {
+          "rejected": "wrong layout",
+          "fallbackRequests": 0
+        }
+      ]
+    },
+    {
+      "name": "R09 resources path contract rejects absolute/file/traversal/extension/empty inputs before JSON I/O, accepts nested safe Unicode path",
+      "pass": true,
+      "evidence": {
+        "rejectedPaths": [
+          "",
+          "guidance_c",
+          "../chart/a",
+          "chart/../a",
+          "/chart/a",
+          "assets/resources/chart/a",
+          "chart/a.json",
+          "chart/a.visual",
+          "chart/a//b",
+          "chart/a\\b",
+          "chart/a?x=1"
+        ],
+        "acceptedTrimmedPath": "chart/雨若_谱面/测试-1"
+      }
+    },
+    {
+      "name": "R10 callback after destroyed composition root does not bind chart/visual, create premiere or append ledger",
+      "pass": true,
+      "evidence": {
+        "lateChartCallbackIgnored": true,
+        "lateVisualCallbackIgnored": true,
+        "loadLedgerDelta": 0
+      }
+    },
+    {
+      "name": "R11 view handles late colors after first build and clears previous colors when binding another chart",
+      "pass": true,
+      "evidence": {
+        "lateColorsForwarded": 4,
+        "nextChartClearsColors": true
+      }
+    },
+    {
+      "name": "R12 UseGuidanceChart=false retains existing old T7 placeholder and fallback behavior",
+      "pass": true,
+      "evidence": {
+        "request": "chart/chart_placeholder",
+        "priorFallbackPreserved": true
+      }
+    }
+  ]
+}

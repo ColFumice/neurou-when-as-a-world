@@ -1,0 +1,800 @@
+diff --git a/src/director/AccountStartupSession.ts b/src/director/AccountStartupSession.ts
+new file mode 100644
+index e69de29..bb21823 100644
+--- /dev/null
++++ b/src/director/AccountStartupSession.ts
+@@ -0,0 +1,51 @@
++// VERDICT-158: account narrative orchestration, independent of world/ledger.
++export interface AccountStartupSnapshot {
++  readonly accountId: string | null;
++  readonly phase: 'Login' | 'Prologue' | 'WorldFolder';
++  /** Local development projection of AccountMilestone.PrologueCompleted. */
++  readonly PrologueCompleted: boolean;
++}
++
++export type AccountStartupIntent =
++  | { readonly kind: 'Login'; readonly accountId: string; readonly PrologueCompleted: boolean }
++  | { readonly kind: 'CompletePrologue' };
++
++export interface AccountStartupReader {
++  getStartupSnapshot(): AccountStartupSnapshot;
++  getPrologueText(): readonly string[];
++}
++
++export interface AccountStartupPort {
++  submitStartupIntent(intent: AccountStartupIntent): void;
++}
++
++export class AccountStartupSession implements AccountStartupReader, AccountStartupPort {
++  constructor(private readonly persistCompletion: (snapshot: AccountStartupSnapshot) => void) {}
++  private snapshot: AccountStartupSnapshot = Object.freeze({
++    accountId: null, phase: 'Login', PrologueCompleted: false,
++  });
++
++  getStartupSnapshot(): AccountStartupSnapshot { return this.snapshot; }
++
++  getPrologueText(): readonly string[] {
++    return Object.freeze(['欢迎来到雨若。', '序章完成后，从世界文件夹进入初始世界。']);
++  }
++
++  submitStartupIntent(intent: AccountStartupIntent): void {
++    if (intent.kind === 'Login') {
++      const accountId = intent.accountId.trim();
++      if (!accountId || accountId.length > 64) { throw new Error('账号标识须为 1～64 个字符'); }
++      if (this.snapshot.phase !== 'Login') { throw new Error('当前账号已经登录'); }
++      this.snapshot = Object.freeze({ accountId, PrologueCompleted: intent.PrologueCompleted,
++        phase: intent.PrologueCompleted ? 'WorldFolder' : 'Prologue' });
++      return;
++    }
++    if (this.snapshot.phase === 'Login') { throw new Error('请先登录'); }
++    if (this.snapshot.PrologueCompleted) { return; }
++    const completed: AccountStartupSnapshot = Object.freeze({ accountId: this.snapshot.accountId,
++      PrologueCompleted: true, phase: 'WorldFolder' });
++    // Commit only after the account storage boundary succeeds; UI cannot mark completion.
++    this.persistCompletion(completed);
++    this.snapshot = completed;
++  }
++}
+diff --git a/src/director/AccountStartupSession.ts.meta b/src/director/AccountStartupSession.ts.meta
+new file mode 100644
+index e69de29..439b0de 100644
+--- /dev/null
++++ b/src/director/AccountStartupSession.ts.meta
+@@ -0,0 +1,9 @@
++{
++  "ver": "4.0.24",
++  "importer": "typescript",
++  "imported": true,
++  "uuid": "09c227e0-a37c-4c56-802c-1b51f5bc28b9",
++  "files": [],
++  "subMetas": {},
++  "userData": {}
++}
+diff --git a/src/director/IntentPort.ts b/src/director/IntentPort.ts
+index f2672db..89429d9 100644
+--- a/src/director/IntentPort.ts
++++ b/src/director/IntentPort.ts
+@@ -941,3 +941,5 @@ export class DirectorSession implements IntentPort {
+     };
+   }
+ }
++// VERDICT-158: presentation reads/submits account startup through the existing narrow route.
++export type { AccountStartupReader, AccountStartupPort, AccountStartupIntent, AccountStartupSnapshot } from './AccountStartupSession';
+diff --git a/src/presentation/EditorFolderView.ts b/src/presentation/EditorFolderView.ts
+new file mode 100644
+index e69de29..668faaa 100644
+--- /dev/null
++++ b/src/presentation/EditorFolderView.ts
+@@ -0,0 +1,102 @@
++import type { EditorCatalog, EditorFolderEntry } from './FolderCatalog';
++import { applyFolderTheme } from './FolderTheme';
++
++// AC-29 灰盒：目录结构和可用性均由只读 catalog 提供。
++export class EditorFolderView {
++  private root: HTMLElement | null = null;
++
++  constructor(
++    private readonly catalog: EditorCatalog,
++    private readonly openEditor: (entry: EditorFolderEntry) => void,
++    private readonly back: () => void,
++  ) {}
++
++  mount(): void {
++    if (typeof document === 'undefined' || this.root) { return; }
++    const root = document.createElement('section');
++    root.id = 'editor-folder';
++    applyFolderTheme(root);
++    root.setAttribute('aria-label', '世界编辑器文件夹');
++    root.innerHTML = `
++      <style>
++      #editor-folder{position:fixed;inset:0;z-index:100;background:var(--folder-bg);color:var(--folder-ink);font:15px/1.5 var(--folder-font);overflow:auto}
++      #editor-folder *{box-sizing:border-box}#editor-folder .folder-shell{width:min(100% - 48px,1080px);height:100%;min-height:360px;margin:auto;display:flex;flex-direction:column;padding:24px 0}
++      #editor-folder header{display:flex;align-items:center;gap:20px;padding-bottom:16px;border-bottom:1px solid var(--folder-border);flex:none}#editor-folder h1{font-size:24px;line-height:1.3;margin:0}
++      #editor-folder .folder-note{color:var(--folder-muted);font-size:13px;margin-top:6px}#editor-folder button{font:inherit;cursor:pointer;color:var(--folder-ink);background:var(--folder-panel);border:1px solid var(--folder-border);border-radius:4px;padding:8px 14px}
++      #editor-folder button:hover{background:#353535;border-color:var(--folder-muted)}#editor-folder button:focus-visible,#editor-folder summary:focus-visible{outline:2px solid var(--folder-ink);outline-offset:2px}
++      #editor-folder main{flex:1;min-height:0;overflow:auto;margin:16px 0;padding-right:8px}#editor-folder details{margin:0}#editor-folder summary{cursor:pointer;min-height:30px;padding:2px 8px;line-height:26px;border-radius:3px}
++      #editor-folder summary:hover{background:var(--folder-panel)}#editor-folder .folder-children{margin-left:20px;border-left:1px solid var(--folder-border);padding-left:12px}
++      #editor-folder .folder-item{display:flex;align-items:center;gap:12px;min-height:30px;padding:2px 8px;text-align:left;width:100%;border:0;background:transparent;line-height:26px}
++      #editor-folder summary .folder-item{display:inline-flex;width:auto;padding:0 4px;vertical-align:middle}#editor-folder .folder-badge{font-size:12px;color:var(--folder-muted);margin-left:12px}
++      #editor-folder .folder-item .folder-badge{margin-left:auto}#editor-folder .folder-implemented{font-weight:600}#editor-folder .folder-implemented .folder-badge{color:var(--folder-ink)}
++      #editor-folder footer{border-top:1px solid var(--folder-border);padding-top:12px;flex:none}#folder-status{color:var(--folder-ink);min-height:24px}
++      @media(max-width:760px){#editor-folder .folder-shell{width:calc(100% - 24px);padding:16px 0}#editor-folder header{gap:12px}#editor-folder h1{font-size:20px}#editor-folder .folder-children{margin-left:10px;padding-left:8px}#editor-folder .folder-badge{margin-left:8px}#editor-folder .folder-item{gap:6px;font-size:14px}}
++      @media(max-height:600px){#editor-folder .folder-shell{padding:12px 0}#editor-folder header{padding-bottom:10px}#editor-folder main{margin:10px 0}}
++      </style>
++      <div class="folder-shell"><header><button id="folder-back" type="button">返回世界文件夹</button><div><h1>世界编辑器文件夹</h1><div class="folder-note">点击目录展开或收起；已实现的编辑器可直接打开。</div></div></header><main id="editor-directory" aria-label="编辑器目录树"></main><footer><div id="folder-status" role="status" aria-live="polite">请选择编辑器。</div></footer></div>`;
++    this.root = root;
++    root.querySelector('#editor-directory')!.appendChild(this.renderEntry(this.catalog.getRoot()));
++    root.querySelector<HTMLButtonElement>('#folder-back')!.onclick = () => this.back();
++    document.body.appendChild(root);
++  }
++
++  private renderEntry(entry: EditorFolderEntry): HTMLElement {
++    if (!entry.children.length) { return this.entryButton(entry); }
++    const details = document.createElement('details');
++    details.open = true;
++    const summary = document.createElement('summary');
++    if (entry.availability === 'Folder') {
++      summary.dataset.entryId = entry.entryId;
++      summary.textContent = entry.title;
++      const badge = document.createElement('span');
++      badge.className = 'folder-badge';
++      badge.textContent = '文件夹';
++      summary.appendChild(badge);
++    } else {
++      const button = this.entryButton(entry);
++      button.onclick = (click) => {
++        click.preventDefault();
++        click.stopPropagation();
++        this.activate(entry);
++        if (entry.availability === 'Placeholder') { details.open = !details.open; }
++      };
++      summary.appendChild(button);
++      summary.onclick = () => {
++        if (entry.availability === 'Placeholder') { this.activate(entry); }
++      };
++    }
++    const children = document.createElement('div');
++    children.className = 'folder-children';
++    for (const child of entry.children) { children.appendChild(this.renderEntry(child)); }
++    details.append(summary, children);
++    return details;
++  }
++
++  private entryButton(entry: EditorFolderEntry): HTMLButtonElement {
++    const button = document.createElement('button');
++    button.type = 'button';
++    button.className = 'folder-item' + (entry.availability === 'Implemented' ? ' folder-implemented' : '');
++    button.dataset.entryId = entry.entryId;
++    const title = document.createElement('span');
++    title.textContent = entry.title;
++    const badge = document.createElement('span');
++    badge.className = 'folder-badge';
++    badge.textContent = entry.availability === 'Implemented' ? '已实现 · 打开' : '暂未实现';
++    button.append(title, badge);
++    button.onclick = () => this.activate(entry);
++    return button;
++  }
++
++  private activate(entry: EditorFolderEntry): void {
++    if (entry.availability === 'Implemented') {
++      this.openEditor(entry);
++    } else if (entry.availability === 'Placeholder') {
++      this.root!.querySelector('#folder-status')!.textContent = entry.title + '：暂未实现';
++    }
++  }
++
++  destroy(): void {
++    this.root?.remove();
++    this.root = null;
++  }
++}
+diff --git a/src/presentation/EditorFolderView.ts.meta b/src/presentation/EditorFolderView.ts.meta
+new file mode 100644
+index e69de29..ac8a8b7 100644
+--- /dev/null
++++ b/src/presentation/EditorFolderView.ts.meta
+@@ -0,0 +1,9 @@
++{
++  "ver": "4.0.24",
++  "importer": "typescript",
++  "imported": true,
++  "uuid": "f7d5a688-234e-42ef-8e70-45c008cb9731",
++  "files": [],
++  "subMetas": {},
++  "userData": {}
++}
+diff --git a/src/presentation/FolderCatalog.ts b/src/presentation/FolderCatalog.ts
+new file mode 100644
+index e69de29..8ea8670 100644
+--- /dev/null
++++ b/src/presentation/FolderCatalog.ts
+@@ -0,0 +1,71 @@
++// 世界与编辑器目录的只读 presentation 数据；组合根注入，零引擎依赖。
++export type WorldFolderEntry = {
++  readonly worldId: 'InitialWorld';
++  readonly title: string;
++  readonly description: string;
++};
++
++export interface WorldFolderReader {
++  getAccountId(): string;
++  getWorlds(): readonly WorldFolderEntry[];
++}
++
++export interface EditorFolderEntry {
++  readonly entryId: string;
++  readonly title: string;
++  readonly availability: 'Folder' | 'Implemented' | 'Placeholder';
++  readonly children: readonly EditorFolderEntry[];
++}
++
++export interface EditorCatalog {
++  getRoot(): EditorFolderEntry;
++}
++
++export const InitialWorld: WorldFolderEntry = Object.freeze({
++  worldId: 'InitialWorld',
++  title: '初始世界',
++  description: '箱庭 · 深痕 · 解谜链 · 引导线演奏',
++});
++
++export function createWorldFolderReader(accountId: string): WorldFolderReader {
++  const worlds: readonly WorldFolderEntry[] = Object.freeze([InitialWorld]);
++  return Object.freeze({
++    getAccountId: (): string => accountId,
++    getWorlds: (): readonly WorldFolderEntry[] => worlds,
++  });
++}
++
++function createEditorFolderEntry(
++  entryId: string,
++  title: string,
++  availability: EditorFolderEntry['availability'],
++  children: readonly EditorFolderEntry[] = [],
++): EditorFolderEntry {
++  return Object.freeze({ entryId, title, availability, children: Object.freeze([...children]) });
++}
++
++const editorRoot = createEditorFolderEntry('EditorRoot', '编辑器', 'Folder', [
++  createEditorFolderEntry('MusicEditor', '音乐编辑器', 'Placeholder', [
++    createEditorFolderEntry('RgbWavetableEditor', 'RGB波表编辑器', 'Placeholder'),
++    createEditorFolderEntry('GridEditor', '网格编辑器', 'Placeholder'),
++    createEditorFolderEntry('MidiTrackEditor', 'MIDI以及音轨编辑器', 'Placeholder'),
++  ]),
++  createEditorFolderEntry('MapEditor', '地图编辑器', 'Placeholder', [
++    createEditorFolderEntry('NarrativeEventEditor', '事件编辑器', 'Placeholder'),
++    createEditorFolderEntry('StoryEditor', '剧情编辑器', 'Placeholder', [
++      createEditorFolderEntry('PasserbyEditor', '路人编辑器', 'Placeholder'),
++      createEditorFolderEntry('SubtitleEditor', '字幕编辑器', 'Placeholder'),
++    ]),
++  ]),
++  createEditorFolderEntry('ChartEditor', '谱面编辑器', 'Folder', [
++    createEditorFolderEntry('GuidanceEditor', '引导线编辑器', 'Implemented', [
++      createEditorFolderEntry('VideoTimingEditor', '视频卡点器', 'Placeholder'),
++      createEditorFolderEntry('PositionEditor', '位置编辑器', 'Placeholder'),
++    ]),
++    createEditorFolderEntry('SpecialNarrativeEventEditor', '特殊事件编辑器', 'Placeholder'),
++  ]),
++]);
++
++export const editorCatalog: EditorCatalog = Object.freeze({
++  getRoot: (): EditorFolderEntry => editorRoot,
++});
+diff --git a/src/presentation/FolderCatalog.ts.meta b/src/presentation/FolderCatalog.ts.meta
+new file mode 100644
+index e69de29..d5af601 100644
+--- /dev/null
++++ b/src/presentation/FolderCatalog.ts.meta
+@@ -0,0 +1,9 @@
++{
++  "ver": "4.0.24",
++  "importer": "typescript",
++  "imported": true,
++  "uuid": "f387781b-a3e0-4e36-8e8c-71bc86d1c578",
++  "files": [],
++  "subMetas": {},
++  "userData": {}
++}
+diff --git a/src/presentation/FolderStartupView.ts b/src/presentation/FolderStartupView.ts
+new file mode 100644
+index e69de29..e33b4fd 100644
+--- /dev/null
++++ b/src/presentation/FolderStartupView.ts
+@@ -0,0 +1,68 @@
++import type { AccountStartupSnapshot } from '../director/IntentPort';
++import { applyFolderTheme } from './FolderTheme';
++
++/** Browser development storage adapter; never used as remote authentication. */
++export class AccountStartupStorage {
++  readCompletion(accountId: string): boolean {
++    const value = localStorage.getItem(this.key(accountId));
++    if (value === null) { return false; }
++    const parsed: unknown = JSON.parse(value);
++    if (typeof parsed !== 'object' || parsed === null ||
++        (parsed as { PrologueCompleted?: unknown }).PrologueCompleted !== true) {
++      throw new Error('账号里程碑损坏，请恢复本地账号数据');
++    }
++    return true;
++  }
++
++  saveCompletion(snapshot: AccountStartupSnapshot): void {
++    if (snapshot.accountId === null || !snapshot.PrologueCompleted) {
++      throw new Error('序章尚未完成');
++    }
++    localStorage.setItem(this.key(snapshot.accountId), JSON.stringify({ PrologueCompleted: true }));
++  }
++
++  private key(accountId: string): string {
++    return 'neurou-account-milestone-v1:' + encodeURIComponent(accountId);
++  }
++}
++
++/** Replaceable AC-29 startup graybox; narrative decisions come from director. */
++export class FolderStartupView {
++  private root: HTMLElement | null = null;
++
++  showLogin(login: (accountId: string) => void): void {
++    this.build('登录');
++    const body = this.root!.querySelector('main')!;
++    body.innerHTML = `<p>雨若 · 开发阶段本地账号</p><form id="folder-login-form"><label for="folder-account">账号标识</label><input id="folder-account" maxlength="64" required value="dev-local" autocomplete="off"><button id="folder-login" type="submit">登录</button></form><small>本地账号用于保存此浏览器的序章完成状态。</small>`;
++    body.querySelector('form')!.onsubmit = e => {
++      e.preventDefault(); login((body.querySelector('input') as HTMLInputElement).value.trim());
++    };
++  }
++
++  showPrologue(accountId: string, text: readonly string[], complete: () => void): void {
++    this.build('序章');
++    const body = this.root!.querySelector('main')!;
++    const account = document.createElement('small'); account.textContent = '当前账号：' + accountId;
++    body.appendChild(account);
++    for (const line of text) { const p = document.createElement('p'); p.textContent = line; body.appendChild(p); }
++    const button = document.createElement('button'); button.id = 'folder-complete-prologue';
++    button.textContent = '完成序章 · 进入世界文件夹'; button.onclick = complete; body.appendChild(button);
++  }
++
++  showError(message: string): void {
++    if (this.root) { this.root.querySelector('[role=status]')!.textContent = message; }
++  }
++
++  destroy(): void { this.root?.remove(); this.root = null; }
++
++  private build(title: string): void {
++    this.destroy(); this.root = document.createElement('section'); this.root.id = 'folder-startup';
++    this.root.innerHTML = `<style>
++      #folder-startup{position:fixed;inset:0;z-index:200;background:var(--folder-bg);color:var(--folder-ink);display:grid;place-items:center;font:18px/1.6 var(--folder-font);overflow:auto}
++      #folder-startup *{box-sizing:border-box}#folder-startup article{width:min(680px,calc(100% - 48px));padding:40px;background:var(--folder-panel);border:1px solid var(--folder-border)}
++      #folder-startup h1{font-size:28px;margin:0 0 24px}#folder-startup form{display:grid;gap:14px}#folder-startup input,#folder-startup button{font:inherit;padding:12px;border:1px solid var(--folder-border);background:#383a3e;color:inherit;border-radius:4px}#folder-startup button{cursor:pointer}#folder-startup button:hover{background:#4b4d51}#folder-startup small{color:#bfc0c2}#folder-startup [role=status]{color:#ffb8b8;min-height:1.6em;margin-top:16px}
++      </style><article><h1></h1><main></main><div role="status" aria-live="polite"></div></article>`;
++    applyFolderTheme(this.root);
++    this.root.querySelector('h1')!.textContent = title; document.body.appendChild(this.root);
++  }
++}
+diff --git a/src/presentation/FolderStartupView.ts.meta b/src/presentation/FolderStartupView.ts.meta
+new file mode 100644
+index e69de29..bf9c898 100644
+--- /dev/null
++++ b/src/presentation/FolderStartupView.ts.meta
+@@ -0,0 +1,9 @@
++{
++  "ver": "4.0.24",
++  "importer": "typescript",
++  "imported": true,
++  "uuid": "596700ac-970b-4b15-add7-aa83f178aa8d",
++  "files": [],
++  "subMetas": {},
++  "userData": {}
++}
+diff --git a/src/presentation/FolderTheme.ts b/src/presentation/FolderTheme.ts
+new file mode 100644
+index e69de29..f835618 100644
+--- /dev/null
++++ b/src/presentation/FolderTheme.ts
+@@ -0,0 +1,27 @@
++// AC-29：文件夹界面共享的可替换灰盒表现配置，不进入逻辑域。
++export interface FolderPresentationTheme {
++  readonly background: string;
++  readonly panel: string;
++  readonly foreground: string;
++  readonly muted: string;
++  readonly border: string;
++  readonly fontFamily: string;
++}
++
++export const folderPresentationTheme: FolderPresentationTheme = Object.freeze({
++  background: '#191919',
++  panel: '#292929',
++  foreground: '#eee',
++  muted: '#aaa',
++  border: '#666',
++  fontFamily: 'system-ui,sans-serif',
++});
++
++export function applyFolderTheme(root: HTMLElement): void {
++  root.style.setProperty('--folder-bg', folderPresentationTheme.background);
++  root.style.setProperty('--folder-panel', folderPresentationTheme.panel);
++  root.style.setProperty('--folder-ink', folderPresentationTheme.foreground);
++  root.style.setProperty('--folder-muted', folderPresentationTheme.muted);
++  root.style.setProperty('--folder-border', folderPresentationTheme.border);
++  root.style.setProperty('--folder-font', folderPresentationTheme.fontFamily);
++}
+diff --git a/src/presentation/FolderTheme.ts.meta b/src/presentation/FolderTheme.ts.meta
+new file mode 100644
+index e69de29..bb23bf3 100644
+--- /dev/null
++++ b/src/presentation/FolderTheme.ts.meta
+@@ -0,0 +1,9 @@
++{
++  "ver": "4.0.24",
++  "importer": "typescript",
++  "imported": true,
++  "uuid": "958c7771-6ad5-4dcf-a8a3-1c7a954927db",
++  "files": [],
++  "subMetas": {},
++  "userData": {}
++}
+diff --git a/src/presentation/GuidanceEditorView.ts b/src/presentation/GuidanceEditorView.ts
+index b2a79f0..9234c7e 100644
+--- a/src/presentation/GuidanceEditorView.ts
++++ b/src/presentation/GuidanceEditorView.ts
+@@ -1,5 +1,5 @@
+ // Cocos 浏览器编辑界面；只读 editor/chart，通过意图修改草稿。
+-import { _decorator, Component, Node, UITransform, SpriteFrame } from 'cc';
++import { _decorator, Component, Node, UITransform, SpriteFrame, isValid } from 'cc';
+ import type { GuidanceEditorReader, GuidanceEditorPort, GuidanceEditorIntent, ChartSourceData } from '../editor/GuidanceEditorSession';
+ import type { ChartNodeKind } from '../chart/GuidanceChart';
+ import { LineEraseEffect } from './LineEraseEffect';
+@@ -138,7 +138,7 @@ export class GuidanceEditorView extends Component {
+       }
+     catch(e){this.status((written ? `导出未完成，已有 ${written} 个文件写入；请重新成对导出。` : '') + (e instanceof Error?e.message:String(e)),true);}
+   }
+-  private stopPlayback(): void { this.video?.pause();this.playing=false;this.endedElapsedMs=0;this.effect?.clearVisuals(); }
++  private stopPlayback(): void { this.video?.pause();this.playing=false;this.endedElapsedMs=0;if(this.effect && isValid(this.effect,true))this.effect.clearVisuals(); }
+   private play(mode:'Manual'|'Rehearsal'): void {
+     if (!this.video || !Number.isFinite(this.video.duration)) { this.status('请先加载可播放视频',true);return; }
+     try { const d=this.reader!.getDocument();if(!this.reader!.getPreviewData())throw new Error('先加载源数据或导出谱面');if(d&&Math.abs(this.video.duration*1000-d.source.mediaDurationMs)>100)throw new Error('视频时长与 MIDI 源不匹配');
+diff --git a/src/presentation/WorldFolderView.ts b/src/presentation/WorldFolderView.ts
+new file mode 100644
+index e69de29..06a4d41 100644
+--- /dev/null
++++ b/src/presentation/WorldFolderView.ts
+@@ -0,0 +1,69 @@
++import type { WorldFolderEntry, WorldFolderReader } from './FolderCatalog';
++import { applyFolderTheme } from './FolderTheme';
++
++// AC-29 灰盒：只读取目录并发出导航回调，不持有世界运行实例。
++export class WorldFolderView {
++  private root: HTMLElement | null = null;
++
++  constructor(
++    private readonly reader: WorldFolderReader,
++    private readonly openWorld: (entry: WorldFolderEntry) => void,
++    private readonly openEditors: () => void,
++  ) {}
++
++  mount(): void {
++    if (typeof document === 'undefined' || this.root) { return; }
++    const root = document.createElement('section');
++    root.id = 'world-folder';
++    applyFolderTheme(root);
++    root.setAttribute('aria-label', '世界文件夹');
++    root.innerHTML = `
++      <style>
++      #world-folder{position:fixed;inset:0;z-index:100;background:var(--folder-bg);color:var(--folder-ink);font:16px/1.5 var(--folder-font);overflow:auto}
++      #world-folder *{box-sizing:border-box}
++      #world-folder .folder-shell{width:min(100% - 48px,1080px);min-height:100%;margin:auto;display:flex;flex-direction:column;padding:36px 0}
++      #world-folder header{display:flex;align-items:center;justify-content:space-between;gap:20px;border-bottom:1px solid var(--folder-border);padding-bottom:20px}
++      #world-folder h1{font-size:26px;line-height:1.3;margin:4px 0}#world-folder h2{font-size:18px;font-weight:500;margin:0 0 18px}
++      #world-folder .folder-brand,#world-folder .folder-account,#world-folder .folder-description,#world-folder footer{color:var(--folder-muted)}
++      #world-folder .folder-account{overflow-wrap:anywhere;text-align:right;max-width:50%}
++      #world-folder main{display:grid;grid-template-columns:minmax(0,2fr) minmax(280px,1fr);gap:24px;margin:auto 0;padding:32px 0}
++      #world-folder button{font:inherit;cursor:pointer;color:var(--folder-ink);background:var(--folder-panel);border:1px solid var(--folder-border);border-radius:4px;padding:24px;text-align:left;width:100%;min-height:180px}
++      #world-folder button:hover{background:#353535;border-color:var(--folder-muted)}#world-folder button:focus-visible{outline:2px solid var(--folder-ink);outline-offset:4px}
++      #world-folder .folder-title{display:block;font-size:24px;font-weight:500;margin-bottom:14px}
++      #world-folder .folder-description{display:block;font-size:15px}
++      #world-folder .folder-worlds{display:grid;gap:16px}#world-folder footer{border-top:1px solid var(--folder-border);padding-top:20px;font-size:14px}
++      @media(max-width:760px){#world-folder .folder-shell{width:calc(100% - 32px);padding:24px 0}#world-folder header{align-items:flex-start}#world-folder h1{font-size:23px}#world-folder main{grid-template-columns:1fr;gap:28px}#world-folder button{min-height:140px;padding:20px}#world-folder .folder-title{font-size:21px}}
++      @media(max-height:600px){#world-folder .folder-shell{padding:18px 0}#world-folder main{padding:20px 0}#world-folder button{min-height:135px}}
++      </style>
++      <div class="folder-shell">
++        <header><div><div class="folder-brand">雨若</div><h1>世界文件夹</h1></div><div class="folder-account" id="folder-account"></div></header>
++        <main><div><h2>我的世界</h2><div class="folder-worlds" id="folder-worlds"></div></div><div><h2>创作</h2><button id="open-editor-folder" type="button"><span class="folder-title">世界编辑器文件夹</span><span class="folder-description">打开编辑器目录</span></button></div></main>
++        <footer>选择世界继续，或打开世界编辑器文件夹。</footer>
++      </div>`;
++    this.root = root;
++    root.querySelector('#folder-account')!.textContent = '当前账号：' + this.reader.getAccountId();
++    const worlds = root.querySelector('#folder-worlds')!;
++    for (const entry of this.reader.getWorlds()) {
++      const button = document.createElement('button');
++      button.type = 'button';
++      button.id = 'open-initial-world';
++      button.dataset.worldId = entry.worldId;
++      const title = document.createElement('span');
++      title.className = 'folder-title';
++      title.textContent = entry.title;
++      const description = document.createElement('span');
++      description.className = 'folder-description';
++      description.textContent = entry.description;
++      button.append(title, description);
++      button.onclick = () => this.openWorld(entry);
++      worlds.appendChild(button);
++    }
++    root.querySelector<HTMLButtonElement>('#open-editor-folder')!.onclick = () => this.openEditors();
++    document.body.appendChild(root);
++  }
++
++  destroy(): void {
++    this.root?.remove();
++    this.root = null;
++  }
++}
+diff --git a/src/presentation/WorldFolderView.ts.meta b/src/presentation/WorldFolderView.ts.meta
+new file mode 100644
+index e69de29..78d8b97 100644
+--- /dev/null
++++ b/src/presentation/WorldFolderView.ts.meta
+@@ -0,0 +1,9 @@
++{
++  "ver": "4.0.24",
++  "importer": "typescript",
++  "imported": true,
++  "uuid": "770c789f-1965-4b48-8155-d57b14c2d1a0",
++  "files": [],
++  "subMetas": {},
++  "userData": {}
++}
+diff --git a/assets/scripts/GuidanceEditorBuilder.ts b/assets/scripts/GuidanceEditorBuilder.ts
+index ceeacd7..788e152 100644
+--- a/assets/scripts/GuidanceEditorBuilder.ts
++++ b/assets/scripts/GuidanceEditorBuilder.ts
+@@ -1,4 +1,4 @@
+-import { _decorator, Component, resources, JsonAsset, SpriteFrame } from 'cc';
++import { _decorator, Component, resources, JsonAsset, SpriteFrame, isValid } from 'cc';
+ import { GuidanceEditorSession } from './src/editor/GuidanceEditorSession';
+ import type { ChartSourceData } from './src/editor/GuidanceEditorSession';
+ import { createDefaultKeyboardPadLayout } from './src/chart/KeyboardPadLayout';
+@@ -12,9 +12,12 @@ export class GuidanceEditorBuilder extends Component {
+   start(): void {
+     this.session = new GuidanceEditorSession(createDefaultKeyboardPadLayout());
+     resources.load('editor/mock_midi', JsonAsset, (error, asset) => {
++      if (!isValid(this, true) || !isValid(this.node, true) || !this.node.activeInHierarchy) { return; }
+       if (error || !asset) { console.error('编辑器 mock 资源加载失败',error);return; }
+       const view = this.node.addComponent(GuidanceEditorView); view.bindEditor(this.session!,this.session!,asset.json as ChartSourceData);
+       resources.load('guidance/head-logo/spriteFrame', SpriteFrame, (logoError, logo) => {
++        if (!isValid(this, true) || !isValid(this.node, true) || !this.node.activeInHierarchy ||
++            !isValid(view, true) || !isValid(view.node, true)) { return; }
+         if (logoError || !logo) { console.error('编辑器 Head LOGO 加载失败', logoError); return; }
+         view.bindHeadLogo(logo);
+       });
+diff --git a/assets/scripts/SceneBuilder.ts b/assets/scripts/SceneBuilder.ts
+index 4395eb2..b326763 100644
+--- a/assets/scripts/SceneBuilder.ts
++++ b/assets/scripts/SceneBuilder.ts
+@@ -141,7 +141,7 @@ import { createDefaultKeyboardPadLayout, CHART_KEY_IDS } from './src/chart/Keybo
+ import { ChartPremiere, CHART_MEDIA_END_TIMEOUT_MS } from './src/chart/ChartPremiere';
+ import { parseGuidanceChart } from './src/chart/GuidanceChart';
+ import type { GuidanceChart } from './src/chart/GuidanceChart';
+-import { GuidanceEditorBuilder } from './GuidanceEditorBuilder';
++import { WorldFolderBuilder } from './WorldFolderBuilder';
+ import type { RhythmStrike } from './src/trace/RhythmStrike';
+ import type { ChartData, Note } from './src/chart/Note';
+ import type {
+@@ -247,6 +247,8 @@ function addBox(
+  */
+ @ccclass('SceneBuilder')
+ export class SceneBuilder extends Component {
++  /** Set only by the folder composition root before Creator invokes start(). */
++  private folderWorld = false;
+   /** AC-18：演奏开始前在 Creator 属性面板调整，保持演奏中不变。 */
+   @property({ min: 0, max: 100, step: 1, slide: true, tooltip: '引导透明度（百分比），演奏开始前配置' })
+   GuideTransparency = 0;
+@@ -343,16 +345,22 @@ export class SceneBuilder extends Component {
+    * 接线。幂等：start 在组件生命周期内只执行一次。
+    */
+   start(): void {
++    if (!this.folderWorld) {
++      const folders = this.node.addComponent(WorldFolderBuilder);
++      folders.bindWorldFactory(node => {
++        const world = node.addComponent(SceneBuilder);
++        world.folderWorld = true;
++        world.UseGuidanceChart = this.UseGuidanceChart;
++        world.GuideTransparency = this.GuideTransparency;
++      });
++      this.enabled = false;
++      return;
++    }
+     // The component may be attached to Canvas or to a plain child node.
+     const rootTransform = this.node.getComponent(UITransform) ?? this.node.addComponent(UITransform);
+     const parentTransform = this.node.parent?.getComponent(UITransform);
+     rootTransform.setContentSize(parentTransform?.width ?? screen.windowSize.width,
+       parentTransform?.height ?? screen.windowSize.height);
+-    if (typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('guidanceEditor') === '1') {
+-      this.node.addComponent(GuidanceEditorBuilder);
+-      this.enabled = false;
+-      return;
+-    }
+     // —— 输入监听注册（与 onDestroy 的 off 成对；T6） ——
+     // ① autoplay 解锁：浏览器要求 AudioContext 在用户手势内
+     //    启动 / 恢复；首次鼠标按下或键盘按下时起播 BGM 并启动
+@@ -386,12 +394,11 @@ export class SceneBuilder extends Component {
+     // 渲染管线会把它们当 UI 子节点处理（影响层级 / 渲染管线），
+     // 3D 相机看不到。挪到 Canvas 同级的独立 World3D 根节点下，
+     // 走标准 3D 渲染管线。
+-    const sceneRoot = this.node.parent ?? this.node;
+-    let world3D = sceneRoot.getChildByName('World3D');
+-    if (world3D === null) {
+-      world3D = new Node('World3D');
+-      sceneRoot.addChild(world3D);
+-    }
++    // Frame/input/UI stay in the disposable runtime root; 3D must remain outside Canvas.
++    const sceneRoot = this.node;
++    const worldSceneRoot = this.node.parent?.parent ?? this.node;
++    const world3D = new Node('World3D');
++    worldSceneRoot.addChild(world3D);
+     world3D.layer = LAYER_DEFAULT_3D;
+     const worldRoot: Node = world3D;
+     this.worldRootNode = worldRoot;
+@@ -1149,6 +1156,9 @@ export class SceneBuilder extends Component {
+     input.off(Input.EventType.MOUSE_DOWN, this.onAutoplayUnlock, this);
+     input.off(Input.EventType.KEY_DOWN, this.onAutoplayUnlock, this);
+     this.audioOutputClock.destroy();
++    // This owned 3D sibling is intentionally outside Canvas's UI traversal.
++    if (this.worldRootNode && isValid(this.worldRootNode, true)) { this.worldRootNode.destroy(); }
++    this.worldRootNode = null;
+     // 这些灰盒网格 / 材质为运行时创建，不属于资源库资产。
+     for (const asset of this.createdVisualAssets) {
+       if (isValid(asset, true)) { asset.destroy(); }
+@@ -1156,6 +1166,13 @@ export class SceneBuilder extends Component {
+     this.createdVisualAssets.length = 0;
+   }
+ 
++  onDisable(): void {
++    if (this.folderWorld) {
++      this.videoPlayer?.pause();
++      if (this.worldRootNode && isValid(this.worldRootNode, true)) { this.worldRootNode.active = false; }
++    }
++  }
++
+   /**
+    * 首次鼠标按下：在用户手势内起播 BGM（T6 灰盒）。
+    *
+diff --git a/assets/scripts/WorldFolderBuilder.ts b/assets/scripts/WorldFolderBuilder.ts
+new file mode 100644
+index e69de29..822b28b 100644
+--- /dev/null
++++ b/assets/scripts/WorldFolderBuilder.ts
+@@ -0,0 +1,120 @@
++import { _decorator, Component, Node, UITransform, Canvas, Camera, director, Director, isValid } from 'cc';
++import { AccountStartupSession } from './src/director/AccountStartupSession';
++import { WorldFolderView } from './src/presentation/WorldFolderView';
++import { EditorFolderView } from './src/presentation/EditorFolderView';
++import { AccountStartupStorage, FolderStartupView } from './src/presentation/FolderStartupView';
++import { applyFolderTheme } from './src/presentation/FolderTheme';
++import { createWorldFolderReader, editorCatalog } from './src/presentation/FolderCatalog';
++import type { EditorFolderEntry, WorldFolderEntry } from './src/presentation/FolderCatalog';
++import { GuidanceEditorBuilder } from './GuidanceEditorBuilder';
++
++const { ccclass } = _decorator;
++
++/** Composition root for entry routing. No gameplay objects exist before world selection. */
++@ccclass('WorldFolderBuilder')
++export class WorldFolderBuilder extends Component {
++  private readonly storage = new AccountStartupStorage();
++  private readonly startup = new AccountStartupSession(snapshot => this.storage.saveCompletion(snapshot));
++  private readonly startupView = new FolderStartupView();
++  private folderView: WorldFolderView | null = null;
++  private catalogView: EditorFolderView | null = null;
++  private runtimeNode: Node | null = null;
++  private worldFactory: ((node: Node) => void) | null = null;
++  private exitControl: HTMLButtonElement | null = null;
++  private retiring = false;
++  private folderPending = false;
++
++  bindWorldFactory(factory: (node: Node) => void): void { this.worldFactory = factory; }
++
++  start(): void {
++    this.startupView.showLogin(accountId => {
++      try {
++        // Storage failure must not be treated as an uncompleted or completed milestone.
++        const completed = this.storage.readCompletion(accountId);
++        this.startup.submitStartupIntent({ kind: 'Login', accountId, PrologueCompleted: completed });
++        if (completed) { this.showWorldFolder(); return; }
++        this.startupView.showPrologue(accountId, this.startup.getPrologueText(), () => {
++          try {
++            this.startup.submitStartupIntent({ kind: 'CompletePrologue' });
++            this.showWorldFolder();
++          } catch (error) { this.startupView.showError('序章完成状态未能保存：' + String(error)); }
++        });
++      } catch (error) { this.startupView.showError('无法登录本地账号：' + String(error)); }
++    });
++  }
++
++  private clearViews(): void {
++    this.startupView.destroy(); this.folderView?.destroy(); this.catalogView?.destroy();
++    this.folderView = null; this.catalogView = null;
++  }
++
++  private showWorldFolder(): void {
++    this.clearViews();
++    const accountId = this.startup.getStartupSnapshot().accountId;
++    if (accountId === null) { return; }
++    this.folderView = new WorldFolderView(createWorldFolderReader(accountId),
++      entry => this.openWorld(entry), () => this.showEditorFolder());
++    this.folderView.mount();
++  }
++
++  private showEditorFolder(): void {
++    this.clearViews();
++    this.catalogView = new EditorFolderView(editorCatalog, entry => this.openEditor(entry), () => this.showWorldFolder());
++    this.catalogView.mount();
++  }
++
++  private createRuntime(name: string): Node {
++    const node = new Node(name); node.layer = this.node.layer;
++    const parentTransform = this.node.getComponent(UITransform) ?? this.node.parent?.getComponent(UITransform);
++    node.addComponent(UITransform).setContentSize(parentTransform?.width ?? 1920, parentTransform?.height ?? 1080);
++    const uiRoot = this.node.getComponent(Canvas) ? this.node : this.node.parent ?? this.node;
++    uiRoot.addChild(node); this.runtimeNode = node; return node;
++  }
++
++  private openWorld(entry: WorldFolderEntry): void {
++    if (this.retiring || this.runtimeNode || entry.worldId !== 'InitialWorld' || !this.worldFactory) { return; }
++    this.clearViews(); this.worldFactory(this.createRuntime('InitialWorld'));
++    this.showExitControl('退出世界 · 返回世界文件夹');
++  }
++
++  private openEditor(entry: EditorFolderEntry): void {
++    if (this.retiring || this.runtimeNode || entry.entryId !== 'GuidanceEditor' || entry.availability !== 'Implemented') { return; }
++    this.clearViews(); this.createRuntime('GuidanceEditor').addComponent(GuidanceEditorBuilder);
++    this.showExitControl('退出编辑器 · 返回世界文件夹');
++  }
++
++  private showExitControl(title: string): void {
++    this.exitControl = document.createElement('button'); this.exitControl.id = 'folder-runtime-exit';
++    this.exitControl.textContent = title;
++    this.exitControl.style.cssText = 'position:fixed;right:18px;bottom:14px;z-index:300;padding:9px 16px;border:1px solid var(--folder-border);background:var(--folder-panel);color:var(--folder-ink);font:14px var(--folder-font);cursor:pointer;border-radius:4px';
++    applyFolderTheme(this.exitControl);
++    this.exitControl.onclick = () => this.exitRuntime(); document.body.appendChild(this.exitControl);
++  }
++
++  private exitRuntime(): void {
++    if (!this.runtimeNode || this.retiring) { return; }
++    this.retiring = true; this.exitControl?.remove(); this.exitControl = null;
++    const runtime = this.runtimeNode; this.runtimeNode = null;
++    // Deactivation stops FrameDriver/input synchronously; destruction removes media/DOM.
++    runtime.active = false; runtime.destroy(); this.folderPending = true;
++    director.once(Director.EVENT_AFTER_DRAW, this.finishRetirement, this);
++  }
++
++  private finishRetirement(): void {
++    // Creator performs deferred destruction after update and before draw.
++    this.retiring = false;
++    const camera = this.node.getComponent(Canvas)?.cameraComponent ??
++      this.node.parent?.getComponent(Canvas)?.cameraComponent ??
++      this.node.getComponent(Camera) ?? this.node.parent?.getComponent(Camera);
++    if (camera) { camera.clearFlags = Camera.ClearFlag.SOLID_COLOR; }
++    if (this.folderPending && isValid(this, true)) { this.folderPending = false; this.showWorldFolder(); }
++  }
++
++  onDestroy(): void {
++    director.off(Director.EVENT_AFTER_DRAW, this.finishRetirement, this);
++    this.clearViews(); this.exitControl?.remove(); this.exitControl = null;
++    if (this.runtimeNode && isValid(this.runtimeNode, true)) {
++      this.runtimeNode.active = false; this.runtimeNode.destroy(); this.runtimeNode = null;
++    }
++  }
++}
+diff --git a/assets/scripts/WorldFolderBuilder.ts.meta b/assets/scripts/WorldFolderBuilder.ts.meta
+new file mode 100644
+index e69de29..ae749f9 100644
+--- /dev/null
++++ b/assets/scripts/WorldFolderBuilder.ts.meta
+@@ -0,0 +1,9 @@
++{
++  "ver": "4.0.24",
++  "importer": "typescript",
++  "imported": true,
++  "uuid": "29eb0b97-ed36-4d3b-9377-a186dd5d5d80",
++  "files": [],
++  "subMetas": {},
++  "userData": {}
++}

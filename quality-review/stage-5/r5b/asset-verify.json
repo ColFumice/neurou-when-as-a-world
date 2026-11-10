@@ -1,0 +1,465 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-26T04:43:17.637Z",
+  "ok": true,
+  "errors": [],
+  "checks": [
+    {
+      "name": "video.left.size",
+      "ok": true,
+      "detail": "1280x720"
+    },
+    {
+      "name": "video.left.fps",
+      "ok": true,
+      "detail": "30"
+    },
+    {
+      "name": "video.left.duration",
+      "ok": true,
+      "detail": "24"
+    },
+    {
+      "name": "video.left.audio",
+      "ok": true,
+      "detail": "expected no audio track"
+    },
+    {
+      "name": "video.left.codec",
+      "ok": true,
+      "detail": "h264"
+    },
+    {
+      "name": "video.right.size",
+      "ok": true,
+      "detail": "1280x720"
+    },
+    {
+      "name": "video.right.fps",
+      "ok": true,
+      "detail": "30"
+    },
+    {
+      "name": "video.right.duration",
+      "ok": true,
+      "detail": "24"
+    },
+    {
+      "name": "video.right.audio",
+      "ok": true,
+      "detail": "expected no audio track"
+    },
+    {
+      "name": "video.right.codec",
+      "ok": true,
+      "detail": "h264"
+    },
+    {
+      "name": "video.leftLoop.duration",
+      "ok": true,
+      "detail": "72"
+    },
+    {
+      "name": "video.rightLoop.duration",
+      "ok": true,
+      "detail": "72"
+    },
+    {
+      "name": "image.theme-rain-night.size",
+      "ok": true,
+      "detail": "1920x1080"
+    },
+    {
+      "name": "image.theme-rain-night.bytes",
+      "ok": true,
+      "detail": "98672"
+    },
+    {
+      "name": "image.theme-rain-night.quality",
+      "ok": true,
+      "detail": "90"
+    },
+    {
+      "name": "image.theme-rain-night.hash",
+      "ok": true,
+      "detail": "sha256 mismatch"
+    },
+    {
+      "name": "image.world-rain-night.size",
+      "ok": true,
+      "detail": "1920x1080"
+    },
+    {
+      "name": "image.world-rain-night.bytes",
+      "ok": true,
+      "detail": "72114"
+    },
+    {
+      "name": "image.world-rain-night.quality",
+      "ok": true,
+      "detail": "90"
+    },
+    {
+      "name": "image.world-rain-night.hash",
+      "ok": true,
+      "detail": "sha256 mismatch"
+    },
+    {
+      "name": "image.logo-horizontal.size",
+      "ok": true,
+      "detail": "1920x1080"
+    },
+    {
+      "name": "image.logo-horizontal.bytes",
+      "ok": true,
+      "detail": "26476"
+    },
+    {
+      "name": "image.logo-horizontal.quality",
+      "ok": true,
+      "detail": "90"
+    },
+    {
+      "name": "image.logo-horizontal.hash",
+      "ok": true,
+      "detail": "sha256 mismatch"
+    },
+    {
+      "name": "image.logo-vertical.size",
+      "ok": true,
+      "detail": "1920x1080"
+    },
+    {
+      "name": "image.logo-vertical.bytes",
+      "ok": true,
+      "detail": "20080"
+    },
+    {
+      "name": "image.logo-vertical.quality",
+      "ok": true,
+      "detail": "90"
+    },
+    {
+      "name": "image.logo-vertical.hash",
+      "ok": true,
+      "detail": "sha256 mismatch"
+    },
+    {
+      "name": "image.logo-mark.size",
+      "ok": true,
+      "detail": "1920x1080"
+    },
+    {
+      "name": "image.logo-mark.bytes",
+      "ok": true,
+      "detail": "19298"
+    },
+    {
+      "name": "image.logo-mark.quality",
+      "ok": true,
+      "detail": "90"
+    },
+    {
+      "name": "image.logo-mark.hash",
+      "ok": true,
+      "detail": "sha256 mismatch"
+    },
+    {
+      "name": "image.logo-title.size",
+      "ok": true,
+      "detail": "1920x1080"
+    },
+    {
+      "name": "image.logo-title.bytes",
+      "ok": true,
+      "detail": "41956"
+    },
+    {
+      "name": "image.logo-title.quality",
+      "ok": true,
+      "detail": "90"
+    },
+    {
+      "name": "image.logo-title.hash",
+      "ok": true,
+      "detail": "sha256 mismatch"
+    },
+    {
+      "name": "audio.duration",
+      "ok": true,
+      "detail": "72"
+    },
+    {
+      "name": "audio.sampleRate",
+      "ok": true,
+      "detail": "48000"
+    },
+    {
+      "name": "audio.channels",
+      "ok": true,
+      "detail": "2"
+    },
+    {
+      "name": "audio.codec",
+      "ok": true,
+      "detail": "pcm_s16le"
+    },
+    {
+      "name": "audio.hash",
+      "ok": true,
+      "detail": "sha256 mismatch"
+    },
+    {
+      "name": "subtitles.count",
+      "ok": true,
+      "detail": "5"
+    },
+    {
+      "name": "subtitle.sub-01.chars",
+      "ok": true,
+      "detail": "6"
+    },
+    {
+      "name": "subtitle.sub-01.time",
+      "ok": true,
+      "detail": "1000-8000"
+    },
+    {
+      "name": "subtitle.sub-02.chars",
+      "ok": true,
+      "detail": "13"
+    },
+    {
+      "name": "subtitle.sub-02.time",
+      "ok": true,
+      "detail": "11000-19000"
+    },
+    {
+      "name": "subtitle.sub-03.chars",
+      "ok": true,
+      "detail": "13"
+    },
+    {
+      "name": "subtitle.sub-03.time",
+      "ok": true,
+      "detail": "27000-35000"
+    },
+    {
+      "name": "subtitle.sub-04.chars",
+      "ok": true,
+      "detail": "8"
+    },
+    {
+      "name": "subtitle.sub-04.time",
+      "ok": true,
+      "detail": "43000-51000"
+    },
+    {
+      "name": "subtitle.sub-05.chars",
+      "ok": true,
+      "detail": "9"
+    },
+    {
+      "name": "subtitle.sub-05.time",
+      "ok": true,
+      "detail": "61500-69500"
+    },
+    {
+      "name": "beats.count",
+      "ok": true,
+      "detail": "108"
+    },
+    {
+      "name": "beats.downbeats",
+      "ok": true,
+      "detail": "27"
+    },
+    {
+      "name": "beats.bpm",
+      "ok": true,
+      "detail": "90"
+    },
+    {
+      "name": "beats.offset",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "name": "beats.source",
+      "ok": true,
+      "detail": "Manual"
+    },
+    {
+      "name": "beats.hash",
+      "ok": true,
+      "detail": "audioSha256 mismatch"
+    },
+    {
+      "name": "chart.duration",
+      "ok": true,
+      "detail": "72000"
+    },
+    {
+      "name": "chart.keyframes",
+      "ok": true,
+      "detail": "expected 12"
+    },
+    {
+      "name": "chart.layerAudio.1",
+      "ok": true,
+      "detail": "asset:audio:sfx-layer1"
+    },
+    {
+      "name": "chart.layerAudio.2",
+      "ok": true,
+      "detail": "asset:audio:sfx-layer2"
+    },
+    {
+      "name": "chart.layerAudio.3",
+      "ok": true,
+      "detail": "asset:audio:sfx-layer3"
+    },
+    {
+      "name": "chart.bindings",
+      "ok": true,
+      "detail": "5"
+    },
+    {
+      "name": "manifest.pair",
+      "ok": true,
+      "detail": "eb5ad96b7054921c"
+    },
+    {
+      "name": "manifest.activePairId",
+      "ok": true,
+      "detail": "eb5ad96b7054921c"
+    },
+    {
+      "name": "logoMark.exists",
+      "ok": true,
+      "detail": "missing"
+    },
+    {
+      "name": "logoMark.size",
+      "ok": true,
+      "detail": "512x512"
+    },
+    {
+      "name": "logoMark.bytes",
+      "ok": true,
+      "detail": "14719"
+    },
+    {
+      "name": "manifest.audioAsset",
+      "ok": true,
+      "detail": "missing audio asset"
+    },
+    {
+      "name": "sfx.asset:audio:sfx-layer1.file",
+      "ok": true,
+      "detail": "missing"
+    },
+    {
+      "name": "sfx.asset:audio:sfx-layer1.duration",
+      "ok": true,
+      "detail": "150"
+    },
+    {
+      "name": "sfx.asset:audio:sfx-layer1.manifest",
+      "ok": true,
+      "detail": "missing manifest asset"
+    },
+    {
+      "name": "sfx.asset:audio:sfx-layer2.file",
+      "ok": true,
+      "detail": "missing"
+    },
+    {
+      "name": "sfx.asset:audio:sfx-layer2.duration",
+      "ok": true,
+      "detail": "150"
+    },
+    {
+      "name": "sfx.asset:audio:sfx-layer2.manifest",
+      "ok": true,
+      "detail": "missing manifest asset"
+    },
+    {
+      "name": "sfx.asset:audio:sfx-layer3.file",
+      "ok": true,
+      "detail": "missing"
+    },
+    {
+      "name": "sfx.asset:audio:sfx-layer3.duration",
+      "ok": true,
+      "detail": "150"
+    },
+    {
+      "name": "sfx.asset:audio:sfx-layer3.manifest",
+      "ok": true,
+      "detail": "missing manifest asset"
+    },
+    {
+      "name": "manifest.audioHash",
+      "ok": true,
+      "detail": "manifest audio sha256 mismatch"
+    },
+    {
+      "name": "manifest.leftFile",
+      "ok": true,
+      "detail": "left file missing"
+    },
+    {
+      "name": "manifest.rightFile",
+      "ok": true,
+      "detail": "right file missing"
+    },
+    {
+      "name": "manifest.leftSha",
+      "ok": true,
+      "detail": "left sha mismatch"
+    },
+    {
+      "name": "manifest.rightSha",
+      "ok": true,
+      "detail": "right sha mismatch"
+    }
+  ],
+  "summary": {
+    "video": {
+      "original": "1280x720 / 30fps / 24s",
+      "loop": "1280x720 / 30fps / 72s",
+      "stereoBaselinePx": 8
+    },
+    "images": {
+      "count": 6,
+      "size": "1920x1080",
+      "quality": 90,
+      "maxBytes": 512000
+    },
+    "logoMark": {
+      "size": "512x512",
+      "alpha": true,
+      "maxBytes": 204800
+    },
+    "audio": {
+      "durationSeconds": 72,
+      "bpm": 90,
+      "sampleRate": 48000,
+      "channels": 2,
+      "codec": "pcm_s16le"
+    },
+    "subtitles": {
+      "count": 5,
+      "minChars": 5,
+      "maxChars": 15
+    },
+    "chart": {
+      "keyframes": 12,
+      "bindings": 5,
+      "durationMs": 72000,
+      "beats": 108,
+      "downbeats": 27
+    }
+  }
+}

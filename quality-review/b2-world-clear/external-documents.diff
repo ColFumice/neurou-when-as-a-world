@@ -1,0 +1,88 @@
+diff --git a/docs/NAMEBOOK.md b/docs/NAMEBOOK.md
+index 4f8204c..8cadca8 100644
+--- a/docs/NAMEBOOK.md
++++ b/docs/NAMEBOOK.md
+@@ -880,4 +880,67 @@ EditorRoot、MusicEditor、RgbWavetableEditor、GridEditor、MidiTrackEditor、M
+ - FormatTime 最小结构：{ epochMs: number }
+ 
+ ### 明确不新增（B2.3 或更后）
+-- WorldRegistry / DuplicateWorld / CrossDeviceDuplicate / WorldMigration / RealityPause / FileCarryPayload / ObserverSync / AuthService / CommitRelay / OfflineGrace / AccessCode 实装
++- WorldRegistry / DuplicateWorld / CrossDeviceDuplicate / WorldMigration / RealityPause / FileCarryPayload / ObserverSync / AuthService / CommitRelay / OfflineGrace / AccessCode 实装
++
++---
++
++## 名库 v3.8 附录 · VERDICT-226~240 B2.2c 真实通关链路
++
++### 沿用/复活的冻结名
++- EventSpaceCenter：主角事件空间初始球心，完整 20 维不可变内容配置
++- EventDistance：有限、严格正的球面半径
++- LedgerPosition：当前 accountId/worldId/protagonistCharacterId 权威账本所有向量累计和
++- SphereCrossing：director 业务类，重新实现（archive 不修改）
++- ChartEntry：source 扩展为 DeepTrace / SphereCrossing
++- WorldBossChart：世界内容清单中唯一 World 级作者谱面
++- ChartRef：新增可选 state: Entry / PremiereCompleted
++- RouteSignature：完成追加后主角真实累计坐标的不可变快照
++- DivergenceAxis：六个 NarrativeDimension 情感成员的联合类型
++- WorldClearRecord：Primary 首次合法通关的账号记录
++
++### 新增命名
++- WorldGameplayContext（director 契约 / assets/scripts 接线）
++- WorldBossChartSource（chart）
++- WorldClearSession（director）
++- WorldClearStorage（presentation）
++- WorldClearProjection（director 契约）
++- deriveLedgerPosition（ledger）
++- classifyDivergenceAxis（director）
++- classifyChartReference（director）
++- hasChartPremiereCompleted（director）
++- readWorldClearRecords（WorldClearStorage）
++- saveWorldClearRecord（WorldClearStorage）
++
++### 结构
++- ChartEntry：entryId / worldId / characterId / ChartRef / tier / source
++- ChartRef.state：Entry / PremiereCompleted
++- 只读引用分类：Entry / PremiereCompleted / Unclassified
++- RouteSignature：VectorSchemaVersion=1 / ledgerPosition / classificationVersion=1 / divergenceAxis / narrativeTime
++- WorldClearRecord：schemaVersion=1 / accountId / worldId / worldKind='Primary' / protagonistCharacterId / ChartRef / contentRevision / completionEventId / clearedAt / routeSignature
++- WorldClearProjection：schemaVersion=1 / accountId / records
++
++### 存储 key
++- neurou-account-world-clears-v1:<encodeURIComponent(accountId)>
++
++### 6 个 DivergenceAxis
++NarrativeDimension.Red / Green / Blue / Black / White / Grey
++（旧 .Understanding / .Empathy 不映射为颜色、不复活）
++
++### 分类算法
++- 正最大值严格为正时选最大者
++- 正并列按 Red → Green → Blue → Black → White → Grey 选首项
++- 六情感全零、其余维非零 → divergenceAxis=null
++- 完整零向量 → 不生成合法通关路线
++
++### 修订
++- VERDICT-030 精确为"账本存在合法首演完成引用"，T6 Entry 保留
++- 旧 T6/T7 只读兼容、不回写
++
++### 保持
++- FirstWorldCleared / CopyPermission 核心
++- 七项 WorldState 契约
++- WorldForkAvailability=NotImplemented
++- 完整 20 维感绪系统（阶段 4）
++
++### 明确不新增
++- WorldFork / FileCarryPayload / WorldRegistry / 跨设备 / 观察者同步 / 服务 / AccessCode
+diff --git a/docs/spec/stage-1.md b/docs/spec/stage-1.md
+index b65a5f7..78c5e1f 100644
+--- a/docs/spec/stage-1.md
++++ b/docs/spec/stage-1.md
+@@ -12,7 +12,9 @@
+ 
+ > 本文件最近更新：B2.1 本地多世界基础，纳入 VERDICT-201 ~ 210。
+ 
+-> 本文件最近更新：B2.2 账号里程碑与状态契约，纳入 VERDICT-211 ~ 225。
++> 本文件最近更新：B2.2 账号里程碑与状态契约，纳入 VERDICT-211 ~ 225。
++
++> 本文件最近更新：B2.2c 真实通关链路，纳入 VERDICT-226 ~ 240。
+ 
+ 
+ 

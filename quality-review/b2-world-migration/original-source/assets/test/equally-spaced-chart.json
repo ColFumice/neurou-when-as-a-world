@@ -1,0 +1,17 @@
+﻿{
+  "testChartName": "equally-spaced-notes",
+  "timeBase": "videoMediaTimeMs",
+  "intervalMs": 500,
+  "notes": [
+    { "timeMs": 500 },
+    { "timeMs": 1000 },
+    { "timeMs": 1500 },
+    { "timeMs": 2000 },
+    { "timeMs": 2500 },
+    { "timeMs": 3000 },
+    { "timeMs": 3500 },
+    { "timeMs": 4000 },
+    { "timeMs": 4500 },
+    { "timeMs": 5000 }
+  ]
+}

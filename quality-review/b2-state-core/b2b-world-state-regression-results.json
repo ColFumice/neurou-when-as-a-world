@@ -1,0 +1,189 @@
+{
+  "suite": "B2.2b world-state foundation contracts",
+  "evidenceClass": "CONTRACT_TEST",
+  "scope": "Injected in-memory medium and direct isolated API calls; no real gameplay restore, milestone completion, Cocos flow, or browser writes claimed.",
+  "runAt": "2026-10-10T11:09:50.576Z",
+  "sourceHashes": [
+    {
+      "file": "src/director/WorldStateSession.ts",
+      "sha256": "9085af46ee34c6651876c020d2e898d96bdd3e0fc632006279e8307a63aa2b58"
+    },
+    {
+      "file": "src/presentation/WorldStateStorage.ts",
+      "sha256": "95e03b7610946041e0aa635d37cf5790b17cdd37d3ed7272080a5b69815e8056"
+    }
+  ],
+  "passed": true,
+  "count": 42,
+  "passedCount": 42,
+  "checks": [
+    {
+      "id": "initial-reader-has-no-capture-and-fork-is-not-implemented",
+      "passed": true
+    },
+    {
+      "id": "ownership-contract-Ledger",
+      "passed": true
+    },
+    {
+      "id": "ownership-contract-PuzzleProgress",
+      "passed": true
+    },
+    {
+      "id": "ownership-contract-RecallCount",
+      "passed": true
+    },
+    {
+      "id": "ownership-contract-FormatTime",
+      "passed": true
+    },
+    {
+      "id": "ownership-contract-WorldLink",
+      "passed": true
+    },
+    {
+      "id": "ownership-contract-ChartSnapshot",
+      "passed": true
+    },
+    {
+      "id": "ownership-contract-ChartScore",
+      "passed": true
+    },
+    {
+      "id": "format-time-proposal-and-world-link-applicability-are-metadata",
+      "passed": true
+    },
+    {
+      "id": "capture-is-incomplete-with-seven-missing-sections-and-control-diagnostics",
+      "passed": true
+    },
+    {
+      "id": "candidate-header-has-all-fields-with-explicit-unavailable-values",
+      "passed": true
+    },
+    {
+      "id": "capture-and-ownership-are-recursively-frozen",
+      "passed": true
+    },
+    {
+      "id": "capture-publishes-a-new-diagnostic-result-only",
+      "passed": true
+    },
+    {
+      "id": "invalid-clock-retains-last-capture",
+      "passed": true
+    },
+    {
+      "id": "restore-rejects-null-with-diagnostic",
+      "passed": true
+    },
+    {
+      "id": "restore-rejects-array-with-diagnostic",
+      "passed": true
+    },
+    {
+      "id": "restore-rejects-primitive-with-diagnostic",
+      "passed": true
+    },
+    {
+      "id": "restore-rejects-missing-fields-with-diagnostic",
+      "passed": true
+    },
+    {
+      "id": "restore-rejects-unknown-version-with-diagnostic",
+      "passed": true
+    },
+    {
+      "id": "restore-rejects-other-account-with-diagnostic",
+      "passed": true
+    },
+    {
+      "id": "restore-rejects-other-world-with-diagnostic",
+      "passed": true
+    },
+    {
+      "id": "restore-rejects-unknown-world-kind-with-diagnostic",
+      "passed": true
+    },
+    {
+      "id": "restore-rejects-primary-with-shore-origin-with-diagnostic",
+      "passed": true
+    },
+    {
+      "id": "restore-rejects-shore-with-no-origin-with-diagnostic",
+      "passed": true
+    },
+    {
+      "id": "restore-rejects-shore-with-unknown-origin-with-diagnostic",
+      "passed": true
+    },
+    {
+      "id": "restore-rejects-negative-revision-with-diagnostic",
+      "passed": true
+    },
+    {
+      "id": "restore-rejects-fractional-revision-with-diagnostic",
+      "passed": true
+    },
+    {
+      "id": "restore-rejects-invalid-time-with-diagnostic",
+      "passed": true
+    },
+    {
+      "id": "valid-header-is-only-header-valid-never-complete",
+      "passed": true
+    },
+    {
+      "id": "incomplete-and-forged-complete-restore-cannot-succeed",
+      "passed": true
+    },
+    {
+      "id": "header-rejects-inherited-missing-and-accessor-fields-without-getter-invocation",
+      "passed": true
+    },
+    {
+      "id": "complete-snapshot-brand-prevents-structural-header-construction",
+      "passed": true
+    },
+    {
+      "id": "storage-missing-is-distinct-from-null-and-isolated-by-both-identities",
+      "passed": true
+    },
+    {
+      "id": "storage-rejects-bad-json-and-preserves-raw-value",
+      "passed": true
+    },
+    {
+      "id": "storage-rejects-stored-null-and-preserves-raw-value",
+      "passed": true
+    },
+    {
+      "id": "storage-rejects-array-and-preserves-raw-value",
+      "passed": true
+    },
+    {
+      "id": "storage-rejects-primitive-and-preserves-raw-value",
+      "passed": true
+    },
+    {
+      "id": "unknown-version-and-mismatched-storage-candidates-rejected-by-director",
+      "passed": true
+    },
+    {
+      "id": "all-save-inputs-rejected-with-zero-writes-and-unchanged-storage",
+      "passed": true
+    },
+    {
+      "id": "read-medium-failure-is-explicit-and-save-never-touches-medium",
+      "passed": true
+    },
+    {
+      "id": "invalid-boundary-identities-rejected-before-storage-access",
+      "passed": true
+    },
+    {
+      "id": "account-max64-world-max128-and-invalid-unicode-rejected-explicitly",
+      "passed": true
+    }
+  ]
+}

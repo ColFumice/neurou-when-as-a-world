@@ -1,0 +1,53 @@
+{
+  "category": "ContractTest",
+  "note": "Actual SceneBuilder persistence methods with inert Creator imports, real domain/codec/storage and controlled media. Does not establish Cocos rendering or production acceptance.",
+  "passed": 9,
+  "failed": 0,
+  "results": [
+    {
+      "name": "genuine first activation publishes one durable empty Ledger and stable Puzzle baseline before gameplay",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "unchanged stable frames do not repeatedly save or revise the checkpoint",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "narrative choice root wiring persists same authoritative Ledger before publishing crossing and retains stable Puzzle",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "root append write failure retains persistent document, in-memory core and domain Ledger before retry",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "active seven-second timing remains UnsupportedBoundary without resetting timer or saving a fabricated stable phase",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "real T6 endpoint append durably records Ledger with Puzzle=null before endpoint/deep/reveal publication",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "failed real T6 endpoint save keeps prior checkpoint, untriggered deep trace and no event; later retry writes original ID once",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "real T7 completion is durably null-Puzzle intermediate then one stable completed checkpoint with both original IDs",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "failed stable checkpoint after durable T7 completion retains null boundary and retries without re-appending T6/T7",
+      "result": "PASS",
+      "category": "ContractTest"
+    }
+  ]
+}

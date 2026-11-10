@@ -1,0 +1,27 @@
+{
+  "generatedUtc": "2026-10-11T07:53:46.046Z",
+  "nodeVersion": "v24.19.0",
+  "compilerOptions": {
+    "lib": [
+      "ES2020"
+    ],
+    "types": [],
+    "noDOM": true,
+    "noNodeTypes": true,
+    "noEngineDeclarations": true
+  },
+  "sources": [
+    {
+      "path": "src/director/SharedServiceProtocolContracts.ts",
+      "sha256": "e74f48e14ded771db56cb1890c24a19490e52e2a9b8d96a9c3a9a9bad33b4a80"
+    },
+    {
+      "path": "src/director/SharedServiceProtocolCodec.ts",
+      "sha256": "22bb5e8139f8323388bcb2129d021471c48b97c0ede4a25cbea1285629400fea"
+    }
+  ],
+  "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "logBytes": 0,
+  "contractsRuntimeEmission": "\"use strict\";\nObject.defineProperty(exports, \"__esModule\", { value: true });\n",
+  "pass": true
+}

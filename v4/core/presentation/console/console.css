@@ -1,0 +1,1670 @@
+﻿.world-console {
+  position: relative;
+  min-height: calc(100vh - 10rem);
+  overflow: hidden;
+  border: 1px solid rgba(142, 154, 171, 0.24);
+  background: #05070a;
+  color: #d8e2ee;
+  font: 400 0.82rem/1.55 "Cascadia Code", "Consolas", monospace;
+}
+
+.world-console button,
+.world-console input {
+  font: inherit;
+}
+
+.world-console__topbar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.55rem 0.8rem;
+  border-bottom: 1px solid rgba(142, 154, 171, 0.2);
+  background: #0d1219;
+}
+
+.world-console__topbar button,
+.console-settings button,
+.console-world-view button {
+  border: 1px solid rgba(142, 154, 171, 0.32);
+  background: #121922;
+  color: #d8e2ee;
+  padding: 0.35rem 0.55rem;
+  cursor: pointer;
+}
+
+.world-console__topbar button:hover,
+.console-settings button:hover,
+.console-world-view button:hover {
+  border-color: #7fa8ff;
+}
+
+.world-console__eyebrow,
+.world-console__section-label {
+  color: #6f7d90;
+  letter-spacing: 0.12em;
+  font-size: 0.66rem;
+}
+
+.world-console__topbar strong {
+  color: #f0f4fa;
+  font-weight: 600;
+}
+
+.world-console__mode {
+  margin-left: auto;
+  color: #7fa8ff;
+  font-size: 0.7rem;
+}
+
+.console-environment {
+  padding: 0.85rem 1rem 0.65rem;
+  border-bottom: 1px solid rgba(142, 154, 171, 0.14);
+}
+
+.console-environment__text {
+  min-height: 1.4rem;
+  margin: 0;
+  color: #b9c9dd;
+  white-space: pre-wrap;
+}
+
+.console-caret {
+  color: #7fa8ff;
+  animation: console-caret-blink 0.8s steps(1, end) infinite;
+}
+
+.console-command-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 0.75rem;
+  margin-top: 0.55rem;
+  padding-top: 0.45rem;
+  border-top: 1px dashed rgba(142, 154, 171, 0.14);
+}
+
+.console-command-list__item {
+  display: inline-flex;
+  gap: 0.35rem;
+  color: #6f7d90;
+  font-size: 0.68rem;
+}
+
+.console-command-list__item b {
+  color: #9eb8de;
+  font-weight: 500;
+}
+
+.world-console__layout {
+  display: grid;
+  grid-template-columns: minmax(13rem, 22rem) minmax(0, 1fr);
+  min-height: 17rem;
+}
+
+.world-console__directory {
+  padding: 0.8rem;
+  border-right: 1px solid rgba(142, 154, 171, 0.14);
+  background: rgba(10, 14, 20, 0.8);
+}
+
+.world-console__section-label {
+  margin: 0 0 0.25rem;
+}
+
+.world-console__path,
+.world-console__input-path {
+  color: #7fa8ff;
+}
+
+.world-console__directory ul {
+  display: grid;
+  gap: 0.2rem;
+  margin: 0.7rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.console-entry {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  width: 100%;
+  border: 1px solid transparent;
+  background: transparent;
+  color: #b9c9dd;
+  padding: 0.28rem 0.35rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+.console-entry:hover,
+.console-entry.is-selected {
+  border-color: rgba(127, 168, 255, 0.45);
+  background: rgba(127, 168, 255, 0.08);
+}
+
+.console-entry.is-orphan {
+  color: #c4ae86;
+}
+
+.console-entry__kind {
+  margin-left: auto;
+  color: #667487;
+  font-size: 0.62rem;
+}
+
+.console-entry__warning {
+  color: #ffcf84;
+}
+
+.world-entry-highlight {
+  display: inline-flex;
+  gap: 0.2rem;
+  align-items: center;
+  padding: 0.02rem 0.15rem;
+}
+
+.world-entry-highlight__label {
+  padding: 0 0.1rem;
+}
+
+.world-entry-highlight.is-active,
+.world-entry-highlight.is-hovered,
+.console-entry:hover .world-entry-highlight {
+  background: #f1f4f8;
+  color: #05070a;
+}
+
+.world-console__main {
+  min-width: 0;
+  padding: 0.8rem;
+}
+
+.console-output {
+  height: 15rem;
+  overflow-y: auto;
+  border: 1px solid rgba(142, 154, 171, 0.14);
+  background: rgba(4, 6, 9, 0.75);
+  padding: 0.55rem 0.65rem;
+}
+
+.console-output__line {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.world-console__input {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.55rem 0.8rem;
+  border-top: 1px solid rgba(142, 154, 171, 0.18);
+  background: #0c1118;
+}
+
+.console-prompt {
+  color: #7fa8ff;
+}
+
+.world-console__input input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #eaf1f9;
+  caret-color: #7fa8ff;
+}
+
+.world-console__empty {
+  margin: 0.8rem 0 0;
+  color: #596577;
+}
+
+.console-settings {
+  position: absolute;
+  top: 3rem;
+  right: 1rem;
+  z-index: 20;
+  width: min(22rem, calc(100% - 2rem));
+  border: 1px solid rgba(127, 168, 255, 0.35);
+  background: #0b1017;
+  box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.45);
+}
+
+.console-settings__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0.65rem;
+  border-bottom: 1px solid rgba(142, 154, 171, 0.18);
+  color: #9eb8de;
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+}
+
+.console-settings__group {
+  padding: 0.65rem;
+  border-bottom: 1px solid rgba(142, 154, 171, 0.1);
+}
+
+.console-settings__label {
+  margin: 0 0 0.4rem;
+  color: #6f7d90;
+  font-size: 0.68rem;
+}
+
+.console-settings__effects {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.console-settings__effects button.is-active {
+  border-color: #7fa8ff;
+  background: #1b2940;
+  color: #eaf1f9;
+}
+
+.console-settings__placeholder {
+  color: #596577;
+  font-size: 0.7rem;
+}
+
+.console-context-menu {
+  position: fixed;
+  z-index: 40;
+  min-width: 7.5rem;
+  border: 1px solid rgba(255, 178, 193, 0.4);
+  background: #120b10;
+  padding: 0.2rem;
+}
+
+.console-context-menu button {
+  display: block;
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: #ffd0d8;
+  padding: 0.35rem 0.45rem;
+  text-align: left;
+}
+
+.console-context-menu button:hover {
+  background: rgba(255, 178, 193, 0.12);
+}
+
+.console-world-view {
+  min-height: 24rem;
+  padding: 3rem clamp(1.5rem, 6vw, 5rem);
+  background:
+    radial-gradient(circle at 70% 20%, rgba(127, 168, 255, 0.12), transparent 24rem),
+    #05070a;
+}
+
+.console-world-view h2 {
+  margin: 0.4rem 0 1rem;
+  font: 600 2.4rem/1.1 "Segoe UI", "Microsoft YaHei", sans-serif;
+  color: #eaf1f9;
+}
+
+.console-world-view p {
+  max-width: 36rem;
+  color: #8494a8;
+}
+
+.console-loading-sequence {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: grid;
+  place-items: center;
+  background: rgba(3, 5, 8, 0.94);
+}
+
+.console-loading-progress,
+.console-pixel-zoom,
+.console-enter-transition {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.console-loading-progress.is-active,
+.console-pixel-zoom.is-active,
+.console-enter-transition.is-active {
+  opacity: 1;
+}
+
+.console-loading-progress {
+  align-content: center;
+  gap: 0.55rem;
+  color: #b9c9dd;
+}
+
+.console-loading-progress__lines {
+  display: grid;
+  gap: 0.2rem;
+  color: #7d90aa;
+  font-size: 0.72rem;
+  animation: console-progress-scroll 1.4s linear infinite;
+}
+
+.console-loading-progress__bar {
+  width: min(26rem, 70vw);
+  height: 0.42rem;
+  border: 1px solid rgba(127, 168, 255, 0.35);
+}
+
+.console-loading-progress__bar span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: #7fa8ff;
+  animation: console-progress-fill 1.2s ease-out both;
+}
+
+.console-loading-progress__percent {
+  color: #7fa8ff;
+  font-size: 0.7rem;
+}
+
+.console-pixel-zoom {
+  align-content: center;
+  gap: 1rem;
+}
+
+.console-pixel-zoom__grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1.4rem);
+  gap: 0.18rem;
+  transform: perspective(28rem) rotateX(18deg);
+}
+
+.console-pixel-zoom__grid span {
+  width: 1.4rem;
+  height: 1.4rem;
+  background: #17243a;
+  animation: console-pixel-pop 0.8s ease-in-out infinite alternate;
+}
+
+.console-pixel-zoom__caption {
+  color: #7fa8ff;
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+}
+
+.console-enter-transition {
+  overflow: hidden;
+}
+
+.console-enter-transition__black {
+  position: absolute;
+  inset: 0;
+  background: #000;
+  animation: console-black-in 0.5s ease-out both;
+}
+
+.console-enter-transition__flash {
+  position: absolute;
+  inset: 0;
+  background: #fff;
+  animation: console-flash 0.55s ease-out both;
+}
+
+.console-enter-transition__label {
+  position: relative;
+  display: grid;
+  gap: 0.4rem;
+  text-align: center;
+  color: #eaf1f9;
+}
+
+.console-enter-transition__label span {
+  color: #7fa8ff;
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+}
+
+.console-enter-transition__label strong {
+  font: 600 2rem/1.1 "Segoe UI", "Microsoft YaHei", sans-serif;
+}
+
+.world-console::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.console-effect-scanline::after {
+  opacity: 0.18;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(173, 216, 230, 0.22) 0,
+    rgba(173, 216, 230, 0.22) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  animation: console-scanline 7s linear infinite;
+}
+
+.console-effect-flicker {
+  animation: console-flicker 3.2s steps(1, end) infinite;
+}
+
+.console-effect-glitch .world-console__layout {
+  animation: console-glitch 2.8s steps(1, end) infinite;
+}
+
+.console-effect-fisheye .world-console__layout,
+.console-effect-fisheye .console-environment {
+  transform: perspective(42rem) scale(1.025);
+  transform-origin: 50% 50%;
+}
+
+@keyframes console-caret-blink {
+  50% { opacity: 0; }
+}
+
+@keyframes console-scanline {
+  from { transform: translateY(-12px); }
+  to { transform: translateY(12px); }
+}
+
+@keyframes console-flicker {
+  0%, 92%, 100% { opacity: 1; }
+  93% { opacity: 0.72; }
+  94% { opacity: 0.96; }
+  95% { opacity: 0.8; }
+}
+
+@keyframes console-glitch {
+  0%, 90%, 100% { transform: translate(0); filter: none; }
+  91% { transform: translate(-1px, 1px); filter: hue-rotate(18deg); }
+  92% { transform: translate(1px, -1px); filter: hue-rotate(-18deg); }
+  93% { transform: translate(0); filter: none; }
+}
+
+@keyframes console-progress-scroll {
+  from { transform: translateY(-6px); }
+  to { transform: translateY(6px); }
+}
+
+@keyframes console-progress-fill {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+@keyframes console-pixel-pop {
+  from { background: #17243a; transform: scale(0.8); }
+  to { background: #7fa8ff; transform: scale(1.1); }
+}
+
+@keyframes console-black-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes console-flash {
+  0% { opacity: 0; }
+  12% { opacity: 0.95; }
+  100% { opacity: 0; }
+}
+
+@media (max-width: 800px) {
+  .world-console__layout {
+    grid-template-columns: 1fr;
+  }
+
+  .world-console__directory {
+    border-right: 0;
+    border-bottom: 1px solid rgba(142, 154, 171, 0.14);
+  }
+}
+
+/* R3.6c ProjectConsole：纯文本全屏，无栏目。 */
+.project-console {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding: 1rem;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(48, 74, 98, 0.18), transparent 62%),
+    #05070a;
+  color: #c9d5e4;
+  font-family: Consolas, "Cascadia Mono", monospace;
+  overflow: hidden;
+}
+
+.project-console__topbar {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding-bottom: 0.7rem;
+  border-bottom: 1px solid rgba(142, 154, 171, 0.2);
+}
+
+.project-console__topbar button {
+  border: 1px solid rgba(142, 154, 171, 0.32);
+  background: #121922;
+  color: #dbe6f4;
+  padding: 0.3rem 0.7rem;
+  cursor: pointer;
+}
+
+.project-console__eyebrow {
+  color: #6f7d90;
+  letter-spacing: 0.14em;
+  font-size: 0.68rem;
+}
+
+.project-console__topbar strong {
+  color: #f0f4fa;
+  font-weight: 600;
+}
+
+.project-console__mode {
+  margin-left: auto;
+  color: #7fa8ff;
+  font-size: 0.72rem;
+}
+
+.project-console__main {
+  flex: 1;
+  min-height: 0;
+  padding: 0.9rem 0.2rem;
+}
+
+.project-console__main .console-output {
+  height: 100%;
+  max-height: none;
+  overflow-y: auto;
+  border: 0;
+  background: transparent;
+  font-size: 0.84rem;
+  line-height: 1.6;
+}
+
+.project-console {
+  box-sizing: border-box;
+}
+
+.project-console .console-command-list {
+  display: none;
+}
+
+.project-console {
+  box-sizing: border-box;
+  bottom: 3rem;
+  height: auto;
+  max-height: none;
+}
+
+.project-console .console-command-list {
+  display: none;
+}
+
+.project-console__main {
+  padding-bottom: 0.5rem;
+}
+
+.project-console__input {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex: 0 0 auto;
+  padding: 0.7rem 0.2rem 0.2rem;
+  border-top: 1px solid rgba(142, 154, 171, 0.2);
+}
+
+.project-console__input input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #eaf1f9;
+  font: inherit;
+}
+/* R3.6c-patch-1：纯黑沉浸式 ProjectConsole。 */
+.project-console {
+  inset: 0;
+  bottom: 0;
+  height: 100vh;
+  max-height: 100vh;
+  padding: 1.6rem 2rem;
+  display: flex;
+  flex-direction: column;
+  background: #000000;
+  color: #e8e8e8;
+  font: 400 20px/1.65 "Cascadia Mono", "Consolas", monospace;
+  overflow: hidden;
+}
+
+.project-console::after {
+  display: none;
+}
+
+.project-console__scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.project-console__scroll .console-output {
+  height: auto;
+  max-height: none;
+  overflow: visible;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  color: #e8e8e8;
+  white-space: pre-wrap;
+}
+
+.project-console__scroll .console-output__line {
+  min-height: 1.65em;
+}
+
+.project-console__input {
+  position: static;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex: 0 0 auto;
+  padding: 0.45rem 0 0;
+  border: 0;
+  background: transparent;
+  font: inherit;
+}
+
+.project-console__path {
+  color: #e8e8e8;
+}
+
+.project-console__input input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #ffffff;
+  font: inherit;
+  caret-color: #ffffff;
+}
+
+.project-console__black {
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  display: grid;
+  place-items: center;
+  background: #000000;
+}
+
+.project-console__pixel {
+  width: 4px;
+  height: 4px;
+  background: #ffffff;
+  box-shadow: 0 0 12px #ffffff;
+  animation: console-pixel-out 0.5s ease-out both;
+}
+
+.project-console__black-prologue {
+  max-width: min(54rem, 84vw);
+  margin: 0;
+  color: #ffffff;
+  font: 400 22px/1.9 "Segoe UI", "Microsoft YaHei", sans-serif;
+  text-align: center;
+  white-space: pre-wrap;
+  /* 原 3s；显示时间 ×3，与 WORLD_PROLOGUE_MS = 9000 对齐。 */
+  animation: console-black-prologue 9s ease-in-out both;
+}
+
+@keyframes console-pixel-out {
+  0% { opacity: 0; transform: scale(0.2); }
+  35% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(5); }
+}
+
+@keyframes console-black-prologue {
+  0% { opacity: 0; }
+  16% { opacity: 1; }
+  84% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.project-console__world {
+  flex: 1;
+  display: grid;
+  place-content: center;
+  gap: 1.2rem;
+  text-align: center;
+  animation: project-world-recover 2s ease-out both;
+}
+
+.project-console__world-eyebrow {
+  color: #8f9ba8;
+  font-size: 0.72em;
+  letter-spacing: 0.2em;
+}
+
+.project-console__world h2 {
+  margin: 0;
+  color: #f4f6f8;
+  font: 600 clamp(2.5rem, 8vw, 7rem)/1 "Segoe UI", "Microsoft YaHei", sans-serif;
+}
+
+.project-console__world .project-console__prologue {
+  color: #d8dee6;
+  font: 400 1rem/1.9 "Segoe UI", "Microsoft YaHei", sans-serif;
+  white-space: pre-wrap;
+}
+
+.project-console.is-blackout {
+  background: #000000;
+}
+
+/* R3.6c-patch-2：上方历史 / 下方 40vh 输入区。 */
+.project-console {
+  display: flex;
+  flex-direction: column;
+  padding: 1.3rem 1.8rem 0;
+}
+
+.project-console__history {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding-bottom: 0.8rem;
+  scrollbar-width: thin;
+}
+
+.project-console__history .console-output {
+  height: auto;
+  max-height: none;
+  overflow: visible;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  white-space: pre-wrap;
+}
+
+.project-console__input-area {
+  flex: 0 0 40vh;
+  min-height: 9rem;
+  overflow: hidden;
+  padding: 0.8rem 0 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  background: #080808;
+}
+
+.project-console__input {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+}
+
+.project-console__input textarea {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  resize: none;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #f2f2f2;
+  font: inherit;
+  line-height: 1.65;
+  caret-color: #ffffff;
+}
+
+.project-console__frame {
+  position: fixed;
+  inset: 2px;
+  z-index: 10;
+  border: 2px solid #ffffff;
+  pointer-events: none;
+}
+
+.project-console__flash {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  background: #ffffff;
+  pointer-events: none;
+  animation: project-white-flash 0.46s ease-out both;
+}
+
+@keyframes project-white-flash {
+  0% { opacity: 0; }
+  12% { opacity: 1; }
+  55% { opacity: 0.92; }
+  100% { opacity: 0; }
+}
+
+.project-console__world-command {
+  position: fixed;
+  left: 2.2rem;
+  bottom: 2.2rem;
+  z-index: 12;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  width: min(38rem, 70vw);
+  padding: 0.55rem 0.8rem;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  background: rgba(80, 80, 80, 0.55);
+  color: #ffffff;
+  font: 400 16px/1.5 "Cascadia Mono", "Consolas", monospace;
+  backdrop-filter: blur(6px);
+}
+
+.project-console__world-command input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #ffffff;
+  font: inherit;
+  caret-color: #ffffff;
+}
+
+.project-console__world {
+  animation: project-world-recover 2s ease-out both;
+}
+
+.project-console__black {
+  z-index: 6;
+}
+
+/* R3.6c-patch-3：单栏流式 cmp + 视口内边框。 */
+.project-console {
+  position: fixed;
+  inset: 6px;
+  width: auto;
+  height: auto;
+  min-height: 0;
+  margin: 0;
+  padding: 1.2rem 1.8rem 1rem;
+  box-sizing: border-box;
+  border: 1px solid rgba(255, 255, 255, 0.66);
+  border-radius: 16px;
+  background: #000000;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.project-console__frame {
+  display: none;
+}
+
+.project-console__scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding-bottom: 0.4rem;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.project-console__scroll::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
+}
+
+.project-console__scroll .console-output {
+  height: auto;
+  max-height: none;
+  overflow: visible;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  white-space: pre-wrap;
+}
+
+.project-console__history,
+.project-console__input-area {
+  display: contents;
+}
+
+.project-console__input {
+  position: static;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  width: 100%;
+  height: auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font: inherit;
+}
+
+.project-console__input input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #ffffff;
+  font: inherit;
+  caret-color: #ffffff;
+}
+
+.project-console__world {
+  flex: 1;
+  min-height: 0;
+}
+
+.project-console__flash {
+  animation: project-white-flash 200ms linear both;
+}
+
+@keyframes project-white-flash {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* R3.6c-patch-4：动画细节。 */
+.project-console {
+  animation: console-frame-in 700ms ease-out both;
+}
+
+.project-console__scroll {
+  animation: terminal-in 520ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+.project-console__scroll .console-output__line {
+  animation: terminal-line-in 180ms ease-out both;
+}
+
+.project-console__black {
+  animation: console-shutdown 80ms ease-out both;
+}
+
+@keyframes console-frame-in {
+  0% { border-color: rgba(255, 255, 255, 0.18); box-shadow: inset 0 0 0 rgba(255, 255, 255, 0); }
+  100% { border-color: #ffffff; box-shadow: inset 0 0 32px rgba(255, 255, 255, 0.035); }
+}
+
+@keyframes terminal-in {
+  0% { opacity: 0; transform: translateY(6px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes terminal-line-in {
+  0% { opacity: 0; transform: translateY(3px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes console-shutdown {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.project-console__world {
+  position: relative;
+  overflow: hidden;
+}
+
+.project-console__world-scene {
+  position: absolute;
+  inset: -8%;
+  overflow: hidden;
+  animation: world-scene-drift 22s ease-in-out infinite alternate;
+}
+
+.project-console__world-layer {
+  position: absolute;
+  display: block;
+  border-radius: 40%;
+  filter: blur(28px);
+  opacity: 0.45;
+}
+
+.project-console__world-layer--one {
+  left: 8%;
+  top: 30%;
+  width: 54%;
+  height: 42%;
+  background: radial-gradient(ellipse, rgba(130, 190, 220, 0.22), transparent 68%);
+  animation: world-layer-one 14s ease-in-out infinite alternate;
+}
+
+.project-console__world-layer--two {
+  right: 4%;
+  bottom: 8%;
+  width: 46%;
+  height: 38%;
+  background: radial-gradient(ellipse, rgba(226, 156, 96, 0.16), transparent 70%);
+  animation: world-layer-two 18s ease-in-out infinite alternate;
+}
+
+.project-console__world-grid {
+  position: absolute;
+  inset: 0;
+  opacity: 0.18;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 80px 80px;
+  mask-image: radial-gradient(ellipse at center, #000 10%, transparent 72%);
+}
+
+.project-console__world-copy {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  gap: 1.1rem;
+  text-align: center;
+}
+
+.project-console__world {
+  display: grid;
+  place-content: center;
+}
+
+.project-console__world-command {
+  animation: world-command-in 180ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+@keyframes world-command-in {
+  0% { opacity: 0; transform: translateY(8px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes world-scene-drift {
+  0% { transform: scale(1) translate3d(-1.2%, 0, 0); }
+  100% { transform: scale(1.06) translate3d(1.2%, -1%, 0); }
+}
+
+@keyframes world-layer-one {
+  0% { transform: translate3d(-3%, 2%, 0) scale(0.96); }
+  100% { transform: translate3d(4%, -2%, 0) scale(1.04); }
+}
+
+@keyframes world-layer-two {
+  0% { transform: translate3d(2%, 0, 0) scale(1.02); }
+  100% { transform: translate3d(-4%, -3%, 0) scale(0.97); }
+}
+
+@keyframes project-world-recover {
+  0% { opacity: 0; filter: blur(20px) brightness(2.2); transform: scale(1.018); }
+  42% { opacity: 1; filter: blur(10px) brightness(1.55); }
+  100% { opacity: 1; filter: blur(0) brightness(1); transform: scale(1); }
+}
+
+/* R3.6c-patch-4：cmp 终端纹理与缩放虚影。 */
+.project-console {
+  font: 400 20px/1.4 "Cascadia Mono", "Consolas", monospace;
+}
+
+.project-console__scroll .console-output__line {
+  min-height: 1.4em;
+}
+
+.project-console .console-output {
+  transform: perspective(900px) scale(1.004);
+  transform-origin: 50% 50%;
+}
+
+.project-console.is-zooming .project-console__scroll {
+  text-shadow:
+    0 -0.24em rgba(255, 255, 255, 0.22),
+    0 0.24em rgba(255, 255, 255, 0.18),
+    0 -0.48em rgba(255, 255, 255, 0.1),
+    0 0.48em rgba(255, 255, 255, 0.08);
+}
+
+.project-console__fx {
+  position: fixed;
+  inset: 6px;
+  z-index: 4;
+  overflow: hidden;
+  border-radius: 15px;
+  pointer-events: none;
+}
+
+.project-console__fx span {
+  position: absolute;
+  inset: 0;
+  display: block;
+  pointer-events: none;
+}
+
+.project-console__fx-scan {
+  opacity: 0.055;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.16) 0,
+    rgba(255, 255, 255, 0.16) 1px,
+    transparent 1px,
+    transparent 4px
+  );
+  animation: console-fx-scan 9s linear infinite;
+}
+
+.project-console__fx-pixel {
+  opacity: 0.018;
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.7) 1px, transparent 1px);
+  background-size: 3px 3px;
+}
+
+.project-console__fx-vignette {
+  background: radial-gradient(ellipse at center, transparent 52%, rgba(0, 0, 0, 0.34) 100%);
+}
+
+.project-console.is-zooming .project-console__fx-scan {
+  opacity: 0.16;
+  animation-duration: 0.8s;
+}
+
+.project-console.is-zooming .project-console__fx-pixel {
+  opacity: 0.075;
+}
+
+.project-console.console-effect-fisheye .console-output {
+  transform: perspective(700px) scale(1.016);
+}
+
+.project-console.console-effect-fisheye .project-console__fx-vignette {
+  background: radial-gradient(ellipse at center, transparent 46%, rgba(0, 0, 0, 0.48) 100%);
+}
+
+@keyframes console-fx-scan {
+  0% { background-position-y: 0; }
+  100% { background-position-y: 40px; }
+}
+
+.project-console__fx::before {
+  content: "";
+  position: absolute;
+  inset: -10% 0;
+  background:
+    linear-gradient(90deg, transparent 0 12%, rgba(255, 255, 255, 0.08) 12% 12.3%, transparent 12.3% 63%, rgba(255, 255, 255, 0.05) 63% 63.2%, transparent 63.2%),
+    linear-gradient(0deg, transparent 0 38%, rgba(255, 255, 255, 0.04) 38% 38.2%, transparent 38.2% 71%, rgba(255, 255, 255, 0.035) 71% 71.2%, transparent 71.2%);
+  mix-blend-mode: screen;
+  opacity: 0.35;
+  animation: console-fx-glitch 7.5s steps(1, end) infinite;
+}
+
+@keyframes console-fx-glitch {
+  0%, 93%, 100% { transform: translate3d(0, 0, 0); opacity: 0.35; }
+  94% { transform: translate3d(-2px, 1px, 0); opacity: 0.55; }
+  95% { transform: translate3d(2px, -1px, 0); opacity: 0.3; }
+  96% { transform: translate3d(-1px, 0, 0); opacity: 0.5; }
+}
+
+/* R3.6c-patch-5：紧凑行距、像素感、缩放震颤轨迹。 */
+.project-console {
+  font: 400 20px/1.1 "Cascadia Mono", "Consolas", monospace;
+}
+
+.project-console__scroll .console-output__line {
+  min-height: 1.1em;
+}
+
+.project-console .console-output {
+  text-shadow:
+    0.55px 0 rgba(255, 70, 120, 0.14),
+    -0.55px 0 rgba(60, 220, 255, 0.12);
+  filter: contrast(1.03);
+}
+
+.project-console__fx-scan {
+  opacity: 0.09;
+}
+
+.project-console__fx-pixel {
+  opacity: 0.04;
+  background-size: 2px 2px;
+}
+
+.project-console.is-zooming .project-console__fx-scan {
+  opacity: 0.24;
+}
+
+.project-console.is-zooming .project-console__fx-pixel {
+  opacity: 0.13;
+}
+
+.project-console.is-zooming .project-console__scroll {
+  text-shadow:
+    var(--trail-0-x, 0) var(--trail-0-y, 0) 0 rgba(255, 255, 255, 0.24),
+    var(--trail-1-x, 0) var(--trail-1-y, 0) 0 rgba(255, 255, 255, 0.16),
+    var(--trail-2-x, 0) var(--trail-2-y, 0) 0 rgba(255, 255, 255, 0.11),
+    var(--trail-3-x, 0) var(--trail-3-y, 0) 0 rgba(255, 255, 255, 0.07),
+    0 -0.24em rgba(255, 255, 255, 0.12),
+    0 0.24em rgba(255, 255, 255, 0.1);
+}
+
+/* R3.6c-patch-6：每一帧震颤都留下固定印记。 */
+.project-console {
+  z-index: 2;
+}
+
+.project-console.is-zooming {
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.project-console__imprints {
+  position: fixed;
+  inset: 2px;
+  z-index: 1;
+  overflow: hidden;
+  border-radius: 4px;
+  pointer-events: none;
+}
+
+.project-console__imprint {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  padding: 1.2rem 1.8rem;
+  color: #ffffff;
+  font: 400 20px/1.1 "Cascadia Mono", "Consolas", monospace;
+  white-space: pre-wrap;
+  will-change: transform, opacity;
+}
+
+.project-console__imprint pre {
+  margin: 0;
+  color: inherit;
+  font: inherit;
+  line-height: 1.1;
+  white-space: pre-wrap;
+}
+
+/* R3.6c-patch-7：镜头推进 + CRT 收束 + 受控残影。 */
+.project-console.is-zooming {
+  animation: console-camera-push 2800ms cubic-bezier(0.66, 0, 0.34, 1) 800ms both;
+  transform-origin: var(--console-origin-x, 50%) var(--console-origin-y, 50%);
+  will-change: transform;
+}
+
+.project-console__echo-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.project-console__echo {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 1.2rem 1.8rem;
+  overflow: hidden;
+  color: #ffffff;
+  font: 400 20px/1.1 "Cascadia Mono", "Consolas", monospace;
+  white-space: pre-wrap;
+  opacity: 0.09;
+  filter: blur(0.35px);
+  animation: console-echo-drift 900ms ease-out both;
+}
+
+.project-console__echo--one { transform: translate3d(-7px, 4px, 0); opacity: 0.10; }
+.project-console__echo--two { transform: translate3d(9px, -5px, 0); opacity: 0.07; }
+.project-console__echo--three { transform: translate3d(-13px, 8px, 0); opacity: 0.045; }
+
+.project-console__scroll {
+  position: relative;
+  z-index: 2;
+}
+
+@keyframes console-camera-push {
+  0% { transform: scale(1); }
+  100% { transform: scale(2.18); }
+}
+
+@keyframes console-echo-drift {
+  0% { opacity: 0.16; }
+  100% { opacity: 0.03; }
+}
+
+.project-console__shutdown-line {
+  position: fixed;
+  left: 2px;
+  right: 2px;
+  top: 50%;
+  z-index: 8;
+  height: 1px;
+  background: #ffffff;
+  box-shadow: 0 0 14px rgba(255, 255, 255, 0.8);
+  transform-origin: 50% 50%;
+  animation: console-line-close 260ms ease-out both;
+  pointer-events: none;
+}
+
+@keyframes console-line-close {
+  0% { transform: scaleX(1); opacity: 0.9; }
+  70% { opacity: 0.5; }
+  100% { transform: scaleX(0); opacity: 0; }
+}
+
+.project-console__scroll {
+  overflow-x: hidden;
+}
+
+.project-console__scroll .console-output,
+.project-console__scroll .console-output__line {
+  overflow-wrap: anywhere;
+}
+
+/* R3.6c-patch-8：复制流 + 加速上滚 + 花屏。 */
+.project-console__stream {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  overflow: hidden;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+.project-console__stream-track {
+  animation: console-stream-rush 1600ms cubic-bezier(0.55, 0, 0.95, 0.35) 800ms infinite;
+  will-change: transform;
+}
+
+.project-console__stream-copy {
+  margin: 0;
+  padding: 0.3rem 1.8rem;
+  color: #ffffff;
+  font: 400 20px/1.1 "Cascadia Mono", "Consolas", monospace;
+  white-space: pre-wrap;
+  opacity: 0.28;
+}
+
+.project-console__stream-copy:nth-child(3n) {
+  transform: translateX(7px);
+  opacity: 0.21;
+}
+
+.project-console__stream-copy:nth-child(4n) {
+  transform: translateX(-5px);
+  opacity: 0.17;
+}
+
+.project-console__stream-tear {
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 7px,
+      rgba(255, 255, 255, 0.18) 7px,
+      rgba(255, 255, 255, 0.18) 8px,
+      transparent 8px,
+      transparent 23px
+    ),
+    repeating-linear-gradient(
+      to right,
+      transparent 0,
+      transparent 31px,
+      rgba(100, 220, 255, 0.08) 31px,
+      rgba(100, 220, 255, 0.08) 32px
+    );
+  opacity: 0;
+  mix-blend-mode: screen;
+  animation: console-stream-tear 1600ms steps(2, end) 800ms infinite;
+}
+
+@keyframes console-stream-rush {
+  0% { transform: translate3d(0, 0, 0); }
+  35% { transform: translate3d(0, -260px, 0); }
+  70% { transform: translate3d(0, -1100px, 0); }
+  100% { transform: translate3d(0, -2400px, 0); }
+}
+
+@keyframes console-stream-tear {
+  0%, 58% { opacity: 0; }
+  76% { opacity: 0.22; }
+  100% { opacity: 0.55; }
+}
+
+/* 增强 cmp Fisheye 与暗角。 */
+.project-console .console-output {
+  transform: perspective(760px) scale(1.012) rotateX(0.35deg);
+  transform-origin: 50% 50%;
+  filter: contrast(1.04);
+}
+
+.project-console.console-effect-fisheye .console-output {
+  transform: perspective(480px) scale(1.032) rotateX(0.9deg);
+  filter: contrast(1.08) saturate(0.95);
+}
+
+.project-console__fx-vignette {
+  background: radial-gradient(
+    ellipse at center,
+    transparent 30%,
+    rgba(0, 0, 0, 0.42) 68%,
+    rgba(0, 0, 0, 0.72) 100%
+  );
+  box-shadow:
+    inset 0 0 90px 18px rgba(0, 0, 0, 0.55),
+    inset 0 0 220px 60px rgba(0, 0, 0, 0.42);
+}
+
+.project-console.console-effect-fisheye .project-console__fx-vignette {
+  background: radial-gradient(
+    ellipse at center,
+    transparent 24%,
+    rgba(0, 0, 0, 0.52) 62%,
+    rgba(0, 0, 0, 0.82) 100%
+  );
+}
+
+/* 真正的中心膨胀 Fisheye：SVG 位移滤镜。 */
+.project-console__fisheye-defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.project-console__fisheye {
+  filter: url(#project-console-fisheye);
+  transform-origin: 50% 50%;
+  overflow: hidden;
+  clip-path: inset(0);
+  contain: paint;
+}
+
+.project-console.console-effect-fisheye .project-console__fisheye {
+  filter: url(#project-console-fisheye) contrast(1.06) saturate(0.92);
+}
+
+/* 选中文本：白底黑字；禁止拖动已选文本。 */
+.project-console ::selection,
+.project-console input::selection {
+  background: #ffffff;
+  color: #000000;
+}
+
+.project-console {
+  -webkit-user-drag: none;
+}
+
+/* 输入行：虚拟路径在 > 前面，> 后不再附带 /path。 */
+.project-console__virtual-path {
+  flex: 0 0 auto;
+  color: #e8e8e8;
+  white-space: pre;
+}
+
+/* 输入口下方 7 行空白，与日志使用同一行高。 */
+.project-console__tail-lines {
+  flex: 0 0 auto;
+  pointer-events: none;
+}
+
+.project-console__tail-line {
+  height: 1.1em;
+  min-height: 1.1em;
+  line-height: 1.1;
+}
+
+/* 输入行是日志流的一部分，不是独立终端栏。 */
+.project-console__input {
+  position: static;
+  z-index: auto;
+  background: transparent;
+  padding: 0.8em 0 0;
+  margin: 0;
+  min-height: 1.1em;
+  line-height: 1.1;
+  font: inherit;
+}
+
+/* 错误行：整行红色。 */
+.project-console .console-output__line--error {
+  color: #ff4d4d;
+  text-shadow: 0 0 8px rgba(255, 50, 50, 0.22);
+}
+
+/* 加载日志强烈震颤（只抖日志，不抖镜头）。 */
+.project-console.is-zooming .project-console__fisheye {
+  animation: console-log-shake 70ms steps(2, end) 3100ms infinite;
+  will-change: transform;
+}
+
+@keyframes console-log-shake {
+  0% { transform: translate3d(-38px, 16px, 0) rotate(-0.7deg); }
+  20% { transform: translate3d(46px, -24px, 0) rotate(0.9deg); }
+  40% { transform: translate3d(-34px, -15px, 0) rotate(-0.6deg); }
+  60% { transform: translate3d(28px, 26px, 0) rotate(1deg); }
+  80% { transform: translate3d(-52px, -12px, 0) rotate(-0.9deg); }
+  100% { transform: translate3d(22px, 14px, 0) rotate(0.5deg); }
+}
+
+.project-console__input input {
+  height: 1.1em;
+  line-height: 1.1;
+  padding: 0;
+}
+
+/* 少量日志使用项目主题色。 */
+.project-console .console-output__line--accent {
+  color: color-mix(in srgb, var(--console-accent, #8fa8b8) 58%, #e8f4ff);
+  text-shadow: 0 0 6px color-mix(in srgb, var(--console-accent, #8fa8b8) 28%, transparent);
+}
+
+/* 给最后一行字形 descender 留出空间，避免输入行顶到上一行。 */
+.project-console__scroll .console-output {
+  padding-bottom: 0.6em;
+}
+
+/* 最终修正：不再用 transform 放大日志，避免最后一行被裁切。 */
+.project-console .console-output {
+  transform: none;
+}
+
+/* 彻底隐藏 cmp 内所有滚动条。 */
+.project-console,
+.project-console * {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.project-console ::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
+}
+
+/* 容器底部留出空间，避免 SVG filter 的最后一行被裁切。 */
+.project-console__fisheye {
+  padding-bottom: 1em;
+}
+
+/* 输入行与最后一行再留一点间距。 */
+.project-console__input {
+  margin-top: 0.2em;
+}
+
+/* 加载最后 1s：全屏逐渐模糊 */
+.console-loading-final-blur {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483000;
+  pointer-events: none;
+  backdrop-filter: blur(0);
+  animation: console-loading-final-blur 2s ease-in forwards;
+}
+@keyframes console-loading-final-blur {
+  from { backdrop-filter: blur(0); }
+  to { backdrop-filter: blur(34px); }
+}
+
+
+/* R4e.2b · Rain settings */
+.console-settings__rain-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  margin-bottom: 0.45rem;
+  color: #aebccd;
+  font-size: 0.72rem;
+}
+
+.console-settings__rain-row button.is-active {
+  border-color: #8ed8e8;
+  background: rgba(95, 190, 210, 0.16);
+  color: #ecfcff;
+}
+
+.console-settings__rain-status {
+  display: grid;
+  gap: 0.16rem;
+  padding: 0.38rem 0.45rem;
+  border: 1px dashed rgba(150, 215, 232, 0.22);
+  color: #c7dce8;
+  font: 600 0.62rem/1.3 "Cascadia Code", "Consolas", monospace;
+  letter-spacing: 0.08em;
+}
+
+.console-settings__rain-status.is-degraded {
+  border-color: rgba(255, 175, 135, 0.38);
+  color: #ffb89a;
+}
+
+.console-settings__rain-status.is-rain-light,
+.console-settings__rain-status.is-rain-moderate,
+.console-settings__rain-status.is-rain-heavy {
+  border-color: rgba(150, 225, 245, 0.42);
+  color: #dff9ff;
+}
+
+.console-settings__rain-status small {
+  color: #8f9caa;
+  font-size: 0.54rem;
+  letter-spacing: 0.04em;
+}
+
+.console-settings__rain-actions {
+  display: flex;
+  gap: 0.3rem;
+  margin-top: 0.4rem;
+}

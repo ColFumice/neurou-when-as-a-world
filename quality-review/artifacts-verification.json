@@ -1,0 +1,15 @@
+{
+  "reportHeadings": [
+    "## 一、代码审查报告",
+    "## 二、扩张滤镜圆修复",
+    "## 三、Bug 修复清单",
+    "## 四、Cocos 运行时测试结果",
+    "## 五、新增命名清单（待 PROTOCOL 追认）",
+    "## 六、无法修复 / 需要 PROTOCOL 裁定的事项"
+  ],
+  "linkedArtifacts": 17,
+  "missingArtifacts": [],
+  "reviewedHashMismatches": [],
+  "finalDiffContainsTopStatus": true,
+  "finalDiffContainsRevealLabelGate": true
+}

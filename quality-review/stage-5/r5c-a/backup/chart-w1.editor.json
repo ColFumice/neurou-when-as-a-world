@@ -1,0 +1,451 @@
+{
+    "bindings":  [
+                     {
+                         "assetId":  "asset:audio:main",
+                         "keyframeId":  "editor-w1-kf-1",
+                         "triggerAtMs":  0
+                     },
+                     {
+                         "assetId":  "asset:video:foreground",
+                         "keyframeId":  "editor-w1-kf-1",
+                         "triggerAtMs":  0
+                     },
+                     {
+                         "assetId":  "asset:video:foreground",
+                         "keyframeId":  "editor-w1-kf-10",
+                         "triggerAtMs":  10667
+                     },
+                     {
+                         "assetId":  "asset:video:foreground",
+                         "keyframeId":  "editor-w1-kf-3",
+                         "triggerAtMs":  42667
+                     },
+                     {
+                         "assetId":  "asset:video:foreground",
+                         "keyframeId":  "editor-w1-kf-12",
+                         "triggerAtMs":  61333
+                     }
+                 ],
+    "canvas":  {
+                   "stageHeight":  720,
+                   "stageWidth":  1280
+               },
+    "chartId":  "chart-w1",
+    "documentId":  "editor-w1",
+    "durationMs":  72000,
+    "effects":  [
+                    {
+                        "effectKind":  "EaseIn",
+                        "interfaceId":  "fx-1",
+                        "params":  {
+                                       "durationMs":  600,
+                                       "intensity":  1
+                                   }
+                    },
+                    {
+                        "effectKind":  "EaseOut",
+                        "interfaceId":  "fx-2",
+                        "params":  {
+                                       "durationMs":  600,
+                                       "intensity":  1
+                                   }
+                    },
+                    {
+                        "effectKind":  "EaseIn",
+                        "interfaceId":  "fx-3",
+                        "params":  {
+                                       "durationMs":  600,
+                                       "intensity":  1
+                                   }
+                    },
+                    {
+                        "effectKind":  "EaseIn",
+                        "interfaceId":  "fx-4",
+                        "params":  {
+                                       "durationMs":  600,
+                                       "intensity":  1
+                                   }
+                    },
+                    {
+                        "effectKind":  "Glitch",
+                        "interfaceId":  "fx-5",
+                        "params":  {
+                                       "durationMs":  420,
+                                       "glitchOffset":  4,
+                                       "intensity":  0.6
+                                   }
+                    }
+                ],
+    "neuModules":  [
+                       {
+                           "inputs":  [
+
+                                      ],
+                           "moduleId":  "neu-4",
+                           "outputs":  [
+                                           {
+                                               "port":  1,
+                                               "targets":  [
+                                                               {
+                                                                   "moduleId":  "neu-5",
+                                                                   "port":  1
+                                                               }
+                                                           ]
+                                           }
+                                       ],
+                           "params":  {
+                                          "keyframeId":  "editor-w1-kf-1",
+                                          "timeMs":  0
+                                      },
+                           "type":  "RhythmPoint",
+                           "x":  0.2,
+                           "y":  0.24
+                       },
+                       {
+                           "inputs":  [
+                                          {
+                                              "port":  1,
+                                              "sourceModuleId":  "neu-4",
+                                              "sourcePort":  1
+                                          },
+                                          {
+                                              "port":  1,
+                                              "sourceModuleId":  "channel-left-4",
+                                              "sourcePort":  1
+                                          }
+                                      ],
+                           "moduleId":  "neu-5",
+                           "outputs":  [
+                                           {
+                                               "port":  1,
+                                               "targets":  [
+                                                               {
+                                                                   "moduleId":  "neu-6",
+                                                                   "port":  1
+                                                               }
+                                                           ]
+                                           }
+                                       ],
+                           "params":  {
+                                          "assetId":  "asset:audio:main",
+                                          "durationMs":  72000,
+                                          "volume":  0.8
+                                      },
+                           "type":  "Audio",
+                           "x":  0.3947471033868093,
+                           "y":  0.3412802419354839
+                       },
+                       {
+                           "inputs":  [
+                                          {
+                                              "port":  1,
+                                              "sourceModuleId":  "neu-5",
+                                              "sourcePort":  1
+                                          }
+                                      ],
+                           "moduleId":  "neu-6",
+                           "outputs":  [
+                                           {
+                                               "port":  1,
+                                               "targets":  [
+                                                               {
+                                                                   "moduleId":  "channel-right-4",
+                                                                   "port":  1
+                                                               }
+                                                           ]
+                                           }
+                                       ],
+                           "params":  {
+                                          "delayMs":  1000,
+                                          "extendPrevious":  false
+                                      },
+                           "type":  "Delay",
+                           "x":  0.6346228832442068,
+                           "y":  0.47258064516129034
+                       },
+                       {
+                           "inputs":  [
+                                          {
+                                              "port":  1,
+                                              "sourceModuleId":  "neu-6",
+                                              "sourcePort":  1
+                                          }
+                                      ],
+                           "moduleId":  "channel-right-4",
+                           "outputs":  [
+
+                                       ],
+                           "params":  {
+                                          "port":  4,
+                                          "side":  "right"
+                                      },
+                           "type":  "Channel",
+                           "x":  0.99,
+                           "y":  0.54
+                       },
+                       {
+                           "inputs":  [
+
+                                      ],
+                           "moduleId":  "channel-left-4",
+                           "outputs":  [
+                                           {
+                                               "port":  1,
+                                               "targets":  [
+                                                               {
+                                                                   "moduleId":  "neu-5",
+                                                                   "port":  1
+                                                               }
+                                                           ]
+                                           }
+                                       ],
+                           "params":  {
+                                          "port":  4,
+                                          "side":  "left"
+                                      },
+                           "type":  "Channel",
+                           "x":  0.01,
+                           "y":  0.54
+                       }
+                   ],
+    "provenance":  "Mock",
+    "schemaVersion":  2,
+    "seed":  20261025,
+    "tracks":  [
+                   {
+                       "trackId":  "layer-1",
+                       "layerIndex":  1,
+                       "keyframes":  [
+                                         {
+                                             "chartKeyId":  null,
+                                             "chartLayerIndex":  1,
+                                             "chartPadKind":  "TopMost",
+                                             "durationMs":  1600,
+                                             "effectInterfaceIds":  [
+
+                                                                    ],
+                                             "gridCellId":  null,
+                                             "keyframeId":  "editor-w1-kf-1",
+                                             "logo":  {
+                                                          "logoId":  "open-logo",
+                                                          "assetId":  "builtin:head-logo",
+                                                          "x":  0.28,
+                                                          "y":  0.56,
+                                                          "size":  0.12,
+                                                          "stretch":  1,
+                                                          "appearEffect":  "FadeDown",
+                                                          "disappearEffect":  "FadeUp",
+                                                          "easing":  "EaseInOut"
+                                                      },
+                                             "parallaxFactor":  0.4,
+                                             "timeMs":  0
+                                         },
+                                         {
+                                             "chartKeyId":  null,
+                                             "chartLayerIndex":  1,
+                                             "chartPadKind":  "TopMost",
+                                             "durationMs":  1000,
+                                             "effectInterfaceIds":  [
+
+                                                                    ],
+                                             "gridCellId":  null,
+                                             "keyframeId":  "editor-w1-kf-2",
+                                             "logo":  {
+                                                          "logoId":  "verse-logo",
+                                                          "assetId":  "builtin:head-logo",
+                                                          "x":  0.7,
+                                                          "y":  0.42,
+                                                          "size":  0.11,
+                                                          "stretch":  1,
+                                                          "appearEffect":  "Truncate",
+                                                          "disappearEffect":  "FadeUp",
+                                                          "easing":  "EaseInOut"
+                                                      },
+                                             "parallaxFactor":  1.1,
+                                             "timeMs":  21333
+                                         },
+                                         {
+                                             "chartKeyId":  null,
+                                             "chartLayerIndex":  1,
+                                             "chartPadKind":  "TopMost",
+                                             "durationMs":  1200,
+                                             "effectInterfaceIds":  [
+                                                                        "fx-1",
+                                                                        "fx-2",
+                                                                        "fx-3",
+                                                                        "fx-4",
+                                                                        "fx-5"
+                                                                    ],
+                                             "gridCellId":  null,
+                                             "keyframeId":  "editor-w1-kf-3",
+                                             "logo":  {
+                                                          "logoId":  "lift-logo",
+                                                          "assetId":  "builtin:head-logo",
+                                                          "x":  0.5,
+                                                          "y":  0.5,
+                                                          "size":  0.14,
+                                                          "stretch":  1,
+                                                          "appearEffect":  "FlashWhite",
+                                                          "disappearEffect":  "FadeUp",
+                                                          "easing":  "EaseInOut"
+                                                      },
+                                             "parallaxFactor":  1.6,
+                                             "timeMs":  42667
+                                         },
+                                         {
+                                             "chartKeyId":  null,
+                                             "chartLayerIndex":  1,
+                                             "chartPadKind":  "TopMost",
+                                             "durationMs":  1600,
+                                             "effectInterfaceIds":  [
+
+                                                                    ],
+                                             "gridCellId":  null,
+                                             "keyframeId":  "editor-w1-kf-4",
+                                             "logo":  {
+                                                          "logoId":  "close-logo",
+                                                          "assetId":  "builtin:head-logo",
+                                                          "x":  0.72,
+                                                          "y":  0.56,
+                                                          "size":  0.11,
+                                                          "stretch":  1,
+                                                          "appearEffect":  "Glitch",
+                                                          "disappearEffect":  "FadeUp",
+                                                          "easing":  "EaseInOut"
+                                                      },
+                                             "parallaxFactor":  0.7,
+                                             "timeMs":  64000
+                                         }
+                                     ]
+                   },
+                   {
+                       "trackId":  "layer-2",
+                       "layerIndex":  2,
+                       "keyframes":  [
+                                         {
+                                             "chartKeyId":  null,
+                                             "chartLayerIndex":  2,
+                                             "chartPadKind":  "Light",
+                                             "durationMs":  0,
+                                             "effectInterfaceIds":  [
+
+                                                                    ],
+                                             "gridCellId":  2,
+                                             "keyframeId":  "editor-w1-kf-5",
+                                             "logo":  null,
+                                             "parallaxFactor":  0.5,
+                                             "timeMs":  8000
+                                         },
+                                         {
+                                             "chartKeyId":  null,
+                                             "chartLayerIndex":  2,
+                                             "chartPadKind":  "Heavy",
+                                             "durationMs":  700,
+                                             "effectInterfaceIds":  [
+
+                                                                    ],
+                                             "gridCellId":  5,
+                                             "keyframeId":  "editor-w1-kf-6",
+                                             "logo":  null,
+                                             "parallaxFactor":  -0.8,
+                                             "timeMs":  16000
+                                         },
+                                         {
+                                             "chartKeyId":  null,
+                                             "chartLayerIndex":  2,
+                                             "chartPadKind":  "Light",
+                                             "durationMs":  0,
+                                             "effectInterfaceIds":  [
+
+                                                                    ],
+                                             "gridCellId":  3,
+                                             "keyframeId":  "editor-w1-kf-7",
+                                             "logo":  null,
+                                             "parallaxFactor":  1,
+                                             "timeMs":  32000
+                                         },
+                                         {
+                                             "chartKeyId":  null,
+                                             "chartLayerIndex":  2,
+                                             "chartPadKind":  "Light",
+                                             "durationMs":  0,
+                                             "effectInterfaceIds":  [
+
+                                                                    ],
+                                             "gridCellId":  6,
+                                             "keyframeId":  "editor-w1-kf-8",
+                                             "logo":  null,
+                                             "parallaxFactor":  -1.2,
+                                             "timeMs":  48000
+                                         },
+                                         {
+                                             "chartKeyId":  null,
+                                             "chartLayerIndex":  2,
+                                             "chartPadKind":  "Heavy",
+                                             "durationMs":  600,
+                                             "effectInterfaceIds":  [
+
+                                                                    ],
+                                             "gridCellId":  8,
+                                             "keyframeId":  "editor-w1-kf-9",
+                                             "logo":  null,
+                                             "parallaxFactor":  0.9,
+                                             "timeMs":  58667
+                                         }
+                                     ]
+                   },
+                   {
+                       "trackId":  "layer-3",
+                       "layerIndex":  3,
+                       "keyframes":  [
+                                         {
+                                             "chartKeyId":  null,
+                                             "chartLayerIndex":  3,
+                                             "chartPadKind":  "Light",
+                                             "durationMs":  0,
+                                             "effectInterfaceIds":  [
+
+                                                                    ],
+                                             "gridCellId":  null,
+                                             "keyframeId":  "editor-w1-kf-10",
+                                             "logo":  null,
+                                             "parallaxFactor":  -1.4,
+                                             "timeMs":  10667
+                                         },
+                                         {
+                                             "chartKeyId":  null,
+                                             "chartLayerIndex":  3,
+                                             "chartPadKind":  "Light",
+                                             "durationMs":  0,
+                                             "effectInterfaceIds":  [
+
+                                                                    ],
+                                             "gridCellId":  null,
+                                             "keyframeId":  "editor-w1-kf-11",
+                                             "logo":  null,
+                                             "parallaxFactor":  1.3,
+                                             "timeMs":  37333
+                                         },
+                                         {
+                                             "chartKeyId":  null,
+                                             "chartLayerIndex":  3,
+                                             "chartPadKind":  "Light",
+                                             "durationMs":  0,
+                                             "effectInterfaceIds":  [
+
+                                                                    ],
+                                             "gridCellId":  null,
+                                             "keyframeId":  "editor-w1-kf-12",
+                                             "logo":  null,
+                                             "parallaxFactor":  -0.8,
+                                             "timeMs":  61333
+                                         }
+                                     ]
+                   }
+               ],
+    "layerAudio":  {
+                       "1":  "asset:audio:sfx-layer1",
+                       "2":  "asset:audio:sfx-layer2",
+                       "3":  "asset:audio:sfx-layer3"
+                   }
+}

@@ -1,0 +1,83 @@
+﻿﻿﻿﻿{
+  "task": "refactor-r0 前置归档与索引（任务 1~4 + 汇总）",
+  "auditTime": "2026-10-18 19:55:57 +08:00",
+  "executor": "Trae (EXECUTOR)",
+  "protectedFilesUnchanged": [
+    {
+      "path": "docs/NAMEBOOK.md",
+      "bytes": 178559,
+      "sha256Before": "398ED2E5AE2581094708FD5EDBEF958E9FCA20A3CBCCBC79F1A8CF7D9D381DAC",
+      "sha256After": "398ED2E5AE2581094708FD5EDBEF958E9FCA20A3CBCCBC79F1A8CF7D9D381DAC",
+      "unchanged": true
+    },
+    {
+      "path": "docs/spec/stage-1.md",
+      "bytes": 108712,
+      "sha256Before": "C4E9A3090BC96D2204E57401B57F788B448386D822ADA7EDAE6874C68AC63FCE",
+      "sha256After": "C4E9A3090BC96D2204E57401B57F788B448386D822ADA7EDAE6874C68AC63FCE",
+      "unchanged": true
+    }
+  ],
+  "untouchedAreasByDesign": [
+    "src/（全部源码）",
+    "server/（全部源码）",
+    "assets/scripts/（全部组合根）",
+    "scripts/（门禁脚本与白名单）",
+    "docs/ 下全部已有文件（只读）",
+    "quality-review/ 已有内容",
+    "archive/ 已有内容"
+  ],
+  "newDirectoriesConfirmed": [
+    "docs/refactor-r0",
+    "quality-review/refactor-r0",
+    "archive/legacy-v3.21"
+  ],
+  "deliverables": [
+    {
+      "path": "docs/refactor-r0/namebook-legacy-index.md",
+      "bytes": 46199,
+      "sha256": "8708AB41D0A69390A1F2487A138ACC4B3E1053AEF8C3120DB58AB35E43700AB9",
+      "summary": "任务 1：旧名库全景索引，945 项（保留 82 / 重审 696 / 废止 167 / 待裁定 0）"
+    },
+    {
+      "path": "docs/refactor-r0/stage-1-legacy-index.md",
+      "bytes": 37337,
+      "sha256": "827E720045883DB217D821E204686BAA6DE72DB1DC45D931D7C4F189F707FA87",
+      "summary": "任务 2：旧 stage-1 全景索引，186 项 AC（保留 1 / 需重审 176 / 废止 9 / 待裁定 0）"
+    },
+    {
+      "path": "archive/legacy-v3.21/NAMEBOOK.md",
+      "bytes": 178559,
+      "sha256": "398ED2E5AE2581094708FD5EDBEF958E9FCA20A3CBCCBC79F1A8CF7D9D381DAC",
+      "summary": "任务 3：只读快照（与源文件逐字节一致）"
+    },
+    {
+      "path": "archive/legacy-v3.21/stage-1.md",
+      "bytes": 108712,
+      "sha256": "C4E9A3090BC96D2204E57401B57F788B448386D822ADA7EDAE6874C68AC63FCE",
+      "summary": "任务 3：只读快照（与源文件逐字节一致）"
+    },
+    {
+      "path": "archive/legacy-v3.21/MANIFEST.md",
+      "bytes": 1398,
+      "sha256": "E0CE14ED3D43E5052B2692E25651E114D053BECE191757973A0CC4E3E5ED953B",
+      "summary": "任务 3：快照清单（复制前后 SHA 对照 + 只读快照说明）"
+    },
+    {
+      "path": "quality-review/refactor-r0/workspace-baseline.json",
+      "bytes": 1839564,
+      "sha256": "0CDF338A0A66EB02A140B8D204DDD89045B3AECE45715DB3F4E88B7D05B5FC91",
+      "summary": "任务 4：工作区基线快照，10454 文件 / 947559619 字节"
+    }
+  ],
+  "gateResults": {
+    "check:naming": "0 ERROR / 45 WARN（45 条为 B2.5c-1 起既有 Trace 痕域语义告警，与基线一致，无新增）",
+    "check:dependencies": "0 ERROR（132 个 .ts 文件，约 448 条静态依赖子句）",
+    "typecheck": "exit 0（tsc --noEmit 无诊断）"
+  },
+  "notes": [
+    "本任务未修改任何已有文件；除 deliverables 列出的新建文件外无其他写入。",
+    "临时脚本 %TEMP%\\r0-baseline.ps1 位于工程目录之外，不属于交付物。",
+    "docs/NAMEBOOK.md 与 docs/spec/stage-1.md 继续作为唯一生效口径；archive/legacy-v3.21/ 为只读存证。"
+  ]
+}

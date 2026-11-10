@@ -1,0 +1,635 @@
+R3 实施计划（DSH v1）
+日期：2026-10-19（Asia/Shanghai）
+角色：DSH = ARCHITECT + IMPLEMENTER；Trae = EXECUTOR；DeepSeek = PROTOCOL
+状态：待 PROTOCOL 审阅（本轮不写代码）
+
+================================================================================
+0. 前置核对（2026-10-19 23:08）
+================================================================================
+
+已确认：
+- R2 完成包已落盘：quality-review/stage-4/r2/R2-completion.md、ac-coverage.md、test-report.md。
+- R2 测试证据：quality-review/stage-4/r2/tests/（8 个 AC 日志，14/14）。
+- R2 门禁证据：quality-review/stage-4/r2/gates/（四门禁 0 ERROR / 0 WARN，totalErrors=0，allPassed=true）。
+- v4/core 现有 15 文件；v4/adapters/node 现有 3 文件；v4/tests 现有 9 文件；tools 现有 5 个门禁 + 2 个 lib。
+- 工具链：Node v24.19.0；npm 11.17.0；cargo 1.98.0；rustc 1.98.0；rust target x86_64-pc-windows-msvc；WebView2 155.0.4283.62；ffmpeg/ffprobe 4.4.1。
+- 尚未安装：react / react-dom / pixi.js / vite / @tauri-apps/api / @tauri-apps/cli。
+
+发现并需先解决的事项：
+- docs/spec/stage-4.md 当前仍为 17,584 字节（2026-10-19 18:08），未发现 §3.1，也未发现独立的 stage-4.v1.1 文件。
+- tools/lib/namebook-v4.cjs 的 SECTION_MODULES 仍为 provisional: true。
+- 因此“stage-4.v1.1 已落盘”与当前工作区不一致。R3 计划按用户描述的 stage-4.v1.1 目标撰写；但 R3.1 开工前必须由 PROTOCOL/Trae 确认补遗文件的实际落盘位置，否则 R3 门禁只能继续 provisional 映射（见 P-R3-01）。
+- R3 出口 AC 用户写“14 条”，但实际列举为 12 条：AC4-04 / 05 / 06 / 07 / 08 / 09（6）+ AC4-23（1）+ AC4-29（1）+ AC4-34（1）+ AC4-42 / 43 / 44（3）= 12。本计划按这 12 条执行；请 PROTOCOL 确认是否漏列第 13/14 条（见 P-R3-13）。
+
+================================================================================
+1. R3 范围与 7 个问题的回答
+================================================================================
+
+1.1 R3 范围
+- app（Tauri 2 + React 19 + Vite）
+- studio（项目/世界目录读取；不重写 R2 ProjectStore 契约）
+- console（cmd 风格世界文件夹，presentation 子域）
+- editor（谱面编辑，AC4-34）
+- media 导入（Tauri/Rust，AC4-23）
+- PixiJS 视差预览（AC4-07 / 08 / 09）
+- G 事件树数据层（EventTreeDAG / EventTreeNode / EventTreeEdge / EventTreeDocument / EventTreeBuilder）
+
+R3 出口 AC：AC4-04 / 05 / 06 / 07 / 08 / 09 / 23 / 29 / 34 / 42 / 43 / 44。
+（AC4-04~09 的数据层与渲染基础、AC4-23 Tauri/Rust、AC4-29/42/43/44 console、AC4-34 editor。）
+
+R3 明确不做：
+- 完整 EventGraph 运行时（AC4-20~22 留 R4）
+- 8 格判定运行时（AC4-14~17 留 R4）
+- Logo / 动态网格 / Hold 运行时（AC4-31~33 留 R4）
+- AI 双模式（AC4-35 留 R4）
+- Rain 天气 API（AC4-37~39 留 R4；R3 只做视觉外壳 + 接口占位）
+- 端到端（AC4-28 留 R4）
+- Live2D / Spine / 着色器（R5）
+- 不重裁 R1/R2 已冻结项
+
+1.2 问题 1：v4/app/ 最小骨架如何组织？
+
+结论：
+- v4/app/ 使用独立 package.json，不复用根 package.json。根 package.json 是 legacy CommonJS；app 是 Tauri + React ESM，两者隔离，避免污染 legacy 依赖与 lockfile。
+- v4/app/ 独立 tsconfig.json，不复用 v4/tsconfig.json。v4/tsconfig.json 是 CommonJS + node types + core/adapters/tests；app 需要 DOM、JSX、Bundler resolution、vite/client。
+- app tsconfig 不设 rootDir（noEmit）；通过 import 把 ../core/presentation 的 .tsx 纳入类型检查，避免 rootDir 限制导致跨目录报错。
+- 打包器用 Vite，不用 webpack。Vite 是 Tauri 2 官方模板的默认前端构建器；启动快、配置小。
+- src-tauri/ 放在 v4/app/src-tauri/，由 v4/app 的 @tauri-apps/cli 管理。
+- 根 package.json 不改；R3.1 不增加根脚本。app 自带 dev / build / tauri / typecheck 脚本，从 v4/app 执行。
+
+目录（R3.1）：
+v4/app/
+  package.json
+  index.html
+  vite.config.ts
+  tsconfig.json
+  tsconfig.node.json
+  src/
+    main.tsx
+    App.tsx
+    app.css
+    tauri.ts
+    vite-env.d.ts
+  src-tauri/
+    Cargo.toml
+    build.rs
+    tauri.conf.json
+    capabilities/default.json
+    icons/
+    src/
+      main.rs
+      lib.rs
+      commands/
+        mod.rs
+        app_info.rs
+
+技术选择：
+- React 19 + react-dom 19。
+- Vite 7 + @vitejs/plugin-react。
+- Tauri 2：@tauri-apps/api 2、@tauri-apps/cli 2（devDependency）。
+- TypeScript 使用 app 自己的版本（建议 ~5.9；与根 5.5.4 隔离）。
+- PixiJS 8 在 R3.4 安装；R3.1 可以先写入 package.json，也可以 R3.4 再加（建议 R3.1 一次性锁定，避免二次安装）。
+- Tauri 配置：devUrl http://localhost:1420；beforeDevCommand npm run dev；beforeBuildCommand npm run build；frontendDist ../dist；端口 1420 strictPort。
+- Vite alias：@core → ../core，@adapters → ../adapters；server.fs.allow 包含 app 的上一级，允许读取 v4/core 与 v4/adapters。
+- 窗口：1280×800，标题“雨若”；identifier 待 U-R3-02 确认（建议 cn.neurou.app）。
+- commands 注册：lib.rs 的 invoke_handler 注册 app_info；后续 fs/media 命令按子阶段追加。
+- 图标：用现有 big logo.png 经 npx tauri icon 生成 src-tauri/icons；不手写 ico。
+- CSP：R3.1 先用 Tauri 默认；R3.5 媒体预览时再补 asset: 协议与 media-src。
+
+R3.1 验收（基础设施，不对应 R3 出口 AC）：
+- v4/app 下 npm install 成功。
+- npm run typecheck 通过。
+- npm run build（Vite）通过。
+- npm run tauri dev 能打开窗口，React 页面显示 app_info 返回的 name/version/tauri 版本。
+- cargo check 通过。
+- npm run check:v4 仍为四门禁 0 ERROR（app 不在现有 core 门禁扫描范围）。
+- 不改 v4/core、v4/adapters、v4/tests、tools、根 package.json。
+
+1.3 问题 2：v4/adapters/tauri/ 如何桥接逻辑层？
+
+结论：选方案 A（Rust command 直接实现 fs 适配器），不启用 Node 后端，不以 plugin-fs 作为主写路径。
+
+理由：
+- Tauri 2 默认没有 Node 运行时，方案 B 不成立（除非引入 sidecar，复杂且破坏单机轻量目标）。
+- plugin-fs 能读写文件，但不能保证 AC4-03 需要的 fsync + 原子 rename + .bak，也不能保证 AC4-11 的 NDJSON append + fsync；方案 C 会把关键语义交给权限插件，测试与审计都更弱。
+- 方案 A 可以在 Rust 侧完整实现与 Node adapters 等价的 io 契约；Node adapters 保留给 headless 测试，Tauri adapters 作为同一端口的生产实现。
+- plugin-dialog 只用于“选择文件/目录”对话框；实际读写仍走自定义 command。
+
+桥接方式：
+- 不改 ProjectStore / LedgerStore 的核心逻辑；它们接受 inline io。
+- v4/adapters/tauri/ 新增：
+  - TauriProjectIo：实现 ensureLayout / readProjectJson / writeProjectJson / readEventTreeJson / writeEventTreeJson，内部 invoke Rust command。
+  - TauriLedgerFile：实现 readHead / readLines / appendLine / writeHead / hash，内部 invoke Rust command。
+  - TauriMediaImporter：媒体导入/trim/抽帧的 command 封装（R3.5）。
+  - tauriInvoke.ts：薄封装（invoke + 错误归一化）。
+- Rust command（最小集）：
+  - project_ensure_layout
+  - project_read_json
+  - project_write_json_atomic
+  - ledger_read_head
+  - ledger_read_lines
+  - ledger_append_line
+  - ledger_write_head
+  - ledger_hash_sha256
+  - media_probe / media_import / media_trim / media_extract_frames / media_extract_audio / depth_import_or_generate（R3.5）
+- 路径安全：
+  - Tauri 维护 ActiveProjectRoot state；
+  - 所有 fs command 只接受相对路径；
+  - Rust 侧 canonicalize 后必须落在 root 下；拒绝绝对路径、..、UNC、符号链接逃逸；
+  - 项目未打开时 fs command 返回 ProjectNotOpen。
+- 原子写：
+  - Rust 写 .tmp → sync_all → 可选 .bak 字节复制 → rename → 清理 tmp；
+  - 与 AtomicJsonFile 的四种崩溃语义一致（R3.3 接入时用 Tauri 侧集成测试验证；R3.1 只做骨架时可先不实现）。
+- 账本：
+  - Rust 追加 line + "\n" 后 sync_data；head 原子写；SHA-256 用 sha2；
+  - 读写校验仍由 LedgerStore/LedgerReader 完成，Rust 只做字节层。
+
+对既有 Node adapters 的处置：
+- 保留，不删除；v4/tests 继续用 Node adapters 做 headless 测试。
+- Tauri 与 Node 两套 io 必须共用同一组契约测试（R3.3/R3.5 增加 Tauri 集成测试；若 CI 无 Tauri 窗口，可用 command 层单测/无头调用）。
+
+1.4 问题 3：EventTreeDAG / EventTreeDocument / EventTreeBuilder 最小实现
+
+模块归属：G（v4/core/eventgraph/）。
+R3 只落事件树数据层；EventGraph 运行时（AC4-20~22）留 R4。
+
+A 类（5 个）：
+- EventTreeNode
+- EventTreeEdge
+- EventTreeDAG
+- EventTreeDocument
+- EventTreeBuilder
+
+数据结构建议：
+- EventTreeNode：
+  - nodeId: string
+  - worldId: string（只存 worldId，不嵌入 WorldInstance）
+  - position: { x: number; y: number }（DAG 画布布局，非世界坐标）
+  - orphan: boolean（世界删除后标记；UI 灰显 + 警告图标）
+  - 可选 entryAnchor?: { timelineMs: number; lateral: number }（进入该世界时的锚点；R3 只透传）
+- EventTreeEdge：
+  - edgeId: string
+  - fromNodeId: string
+  - toNodeId: string
+- EventTreeDAG：
+  - nodes: readonly EventTreeNode[]
+  - edges: readonly EventTreeEdge[]
+  - rootNodeId: string | null
+- EventTreeDocument：
+  - schemaVersion: 1
+  - nodes / edges / rootNodeId
+  - 与 R2 的 event-tree.json 占位完全同形：{ schemaVersion: 1, nodes: [], edges: [], rootNodeId: null }
+  - 不新增 updatedAt（避免改 R2 ProjectStore 写入形状；文件 mtime 足够）
+
+EventTreeBuilder 最小 API（无 React）：
+- constructor(document?: EventTreeDocument)
+- addNode(input) / removeNode(nodeId)
+- addEdge(fromNodeId, toNodeId) / removeEdge(edgeId)
+- setRoot(nodeId)
+- renameNode?（R3 不需要）
+- markOrphans(existingWorldIds: readonly string[])
+- validate(existingWorldIds, worlds): Diagnostic[]
+- toDocument(): EventTreeDocument
+- build(): EventTreeDAG
+
+校验：
+- 节点 ID 唯一；边 ID 唯一；边端点存在；禁止自环。
+- 环检测：Kahn 拓扑排序（或 DFS 三色）。有环 → 拒绝提交，返回 cycleNodeIds。
+- 单根：入度为 0 的节点必须恰好 1 个；rootNodeId 必须指向该节点。
+- 孤立节点：允许存在（没有边但仍有节点），但必须可达（从 root 可达）；不可达节点给 WARN/诊断，不静默删除。
+- Primary 唯一性（AC4-06）：
+  - 输入 worlds: readonly { worldId: string; kind: WorldKind }[]
+  - 恰好一个 kind === WorldKind.Primary；
+  - 该 worldId 必须等于 rootNodeId 指向节点的 worldId；
+  - 否则拒绝。
+- orphan（AC4-05）：
+  - markOrphans(existingWorldIds) 只改 orphan 标记，不级联删除节点/边；
+  - UI 灰显 + 警告图标；可从 DAG 手动删除；
+  - 世界删除逻辑不在 G 内自动执行。
+
+UI：
+- P 新增 EventTreeView（React + SVG 边 + 绝对定位节点）。
+- 支持新增/删除节点与边、选择、右键菜单（R3.2 最小交互）。
+- orphan 节点灰显 + 警告；删除按钮可用。
+- 不做完整 EventGraph 蓝图运行时。
+
+1.5 问题 4：console（cmd 风格世界文件夹）的组件划分
+
+归属：P（presentation 子域）；不新增顶层模块。
+21 项按“纯逻辑 / React 组件 / 视图模型”划分：
+
+纯逻辑（无 React，仍在 P）：
+- ConsoleDirectory：虚拟目录树（主文件夹 + 子目录）。
+- ConsoleDirectoryConstraint：目录约束（只允许主文件夹下层操作；cd .. 到上层拒绝；越界命令不改当前目录）。
+- ConsoleCommand：命令联合类型 / 解析结果（ls、cd、open、export、import、settings、help、clear 等）。
+- ConsoleCommandList：命令表数据（显示在 ConsoleEnvironmentText 下方）。
+- WorldFileEntry：世界文件条目视图模型。
+- WorldFolderEntryKind：条目类型（WorldFolder / WorldFile / Exe 等）。
+- WorldExportIntent：导出意图（由 app 服务执行，不由 P 直接碰 fs）。
+- WorldImportAuto：导入意图（自动识别类型；由 app 服务执行）。
+- ConsoleEffect：控制台效果类型（scanline / flicker / glitch 等）。
+- WorldSelectionMode：选择模式类型/状态（Keyboard / Pointer / Hover）。
+
+React 组件：
+- WorldFolderConsole：console 根组件（布局、键盘焦点、状态编排）。
+- ConsolePrompt：提示符。
+- ConsoleOutput：输出滚动区。
+- ConsoleEnvironmentText：环境文本（含 console 命令表位置）。
+- SettingsConsole：设置面板。
+- WorldEntryHighlight：> / < 夹住 + 白底黑字高亮。
+- ContextMenuAction：右键菜单（新建 / 删除 / 导出）。
+- WorldLoadProgressBar：命令行风格进度条，向下滚动。
+- WorldPixelZoom：像素点放大循环。
+- WorldEnterTransition：叠黑 + 闪光 + 显示世界。
+- WorldLoadingSequence：依次编排 ProgressBar → PixelZoom → EnterTransition。
+
+约束实现：
+- ConsoleDirectory 的根是“主文件夹”（虚拟路径 /）。
+- ConsoleDirectoryConstraint 只允许 currentPath.length >= 1 的子层操作；在根执行 cd .. 返回错误并保持 currentPath；
+- 拒绝绝对路径、盘符、UNC、.. 越界；
+- 所有 export/import 目标必须在当前项目根内；
+- 命令表显示在 ConsoleEnvironmentText 下方；越界命令输出错误但不改目录。
+- 选择/高亮（AC4-43）：
+  - 上下键移动、回车进入/打开、鼠标点击选中、掠过 hover 高亮；
+  - WorldEntryHighlight 对 exe 与文件夹都用 > 和 < 夹住 + 白底黑字；
+  - ContextMenuAction 右键新建/删除/导出。
+- 进入过渡（AC4-44）：
+  - WorldLoadingSequence 只做视觉；过渡期间不写账本、不改世界状态；
+  - 完成后由 app 切换当前 WorldInstance。
+- 账号/登录：console 不出现任何 Account/Login/Auth 文案或入口。
+
+1.6 问题 5：视差渲染（PixiJS）与逻辑层解耦
+
+数据层（W，R3.4 新增 8 个 A 类）：
+- VisualFrame、VisualFrameRect、VisualFrameParallaxFactor、VisualFrameSaturation、GlobalSaturation、FrameTarget、FrameTracking、VisualFrameTargetLock。
+
+建议语义：
+- VisualFrameRect：屏幕矩形 { x, y, width, height }。
+- VisualFrameParallaxFactor：每层视差因子（number；由 W 数据提供）。
+- VisualFrame：矩形 + 每层因子 + FrameTarget + FrameTracking + VisualFrameTargetLock + 只读饱和度。
+- FrameTarget：目标点/目标框（屏幕坐标）。
+- FrameTracking：Tracked / Lost / Locked（或等价枚举）。
+- VisualFrameTargetLock：Locked / Unlocked。
+- VisualFrameSaturation / GlobalSaturation：只读 number；逻辑层不读取渲染颜色。
+- 逻辑层不 import Pixi；P 只读 W 数据。
+
+P（PixiJS）：
+- ParallaxRenderer：创建/管理 PIXI.Application 或 Container；读取 WorldInstance.layers（至少 3 层）；渲染前景/中景/背景。
+- ParallaxCamera：根据 timeline progress / lateral 计算相机偏移；不写 W。
+- ForegroundUV / MidgroundUV / BackgroundUV：三层 UV/偏移值对象；由 renderer 使用。
+- 渲染输入：只读 WorldInstance + Layer + VisualFrame + TimelineProgress 快照。
+- 三层视差与时间轴同步：
+  - R3 用 requestAnimationFrame + TimelineStateMachine 的 progress；
+  - 每层 offset = progress * layer.parallaxFactor（具体公式在 P 内，可配置）；
+  - 不做音频时钟（AudioOutputClock 留 R4）。
+- 左右移动（AC4-08）：
+  - 键盘/指针输入 → TimelineStateMachine.seek/advance；
+  - 边界 clamp；暂停冻结；
+  - W 只提供数据与边界，P 处理输入。
+- 视差框（AC4-09）：
+  - W 计算 target in frame / FrameTracking / lock；
+  - P 画矩形与饱和度；
+  - 逻辑层不读取渲染颜色。
+
+TimelineStateMachine：
+- R2 是 interface；R3.4 建议升级为同名 class（A 类不变），补 play/pause/seek/advance/progress、方向、边界。
+- 这会改 R2 文件 v4/core/timeline/types.ts；需 P-R3-05 批准。
+
+1.7 问题 6：编辑器（AC4-34）的组件划分
+
+E（editor 逻辑，无 React）：
+- ChartEditMode：Notes / Keyframes / Logo / Layers（枚举）。
+- KeyframeTrack：轨道 + keyframes。
+- ChartKeyframe：keyframeId / trackId / timeMs / property / value。
+- ChartKeyframeAnimation：起始/中间/结束插值。
+- ChartKeyframeProperty：Position / Size / Stretch / AppearEffect / DisappearEffect。
+- LogoPositionPicker：选位状态机（进入选位、点击预览、创建引导 logo）。
+- LogoRandomPlacement：种子化随机放置（使用 RandomSeed；不调用 AI）。
+- ChartEditUndo：命令栈（有界；R3 最小 add/remove/move keyframe）。
+- AIKeyframeGeneration：界面占位/接口占位；R3 返回未启用，不调用真实 AI（R4）。
+- ChartSourceData / parseChartSourceData：如果 R3 需要加载谱面 v2，则一并落 E；否则 R3.5 最小只做 keyframe 编辑，谱面加载留 R4。建议 R3.5 落 ChartSourceData 的类型与解析，避免编辑器没有输入。
+
+P（React 视图）：
+- EditorTimeline / EditorPlayhead / EditorTrack / EditorClip / EditorCanvas / EditorInspector 的 A 类归属在 E（视图模型），P 用内部 React 组件渲染，不导出新 A 名。
+- 右栏交互：
+  - 选中关键帧后才显示编辑项；未选中不显示。
+  - 预览窗口双击选择、拖动。
+  - 起始/结束/中间关键帧分别设置位置、大小、拉伸、出现/消失动效。
+  - 中间关键帧自动生成移动动画（起始→中间→结束）。
+  - 右栏“选位”→ 点击预览窗口 → 创建引导 logo。
+  - 右栏可删除关键帧及关联 logo。
+- 预览使用 RandomSeed；R3 只做编辑器预览，不做运行时随机分流（AC4-41 留 R4）。
+- AIKeyframeGeneration 按钮可见但禁用/占位；R4 接 AI。
+
+1.8 问题 7：媒体导入（AC4-23）的 Tauri/Rust 接口
+
+D（media 类型）：
+- MediaSource：assetId / kind / durationMs / width / height / fps / audioStreams / path。
+- MediaImport：源路径、目标路径、assetId、hash、probe 结果、状态。
+- MediaTrim：源 assetId、startMs、endMs、输出 assetId/path。
+- DepthMap / DepthThreshold：R3 只做类型 + 导入（图片/JSON 深度图）；SGBM 生成留 R4/R5。
+- AudioSegment / AudioMarker / Downbeat：R3 只做音频导入/切段所需最小字段；完整音乐工程留 R4。
+
+Tauri commands：
+- media_probe(path) → MediaSource（ffprobe JSON）
+- media_import(projectRoot, sourcePath, targetName?) → MediaImport（复制到 media/，hash，probe，失败回滚）
+- media_trim(assetId, startMs, endMs) → MediaTrim（ffmpeg -ss/-to；输出新 asset）
+- media_extract_frames(assetId, times[]) → string[]（ffmpeg 抽帧到 media/frames/）
+- media_extract_audio(assetId) → AudioSegment（ffmpeg -vn）
+- depth_import_or_generate(assetId) → DepthMap：R3 只支持导入深度图；生成返回 Unsupported（明确 diagnostic，不伪造深度图）
+
+实现：
+- 调用系统 ffmpeg/ffprobe（已确认 4.4.1 可用），不链接 ffmpeg-next/OpenCV；Rust 用 std::process::Command。
+- 失败回滚：先写 temp 目录/临时文件 → probe/trim 成功 → 原子 rename 到 media/；任一步失败清理 temp，不产生半成品。
+- 路径安全：同 fs command，仅项目相对路径；源文件路径由 dialog 选择后传入，Rust 读取前校验。
+- SGBM：R3 不实现；depth_generate 返回 Unsupported；R4/R5 再评估 OpenCV/own SGBM。
+- Rust 依赖（R3.5 增加）：sha2、hex、uuid、image、thiserror；ffmpeg 作为外部运行时依赖写入 README/验收。
+- 前置：ffmpeg 缺失时 command 返回 MediaToolMissing，UI 显示可诊断错误；不崩溃。
+
+================================================================================
+2. 子阶段拆分（R3.1 ~ R3.5）
+================================================================================
+
+| 子阶段 | 范围 | 出口 AC | 交付物 | 依赖 |
+|---|---|---|---|---|
+| R3.1 | app 最小骨架：Tauri 2 + React 19 + Vite + 空窗口 + app_info command | 无（基础设施） | v4/app 全套；Tauri 配置；app_info；构建/启动验收 | 工具链安装；U-R3-01/02 |
+| R3.2 | G 事件树数据层 + EventTreeView | AC4-04 / 05 / 06 | v4/core/eventgraph/ 5 A 类；P EventTreeView / MainScreenView；G 测试 | R3.1；P-R3-06/07 |
+| R3.3 | console 21 项 + Tauri fs 适配器 | AC4-29 / 42 / 43 / 44 | v4/core/presentation/console/；TauriProjectIo / TauriLedgerFile；console 测试 | R3.1/R3.2；P-R3-03/04/10 |
+| R3.4 | Pixi 视差 + VisualFrame + TimelineStateMachine | AC4-07 / 08 / 09 | W frame 8 A 类；M class 升级；P Pixi 渲染；视差测试 | R3.1；P-R3-05 |
+| R3.5 | 编辑器 AC4-34 + 媒体导入 AC4-23 | AC4-23 / 34 | E chart edit 9 A 类 + P 编辑器；D media 类型；Rust media commands；集成测试 | R3.1/R3.3/R3.4；P-R3-08/09 |
+
+执行规则：
+- 每个子阶段独立出实施计划 + 独立验收；R3.1 验收通过后才开 R3.2。
+- R3.2 开始前更新门禁扫描范围（P 排除 zero-engine；app 纳入 X 的 forbidden/deps 扫描）。
+- R3.5 的 editor 与 media 两条线可并行，但同一子阶段验收；若工作量超预期，可在 R3.5 内部拆 R3.5a（editor）/ R3.5b（media），不改变 R3 出口。
+
+================================================================================
+3. 模块目录结构
+================================================================================
+
+v4/
+  app/
+    package.json
+    index.html
+    vite.config.ts
+    tsconfig.json
+    tsconfig.node.json
+    src/
+      main.tsx
+      App.tsx
+      app.css
+      tauri.ts
+      vite-env.d.ts
+      screens/            # R3.2+ 组合根；只做装配，不写业务
+    src-tauri/
+      Cargo.toml
+      build.rs
+      tauri.conf.json
+      capabilities/default.json
+      icons/
+      src/
+        main.rs
+        lib.rs
+        commands/
+          mod.rs
+          app_info.rs
+          fs.rs           # R3.3
+          media.rs        # R3.5
+  adapters/
+    node/                 # R2 保留，headless 测试
+    tauri/
+      tauriInvoke.ts
+      TauriProjectIo.ts
+      TauriLedgerFile.ts
+      TauriMediaImporter.ts
+  core/
+    eventgraph/
+      EventTree.ts        # 5 A 类；R3 只事件树
+    presentation/
+      eventtree/
+        EventTreeView.tsx
+        MainScreenView.tsx
+      console/
+        ConsoleDirectory.ts
+        ConsoleCommand.ts
+        ConsoleCommandList.ts
+        WorldFileEntry.ts
+        WorldExportIntent.ts
+        WorldImportAuto.ts
+        ConsoleEffect.ts
+        ConsoleDirectoryConstraint.ts
+        WorldFolderConsole.tsx
+        ConsolePrompt.tsx
+        ConsoleOutput.tsx
+        ConsoleEnvironmentText.tsx
+        SettingsConsole.tsx
+        WorldEntryHighlight.tsx
+        ContextMenuAction.tsx
+        WorldLoadProgressBar.tsx
+        WorldPixelZoom.tsx
+        WorldEnterTransition.tsx
+        WorldLoadingSequence.tsx
+        WorldSelectionMode.ts
+      parallax/
+        ParallaxRenderer.ts
+        ParallaxCamera.ts
+        ParallaxUV.ts       # ForegroundUV / MidgroundUV / BackgroundUV
+      editor/
+        EditorCanvas.tsx
+        EditorTimeline.tsx
+        EditorInspector.tsx
+    world/
+      frame.ts              # R3.4 8 A 类
+    timeline/
+      types.ts              # R3.4 TimelineStateMachine class
+    editor/
+      ChartEdit.ts          # 9 A 类
+      ChartSource.ts        # ChartSourceData / parseChartSourceData（如 R3.5 需要）
+    media/
+      Media.ts              # D 类型
+  tests/
+    r3/                     # R3 测试；不与 R2 测试混放
+      ...
+
+说明：
+- P 的 A 类组件/类型全部放在 v4/core/presentation/；由 app 组合根引用。
+- P 文件可以 import React/Pixi/WebAudio；K~R 仍禁止。
+- app 只做组合根与 Tauri 初始化，不承载业务逻辑。
+- console 是 P 子域，不新增顶层模块。
+
+================================================================================
+4. 依赖矩阵新增边
+================================================================================
+
+R3 不新增顶层模块；v4/app 与 v4/adapters/tauri 都归 X。
+
+新增/确认的边：
+1. E（editor）→ G（eventgraph）仅类型：Editor 使用 RandomSeed（AC4-34 预览）。
+   - 现状 E 仅类型：W、D、U；需加 G。
+   - 不新增 E → R / L 任何边。
+2. G（eventgraph）→ W 仅类型：EventTreeBuilder 的 Primary 校验需要 WorldKind。
+   - 现状已允许（G 仅类型 W/C/D）；确认即可，无矩阵改动。
+3. P（presentation）→ S（studio）仅类型：console 读取 StudioProject / 项目视图模型。
+   - P 现状“仅类型：全部逻辑模块 R/I”，已覆盖；确认即可。
+4. X（app / adapters）→ all：现有 X 行已覆盖；v4/app 与 v4/adapters/tauri 均按 X 处理。
+5. P 值依赖仍只有 K；React / Pixi / WebAudio 是外部库，不进入矩阵。
+
+门禁口径调整（不是矩阵边）：
+- check-zero-engine：扫描范围从 v4/core 全量改为 K~R（排除 v4/core/presentation）。P 是唯一允许 React/Pixi/WebAudio 的层。
+- 全部扫描器增加 .tsx：walk 同时收 .ts/.tsx；TSX 文件用 ts.ScriptKind.TSX 解析；相对导入解析增加 .tsx 候选。
+- check-naming：v4/core 继续 A 归属校验；v4/app 只做禁名检查（app 是 X，不参与 A 类）。
+- check-dependencies：扫描范围增加 v4/app；v4/app 按 X 行；tests 仍豁免。
+- check-ledger-single-writer：扫描范围增加 v4/app；app 仍不得调用 appendNarrativeEvent（R3 不写账本）；director 例外保留。
+- tools/lib/module-map-v4.cjs：为 v4/app 加 X 映射；v4/adapters/tauri 已在 adapters 前缀下映射 X。
+- tools/lib/namebook-v4.cjs：stage-4.v1.1 落盘后把 provisional 改 false；在确认前保持 true。
+
+================================================================================
+5. 风险点与缓解
+================================================================================
+
+R3-R1 工具链/网络：Tauri CLI、npm 包、cargo crates 需要首次下载；可能受网络/镜像影响。
+- 缓解：R3.1 单独做安装验证；失败则停在 R3.1，不进入业务代码；记录 lockfile。
+
+R3-R2 Node/Tauri 双适配器漂移：同一 io 契约两套实现，原子写/账本可能不一致。
+- 缓解：契约测试双跑；R3.3 加 Tauri command 层集成测试；Rust 实现逐条对照 AC4-03/11/12。
+
+R3-R3 路径逃逸：自定义 fs command 可被传入任意路径。
+- 缓解：ActiveProjectRoot + canonicalize + 相对路径白名单 + 拒绝 .. / 绝对路径 / UNC；Rust 单测覆盖。
+
+R3-R4 P 门禁误伤：check-zero-engine 若继续扫描 presentation，会因 React/Pixi 报 ERROR。
+- 缓解：R3.2 先改扫描范围并加 selftest；P 目录明确排除；K~R 仍全扫。
+
+R3-R5 Primary 世界数据源：project.json 只有 worldIds，没有 kind；AC4-06 需要 WorldKind。
+- 缓解：ProjectStore 增加只读 world summaries（读 worlds/<id>/world.json）；在 R3.2 前定契约（P-R3-06）。
+
+R3-R6 TimelineStateMachine interface→class：会改 R2 文件，可能影响现有类型。
+- 缓解：同名 A 类；只补行为不改名称；R3.4 前由 PROTOCOL 批准；加回归测试。
+
+R3-R7 EventTreeView 交互复杂度：DAG 拖拽/连线/环检测 UI 容易超 R3.2。
+- 缓解：R3.2 只做最小增删/选择/灰显；拖拽布局可简化为固定网格/绝对坐标；完整编辑器留 R4。
+
+R3-R8 媒体子进程：ffmpeg 参数/编码/路径空格/中文路径；失败回滚。
+- 缓解：统一 Command 参数数组（不经 shell）；临时目录；probe 后再发布；错误码可诊断；ffmpeg 缺失显式提示。
+
+R3-R9 app 与根 CJS/TS 冲突：根 tsconfig/package 不应被 app 污染。
+- 缓解：v4/app 独立 package/tsconfig；根 npm scripts 不改；Vite alias 读取 ../core；server.fs.allow 显式配置。
+
+R3-R10 stage-4.v1.1 不一致：当前工作区未见补遗，provisional 未固定。
+- 缓解：R3.1 前确认落盘；未确认不把 provisional 改 false；P-R3-01 阻断。
+
+R3-R11 console 键盘焦点/可访问性：cmd 风格 + 上下键 + 右键 + 预览点击。
+- 缓解：WorldFolderConsole 统一键盘事件；输入框聚焦时不让全局键抢占；R3.3 测试覆盖。
+
+R3-R12 AC4-34 范围膨胀：右栏 6 条交互 + keyframe 动画 + logo 选位 + undo。
+- 缓解：R3.5 只做最小闭环；AI 生成占位；复杂动效/曲线编辑留 R4。
+
+================================================================================
+6. 需 PROTOCOL 裁定的事项（P-R3-01 ~ P-R3-12）
+================================================================================
+
+P-R3-01【阻断】stage-4.v1.1 落盘位置与 §3.1 内容确认。
+- 当前 docs/spec/stage-4.md 仍是旧版；未发现 §3.1 / stage-4.v1.1 文件。
+- 请确认补遗是否已落盘、路径、SHA；确认后 R3.1 才可开工，namebook provisional 才可改 false。
+
+P-R3-02 v4/app 独立 package.json 与版本基线。
+- 建议 React 19 / Vite 7 / Tauri 2 / Pixi 8；app 独立 node_modules 与 lockfile；根 package.json 不改。
+
+P-R3-03 Tauri fs 桥接选型 A。
+- Rust command 直接实现 fs io；Node adapters 保留测试；plugin-fs 不作主写路径；plugin-dialog 只选文件。
+
+P-R3-04 门禁扫描范围调整。
+- check-zero-engine 排除 v4/core/presentation；check-naming 对 v4/app 只做禁名；check-dependencies/single-writer 纳入 v4/app。
+- 请批准在 R3.2 落盘这些工具修改，并保留 selftest。
+
+P-R3-05 TimelineStateMachine 从 interface 升级为 class。
+- 同名 A 类，R3.4 修改 v4/core/timeline/types.ts；是否允许改 R2 已落盘文件？
+
+P-R3-06 Primary 世界数据源。
+- 建议 ProjectStore 增加只读 world summaries（worlds/<id>/world.json 的 worldId + kind），不新增 A 类；请确认 S 的职责边界与读取方式。
+
+P-R3-07 EventTreeDocument 持久化形状。
+- 建议与 R2 占位完全同形：{ schemaVersion: 1, nodes, edges, rootNodeId }；不加 updatedAt。请确认。
+
+P-R3-08 E → G 仅类型边与 RandomSeed。
+- R3.5 为 AC4-34 预览在 G 增加 RandomSeed 类型；不实现 EventGraph 运行时；矩阵加 E 仅类型 G。请确认。
+
+P-R3-09 媒体实现边界。
+- R3 用系统 ffmpeg/ffprobe；SGBM 不实现，depth 只导入；R4/R5 再做生成。请确认 AC4-23 的“深度”在 R3 的解释。
+
+P-R3-10 console 归属与纯逻辑位置。
+- 21 项全部 P；纯逻辑（ConsoleDirectory / Constraint / Command）放 v4/core/presentation/console/，不新增模块。请确认。
+
+P-R3-11 app 的 Tauri identifier / productName / 窗口尺寸。
+- 建议 identifier cn.neurou.app；productName 雨若；1280×800。请确认或给值。
+
+P-R3-12 app/adapters 的 X 归类与门禁豁免。
+- v4/app、v4/adapters/tauri 均 X；不参与 A 归属；只做禁名/依赖/零引擎（零引擎不扫 X）。请确认。
+
+P-R3-13 R3 出口 AC 计数不一致。
+- 用户写 14 条，但列举为 12 条（AC4-04~09、23、29、34、42~44）。请确认第 13/14 条是否漏列；在确认前按 12 条执行，不擅自补 AC。
+
+================================================================================
+7. 需用户确认的事项（U-R3-01 ~ U-R3-04）
+================================================================================
+
+U-R3-01 允许在 v4/app 执行 npm install（React 19 / Vite 7 / Tauri 2 / Pixi 8），并允许 cargo 首次下载 Tauri crates。
+- 需要网络；会产生 v4/app/package-lock.json 与 src-tauri/Cargo.lock。
+
+U-R3-02 确认 app 元数据：productName“雨若”、identifier（建议 cn.neurou.app）、窗口 1280×800、标题栏文案。
+
+U-R3-03 确认媒体范围：R3 支持视频/音频/深度图导入 + trim + 抽帧 + 音频分离；SGBM 生成延 R4/R5；ffmpeg 4.4.1 作为运行依赖。
+
+U-R3-04 确认 AC4-34 的 R3 最小闭环：keyframe 编辑/右栏/选位/undo；AIKeyframeGeneration 仅占位；不做 AI 双模式（R4）。
+
+================================================================================
+8. 第一批要出的文件（R3.1 最小骨架）
+================================================================================
+
+R3.1 只做 app 骨架，不写 core/adapters/G/P/E/D。
+
+新增：
+1. v4/app/package.json
+2. v4/app/index.html
+3. v4/app/vite.config.ts
+4. v4/app/tsconfig.json
+5. v4/app/tsconfig.node.json
+6. v4/app/src/main.tsx
+7. v4/app/src/App.tsx
+8. v4/app/src/app.css
+9. v4/app/src/tauri.ts
+10. v4/app/src/vite-env.d.ts
+11. v4/app/src-tauri/Cargo.toml
+12. v4/app/src-tauri/build.rs
+13. v4/app/src-tauri/tauri.conf.json
+14. v4/app/src-tauri/capabilities/default.json
+15. v4/app/src-tauri/src/main.rs
+16. v4/app/src-tauri/src/lib.rs
+17. v4/app/src-tauri/src/commands/mod.rs
+18. v4/app/src-tauri/src/commands/app_info.rs
+19. v4/app/.gitignore
+
+生成/命令产生（不手写）：
+- v4/app/package-lock.json（npm install）
+- v4/app/src-tauri/Cargo.lock（cargo）
+- v4/app/src-tauri/icons/*（npx tauri icon，来源 big logo.png）
+
+修改：
+- 根 .gitignore 追加 v4/app/node_modules/、v4/app/dist/、v4/app/src-tauri/target/、v4/app/src-tauri/gen/。
+
+R3.1 验收命令：
+- cd v4/app && npm install
+- npm run typecheck
+- npm run build
+- npm run tauri dev（人工确认窗口 + app_info）
+- cd v4/app/src-tauri && cargo check
+- 根目录 npm run check:v4（仍 0 ERROR；app 不在现有 core 扫描范围）
+
+R3.1 不修改：
+- v4/core、v4/adapters、v4/tests、tools、根 package.json、根 tsconfig、stage-4、NAMEBOOK、verdicts。
+
+================================================================================
+9. 下一步
+================================================================================
+
+请 PROTOCOL 先裁定 P-R3-01（stage-4.v1.1 落盘）、P-R3-02（app 包）、P-R3-03（Tauri fs 选型）、P-R3-04（门禁范围）。
+上述四项通过后，DSH 出 R3.1 第一批文件文本（19 个手写文件 + 2 个生成说明）。

@@ -1,0 +1,53 @@
+{
+  "generatedAt": "2026-10-10T12:27:23.627Z",
+  "scope": "Actual WorldFolderBuilder, WorldFolderSession, AccountStartupSession, WorldLocalStorage and AccountStartupStorage; mocked cc lifecycle/views/runtime constructor boundaries. No actual rendering claim.",
+  "passed": 0,
+  "failed": 9,
+  "checks": [
+    {
+      "name": "C01 real startup shell seeds metadata after prologue and creates no gameplay objects before explicit selection",
+      "pass": false,
+      "error": "TypeError: Cannot read properties of null (reading 'reader')\n    at D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-local-worlds\\builder-boundary.cjs:47:95\n    at test (D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-local-worlds\\builder-boundary.cjs:35:76)\n    at Object.<anonymous> (D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-local-worlds\\builder-boundary.cjs:45:1)\n    at Module._compile (node:internal/modules/cjs/loader:1872:14)\n    at Object.<anonymous> (D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b3-world-fork\\regression-runner.cjs:27:64)\n    at Module._compile (node:internal/modules/cjs/loader:1872:14)\n    at Object..js (node:internal/modules/cjs/loader:2003:10)\n    at Module.load (node:internal/modules/cjs/loader:1594:32)\n    at Module.<anonymous> (node:internal/modules/cjs/loader:1396:12)\n    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)"
+    },
+    {
+      "name": "C02 empty-world entry uses minimal factory with current stored record and never invokes InitialWorld gameplay factory",
+      "pass": false,
+      "error": "TypeError: Cannot read properties of null (reading 'port')\n    at D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-local-worlds\\builder-boundary.cjs:51:110\n    at test (D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-local-worlds\\builder-boundary.cjs:35:76)\n    at Object.<anonymous> (D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-local-worlds\\builder-boundary.cjs:50:1)\n    at Module._compile (node:internal/modules/cjs/loader:1872:14)\n    at Object.<anonymous> (D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b3-world-fork\\regression-runner.cjs:27:64)\n    at Module._compile (node:internal/modules/cjs/loader:1872:14)\n    at Object..js (node:internal/modules/cjs/loader:2003:10)\n    at Module.load (node:internal/modules/cjs/loader:1594:32)\n    at Module.<anonymous> (node:internal/modules/cjs/loader:1396:12)\n    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)"
+    },
+    {
+      "name": "C03 built-in selection preserves configured InitialWorld factory and rapid duplicate opens create one runtime",
+      "pass": false,
+      "error": "TypeError: Cannot read properties of null (reading 'open')\n    at D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-local-worlds\\builder-boundary.cjs:57:129\n    at test (D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-local-worlds\\builder-boundary.cjs:35:76)\n    at Object.<anonymous> (D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-local-worlds\\builder-boundary.cjs:56:1)\n    at Module._compile (node:internal/modules/cjs/loader:1872:14)\n    at Object.<anonymous> (D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b3-world-fork\\regression-runner.cjs:27:64)\n    at Module._compile (node:internal/modules/cjs/loader:1872:14)\n    at Object..js (node:internal/modules/cjs/loader:2003:10)\n    at Module.load (node:internal/modules/cjs/loader:1594:32)\n    at Module.<anonymous> (node:internal/modules/cjs/loader:1396:12)\n    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)"
+    },
+    {
+      "name": "C04 opening stale/unknown/foreign-account entry rechecks storage and refuses runtime creation",
+      "pass": false,
+      "error": "TypeError: Cannot read properties of null (reading 'port')\n    at D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-local-worlds\\builder-boundary.cjs:62:61\n    at test (D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-local-worlds\\builder-boundary.cjs:35:76)\n    at Object.<anonymous> (D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-local-worlds\\builder-boundary.cjs:61:1)\n    at Module._compile (node:internal/modules/cjs/loader:1872:14)\n    at Object.<anonymous> (D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b3-world-fork\\regression-runner.cjs:27:64)\n    at Module._compile (node:internal/modules/cjs/loader:1872:14)\n    at Object..js (node:internal/modules/cjs/loader:2003:10)\n    at Module.load (node:internal/modules/cjs/loader:1594:32)\n    at Module.<anonymous> (node:internal/modules/cjs/loader:1396:12)\n    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)"
+    },
+    {
+      "name": "C05 exit disables and destroys runtime once, gates new open until after-draw, then reloads latest external directory",
+      "pass": false,
+      "error": "TypeError: Cannot read properties of null (reading 'port')\n    at D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-local-worlds\\builder-boundary.cjs:69:49\n    at test (D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-local-worlds\\builder-boundary.cjs:35:76)\n    at Object.<anonymous> (D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-local-worlds\\builder-boundary.cjs:68:1)\n    at Module._compile (node:internal/modules/cjs/loader:1872:14)\n    at Object.<anonymous> (D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b3-world-fork\\regression-runner.cjs:27:64)\n    at Module._compile (node:internal/modules/cjs/loader:1872:14)\n    at Object..js (node:internal/modules/cjs/loader:2003:10)\n    at Module.load (node:internal/modules/cjs/loader:1594:32)\n    at Module.<anonymous> (node:internal/modules/cjs/loader:1396:12)\n    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)"
+    },
+    {
+      "name": "C06 refresh sees external metadata, stale port CAS cannot overwrite it, and later valid create succeeds",
+      "pass": false,
+      "error": "AssertionError [ERR_ASSERTION]: The input did not match the regular expression /其他页面更新/. Input:\n\n\"TypeError: Cannot read properties of null (reading 'port')\"\n\n    at D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-local-worlds\\builder-boundary.cjs:78:10\n    at test (D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-local-worlds\\builder-boundary.cjs:35:76)\n    at Object.<anonymous> (D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-local-worlds\\builder-boundary.cjs:76:1)\n    at Module._compile (node:internal/modules/cjs/loader:1872:14)\n    at Object.<anonymous> (D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b3-world-fork\\regression-runner.cjs:27:64)\n    at Module._compile (node:internal/modules/cjs/loader:1872:14)\n    at Object..js (node:internal/modules/cjs/loader:2003:10)\n    at Module.load (node:internal/modules/cjs/loader:1594:32)\n    at Module.<anonymous> (node:internal/modules/cjs/loader:1396:12)\n    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)"
+    },
+    {
+      "name": "C07 failed metadata load displays empty unavailable list without reseed/overwrite and keeps editors accessible",
+      "pass": false,
+      "error": "TypeError: Cannot read properties of null (reading 'reload')\n    at D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-local-worlds\\builder-boundary.cjs:83:152\n    at test (D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-local-worlds\\builder-boundary.cjs:35:76)\n    at Object.<anonymous> (D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-local-worlds\\builder-boundary.cjs:82:1)\n    at Module._compile (node:internal/modules/cjs/loader:1872:14)\n    at Object.<anonymous> (D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b3-world-fork\\regression-runner.cjs:27:64)\n    at Module._compile (node:internal/modules/cjs/loader:1872:14)\n    at Object..js (node:internal/modules/cjs/loader:2003:10)\n    at Module.load (node:internal/modules/cjs/loader:1594:32)\n    at Module.<anonymous> (node:internal/modules/cjs/loader:1396:12)\n    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)"
+    },
+    {
+      "name": "C08 destroy removes pending after-draw callback, retires active runtime and prevents view reconstruction",
+      "pass": false,
+      "error": "TypeError: Cannot read properties of null (reading 'open')\n    at D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-local-worlds\\builder-boundary.cjs:90:49\n    at test (D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-local-worlds\\builder-boundary.cjs:35:76)\n    at Object.<anonymous> (D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-local-worlds\\builder-boundary.cjs:89:1)\n    at Module._compile (node:internal/modules/cjs/loader:1872:14)\n    at Object.<anonymous> (D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b3-world-fork\\regression-runner.cjs:27:64)\n    at Module._compile (node:internal/modules/cjs/loader:1872:14)\n    at Object..js (node:internal/modules/cjs/loader:2003:10)\n    at Module.load (node:internal/modules/cjs/loader:1594:32)\n    at Module.<anonymous> (node:internal/modules/cjs/loader:1396:12)\n    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)"
+    },
+    {
+      "name": "C09 composition failure rolls back partial runtime, retains visible error, and permits retry after deferred destruction",
+      "pass": false,
+      "error": "TypeError: Cannot read properties of null (reading 'open')\n    at D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-local-worlds\\builder-boundary.cjs:97:39\n    at test (D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-local-worlds\\builder-boundary.cjs:35:76)\n    at Object.<anonymous> (D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-local-worlds\\builder-boundary.cjs:95:1)\n    at Module._compile (node:internal/modules/cjs/loader:1872:14)\n    at Object.<anonymous> (D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b3-world-fork\\regression-runner.cjs:27:64)\n    at Module._compile (node:internal/modules/cjs/loader:1872:14)\n    at Object..js (node:internal/modules/cjs/loader:2003:10)\n    at Module.load (node:internal/modules/cjs/loader:1594:32)\n    at Module.<anonymous> (node:internal/modules/cjs/loader:1396:12)\n    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)"
+    }
+  ]
+}

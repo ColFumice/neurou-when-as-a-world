@@ -1,0 +1,91 @@
+{
+  "creator": "3.8.8",
+  "target": "preview",
+  "capturedAt": "2026-10-10T01:52:39.133Z",
+  "entries": [
+    {
+      "name": "SceneBuilder.ts",
+      "source": "assets/scripts/SceneBuilder.ts",
+      "sourceSha256": "501d19ea04cba4160b06154bd453026176d77304cce68061491090eb2f853eb0",
+      "chunk": "./chunks/8b/8b7eae5ef325431fd5924802b2c0ea4b14e61744.js",
+      "url": "http://localhost:7456/scripting/x/chunks/8b/8b7eae5ef325431fd5924802b2c0ea4b14e61744.js",
+      "sha256": "66c7010c6fa239a030a7d020350549883770cfe6cd0e98fc612bc4eee21c1be4",
+      "markers": [
+        "guidance_b",
+        "未决对象沿独立时间"
+      ],
+      "servedEqualsCompilerOutput": true,
+      "pass": true
+    },
+    {
+      "name": "GuidanceLineRuntime.ts",
+      "source": "src/chart/GuidanceLineRuntime.ts",
+      "sourceSha256": "56c486793d5b8351b110bcfe4378eaf70a2fc1cffa0bf58c774a1416e008888c",
+      "chunk": "./chunks/63/63f427a813d2ae759b12cf6d47faef24c479d84a.js",
+      "url": "http://localhost:7456/scripting/x/chunks/63/63f427a813d2ae759b12cf6d47faef24c479d84a.js",
+      "sha256": "12e11be92015384ce02f16464c2517f47ecc23a3e4b036bfdecd95c5d0ceef60",
+      "markers": [
+        "hasHeldGridKey",
+        "isMatchingGridKey"
+      ],
+      "servedEqualsCompilerOutput": true,
+      "pass": true
+    },
+    {
+      "name": "LineEraseEffect.ts",
+      "source": "src/presentation/LineEraseEffect.ts",
+      "sourceSha256": "410c3c71949cf2b8e8b689c16e82540c8bc2c9c56d53343d3ac783cdd56896ce",
+      "chunk": "./chunks/33/33602cd2fe563b12ea97df8f9eb23f02908ad871.js",
+      "url": "http://localhost:7456/scripting/x/chunks/33/33602cd2fe563b12ea97df8f9eb23f02908ad871.js",
+      "sha256": "69b4a957dfd2946925a1d1b6e8c4e3b41d9974b43b4ec2ec6dee9d43826a1a62",
+      "markers": [
+        "drawHoldRange"
+      ],
+      "servedEqualsCompilerOutput": true,
+      "pass": true
+    },
+    {
+      "name": "GuidanceChart.ts",
+      "source": "src/chart/GuidanceChart.ts",
+      "sourceSha256": "3006f030202c742f6e606532fbd292ee11c9c4d2ddf8289ce185ab1a7b0b6735",
+      "chunk": "./chunks/2a/2afd45e8bed9e5259eefe439197fb98067934fc2.js",
+      "url": "http://localhost:7456/scripting/x/chunks/2a/2afd45e8bed9e5259eefe439197fb98067934fc2.js",
+      "sha256": "08a3e8c9a55a0caa36e329d8e5f4fbadeafa9aa2ec77d69b0148520e92726f47",
+      "markers": [
+        "slicePathByDistance"
+      ],
+      "servedEqualsCompilerOutput": true,
+      "pass": true
+    },
+    {
+      "name": "KeyboardPadLayout.ts",
+      "source": "src/chart/KeyboardPadLayout.ts",
+      "sourceSha256": "73adc3efcb5e1311040385d63352ca3242536743b75505283954720dd545e992",
+      "chunk": "./chunks/a2/a2a1f0f206ea0cc714d5f86d6a0d43d512f93e4d.js",
+      "url": "http://localhost:7456/scripting/x/chunks/a2/a2a1f0f206ea0cc714d5f86d6a0d43d512f93e4d.js",
+      "sha256": "e48e68fd1479b82764033e192c99fd2f6c59a5584b7430921d0c4e401382e3ac",
+      "markers": [
+        "pad-layout-2",
+        "isMatchingGridKey"
+      ],
+      "servedEqualsCompilerOutput": true,
+      "pass": true
+    },
+    {
+      "name": "ChartPadView.ts",
+      "source": "src/presentation/ChartPadView.ts",
+      "sourceSha256": "426f0888c6bbb7e3cfc1d609bc942e353ee6503af54d27c9942e7d83db9b2160",
+      "chunk": "./chunks/71/71f207c3b1aa9851200fbcd518cfb45a40b58131.js",
+      "url": "http://localhost:7456/scripting/x/chunks/71/71f207c3b1aa9851200fbcd518cfb45a40b58131.js",
+      "sha256": "9b24c1ea823dad5d1c468fd671abd6a83ef9724b54ea6d6472a6d17252c76a43",
+      "markers": [
+        "rebuildSlotLabels",
+        "resolveContentRect(width, height)"
+      ],
+      "servedEqualsCompilerOutput": true,
+      "pass": true
+    }
+  ],
+  "pass": true,
+  "unchangedThroughEvidenceCapture": true
+}

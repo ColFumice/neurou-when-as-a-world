@@ -1,0 +1,220 @@
+{
+  "reviewedAt": "2026-10-10T07:04:36.612Z",
+  "total": 21,
+  "passed": 21,
+  "failed": 0,
+  "sourceHashes": {
+    "src/musicEditor/MusicEditorSession.ts": "ef6f514f37a34c715117ed871b4c1a8525e5a85c3d0c3d3a754bf17a7dbac97b",
+    "src/presentation/MusicEditorView.ts": "fc5a6d4c774d841177b264d67fdac2658226f2df976cb5f95cef3d7fb50e425d"
+  },
+  "evidence": "真实TS View/Session + 最小cc/DOM/Canvas宿主的独立状态机测试；Creator交互截图及人工听感另列，非此测试证明范围",
+  "astRecords": [
+    {
+      "file": "src/musicEditor/ChartSourceBuilder.ts",
+      "imports": [
+        {
+          "target": "../chart/KeyboardPadLayout",
+          "typeOnly": true
+        },
+        {
+          "target": "../chart/KeyboardPadLayout",
+          "typeOnly": false
+        },
+        {
+          "target": "../chart/GuidanceChart",
+          "typeOnly": false
+        },
+        {
+          "target": "../editor/GuidanceEditorSession",
+          "typeOnly": true
+        },
+        {
+          "target": "./MusicProjectData",
+          "typeOnly": true
+        },
+        {
+          "target": "./MusicProjectData",
+          "typeOnly": false
+        },
+        {
+          "target": "./MusicTiming",
+          "typeOnly": false
+        }
+      ]
+    },
+    {
+      "file": "src/musicEditor/MusicEditorSession.ts",
+      "imports": [
+        {
+          "target": "../chart/KeyboardPadLayout",
+          "typeOnly": true
+        },
+        {
+          "target": "../editor/GuidanceEditorSession",
+          "typeOnly": true
+        },
+        {
+          "target": "./MusicProjectData",
+          "typeOnly": true
+        },
+        {
+          "target": "./MusicProjectData",
+          "typeOnly": false
+        },
+        {
+          "target": "./ChartSourceBuilder",
+          "typeOnly": false
+        },
+        {
+          "target": "./MusicTiming",
+          "typeOnly": false
+        }
+      ]
+    },
+    {
+      "file": "src/musicEditor/MusicProjectData.ts",
+      "imports": [
+        {
+          "target": "../chart/GuidanceChart",
+          "typeOnly": true
+        },
+        {
+          "target": "../chart/KeyboardPadLayout",
+          "typeOnly": true
+        },
+        {
+          "target": "../editor/GuidanceEditorSession",
+          "typeOnly": true
+        }
+      ]
+    },
+    {
+      "file": "src/musicEditor/MusicTiming.ts",
+      "imports": [
+        {
+          "target": "./MusicProjectData",
+          "typeOnly": true
+        },
+        {
+          "target": "./MusicProjectData",
+          "typeOnly": false
+        }
+      ]
+    },
+    {
+      "file": "src/presentation/MusicEditorView.ts",
+      "imports": [
+        {
+          "target": "cc",
+          "typeOnly": false
+        },
+        {
+          "target": "../musicEditor/MusicEditorSession",
+          "typeOnly": true
+        },
+        {
+          "target": "../musicEditor/MusicProjectData",
+          "typeOnly": true
+        },
+        {
+          "target": "../editor/GuidanceEditorSession",
+          "typeOnly": true
+        },
+        {
+          "target": "./FolderTheme",
+          "typeOnly": false
+        },
+        {
+          "target": "./MusicPreviewAudio",
+          "typeOnly": false
+        }
+      ]
+    }
+  ],
+  "results": [
+    {
+      "name": "R01 Ctrl toggle跨轨、同轨Shift/无同轨anchor、Ctrl+Shift追加",
+      "passed": true
+    },
+    {
+      "name": "R02 已选普通点击down保留组用于拖动，短up单选且无历史",
+      "passed": true
+    },
+    {
+      "name": "R03 跨轨ghost只画预览、mouseUp一次共同位移、字段不变",
+      "passed": true
+    },
+    {
+      "name": "R04 负音轨offset移动整组拒绝，ghost标红且不提交",
+      "passed": true
+    },
+    {
+      "name": "R05 任一pitch/时间尾端越界不夹取、不部分提交或扩时长",
+      "passed": true
+    },
+    {
+      "name": "R06 框选与真实min5px noteRect交集，跨轨且不写history",
+      "passed": true
+    },
+    {
+      "name": "R07 空白≤4px短点击添加，>4px框选不添加",
+      "passed": true
+    },
+    {
+      "name": "R08 Esc在ghost过程中取消并清空选择、anchor、capture且无事务",
+      "passed": true
+    },
+    {
+      "name": "R09 blur/Pointer取消恢复原selection与anchor，清pointer目标且无提交",
+      "passed": true
+    },
+    {
+      "name": "R10 Ctrl+A取消pending拖动并仅全选当前轨，不写history",
+      "passed": true
+    },
+    {
+      "name": "R11 复制tick/ID稳定锚点、跨轨flatten目标轨、pointer统一位移与新ID选择",
+      "passed": true
+    },
+    {
+      "name": "R12 粘贴播放头fallback减目标轨offset并按分段tempo逆算/PPQ4吸附",
+      "passed": true
+    },
+    {
+      "name": "R13 任一粘贴成员越界整体失败，selection/clipboard/历史保持",
+      "passed": true
+    },
+    {
+      "name": "R14 复制快照隔离、UI selection/anchor/clipboard/ghost零序列化",
+      "passed": true
+    },
+    {
+      "name": "R15 LoadDraft清selection/anchor/pointer/gesture，保留逻辑完整history",
+      "passed": true
+    },
+    {
+      "name": "R16 Undo/Redo修剪新ID且不从历史重建selection，批量Delete一步恢复",
+      "passed": true
+    },
+    {
+      "name": "R17 input/textarea/select/contenteditable快捷键不抢，重复paste/delete隔离",
+      "passed": true
+    },
+    {
+      "name": "R18 teardown释放gesture/capture与监听，UI状态不可复活",
+      "passed": true
+    },
+    {
+      "name": "R19 新batch历史同tick排序反转roundtrip，不依赖源数组顺序",
+      "passed": true
+    },
+    {
+      "name": "R20 AST实际变更依赖图：逻辑零cc、无require/动态/副作用导入、presentation逻辑type-only",
+      "passed": true
+    },
+    {
+      "name": "R21 受保护契约/Builder/docs的基线SHA不变",
+      "passed": true
+    }
+  ]
+}

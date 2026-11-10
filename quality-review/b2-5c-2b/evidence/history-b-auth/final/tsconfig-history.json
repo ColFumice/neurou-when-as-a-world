@@ -1,0 +1,32 @@
+{
+  "compilerOptions": {
+    "target": "ES2023",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "outDir": "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-2b\\evidence\\history-b-auth\\final\\server\\dist",
+    "rootDir": "D:\\Project\\A_New_Begin\\Neurou_official\\server",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "types": [
+      "node"
+    ],
+    "typeRoots": [
+      "D:\\Project\\A_New_Begin\\Neurou_official\\server\\node_modules\\@types"
+    ]
+  },
+  "files": [
+    "D:\\Project\\A_New_Begin\\Neurou_official\\server\\src\\app.ts",
+    "D:\\Project\\A_New_Begin\\Neurou_official\\server\\src\\cli.ts",
+    "D:\\Project\\A_New_Begin\\Neurou_official\\server\\src\\config.ts",
+    "D:\\Project\\A_New_Begin\\Neurou_official\\server\\src\\contracts.ts",
+    "D:\\Project\\A_New_Begin\\Neurou_official\\server\\src\\crypto.ts",
+    "D:\\Project\\A_New_Begin\\Neurou_official\\server\\src\\db.ts",
+    "D:\\Project\\A_New_Begin\\Neurou_official\\server\\src\\main.ts",
+    "D:\\Project\\A_New_Begin\\Neurou_official\\server\\src\\strict-json.ts",
+    "D:\\Project\\A_New_Begin\\Neurou_official\\server\\test\\http.test.ts",
+    "D:\\Project\\A_New_Begin\\Neurou_official\\server\\test\\main-process.test.ts"
+  ]
+}

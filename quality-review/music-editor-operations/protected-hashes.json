@@ -1,0 +1,38 @@
+[
+  {
+    "path": "docs/NAMEBOOK.md",
+    "sha256": "22eebce4f190056276c053a457f20b42d3cdb6b6637e1d5301b950129097706f"
+  },
+  {
+    "path": "docs/spec/stage-1-acceptance.md",
+    "sha256": "c08c7cbfb24876b56e0482559c578ad51d9c623e97ced7045907cba742e2bf59"
+  },
+  {
+    "path": "docs/spec/stage-1.md",
+    "sha256": "afc05d1409039551800c458b26a7c464354e39219a218535eacf1d76e9403f06"
+  },
+  {
+    "path": "src/editor/GuidanceEditorSession.ts",
+    "sha256": "7be0662fcf921b04908ad4657b1ad066e35387fe7880d6acd9a1de9ec7e4eb8b"
+  },
+  {
+    "path": "src/editor/GuidanceEditorSession.ts.meta",
+    "sha256": "1f56274b857c28bd26db6ce228346d3dda84a309c1f67dbe055244c348e99eef"
+  },
+  {
+    "path": "src/musicEditor/MusicProjectData.ts",
+    "sha256": "0cbf532438e377d80f4e3452e831e5769c0e5df6fea3e15455b24e53b7c0c424"
+  },
+  {
+    "path": "src/musicEditor/ChartSourceBuilder.ts",
+    "sha256": "2cbe0e42768a890745806a7c4edcd68ed8197ac88ad198982d7df60b6793221b"
+  },
+  {
+    "path": "assets/scripts/WorldFolderBuilder.ts",
+    "sha256": "c0b7214d85a9eee4a244d870a369e366909734ea1ab5b0f0f6c5743d8430962b"
+  },
+  {
+    "path": "assets/scripts/MusicEditorBuilder.ts",
+    "sha256": "ee326b12bd4dcdac03779502d1fd39ba04d0e78bd21af943071a8fbc9851c124"
+  }
+]

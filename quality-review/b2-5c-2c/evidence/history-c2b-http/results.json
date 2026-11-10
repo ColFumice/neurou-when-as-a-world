@@ -1,0 +1,101 @@
+{
+  "phase": "B2.5c-2c isolated real HTTP/PG historical c-2b regression",
+  "generatedUtc": "2026-10-11T09:03:26.323Z",
+  "nodeVersion": "v24.19.0",
+  "copies": [
+    {
+      "source": "server/test/shared-clock-migration.test.ts",
+      "sourceCopy": "history-c2b-http/shared-clock-migration.test.ts",
+      "sourceCopySha256": "498885b2c23262b024313c789a7a7c06fc72dfff791fda05146731dee7170a67",
+      "rewrite": "Only the private fresh-database connection path; case bodies, assertions and expected behavior unchanged.",
+      "transpiledCopy": "history-c2b-http/server/test/shared-clock-migration.test.js",
+      "transpilerVersion": "5.9.3"
+    },
+    {
+      "source": "server/test/shared-http.test.ts",
+      "sourceCopy": "history-c2b-http/shared-http.test.ts",
+      "sourceCopySha256": "f3c963d5ec02ed8e4346045b1627272dbacb2786b4aeb2f0590ff37351e24164",
+      "rewrite": "Only the private fresh-database connection path; case bodies, assertions and expected behavior unchanged.",
+      "transpiledCopy": "history-c2b-http/server/test/shared-http.test.js",
+      "transpilerVersion": "5.9.3"
+    },
+    {
+      "source": "quality-review/b2-5c-2b/client-real-http.cjs",
+      "sourceCopy": "history-c2b-http/client/client-real-http.cjs",
+      "sourceCopySha256": "4f3748e11bd87f65d355d145d342aa93160f7fb48790f81c95295b5efeafda6f",
+      "rewrite": "Only workspace anchor, fresh private DB connection path, and public report database label. Output is naturally redirected by __dirname; cases/assertions unchanged."
+    }
+  ],
+  "sources": [
+    {
+      "path": "server/test/shared-clock-migration.test.ts",
+      "sha256": "1a045ff129e8a68142c20af04cadcca55ec62de1d1c07e9cdbcd4d1249c58d95",
+      "finalSha256": "1a045ff129e8a68142c20af04cadcca55ec62de1d1c07e9cdbcd4d1249c58d95"
+    },
+    {
+      "path": "server/test/shared-http.test.ts",
+      "sha256": "1040fb1057b2f199e2df0e71c874ddeff9f4ef0797b3a649ddcc23af0c7a021a",
+      "finalSha256": "1040fb1057b2f199e2df0e71c874ddeff9f4ef0797b3a649ddcc23af0c7a021a"
+    },
+    {
+      "path": "quality-review/b2-5c-2b/client-real-http.cjs",
+      "sha256": "482f22b25f86ec99b7a9e8b6f6156f48b706f81e65bf630c3bf2356b500f2b42",
+      "finalSha256": "482f22b25f86ec99b7a9e8b6f6156f48b706f81e65bf630c3bf2356b500f2b42"
+    }
+  ],
+  "runs": [
+    {
+      "name": "shared-authority",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "--test",
+        "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-2c\\evidence\\history-c2b-http\\server\\test\\shared-clock-migration.test.js",
+        "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-2c\\evidence\\history-c2b-http\\server\\test\\shared-http.test.js"
+      ],
+      "cwd": "D:\\Project\\A_New_Begin\\Neurou_official\\server",
+      "startedUtc": "2026-10-11T09:03:22.810Z",
+      "completedUtc": "2026-10-11T09:03:26.322Z",
+      "exitCode": 0,
+      "pass": true,
+      "log": "history-c2b-http/shared-authority.log",
+      "sha256": "93ea3f4169c0600a365eef70f828b3d87428c846a698cee7ce195fb5263d3318"
+    },
+    {
+      "name": "authority-adapter",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-2c\\evidence\\history-c2b-http\\client\\client-real-http.cjs"
+      ],
+      "cwd": "D:\\Project\\A_New_Begin\\Neurou_official",
+      "startedUtc": "2026-10-11T09:03:22.824Z",
+      "completedUtc": "2026-10-11T09:03:24.459Z",
+      "exitCode": 0,
+      "pass": true,
+      "log": "history-c2b-http/authority-adapter.log",
+      "sha256": "e83536e792f42629d649608d13163668842785e34e00f9939716353eebcd9fe6"
+    }
+  ],
+  "counts": {
+    "authorityServerTests": -1,
+    "authorityServerPass": -1,
+    "authorityServerFail": -1,
+    "authorityAdapterChecks": 11,
+    "total": 10
+  },
+  "databases": [
+    {
+      "host": "127.0.0.1",
+      "port": 55438,
+      "database": "c2c_authority_regression",
+      "privateCredentialsRecorded": false
+    },
+    {
+      "host": "127.0.0.1",
+      "port": 55438,
+      "database": "c2c_adapter_regression",
+      "privateCredentialsRecorded": false
+    }
+  ],
+  "pass": false,
+  "scope": "Accepted c-2b server 20 and production authority adapter 11 cases copied into new c-2c output, using separate fresh PG17 DBs and true loopback HTTP. c-2b case logic/assertions unchanged. Production-clock evidence and explicitly injected authority-clock cases retain their original categories; these regressions do not certify new Relay mechanisms or full two-client chain."
+}

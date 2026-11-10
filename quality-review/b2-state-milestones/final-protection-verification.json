@@ -1,0 +1,12 @@
+{
+  "verifiedAt": "2026-10-10T09:10:46.499Z",
+  "beforeCount": 3519,
+  "afterCount": 3519,
+  "changed": [],
+  "added": [],
+  "removed": [],
+  "unchanged": true,
+  "evidenceDirectoryExcluded": "quality-review/b2-state-milestones",
+  "b22Implemented": false,
+  "b22Acceptance": false
+}

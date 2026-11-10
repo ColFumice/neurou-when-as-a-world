@@ -1,0 +1,1283 @@
+--- /dev/null
++++ b/assets/scripts/CrossDevicePrototype.ts
+@@ -0,0 +1,269 @@
++import { JsonAsset, resources } from 'cc';
++import { CoreTransferCodec, CrossDeviceImportAdapter, validateTransferFolder } from './src/director/CoreTransfer';
++import type { CoreTransferPayload, CrossDeviceAuthorityPort } from './src/director/CoreTransfer';
++import { validateCoreTransferContent } from './src/director/CoreTransferContent';
++import { WorldHomeRegistryCodec, WorldHomeRegistrySession } from './src/director/WorldHomeRegistry';
++import { WorldHomeContractAdapter } from './src/presentation/WorldHomeContractAdapter';
++import { CrossDeviceContractAdapter } from './src/presentation/CrossDeviceContractAdapter';
++import { CrossDeviceImportStorage } from './src/presentation/CrossDeviceImportStorage';
++import { WorldCoreStateStorage } from './src/presentation/WorldCoreStateStorage';
++import type { WorldStateLease, WorldStateLock } from './src/presentation/WorldCoreStateStorage';
++import { WorldStateCodec } from './src/director/WorldStateCodec';
++import { WorldFolderSession } from './src/director/WorldFolderSession';
++import type { WorldFolderSnapshot } from './src/director/WorldFolderSession';
++import type { WorldStateSnapshot } from './src/director/WorldStateSession';
++import type { AccountMilestoneReader } from './src/director/AccountMilestone';
++import { chartContentDigest } from './src/director/ChartArchive';
++import type { WorldRuntimeIdentity } from './WorldFolderBuilder';
++
++export interface CrossDevicePrototypeBindings {
++  readonly accountId: string;
++  readonly readSourceFolder: () => WorldFolderSnapshot;
++  readonly readSource: (worldId: string) => WorldStateSnapshot;
++  readonly acquireSourceLease: (worldId: string) => Promise<WorldStateLease>;
++  readonly milestoneReader: AccountMilestoneReader;
++  readonly validateComplete: (raw: unknown, accountId: string, worldId: string) => WorldStateSnapshot;
++  readonly isIdle: () => boolean;
++  readonly openTarget: (identity: WorldRuntimeIdentity) => void;
++}
++
++/** Two logical devices in one realm. Only world/journal keys are namespaced for B. */
++class LogicalDeviceStorage {
++  getItem(key: string): string | null { return localStorage.getItem(this.key(key)); }
++  setItem(key: string, value: string): void { localStorage.setItem(this.key(key), value); }
++  removeItem(key: string): void { localStorage.removeItem(this.key(key)); }
++  private key(key: string): string { return 'neurou-contract-device-b:' + encodeURIComponent(key); }
++}
++
++/** Additive production composition. Account facts are a shared read port, never payload data. */
++export class CrossDevicePrototype {
++  private panel: HTMLElement | null = null;
++  private status: HTMLElement | null = null;
++  private payload: CoreTransferPayload | null = null;
++  private lastTarget: string | null = null;
++  private busy = false;
++  private readonly bStorage = new LogicalDeviceStorage();
++  private readonly reservations = new Set<string>();
++  private readonly homeCodec = new WorldHomeRegistryCodec();
++  private readonly codec: CoreTransferCodec;
++  private readonly homes: WorldHomeContractAdapter;
++  private readonly authority: CrossDeviceContractAdapter;
++  private readonly a: CrossDeviceAuthorityPort;
++  private readonly b: CrossDeviceAuthorityPort;
++  private readonly imports: CrossDeviceImportAdapter;
++  private readonly bCore: WorldCoreStateStorage;
++  private readonly importStorage: CrossDeviceImportStorage;
++  private manifest: unknown = null;
++  private ready: Promise<void> | null = null;
++  private serverTick = 0;
++  private alive = true;
++
++  constructor(private readonly bindings: CrossDevicePrototypeBindings) {
++    const validateComplete = (raw: unknown, accountId: string, worldId: string): WorldStateSnapshot => {
++      if (!this.manifest) { throw new Error('正式传输内容清单尚未装配'); }
++      const state = bindings.validateComplete(raw, accountId, worldId);
++      validateCoreTransferContent(state, this.manifest); return state;
++    };
++    this.codec = new CoreTransferCodec(validateComplete);
++    this.homes = new WorldHomeContractAdapter({ now: () => ++this.serverTick,
++      validateContext: raw => this.homeCodec.parseContext(raw), validateRequest: raw => this.homeCodec.parseRegistrationRequest(raw),
++      validateSnapshot: (raw, account) => this.homeCodec.parseSnapshot(raw, account),
++      validateReply: (raw, context, request) => this.homeCodec.parseRegistrationReply(raw, context, request) });
++    this.authority = new CrossDeviceContractAdapter(this.homes, { parsePayload: raw => this.codec.parsePayload(raw),
++      parseProof: (raw, payload) => this.codec.parseProof(raw, payload), parseContext: raw => this.homeCodec.parseContext(raw),
++      parseRegistry: (raw, account) => this.homeCodec.parseSnapshot(raw, account), digestState: state => chartContentDigest(state) });
++    this.a = this.authority.bindDevice({ accountId: bindings.accountId, deviceId: 'logical-device-a' });
++    this.b = this.authority.bindDevice({ accountId: bindings.accountId, deviceId: 'logical-device-b' });
++    this.imports = new CrossDeviceImportAdapter(this.b.context, { authority: this.b, milestoneReader: bindings.milestoneReader,
++      validateComplete, createWorldId: () => 'world-' + crypto.randomUUID(), createTransactionId: () => 'import-' + crypto.randomUUID(),
++      createRegistrationId: () => 'registration-' + crypto.randomUUID(), now: Date.now });
++    const locks = prototypeLocks();
++    this.bCore = new WorldCoreStateStorage(this.bStorage, locks, (raw, account, world) => {
++      if ((raw as { worldKind?: unknown } | null)?.worldKind === 'Unavailable') { return new WorldStateCodec().parse(raw, account, world); }
++      return validateComplete(raw, account, world);
++    }, (account, world) => account === bindings.accountId && (this.reservations.has(world) ||
++      this.readBFolder().records.some(record => record.worldId === world && record.deletedAt === null)));
++    this.importStorage = new CrossDeviceImportStorage(this.bStorage, locks, {
++      context: this.b.context, authority: this.b,
++      validatePlan: raw => this.codec.parsePlan(raw), validateJournal: raw => this.codec.parseJournal(raw),
++      validateFolder: (raw, account) => validateTransferFolder(raw, account),
++      parseRegistrationReply: (raw, context, request) => this.homeCodec.parseRegistrationReply(raw, context, request),
++      parseRegistry: (raw, account) => this.homeCodec.parseSnapshot(raw, account),
++      assertTargetLease: plan => {
++        this.assertAlive();
++        if (!this.bCore.hasWorldLease(plan.accountId, plan.targetWorldId)) { throw new Error('真实导入目标 lease 缺失'); }
++      },
++      readTarget: (account, world) => this.bCore.readCoreState(account, world),
++      validateCurrentTarget: validateComplete,
++      writeTarget: state => {
++        this.assertAlive();
++        this.reservations.add(state.worldId);
++        try { this.bCore.saveCoreState(state, null); } finally { this.reservations.delete(state.worldId); }
++      },
++      verifyAuthoritySource: async plan => {
++        this.assertAlive();
++        this.imports.requirePermission();
++        await this.imports.verifyAuthoritySource(plan.payload);
++        this.assertAlive();
++      },
++    });
++  }
++
++  mount(): void {
++    this.assertAlive();
++    this.unmount();
++    const panel = document.createElement('section'); panel.id = 'cross-device-prototype';
++    panel.dataset.mode = 'ContractAdapter'; panel.dataset.prototype = 'RestrictedCoreTransfer';
++    panel.style.cssText = 'position:fixed;right:24px;bottom:62px;z-index:220;width:min(390px,90vw);padding:14px;border:1px solid #657779;border-radius:5px;background:#102c32;color:#e3f0ec;font:14px sans-serif;box-sizing:border-box';
++    const title = document.createElement('strong'); title.textContent = '受限 Core 原型 · 两个逻辑设备'; panel.appendChild(title);
++    const note = document.createElement('p'); note.textContent = 'A 发送自己创建的世界，B 复制为新世界。'; panel.appendChild(note);
++    const select = document.createElement('select'); select.id = 'cross-device-source'; select.style.cssText = 'width:100%;padding:6px;margin-bottom:8px';
++    for (const record of this.bindings.readSourceFolder().records.filter(record => record.worldId !== 'InitialWorld' && record.deletedAt === null)) {
++      const option = document.createElement('option'); option.value = record.worldId; option.textContent = record.title; select.appendChild(option);
++    }
++    panel.appendChild(select);
++    const controls: [string, string, () => Promise<void>][] = [
++      ['cross-device-export', 'A · 发送选定世界', () => this.exportSource(select.value)],
++      ['cross-device-import', 'B · 导入副本', () => this.importTarget()],
++      ['cross-device-open', 'B · 打开导入世界', () => this.openTarget()],
++      ['cross-device-recover', 'B · 恢复导入', () => this.recover()],
++    ];
++    for (const [id, label, operation] of controls) {
++      const button = document.createElement('button'); button.id = id; button.textContent = label;
++      button.style.cssText = 'padding:7px;margin:3px;cursor:pointer';
++      button.onclick = () => { void this.run(operation); }; panel.appendChild(button);
++    }
++    this.status = document.createElement('p'); this.status.id = 'cross-device-status'; this.status.textContent = 'ContractAdapter · 仅传输七项 Core';
++    panel.appendChild(this.status); document.body.appendChild(panel); this.panel = panel;
++    if (this.lastTarget) { panel.dataset.targetWorldId = this.lastTarget; }
++    void this.initialize().catch(error => this.message(String(error)));
++  }
++  unmount(): void { this.panel?.remove(); this.panel = null; this.status = null; }
++  dispose(): void { this.alive = false; this.unmount(); }
++  private assertAlive(): void { if (!this.alive) { throw Error('原型宿主已销毁；导入保留日志等待恢复'); } }
++  private message(value: string): void { if (this.status) { this.status.textContent = value; } }
++  private async run(operation: () => Promise<void>): Promise<void> {
++    if (this.busy || !this.bindings.isIdle()) { this.message('请返回世界文件夹后重试'); return; }
++    this.busy = true;
++    try { this.assertAlive(); await this.initialize(); this.assertAlive(); await operation(); }
++    catch (error) { this.message(String(error)); if (this.panel) { this.panel.dataset.error = String(error); } }
++    finally { this.busy = false; }
++  }
++  private initialize(): Promise<void> {
++    if (this.ready) { return this.ready; }
++    this.ready = new Promise<JsonAsset>((resolve, reject) => resources.load('chart/content-manifest', JsonAsset,
++      (error, asset) => error || !asset ? reject(error ?? Error('正式内容清单缺失')) : resolve(asset)))
++      .then(async asset => {
++        this.assertAlive();
++        this.manifest = asset.json;
++        if (this.bStorage.getItem(this.folderKey()) !== null) { return; }
++        await this.importStorage.withImportLock(this.bindings.accountId, async () => {
++          this.assertAlive();
++          const lease = await this.bCore.acquireWorldLease(this.bindings.accountId, 'InitialWorld', true);
++          try {
++            this.assertAlive();
++            const locks = prototypeLocks(); if (!locks) { throw Error('无 Web Locks；未初始化 B'); }
++            await locks.request('neurou-world-folder:' + encodeURIComponent(this.bindings.accountId), async () => {
++              this.assertAlive();
++              if (this.bStorage.getItem(this.folderKey()) !== null) { return; }
++              const previous = this.bCore.readValidatedCoreState(this.bindings.accountId, 'InitialWorld');
++              if (previous && (previous.revision !== 0 || previous.worldKind !== 'Unavailable' || previous.shoreOrigin !== 'Unavailable' ||
++                  previous.forkOrigin || previous.sections.Ledger !== null || previous.sections.PuzzleProgress !== null ||
++                  Object.keys(previous.sections).length !== 3 || !previous.sections.FormatTime ||
++                  previous.capturedAt !== previous.sections.FormatTime.epochMs)) {
++                throw Error('B 初始暂存与初始化协议不符；保留原数据');
++              }
++              const now = previous?.sections.FormatTime?.epochMs ?? Date.now();
++              if (!previous) {
++                this.reservations.add('InitialWorld');
++                try { this.bCore.saveCoreState({ schemaVersion: 1, accountId: this.bindings.accountId, worldId: 'InitialWorld',
++                  worldKind: 'Unavailable', shoreOrigin: 'Unavailable', revision: 0, capturedAt: now, kind: 'Core',
++                  sections: { Ledger: null, PuzzleProgress: null, FormatTime: { epochMs: now } } }, null); }
++                finally { this.reservations.delete('InitialWorld'); }
++              }
++              new WorldFolderSession(this.bindings.accountId, null,
++                snapshot => this.bStorage.setItem(this.folderKey(), JSON.stringify(snapshot)), () => { throw Error('初始化不分配UUID'); }, () => now);
++            });
++          } finally { lease.release(); }
++        });
++      }).catch(error => { this.ready = null; throw error; });
++    return this.ready;
++  }
++  private async exportSource(worldId: string): Promise<void> {
++    if (!worldId || worldId === 'InitialWorld') { throw Error('请选择 A 自己创建或分叉的世界'); }
++    const lease = await this.bindings.acquireSourceLease(worldId);
++    try {
++      this.assertAlive();
++      const folder = this.bindings.readSourceFolder();
++      if (!folder.records.some(record => record.worldId === worldId && record.deletedAt === null)) { throw Error('来源目录资格无效'); }
++      const source = this.bindings.readSource(worldId);
++      const home = new WorldHomeRegistrySession(this.a.context, { authority: this.a, readFolder: () => this.bindings.readSourceFolder(),
++        createRegistrationId: () => 'export-home-' + crypto.randomUUID() });
++      const result = await home.registerWorldHome(worldId);
++      this.assertAlive();
++      if (result.kind !== 'Registered' && result.kind !== 'AlreadyHomed') { throw Error(result.kind + ': 来源归属未确认'); }
++      const payload = this.codec.parsePayload({ schemaVersion: 1, kind: 'RestrictedCoreTransfer', transferId: 'transfer-' + crypto.randomUUID(),
++        sourceDeviceId: this.a.context.deviceId, sourceHomeRevision: 1, state: JSON.parse(JSON.stringify(source)) as unknown });
++      this.codec.parseProof(await this.a.publishTransfer(payload), payload);
++      this.assertAlive();
++      this.payload = payload; if (this.panel) { this.panel.dataset.sourceWorldId = worldId; }
++      this.message('A 已发送七项 Core；源世界保持原值');
++    } finally { lease.release(); }
++  }
++  private async importTarget(): Promise<void> {
++    if (!this.payload) { throw Error('请先由 A 发送世界'); }
++    await this.importStorage.withImportLock(this.bindings.accountId, async () => {
++      this.assertAlive();
++      if (this.importStorage.readPending(this.bindings.accountId)) { throw Error('已有导入待恢复'); }
++      const plan = await this.imports.prepareImport(this.payload!, { schemaVersion: 1, title: '跨设备副本', description: '受限 Core 原型' }, this.readBFolder());
++      this.assertAlive();
++      const lease = await this.bCore.acquireWorldLease(plan.accountId, plan.targetWorldId, true);
++      try {
++        this.assertAlive();
++        this.importStorage.prepare(plan);
++        const receipt = await this.importStorage.registerAndPublish(plan);
++        this.lastTarget = plan.targetWorldId;
++        if (this.panel) { this.panel.dataset.targetWorldId = plan.targetWorldId; this.panel.dataset.receipt = receipt.kind; }
++        this.message(receipt.kind === 'Published' ? 'B 已发布新世界 · 七项继承' : 'B 导入待恢复：' + receipt.error);
++      } finally { lease.release(); }
++    });
++  }
++  private async recover(): Promise<void> {
++    await this.importStorage.withImportLock(this.bindings.accountId, async () => {
++      this.assertAlive();
++      const pending = this.importStorage.readPending(this.bindings.accountId);
++      const journal = this.importStorage.readJournal(this.bindings.accountId);
++      const plan = pending?.plan ?? journal?.entries.find(entry => entry.plan.targetWorldId === this.lastTarget)?.plan;
++      if (!plan) { this.message('没有待恢复的导入'); return; }
++      const lease = await this.bCore.acquireWorldLease(plan.accountId, plan.targetWorldId, true);
++      try { const receipt = await this.importStorage.recover(plan.accountId, plan.targetWorldId);
++        this.lastTarget = plan.targetWorldId; this.message('B 对账结果：' + receipt.kind); }
++      finally { lease.release(); }
++    });
++  }
++  private async openTarget(): Promise<void> {
++    this.assertAlive();
++    if (!this.lastTarget) { throw Error('尚未导入世界'); }
++    const lease = await this.bCore.acquireWorldLease(this.bindings.accountId, this.lastTarget, true);
++    let transferred = false;
++    try {
++      await this.importStorage.assertCanOpen(this.bindings.accountId, this.lastTarget);
++      this.assertAlive();
++      this.bindings.openTarget({ accountId: this.bindings.accountId, worldId: this.lastTarget, coreStorage: this.bCore, lease });
++      transferred = true;
++    } finally { if (!transferred) { lease.release(); } }
++  }
++  private readBFolder(): WorldFolderSnapshot {
++    const bytes = this.bStorage.getItem(this.folderKey());
++    return validateTransferFolder(bytes === null ? null : JSON.parse(bytes) as unknown, this.bindings.accountId);
++  }
++  private folderKey(): string { return 'neurou-world-folder-v1:' + encodeURIComponent(this.bindings.accountId); }
++}
++function prototypeLocks(): WorldStateLock | null {
++  if (typeof navigator === 'undefined' || !navigator.locks) { return null; }
++  return {
++    request: <T>(name: string, operation: () => Promise<T>): Promise<T> => navigator.locks.request('neurou-contract-device-b:' + name, { mode: 'exclusive' }, operation),
++    requestIfAvailable: <T>(name: string, operation: () => Promise<T>): Promise<T> => navigator.locks.request('neurou-contract-device-b:' + name,
++      { mode: 'exclusive', ifAvailable: true }, lock => { if (!lock) { throw Error('B 世界已被占用'); } return operation(); }),
++  };
++}
+
+--- /dev/null
++++ b/assets/scripts/CrossDevicePrototype.ts.meta
+@@ -0,0 +1,9 @@
++{
++  "ver": "4.0.24",
++  "importer": "typescript",
++  "imported": true,
++  "uuid": "2d75bc58-4fb3-4dbc-a43f-d67f6de27501",
++  "files": [],
++  "subMetas": {},
++  "userData": {}
++}
+
+--- a/assets/scripts/WorldFolderBuilder.ts
++++ b/assets/scripts/WorldFolderBuilder.ts
+@@ -33,6 +33,7 @@
+ import { WorldForkSession, validateWorldForkPlan, rebaseWorldState } from './src/director/WorldForkSession';
+ import { chartContentDigest } from './src/director/ChartArchive';
+ import { WorldForkStorage } from './src/presentation/WorldForkStorage';
++import { CrossDevicePrototype } from './CrossDevicePrototype';
+ 
+ const { ccclass } = _decorator;
+ 
+@@ -123,6 +124,7 @@
+   private directoryCompleteValidator: ((raw: unknown, accountId: string, worldId: string) => WorldStateSnapshot) | null = null;
+   private regularChartUsesGuidance = true;
+   private regularChartResourcePath = 'chart/guidance_c';
++  private crossDevicePrototype: CrossDevicePrototype | null = null;
+ 
+   bindWorldFactory(factory: (node: Node, identity: WorldRuntimeIdentity) => void): void {
+     this.worldFactory = factory;
+@@ -151,6 +153,7 @@
+   }
+ 
+   private clearViews(): void {
++    this.crossDevicePrototype?.unmount();
+     this.startupView.destroy(); this.folderView?.destroy(); this.catalogView?.destroy();
+     this.folderView = null; this.catalogView = null;
+   }
+@@ -208,6 +211,36 @@
+     this.folderView.mount();
+     if (error !== null) { this.folderView.showStatus('世界目录未能加载：' + String(error)); }
+     else if (cleanupError !== null) { this.folderView.showStatus('世界目录已加载；已删除世界的谱面清理待刷新重试：' + String(cleanupError)); }
++    if (error === null) { this.mountCrossDevicePrototype(accountId); }
++  }
++
++  /** Restricted-transfer composition is separate from local Fork and its transaction. */
++  private mountCrossDevicePrototype(accountId: string): void {
++    if (!this.crossDevicePrototype) {
++      this.crossDevicePrototype = new CrossDevicePrototype({ accountId,
++        readSourceFolder: () => this.loadFolderSession(accountId).getSnapshot(),
++        readSource: worldId => this.directoryCompleteValidator!(this.coreStorage.readCoreState(accountId, worldId), accountId, worldId),
++        acquireSourceLease: worldId => this.coreStorage.acquireWorldLease(accountId, worldId, true),
++        milestoneReader: this.milestoneReader!,
++        validateComplete: (raw, account, world) => this.directoryCompleteValidator!(raw, account, world),
++        isIdle: () => isValid(this, true) && !this.runtimeNode && !this.opening && !this.directoryBusy && !this.retiring,
++        openTarget: identity => this.openImportedRuntime(identity),
++      });
++    }
++    this.crossDevicePrototype.mount();
++  }
++
++  /** Caller has passed receipt/current HomeDevice guard and owns the real B lease. */
++  private openImportedRuntime(identity: WorldRuntimeIdentity): void {
++    if (!isValid(this, true) || this.runtimeNode || this.opening || this.directoryBusy || this.retiring || !this.worldFactory) {
++      throw new Error('导入世界入口当前不可用');
++    }
++    const runtime = this.createRuntime(identity.worldId);
++    try { this.worldFactory(runtime, identity); }
++    catch (error) { runtime.active = false; runtime.destroy(); this.runtimeNode = null; throw error; }
++    this.runtimeLease = identity.lease;
++    this.clearViews();
++    this.showExitControl('退出 B 世界 · 返回世界文件夹');
+   }
+ 
+   private getStateSession(accountId: string, worldId: string): WorldStateSession {
+@@ -517,6 +550,7 @@
+   }
+ 
+   onDestroy(): void {
++    this.crossDevicePrototype?.dispose(); this.crossDevicePrototype = null;
+     director.off(Director.EVENT_AFTER_DRAW, this.finishRetirement, this);
+     this.clearViews(); this.exitControl?.remove(); this.exitControl = null;
+     if (this.runtimeNode && isValid(this.runtimeNode, true)) {
+
+--- /dev/null
++++ b/src/director/CoreTransfer.ts
+@@ -0,0 +1,324 @@
++import type { WorldCoreStateSnapshot } from './WorldStateCodec';
++import { isValidatedWorldStateSnapshot } from './WorldStateCodec';
++import type { WorldStateSnapshot } from './WorldStateSession';
++import { WorldHomeRegistryCodec } from './WorldHomeRegistry';
++import type { WorldHomeAuthorityPort, WorldHomeContext, WorldHomeRecord, WorldHomeRegistrationReply } from './WorldHomeRegistry';
++import { WorldFolderSession } from './WorldFolderSession';
++import type { WorldFolderSnapshot, WorldFolderRecord } from './WorldFolderSession';
++import type { AccountMilestoneReader } from './AccountMilestone';
++import { rebaseWorldState } from './WorldForkSession';
++import { chartContentDigest } from './ChartArchive';
++import { validateWorldForkOrigin } from './WorldForkOrigin';
++
++/** Serialized values deliberately have no WorldStateSnapshot runtime certification. */
++export interface CoreTransferPayload {
++  readonly schemaVersion: 1;
++  readonly kind: 'RestrictedCoreTransfer';
++  readonly transferId: string;
++  readonly sourceDeviceId: string;
++  readonly sourceHomeRevision: 1;
++  readonly state: WorldCoreStateSnapshot & { readonly sections: WorldStateSnapshot['sections'] };
++}
++export interface CoreTransferProof {
++  readonly schemaVersion: 1;
++  readonly accountId: string;
++  readonly worldId: string;
++  readonly sourceDeviceId: string;
++  readonly transferId: string;
++  readonly sourceHomeRevision: 1;
++  readonly sourceDigest: string;
++}
++export interface CrossDeviceAuthorityPort extends WorldHomeAuthorityPort {
++  publishTransfer(payload: CoreTransferPayload): Promise<unknown>;
++  verifyTransfer(payload: CoreTransferPayload): Promise<unknown>;
++}
++export interface CrossDeviceImportRequest {
++  readonly schemaVersion: 1;
++  readonly title: string;
++  readonly description: string;
++}
++export type CrossDeviceDuplicateResult =
++  | { readonly kind: 'Homed' | 'CrossDeviceDuplicate' | 'Released'; readonly mode: 'ContractAdapter'; readonly record: WorldHomeRecord }
++  | { readonly kind: 'Migrated'; readonly mode: 'ContractAdapter'; readonly record: WorldHomeRecord }
++  | { readonly kind: 'AuthorityUnavailable' | 'UnsupportedBoundary'; readonly mode: 'ContractAdapter'; readonly detail: string };
++export interface CrossDeviceImportPlan {
++  readonly schemaVersion: 1;
++  readonly accountId: string;
++  readonly deviceId: string;
++  readonly transactionId: string;
++  readonly registrationId: string;
++  readonly targetWorldId: string;
++  readonly payload: CoreTransferPayload;
++  readonly targetRecord: WorldFolderRecord;
++  readonly targetState: WorldStateSnapshot;
++}
++export type CrossDeviceImportPhase = 'Prepared' | 'HomeRegistered' | 'Published';
++export interface CrossDeviceImportEntry {
++  readonly phase: CrossDeviceImportPhase;
++  readonly plan: CrossDeviceImportPlan;
++  readonly homeReply: WorldHomeRegistrationReply | null;
++}
++export interface CrossDeviceImportJournal {
++  readonly schemaVersion: 1;
++  readonly kind: 'CrossDeviceImportJournal';
++  readonly accountId: string;
++  readonly deviceId: string;
++  readonly entries: readonly CrossDeviceImportEntry[];
++}
++export interface CrossDeviceImportReceipt {
++  readonly kind: 'Published' | 'Pending';
++  readonly mode: 'ContractAdapter';
++  readonly transactionId: string;
++  readonly targetWorldId: string;
++  readonly phase: CrossDeviceImportPhase;
++  readonly error: string | null;
++}
++export type CoreTransferCompleteValidator = (raw: unknown, accountId: string, worldId: string) => WorldStateSnapshot;
++
++/** Data-only transport boundary, always reconstructing receiver-local certification. */
++export class CoreTransferCodec {
++  readonly home = new WorldHomeRegistryCodec();
++  constructor(private readonly validateComplete: CoreTransferCompleteValidator) {}
++
++  parsePayload(raw: unknown): CoreTransferPayload {
++    const value = transferFields(raw, ['schemaVersion', 'kind', 'transferId', 'sourceDeviceId', 'sourceHomeRevision', 'state']);
++    if (value.schemaVersion !== 1 || value.kind !== 'RestrictedCoreTransfer' || value.sourceHomeRevision !== 1) {
++      throw new Error('受限 Core 载荷版本或来源归属版本不支持');
++    }
++    transferIdentity(value.transferId); transferIdentity(value.sourceDeviceId);
++    const data = copyTransferData(value.state) as Record<string, unknown>;
++    transferWorldId(data.worldId);
++    transferIdentity(data.accountId, 64);
++    const complete = this.validateComplete(data, data.accountId, data.worldId);
++    requireComplete(complete, data.accountId, data.worldId);
++    if (complete.worldKind !== 'Primary' || complete.shoreOrigin !== null) { throw new Error('UnsupportedBoundary: 仅支持静止 Primary Core'); }
++    if (chartContentDigest(data) !== chartContentDigest(complete)) { throw new Error('完整解码不得改变载荷内容'); }
++    return Object.freeze({ schemaVersion: 1, kind: 'RestrictedCoreTransfer', transferId: value.transferId,
++      sourceDeviceId: value.sourceDeviceId, sourceHomeRevision: 1,
++      state: copyTransferData(complete) as CoreTransferPayload['state'] });
++  }
++
++  parseProof(raw: unknown, payload: CoreTransferPayload): CoreTransferProof {
++    const value = transferFields(raw, ['schemaVersion', 'accountId', 'worldId', 'sourceDeviceId', 'transferId', 'sourceHomeRevision', 'sourceDigest']);
++    if (value.schemaVersion !== 1 || value.accountId !== payload.state.accountId || value.worldId !== payload.state.worldId ||
++        value.sourceDeviceId !== payload.sourceDeviceId || value.transferId !== payload.transferId ||
++        value.sourceHomeRevision !== payload.sourceHomeRevision || value.sourceDigest !== chartContentDigest(payload.state)) {
++      throw new Error('传输权威 proof 与载荷身份或精确内容不匹配');
++    }
++    return Object.freeze(value) as unknown as CoreTransferProof;
++  }
++
++  parseRequest(raw: unknown): CrossDeviceImportRequest {
++    const value = transferFields(raw, ['schemaVersion', 'title', 'description']);
++    if (value.schemaVersion !== 1) { throw new Error('导入请求版本不支持'); }
++    text(value.title, 1, 80); text(value.description, 0, 300);
++    return Object.freeze({ schemaVersion: 1, title: value.title, description: value.description });
++  }
++
++  parsePlan(raw: unknown): CrossDeviceImportPlan {
++    const value = transferFields(raw, ['schemaVersion', 'accountId', 'deviceId', 'transactionId', 'registrationId', 'targetWorldId', 'payload', 'targetRecord', 'targetState']);
++    if (value.schemaVersion !== 1) { throw new Error('导入计划版本不支持'); }
++    const context = this.home.parseContext({ accountId: value.accountId, deviceId: value.deviceId });
++    transferWorldId(value.targetWorldId, true);
++    if (typeof value.transactionId !== 'string' || !/^import-[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value.transactionId)) {
++      throw new Error('导入事务须为 import-UUIDv4');
++    }
++    this.home.parseRegistrationRequest({ schemaVersion: 1, worldId: value.targetWorldId, registrationId: value.registrationId });
++    const payload = this.parsePayload(value.payload);
++    if (payload.state.accountId !== context.accountId || payload.sourceDeviceId === context.deviceId || payload.state.worldId === value.targetWorldId) {
++      throw new Error('导入来源账号、设备或目标身份不匹配');
++    }
++    const source = this.validateComplete(payload.state, context.accountId, payload.state.worldId);
++    requireComplete(source, context.accountId, payload.state.worldId);
++    const targetState = this.validateComplete(copyTransferData(value.targetState), context.accountId, value.targetWorldId);
++    requireComplete(targetState, context.accountId, value.targetWorldId);
++    const origin = targetState.forkOrigin;
++    if (!origin || origin.transactionId !== value.transactionId || targetState.revision !== 0 || targetState.capturedAt !== origin.forkedAt ||
++        source.forkOrigin?.transactionId === value.transactionId) { throw new Error('导入目标来源头部不匹配'); }
++    const expected = rebaseWorldState(source, value.targetWorldId, origin, this.validateComplete);
++    if (chartContentDigest(expected) !== chartContentDigest(targetState)) { throw new Error('导入目标七项不符合精确重键'); }
++    const record = transferFields(value.targetRecord, ['worldId', 'title', 'description', 'createdAt', 'deletedAt', 'template']);
++    text(record.title, 1, 80); text(record.description, 0, 300);
++    if (record.worldId !== value.targetWorldId || record.createdAt !== origin.forkedAt || record.deletedAt !== null || record.template !== 'EmptyWorld') {
++      throw new Error('导入目录记录与目标不一致');
++    }
++    return Object.freeze({ schemaVersion: 1, ...context, transactionId: value.transactionId,
++      registrationId: value.registrationId as string, targetWorldId: value.targetWorldId, payload,
++      targetRecord: Object.freeze(record) as unknown as WorldFolderRecord, targetState });
++  }
++
++  parseJournal(raw: unknown): CrossDeviceImportJournal {
++    const value = transferFields(raw, ['schemaVersion', 'kind', 'accountId', 'deviceId', 'entries']);
++    const context = this.home.parseContext({ accountId: value.accountId, deviceId: value.deviceId });
++    if (value.schemaVersion !== 1 || value.kind !== 'CrossDeviceImportJournal') { throw new Error('导入日志版本/种类不支持'); }
++    const ids = new Set<string>(), targets = new Set<string>(), registrations = new Set<string>();
++    const entries = transferArray(value.entries).map(rawEntry => {
++      const entry = transferFields(rawEntry, ['phase', 'plan', 'homeReply']);
++      const plan = this.parsePlan(entry.plan);
++      if (plan.accountId !== context.accountId || plan.deviceId !== context.deviceId || ids.has(plan.transactionId) ||
++          targets.has(plan.targetWorldId) || registrations.has(plan.registrationId)) { throw new Error('导入日志身份冲突'); }
++      ids.add(plan.transactionId); targets.add(plan.targetWorldId); registrations.add(plan.registrationId);
++      if (entry.phase !== 'Prepared' && entry.phase !== 'HomeRegistered' && entry.phase !== 'Published') { throw new Error('导入日志阶段不支持'); }
++      const homeReply = entry.homeReply === null ? null : this.home.parseRegistrationReply(entry.homeReply, context,
++        { schemaVersion: 1, worldId: plan.targetWorldId, registrationId: plan.registrationId });
++      if ((entry.phase === 'Prepared' && homeReply !== null) || (entry.phase !== 'Prepared' &&
++          (!homeReply || homeReply.kind === 'HomeConflict' || homeReply.record.homeRevision !== 1))) { throw new Error('导入日志阶段与归属 receipt 不一致'); }
++      return Object.freeze({ phase: entry.phase, plan, homeReply });
++    });
++    if (entries.filter(entry => entry.phase !== 'Published').length > 1) { throw new Error('同设备账号只允许一项待恢复导入'); }
++    return Object.freeze({ schemaVersion: 1, kind: 'CrossDeviceImportJournal', ...context, entries: Object.freeze(entries) });
++  }
++}
++
++export interface CrossDeviceImportBindings {
++  readonly authority: CrossDeviceAuthorityPort | null;
++  readonly milestoneReader: AccountMilestoneReader;
++  readonly validateComplete: CoreTransferCompleteValidator;
++  readonly createWorldId: () => string;
++  readonly createTransactionId: () => string;
++  readonly createRegistrationId: () => string;
++  readonly now: () => number;
++}
++
++/** Remote preparation has no local source lease, source directory or source read port. */
++export class CrossDeviceImportAdapter {
++  readonly context: WorldHomeContext;
++  readonly codec: CoreTransferCodec;
++  constructor(context: WorldHomeContext, private readonly bindings: CrossDeviceImportBindings) {
++    this.codec = new CoreTransferCodec(bindings.validateComplete);
++    this.context = this.codec.home.parseContext(context);
++  }
++
++  async verifyAuthoritySource(raw: CoreTransferPayload): Promise<void> {
++    const result = await this.detectCrossDeviceDuplicate(raw);
++    if (result.kind !== 'CrossDeviceDuplicate') { throw new Error(result.kind + ': 来源当前不可复制'); }
++  }
++
++  private async verifyPublishedProof(raw: CoreTransferPayload): Promise<void> {
++    const payload = this.codec.parsePayload(raw);
++    const authority = this.authority();
++    if (payload.state.accountId !== this.context.accountId) { throw new Error('传输账号与绑定会话不匹配'); }
++    this.codec.parseProof(await authority.verifyTransfer(payload), payload);
++  }
++
++  async detectCrossDeviceDuplicate(raw: unknown): Promise<CrossDeviceDuplicateResult> {
++    let payload: CoreTransferPayload;
++    try { payload = this.codec.parsePayload(raw); }
++    catch (error) { return Object.freeze({ kind: 'UnsupportedBoundary', mode: 'ContractAdapter', detail: String(error) }); }
++    try {
++      await this.verifyPublishedProof(payload);
++      const snapshot = this.codec.home.parseSnapshot(await this.authority().readRegistry(), this.context.accountId);
++      const record = snapshot.records.find(item => item.worldId === payload.state.worldId);
++      if (!record) { throw new Error('可信来源缺少服务归属'); }
++      if (record.homeState === 'Released') { return Object.freeze({ kind: 'Released', mode: 'ContractAdapter', record }); }
++      if (record.homeRevision !== 1 || record.homeDeviceId !== payload.sourceDeviceId) {
++        return Object.freeze({ kind: 'UnsupportedBoundary', mode: 'ContractAdapter', detail: '归属已变更；c 没有迁移证据，不猜测 Migrated' });
++      }
++      return Object.freeze({ kind: record.homeDeviceId === this.context.deviceId ? 'Homed' : 'CrossDeviceDuplicate', mode: 'ContractAdapter', record });
++    } catch (error) { return Object.freeze({ kind: 'AuthorityUnavailable', mode: 'ContractAdapter', detail: String(error) }); }
++  }
++
++  async prepareImport(raw: unknown, rawRequest: CrossDeviceImportRequest, rawFolder: unknown): Promise<CrossDeviceImportPlan> {
++    const payload = this.codec.parsePayload(raw);
++    const request = this.codec.parseRequest(rawRequest);
++    this.requirePermission();
++    const folder = validateTransferFolder(rawFolder, this.context.accountId);
++    const detection = await this.detectCrossDeviceDuplicate(payload);
++    if (detection.kind !== 'CrossDeviceDuplicate') { throw new Error(detection.kind + ': 未进入跨设备复制'); }
++    const targetWorldId = this.bindings.createWorldId(); transferWorldId(targetWorldId, true);
++    if (folder.records.some(record => record.worldId === targetWorldId)) { throw new Error('目标已存在或已成为墓碑'); }
++    const transactionId = this.bindings.createTransactionId();
++    const registrationId = this.bindings.createRegistrationId();
++    const forkedAt = this.bindings.now();
++    const source = this.bindings.validateComplete(payload.state, this.context.accountId, payload.state.worldId);
++    requireComplete(source, this.context.accountId, payload.state.worldId);
++    const origin = validateWorldForkOrigin({ schemaVersion: 1, accountId: this.context.accountId,
++      sourceWorldId: source.worldId, sourceRevision: source.revision, sourceCapturedAt: source.capturedAt,
++      targetWorldId, protagonistCharacterId: source.sections.Ledger.protagonistCharacterId,
++      transactionId, forkedAt, inheritedCompletionEventId: source.sections.Ledger.control.completionEventId }, this.context.accountId, targetWorldId, null);
++    const targetState = rebaseWorldState(source, targetWorldId, origin, this.bindings.validateComplete);
++    return this.codec.parsePlan({ schemaVersion: 1, ...this.context, transactionId, registrationId, targetWorldId, payload,
++      targetRecord: { worldId: targetWorldId, title: request.title, description: request.description,
++        createdAt: forkedAt, deletedAt: null, template: 'EmptyWorld' }, targetState });
++  }
++
++  requirePermission(): void {
++    const value = transferFields(this.bindings.milestoneReader.getMilestoneSnapshot(), ['accountId', 'FirstWorldCleared', 'CopyPermission']);
++    if (value.accountId !== this.context.accountId || typeof value.FirstWorldCleared !== 'boolean' ||
++        typeof value.CopyPermission !== 'boolean' || value.CopyPermission !== value.FirstWorldCleared) {
++      throw new Error('账号复制权限投影无效');
++    }
++    if (!value.CopyPermission) { throw new Error('档案损坏'); }
++  }
++  private authority(): CrossDeviceAuthorityPort {
++    const authority = this.bindings.authority;
++    if (!authority) { throw new Error('共享权威服务不可用'); }
++    const context = this.codec.home.parseContext(authority.context);
++    if (authority.mode !== 'ContractAdapter' || context.accountId !== this.context.accountId || context.deviceId !== this.context.deviceId ||
++        typeof authority.verifyTransfer !== 'function' || typeof authority.readRegistry !== 'function' || typeof authority.registerWorldHome !== 'function') {
++      throw new Error('跨设备端口绑定身份不匹配');
++    }
++    return authority;
++  }
++}
++
++export function validateTransferFolder(raw: unknown, accountId: string): WorldFolderSnapshot {
++  if (raw === null) { throw new Error('接收设备目录未初始化'); }
++  return new WorldFolderSession(accountId, copyTransferData(raw), () => { throw new Error('验证不可写入'); },
++    () => { throw new Error('验证不可分配ID'); }, () => { throw new Error('验证不可采样时间'); }).getSnapshot();
++}
++export function transferFields(raw: unknown, names: readonly string[]): Record<string, unknown> {
++  if (!raw || typeof raw !== 'object' || Array.isArray(raw) || ![Object.prototype, null].includes(Object.getPrototypeOf(raw))) {
++    throw new Error('传输值须为 plain data-only 对象');
++  }
++  const descriptors = Object.getOwnPropertyDescriptors(raw);
++  if (Reflect.ownKeys(descriptors).length !== names.length) { throw new Error('传输对象有缺失或未知字段'); }
++  const output: Record<string, unknown> = {};
++  for (const name of names) {
++    const descriptor = descriptors[name];
++    if (!descriptor || !Object.prototype.hasOwnProperty.call(descriptor, 'value')) { throw new Error('传输值禁止访问器'); }
++    output[name] = descriptor.value;
++  }
++  return output;
++}
++function transferArray(raw: unknown): readonly unknown[] {
++  if (!Array.isArray(raw) || Object.getPrototypeOf(raw) !== Array.prototype) { throw new Error('传输数组无效'); }
++  const descriptors = Object.getOwnPropertyDescriptors(raw);
++  if (Reflect.ownKeys(descriptors).length !== raw.length + 1) { throw new Error('传输数组禁止稀疏/扩展属性'); }
++  return Array.from({ length: raw.length }, (_, i) => {
++    const descriptor = descriptors[String(i)];
++    if (!descriptor || !Object.prototype.hasOwnProperty.call(descriptor, 'value')) { throw new Error('传输数组禁止访问器'); }
++    return descriptor.value;
++  });
++}
++export function copyTransferData(raw: unknown, ancestors = new Set<object>()): unknown {
++  if (raw === null || typeof raw === 'string' || typeof raw === 'boolean') { return raw; }
++  if (typeof raw === 'number' && Number.isFinite(raw)) { return raw; }
++  if (typeof raw !== 'object' || ancestors.has(raw)) { throw new Error('传输值禁止函数/undefined/非有限数/循环/品牌'); }
++  ancestors.add(raw);
++  try {
++    if (Array.isArray(raw)) { return Object.freeze(transferArray(raw).map(value => copyTransferData(value, ancestors))); }
++    const names = Reflect.ownKeys(raw);
++    if (names.some(name => typeof name !== 'string')) { throw new Error('传输值禁止 symbol/品牌'); }
++    const fields = transferFields(raw, names as string[]);
++    const output: Record<string, unknown> = Object.create(null) as Record<string, unknown>;
++    for (const name of names as string[]) { output[name] = copyTransferData(fields[name], ancestors); }
++    return Object.freeze(output);
++  } finally { ancestors.delete(raw); }
++}
++function transferIdentity(value: unknown, maximum = 128): asserts value is string {
++  if (typeof value !== 'string' || !value || value !== value.trim() || value.length > maximum) { throw new Error('传输身份无效'); }
++  try { encodeURIComponent(value); } catch { throw new Error('传输身份编码无效'); }
++}
++function transferWorldId(value: unknown, uuid = false): asserts value is string {
++  transferIdentity(value);
++  if (!(uuid ? /^world-[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i : /^world-[A-Za-z0-9-]{1,80}$/).test(value)) {
++    throw new Error('UnsupportedBoundary: InitialWorld 或世界身份不支持');
++  }
++}
++function text(value: unknown, minimum: number, maximum: number): asserts value is string {
++  if (typeof value !== 'string' || value !== value.trim() || value.length < minimum || value.length > maximum) { throw new Error('导入文字格式无效'); }
++}
++function requireComplete(value: WorldStateSnapshot, accountId: string, worldId: string): void {
++  if (!isValidatedWorldStateSnapshot(value) || value.accountId !== accountId || value.worldId !== worldId) { throw new Error('接收端七项认证或身份缺失'); }
++}
+
+--- /dev/null
++++ b/src/director/CoreTransfer.ts.meta
+@@ -0,0 +1,9 @@
++{
++  "ver": "4.0.24",
++  "importer": "typescript",
++  "imported": true,
++  "uuid": "3e7267a8-e6f3-486c-9596-56da83405a28",
++  "files": [],
++  "subMetas": {},
++  "userData": {}
++}
+
+--- /dev/null
++++ b/src/director/CoreTransferContent.ts
+@@ -0,0 +1,29 @@
++import { chartContentDigest, parseChartContentManifest } from './ChartArchive';
++import { isValidatedWorldStateSnapshot } from './WorldStateCodec';
++import type { WorldStateSnapshot } from './WorldStateSession';
++
++/**
++ * An additional published-reference boundary for the restricted Core prototype.
++ * Complete certifies the graph; this check also binds every frozen performance to
++ * the maker's publication index. No media bytes or missing historical values are
++ * reconstructed here. The composition root verifies actual media before playback.
++ */
++export function validateCoreTransferContent(state: WorldStateSnapshot, rawManifest: unknown): void {
++  if (!isValidatedWorldStateSnapshot(state)) { throw new Error('CoreTransferContentRequired: 接收端须先重新 parseComplete'); }
++  if (state.worldKind !== 'Primary' || state.shoreOrigin !== null) { throw new Error('受限 Core 传输只支持正式 Primary 内容'); }
++  const manifest = parseChartContentManifest(rawManifest);
++  for (const record of state.sections.ChartSnapshot.records) {
++    const chart = manifest.charts.find(value => value.chartId === record.chartId);
++    if (!chart || chartContentDigest(record.chart) !== chart.chartDigest ||
++        chartContentDigest(record.visual) !== chart.visualDigest) {
++      throw new Error('受限 Core 的冻结谱面或视觉与正式发布内容不匹配：' + record.chartId);
++    }
++    const media = manifest.media.find(value => value.contentId === chart.mediaContentId);
++    if (!media || chartContentDigest(record.media) !== chartContentDigest(media)) {
++      throw new Error('受限 Core 的冻结媒体引用与正式发布内容不匹配：' + record.chartId);
++    }
++    if (record.chart.tier === 'World' && chart.contentRevision !== state.sections.Ledger.contentRevision) {
++      throw new Error('受限 Core 的 World 谱面版本与正式叙事版本不匹配：' + record.chartId);
++    }
++  }
++}
+
+--- /dev/null
++++ b/src/director/CoreTransferContent.ts.meta
+@@ -0,0 +1,9 @@
++{
++  "ver": "4.0.24",
++  "importer": "typescript",
++  "imported": true,
++  "uuid": "eae7ddfe-0396-4aee-8d1f-56ff2f789481",
++  "files": [],
++  "subMetas": {},
++  "userData": {}
++}
+
+--- a/src/director/IntentPort.ts
++++ b/src/director/IntentPort.ts
+@@ -1029,3 +1029,8 @@
+   WorldHomeRegistrationRequest, WorldHomeRegistrationReply, WorldHomeRegistryDiagnostic,
+   WorldHomeRegistryReadResult, WorldHomeRegistrationResult, WorldHomeAuthorityPort,
+   WorldHomeRegistryBindings } from './WorldHomeRegistry';
++// B2.4c restricted Core transport; types only, no remote source write capability.
++export type { CoreTransferPayload, CoreTransferProof, CrossDeviceAuthorityPort,
++  CrossDeviceImportRequest, CrossDeviceDuplicateResult, CrossDeviceImportPlan,
++  CrossDeviceImportPhase, CrossDeviceImportEntry, CrossDeviceImportJournal,
++  CrossDeviceImportReceipt, CoreTransferCompleteValidator } from './CoreTransfer';
+
+--- /dev/null
++++ b/src/presentation/CrossDeviceContractAdapter.ts
+@@ -0,0 +1,100 @@
++import type {
++  CoreTransferPayload, CoreTransferProof, CrossDeviceAuthorityPort,
++  WorldHomeContext, WorldHomeRegistrySnapshot, WorldHomeRegistrationRequest,
++} from '../director/IntentPort';
++import type { WorldHomeContractAdapter } from './WorldHomeContractAdapter';
++
++/** Composition supplies the strict codecs and canonical digest; no director values cross this edge. */
++export interface CrossDeviceContractBindings {
++  readonly parsePayload: (raw: unknown) => CoreTransferPayload;
++  readonly parseProof: (raw: unknown, payload: CoreTransferPayload) => CoreTransferProof;
++  readonly parseRegistry: (raw: unknown, expectedAccountId: string) => WorldHomeRegistrySnapshot;
++  readonly parseContext: (raw: unknown) => WorldHomeContext;
++  readonly digestState: (state: CoreTransferPayload['state']) => string;
++}
++
++interface PublishedTransfer {
++  readonly payloadText: string;
++  readonly proofText: string;
++}
++
++/**
++ * Shared restricted-transfer fixture wrapping the B2.4b ownership authority.
++ * An export is admitted only by its bound HomeDevice; proof verification compares
++ * the exact past serialized export. The director separately reads current home
++ * ownership to distinguish a duplicate from Released or unsupported migration.
++ * This in-memory fixture is neither authentication nor a persistent file service.
++ */
++export class CrossDeviceContractAdapter {
++  private readonly bindings: CrossDeviceContractBindings;
++  private readonly transfers = new Map<string, PublishedTransfer>();
++
++  constructor(private readonly homeAdapter: Pick<WorldHomeContractAdapter, 'bindDevice'>,
++    bindings: CrossDeviceContractBindings) {
++    this.bindings = Object.freeze({ parsePayload: bindings.parsePayload, parseProof: bindings.parseProof,
++      parseRegistry: bindings.parseRegistry, parseContext: bindings.parseContext, digestState: bindings.digestState });
++  }
++
++  bindDevice(rawContext: WorldHomeContext): CrossDeviceAuthorityPort {
++    const validated = this.bindings.parseContext(rawContext);
++    const context = Object.freeze({ accountId: validated.accountId, deviceId: validated.deviceId });
++    const home = this.homeAdapter.bindDevice(context);
++    if (home.mode !== 'ContractAdapter' || home.context.accountId !== context.accountId ||
++        home.context.deviceId !== context.deviceId) { throw new Error('跨设备契约的归属会话身份不匹配'); }
++    return Object.freeze({ mode: 'ContractAdapter' as const, context,
++      readRegistry: (): Promise<unknown> => home.readRegistry(),
++      registerWorldHome: (request: WorldHomeRegistrationRequest): Promise<unknown> => home.registerWorldHome(request),
++      publishTransfer: async (raw: CoreTransferPayload): Promise<unknown> => {
++        const payload = this.payload(raw, context);
++        if (payload.sourceDeviceId !== context.deviceId) { throw new Error('只有绑定的来源设备可以发布受限 Core'); }
++        const payloadText = JSON.stringify(payload);
++        await this.checkSource(payload, home.readRegistry.bind(home));
++        const proof = this.proof(payload);
++        const proofText = JSON.stringify(proof);
++        // Compare after the await as well: concurrent publication cannot replace a transfer identity.
++        const key = this.key(context.accountId, payload.transferId), previous = this.transfers.get(key);
++        if (previous && (previous.payloadText !== payloadText || previous.proofText !== proofText)) {
++          throw new Error('传输标识已经绑定其他载荷；原传输保留');
++        }
++        const response = this.bindings.parseProof(JSON.parse(previous?.proofText ?? proofText) as unknown, payload);
++        if (!previous) { this.transfers.set(key, Object.freeze({ payloadText, proofText })); }
++        return response;
++      },
++      verifyTransfer: async (raw: CoreTransferPayload): Promise<unknown> => {
++        const payload = this.payload(raw, context), payloadText = JSON.stringify(payload);
++        const previous = this.transfers.get(this.key(context.accountId, payload.transferId));
++        if (!previous || previous.payloadText !== payloadText) { throw new Error('载荷缺少同账号来源发布证明，或与已发布值不匹配'); }
++        const expected = this.proof(payload);
++        if (JSON.stringify(expected) !== previous.proofText) { throw new Error('来源发布证明与当前载荷摘要不匹配'); }
++        return this.bindings.parseProof(JSON.parse(previous.proofText) as unknown, payload);
++      },
++    });
++  }
++
++  private payload(raw: unknown, context: WorldHomeContext): CoreTransferPayload {
++    const payload = this.bindings.parsePayload(raw);
++    if (payload.state.accountId !== context.accountId) { throw new Error('受限 Core 传输账号与绑定会话不匹配'); }
++    if (payload.state.worldId === 'InitialWorld') { throw new Error('InitialWorld 不参与跨设备传输'); }
++    if (payload.sourceHomeRevision !== 1) { throw new Error('受限 Core 原型不支持迁移后的来源归属'); }
++    return payload;
++  }
++
++  private async checkSource(payload: CoreTransferPayload, readRegistry: () => Promise<unknown>): Promise<void> {
++    const snapshot = this.bindings.parseRegistry(await readRegistry(), payload.state.accountId);
++    const record = snapshot.records.find(value => value.worldId === payload.state.worldId);
++    if (!record || record.homeState !== 'Homed' || record.homeDeviceId !== payload.sourceDeviceId ||
++        record.homeRevision !== 1 || record.homeRevision !== payload.sourceHomeRevision) {
++      throw new Error('传输来源没有当前 Homed/版本一的同设备权威归属');
++    }
++  }
++
++  private proof(payload: CoreTransferPayload): CoreTransferProof {
++    const sourceDigest = this.bindings.digestState(payload.state);
++    if (typeof sourceDigest !== 'string' || !/^[a-f0-9]{64}$/.test(sourceDigest)) { throw new Error('受限 Core 摘要工厂未返回合法 SHA256'); }
++    return this.bindings.parseProof({ schemaVersion: 1, accountId: payload.state.accountId,
++      worldId: payload.state.worldId, sourceDeviceId: payload.sourceDeviceId, transferId: payload.transferId,
++      sourceHomeRevision: 1, sourceDigest }, payload);
++  }
++
++  private key(accountId: string, transferId: string): string { return JSON.stringify([accountId, transferId]); }
++}
+
+--- /dev/null
++++ b/src/presentation/CrossDeviceContractAdapter.ts.meta
+@@ -0,0 +1,9 @@
++{
++  "ver": "4.0.24",
++  "importer": "typescript",
++  "imported": true,
++  "uuid": "45aa345e-4915-4b84-8249-a146dbfe9447",
++  "files": [],
++  "subMetas": {},
++  "userData": {}
++}
+
+--- /dev/null
++++ b/src/presentation/CrossDeviceImportStorage.ts
+@@ -0,0 +1,392 @@
++import type {
++  CrossDeviceImportPlan, CrossDeviceImportReceipt, CrossDeviceImportJournal,
++  CrossDeviceAuthorityPort, WorldHomeContext, WorldHomeRegistrationRequest,
++  WorldHomeRegistrationReply, WorldHomeRegistrySnapshot, WorldFolderSnapshot,
++  WorldStateSnapshot,
++} from '../director/IntentPort';
++import type { WorldStateLock } from './WorldCoreStateStorage';
++
++/** Complete/reference codecs and target lease capability are supplied by composition. */
++export interface CrossDeviceImportStorageBindings {
++  readonly context: WorldHomeContext;
++  readonly authority: CrossDeviceAuthorityPort | null;
++  validatePlan(raw: unknown): CrossDeviceImportPlan;
++  validateJournal(raw: unknown): CrossDeviceImportJournal;
++  validateFolder(raw: unknown, accountId: string): WorldFolderSnapshot;
++  parseRegistrationReply(raw: unknown, context: WorldHomeContext,
++    request: WorldHomeRegistrationRequest): WorldHomeRegistrationReply;
++  parseRegistry(raw: unknown, accountId: string): WorldHomeRegistrySnapshot;
++  assertTargetLease(plan: CrossDeviceImportPlan): void;
++  writeTarget(state: WorldStateSnapshot): void;
++  readTarget(accountId: string, worldId: string): unknown | null;
++  /** Must parseComplete against the receiver's published content before returning. */
++  validateCurrentTarget(raw: unknown, accountId: string, worldId: string): WorldStateSnapshot;
++  verifyAuthoritySource(plan: CrossDeviceImportPlan): Promise<void>;
++}
++
++type ImportEntry = CrossDeviceImportJournal['entries'][number];
++export type CrossDeviceImportRecoveryResult = CrossDeviceImportReceipt
++  | { readonly kind: 'NoPending'; readonly mode: 'ContractAdapter' };
++
++/**
++ * Service-first, journal-coordinated publication. This transaction has only a
++ * real target lease; it never fabricates a remote source lease or calls Fork.
++ * Published receipts remain durable and gate every subsequent target opening.
++ */
++export class CrossDeviceImportStorage {
++  private readonly importAccounts = new Set<string>();
++  private readonly directoryAccounts = new Set<string>();
++  private readonly operatingAccounts = new Set<string>();
++  private readonly context: WorldHomeContext;
++
++  constructor(
++    private readonly storage: Pick<Storage, 'getItem' | 'setItem'> = localStorage,
++    private readonly locks: WorldStateLock | null = browserImportLock(),
++    private readonly bindings?: CrossDeviceImportStorageBindings,
++  ) {
++    const context = this.requireBindings().context;
++    validId(context.accountId, 64, '账号'); validId(context.deviceId, 128, '设备');
++    this.context = Object.freeze({ accountId: context.accountId, deviceId: context.deviceId });
++  }
++
++  /** Order: import lock -> target lease -> directory lock. Never acquire source. */
++  async withImportLock<T>(accountId: string, operation: () => T | Promise<T>): Promise<T> {
++    this.assertAccount(accountId);
++    if (this.locks === null) { throw new Error('当前环境没有导入独占锁；未写入跨设备导入或目录'); }
++    if (this.importAccounts.has(accountId)) { throw new Error('同一账号导入锁不可重入'); }
++    return this.locks.request('neurou-cross-device-import:' + encodeURIComponent(accountId), async () => {
++      if (this.importAccounts.has(accountId)) { throw new Error('导入锁适配器没有提供独占访问'); }
++      this.importAccounts.add(accountId);
++      try { return await operation(); }
++      finally { this.importAccounts.delete(accountId); }
++    });
++  }
++
++  readJournal(accountId: string): CrossDeviceImportJournal | null {
++    this.assertAccount(accountId);
++    const bytes = this.storage.getItem(this.journalKey(accountId));
++    if (bytes === null) { return null; }
++    const journal = this.requireBindings().validateJournal(parseJson(bytes, '跨设备导入日志'));
++    if (journal.accountId !== this.context.accountId || journal.deviceId !== this.context.deviceId) {
++      throw new Error('导入日志账号或设备身份不匹配；原始日志已保留');
++    }
++    return journal;
++  }
++
++  /** Inspection precedes acquiring the pending target's real lease. */
++  readPending(accountId: string): ImportEntry | null {
++    return this.readJournal(accountId)?.entries.find(entry => entry.phase !== 'Published') ?? null;
++  }
++
++  /** No authority or directory mutation occurs until the complete plan is durable. */
++  prepare(raw: CrossDeviceImportPlan): ImportEntry {
++    const plan = this.plan(raw);
++    this.requireImportLock(plan.accountId);
++    this.assertLease(plan);
++    if (this.operatingAccounts.has(plan.accountId)) { throw new Error('导入提交进行中；不能重入准备'); }
++    const journal = this.readJournal(plan.accountId);
++    const existing = journal?.entries.find(entry => entry.plan.transactionId === plan.transactionId);
++    if (existing) {
++      this.assertSamePlan(existing.plan, plan);
++      return existing;
++    }
++    if (journal?.entries.some(entry => entry.plan.targetWorldId === plan.targetWorldId)) {
++      throw new Error('导入目标已属于另一日志；原始数据已保留');
++    }
++    if (journal?.entries.some(entry => entry.phase !== 'Published')) {
++      throw new Error('当前账号尚有待恢复导入；新导入未准备');
++    }
++    if (this.readFolder(plan.accountId).records.some(record => record.worldId === plan.targetWorldId) ||
++        this.readTarget(plan) !== null) {
++      throw new Error('新导入目标已存在或曾被删除；禁止覆盖');
++    }
++    const entry: ImportEntry = { phase: 'Prepared', plan, homeReply: null };
++    const next: CrossDeviceImportJournal = { schemaVersion: 1, kind: 'CrossDeviceImportJournal', accountId: plan.accountId,
++      deviceId: this.context.deviceId, entries: [...(journal?.entries ?? []), entry] };
++    this.writeJournal(next, journal);
++    return this.entry(plan);
++  }
++
++  /** The root holds the import lock and target lease across the service await. */
++  async registerAndPublish(raw: CrossDeviceImportPlan): Promise<CrossDeviceImportReceipt> {
++    const plan = this.plan(raw);
++    this.requireImportLock(plan.accountId);
++    this.assertLease(plan);
++    const initial = this.entry(plan);
++    if (this.operatingAccounts.has(plan.accountId)) { throw new Error('同一账号导入提交不可重入'); }
++    this.operatingAccounts.add(plan.accountId);
++    let authorityConfirmed = false;
++    try {
++      const bindings = this.requireBindings();
++      await bindings.verifyAuthoritySource(plan);
++      this.assertLease(plan);
++      const authority = this.authority();
++      const request: WorldHomeRegistrationRequest = { schemaVersion: 1,
++        worldId: plan.targetWorldId, registrationId: plan.registrationId };
++      const reply = bindings.parseRegistrationReply(await authority.registerWorldHome(request), this.context, request);
++      this.assertReply(plan, reply);
++      // A fresh registry read also rejects a replay whose target was moved or vanished.
++      const registry = bindings.parseRegistry(await authority.readRegistry(), plan.accountId);
++      this.assertRegistryHome(plan, registry, reply);
++      authorityConfirmed = true;
++      this.assertLease(plan);
++      const current = this.entry(plan);
++      if (current.phase !== 'Published') { this.updateEntry(plan, { phase: 'HomeRegistered', plan, homeReply: reply }); }
++      await this.withDirectoryLock(plan.accountId, () => {
++        this.assertLease(plan);
++        const published = this.published(plan);
++        if (this.entry(plan).phase === 'Published') {
++          if (!published) { throw new Error('已发布导入目录缺失；禁止重新创建已删除世界'); }
++          this.verifyPublishedTarget(plan);
++          this.updateEntry(plan, { phase: 'Published', plan, homeReply: reply });
++          return;
++        }
++        const staged = this.readTarget(plan);
++        if (staged === null) {
++          requireSynchronous(bindings.writeTarget(plan.targetState), '导入目标持久提交');
++        }
++        this.verifyStagedTarget(plan);
++        if (!published) {
++          const folder = this.readFolder(plan.accountId);
++          const candidate = bindings.validateFolder({ ...folder, records: [...folder.records, plan.targetRecord] }, plan.accountId);
++          requireSynchronous(candidate, '导入目录完整验证');
++          if (JSON.stringify(this.readFolder(plan.accountId)) !== JSON.stringify(folder)) {
++            throw new Error('导入暂存期间世界目录已变化；禁止陈旧目录覆盖');
++          }
++          // The only local publication point. The target Core remains when this fails.
++          try {
++            this.storage.setItem(this.folderKey(plan.accountId), JSON.stringify(candidate));
++          } catch (error: unknown) {
++            if (!this.published(plan)) { throw error; }
++          }
++          if (!this.published(plan)) { throw new Error('导入目标目录追加未持久成功'); }
++        }
++        this.updateEntry(plan, { phase: 'Published', plan, homeReply: reply });
++      });
++      return receipt(plan, 'Published', null);
++    } catch (error: unknown) {
++      // An adapter may throw after a successful atomic Published write.
++      let phase: ImportEntry['phase'] = initial.phase;
++      try {
++        phase = this.entry(plan).phase;
++        if (phase === 'Published' && this.published(plan)) {
++          this.verifyPublishedTarget(plan);
++          // A journal adapter may throw after its atomic Published write succeeded.
++          if (authorityConfirmed) { return receipt(plan, 'Published', null); }
++        }
++      } catch { /* Preserve damaged or unreachable data; the original error is reported. */ }
++      return receipt(plan, phase, errorText(error));
++    } finally { this.operatingAccounts.delete(plan.accountId); }
++  }
++
++  /** Explicit target selection permits Published receipt reconciliation as well. */
++  async recover(accountId: string, targetWorldId?: string): Promise<CrossDeviceImportRecoveryResult> {
++    this.requireImportLock(accountId);
++    const journal = this.readJournal(accountId);
++    const entry = targetWorldId === undefined
++      ? journal?.entries.find(value => value.phase !== 'Published')
++      : journal?.entries.find(value => value.plan.targetWorldId === targetWorldId);
++    if (!entry) { return Object.freeze({ kind: 'NoPending' as const, mode: 'ContractAdapter' as const }); }
++    return this.registerAndPublish(entry.plan);
++  }
++
++  /** This checks current service ownership; a historical receipt is insufficient. */
++  async assertCanOpen(accountId: string, targetWorldId: string): Promise<void> {
++    this.assertAccount(accountId); validId(targetWorldId, 128, '目标世界');
++    const journal = this.readJournal(accountId);
++    const entry = journal?.entries.find(value => value.plan.targetWorldId === targetWorldId);
++    if (!entry || entry.phase !== 'Published' || entry.homeReply === null) {
++      throw new Error('跨设备导入尚未完成服务与本地对账；拒绝打开');
++    }
++    const plan = this.plan(entry.plan);
++    this.assertLease(plan);
++    const registry = this.requireBindings().parseRegistry(await this.authority().readRegistry(), accountId);
++    this.assertLease(plan);
++    this.assertRegistryHome(plan, registry, entry.homeReply);
++    const latest = this.entry(plan);
++    if (latest.phase !== 'Published' || !this.published(plan)) {
++      throw new Error('跨设备导入发布凭据或目录已变化；拒绝打开');
++    }
++    this.verifyPublishedTarget(plan);
++  }
++
++  private async withDirectoryLock<T>(accountId: string, operation: () => T): Promise<T> {
++    this.requireImportLock(accountId);
++    if (this.locks === null) { throw new Error('当前环境没有目录独占锁；未发布导入世界'); }
++    if (this.directoryAccounts.has(accountId)) { throw new Error('同一账号目录锁不可重入'); }
++    return this.locks.request('neurou-world-folder:' + encodeURIComponent(accountId), async () => {
++      if (this.directoryAccounts.has(accountId)) { throw new Error('目录锁适配器没有提供独占访问'); }
++      this.directoryAccounts.add(accountId);
++      try { return operation(); }
++      finally { this.directoryAccounts.delete(accountId); }
++    });
++  }
++
++  private plan(raw: unknown): CrossDeviceImportPlan {
++    const plan = this.requireBindings().validatePlan(raw);
++    if (plan.accountId !== this.context.accountId || plan.deviceId !== this.context.deviceId) {
++      throw new Error('导入计划与绑定账号或接收设备不匹配');
++    }
++    return plan;
++  }
++
++  private entry(plan: CrossDeviceImportPlan): ImportEntry {
++    const entry = this.readJournal(plan.accountId)?.entries.find(value => value.plan.transactionId === plan.transactionId);
++    if (!entry) { throw new Error('完整导入计划尚未持久准备；未登记或发布'); }
++    this.assertSamePlan(entry.plan, plan);
++    return entry;
++  }
++
++  private updateEntry(plan: CrossDeviceImportPlan, entry: ImportEntry): void {
++    this.requireImportLock(plan.accountId); this.assertLease(plan);
++    const current = this.readJournal(plan.accountId);
++    if (current === null) { throw new Error('导入日志已丢失；原始世界数据保留'); }
++    this.entry(plan);
++    const next: CrossDeviceImportJournal = { ...current,
++      entries: current.entries.map(value => value.plan.transactionId === plan.transactionId ? entry : value) };
++    this.writeJournal(next, current);
++  }
++
++  private writeJournal(raw: CrossDeviceImportJournal, expected: CrossDeviceImportJournal | null): void {
++    this.requireImportLock(raw.accountId);
++    const candidate = this.requireBindings().validateJournal(raw);
++    if (candidate.accountId !== this.context.accountId || candidate.deviceId !== this.context.deviceId) {
++      throw new Error('新导入日志与绑定身份不匹配；未写入');
++    }
++    if (JSON.stringify(this.readJournal(raw.accountId)) !== JSON.stringify(expected)) {
++      throw new Error('导入日志已变化；禁止覆盖其他事务');
++    }
++    this.storage.setItem(this.journalKey(raw.accountId), JSON.stringify(candidate));
++    if (JSON.stringify(this.readJournal(raw.accountId)) !== JSON.stringify(candidate)) {
++      throw new Error('导入日志写入未持久成功；须恢复后重试');
++    }
++  }
++
++  private published(plan: CrossDeviceImportPlan): boolean {
++    const record = this.readFolder(plan.accountId).records.find(value => value.worldId === plan.targetWorldId);
++    if (record === undefined) { return false; }
++    if (JSON.stringify(record) !== JSON.stringify(plan.targetRecord)) {
++      throw new Error('导入目标目录记录与日志冲突或已删除；原始数据已保留');
++    }
++    return true;
++  }
++
++  private verifyStagedTarget(plan: CrossDeviceImportPlan): void {
++    if (JSON.stringify(this.readTarget(plan)) !== JSON.stringify(plan.targetState)) {
++      throw new Error('导入目标 Core 与完整暂存计划不一致；禁止覆盖');
++    }
++  }
++
++  private verifyPublishedTarget(plan: CrossDeviceImportPlan): void {
++    const target = this.readTarget(plan);
++    if (target === null || target.accountId !== plan.accountId || target.worldId !== plan.targetWorldId ||
++        target.revision < plan.targetState.revision ||
++        (target.revision === plan.targetState.revision && JSON.stringify(target) !== JSON.stringify(plan.targetState)) ||
++        JSON.stringify(target.forkOrigin) !== JSON.stringify(plan.targetState.forkOrigin) ||
++        JSON.stringify(target.sections.FormatTime) !== JSON.stringify(plan.targetState.sections.FormatTime)) {
++      throw new Error('已发布导入 Core 身份、来源或创建时刻不一致；拒绝打开');
++    }
++  }
++
++  private readTarget(plan: CrossDeviceImportPlan): WorldStateSnapshot | null {
++    const value = this.requireBindings().readTarget(plan.accountId, plan.targetWorldId);
++    requireSynchronous(value, '导入目标完整回读');
++    if (value === null) { return null; }
++    const target = this.requireBindings().validateCurrentTarget(value, plan.accountId, plan.targetWorldId);
++    requireSynchronous(target, '导入目标完整解析');
++    if (target.accountId !== plan.accountId || target.worldId !== plan.targetWorldId) {
++      throw new Error('导入目标完整回读身份不匹配');
++    }
++    return target;
++  }
++
++  private readFolder(accountId: string): WorldFolderSnapshot {
++    const bytes = this.storage.getItem(this.folderKey(accountId));
++    if (bytes === null) { throw new Error('接收设备世界目录不存在；导入未发布'); }
++    const folder = this.requireBindings().validateFolder(parseJson(bytes, '接收设备世界目录'), accountId);
++    requireSynchronous(folder, '接收设备世界目录完整验证');
++    if (folder.accountId !== accountId) { throw new Error('接收设备世界目录账号不匹配'); }
++    return folder;
++  }
++
++  private assertReply(plan: CrossDeviceImportPlan, reply: WorldHomeRegistrationReply): void {
++    if (reply.kind === 'HomeConflict' || reply.record.accountId !== plan.accountId ||
++        reply.record.worldId !== plan.targetWorldId || reply.record.homeState !== 'Homed' ||
++        reply.record.homeDeviceId !== this.context.deviceId || reply.record.homeRevision !== 1) {
++      throw new Error('导入目标归属冲突或不支持；保留日志，未发布目标');
++    }
++  }
++
++  private assertRegistryHome(plan: CrossDeviceImportPlan, registry: WorldHomeRegistrySnapshot,
++    reply: WorldHomeRegistrationReply): void {
++    const home = registry.records.find(record => record.worldId === plan.targetWorldId);
++    if (registry.accountId !== plan.accountId || registry.registryRevision < reply.registryRevision ||
++        registry.observedAtServerEpochMs < reply.observedAtServerEpochMs || !home ||
++        home.accountId !== plan.accountId || home.homeState !== 'Homed' || home.homeRevision !== 1 ||
++        home.homeDeviceId !== this.context.deviceId || JSON.stringify(home) !== JSON.stringify(reply.record)) {
++      throw new Error('导入目标服务归属缺失、回退或冲突；等待对账，拒绝打开');
++    }
++  }
++
++  private assertLease(plan: CrossDeviceImportPlan): void {
++    requireSynchronous(this.requireBindings().assertTargetLease(plan), '导入目标真实租约检查');
++  }
++
++  private assertSamePlan(left: CrossDeviceImportPlan, right: CrossDeviceImportPlan): void {
++    if (JSON.stringify(left) !== JSON.stringify(right)) {
++      throw new Error('导入事务标识被复用于不同计划；原始日志已保留');
++    }
++  }
++
++  private authority(): CrossDeviceAuthorityPort {
++    const authority = this.requireBindings().authority;
++    if (!authority || authority.mode !== 'ContractAdapter' ||
++        authority.context.accountId !== this.context.accountId || authority.context.deviceId !== this.context.deviceId ||
++        typeof authority.readRegistry !== 'function' || typeof authority.registerWorldHome !== 'function') {
++      throw new Error('跨设备契约权威不可用或绑定身份不匹配；未登记或打开');
++    }
++    return authority;
++  }
++
++  private assertAccount(accountId: string): void {
++    validId(accountId, 64, '账号');
++    if (accountId !== this.context.accountId) { throw new Error('导入存储不能跨越绑定账号读取或写入'); }
++  }
++  private requireImportLock(accountId: string): void {
++    this.assertAccount(accountId);
++    if (!this.importAccounts.has(accountId)) { throw new Error('跨设备导入须持有同一账号导入独占锁'); }
++  }
++  private requireBindings(): CrossDeviceImportStorageBindings {
++    if (this.bindings === undefined) { throw new Error('跨设备导入完整验证器、权威及目标租约能力尚未装配'); }
++    return this.bindings;
++  }
++  private folderKey(accountId: string): string { return 'neurou-world-folder-v1:' + encodeURIComponent(accountId); }
++  private journalKey(accountId: string): string { return 'neurou-cross-device-import-v1:' + encodeURIComponent(accountId); }
++}
++
++function receipt(plan: CrossDeviceImportPlan, phase: ImportEntry['phase'], error: string | null): CrossDeviceImportReceipt {
++  return Object.freeze({ kind: error === null && phase === 'Published' ? 'Published' as const : 'Pending' as const,
++    mode: 'ContractAdapter' as const, transactionId: plan.transactionId,
++    targetWorldId: plan.targetWorldId, phase, error });
++}
++function errorText(error: unknown): string { return error instanceof Error ? error.message : String(error); }
++function parseJson(bytes: string, label: string): unknown {
++  try { return JSON.parse(bytes) as unknown; }
++  catch { throw new Error(label + ' JSON 损坏；原始数据已保留'); }
++}
++function requireSynchronous(result: unknown, label: string): void {
++  if (result !== null && (typeof result === 'object' || typeof result === 'function') &&
++      typeof (result as { then?: unknown }).then === 'function') {
++    void Promise.resolve(result).catch(() => undefined);
++    throw new Error(label + '必须同步完成；未将 Promise 当作持久成功');
++  }
++}
++function validId(value: unknown, maximum: number, label: string): asserts value is string {
++  if (typeof value !== 'string' || !value || value !== value.trim() || value.length > maximum) { throw new Error(label + '标识无效'); }
++  try { encodeURIComponent(value); } catch { throw new Error(label + '标识编码无效'); }
++}
++function browserImportLock(): WorldStateLock | null {
++  if (typeof navigator === 'undefined' || navigator.locks === undefined) { return null; }
++  return { request: <T>(name: string, operation: () => Promise<T>): Promise<T> =>
++    navigator.locks.request(name, { mode: 'exclusive' }, operation) };
++}
+
+--- /dev/null
++++ b/src/presentation/CrossDeviceImportStorage.ts.meta
+@@ -0,0 +1,9 @@
++{
++  "ver": "4.0.24",
++  "importer": "typescript",
++  "imported": true,
++  "uuid": "495153fa-5b25-4eea-af3b-815c574eb6e3",
++  "files": [],
++  "subMetas": {},
++  "userData": {}
++}
+

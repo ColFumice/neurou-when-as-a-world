@@ -1,0 +1,163 @@
+{
+  "category": "ContractTest",
+  "note": "RecallCount strict validation, pure hydration, durable shared own Recall/T6 Replay, director-only foreign first experience and ChartReplay exclusion. Controlled storage/clock and real WorldClearSession Ledger; no Cocos production claim.",
+  "passed": 31,
+  "failed": 0,
+  "results": [
+    {
+      "name": "real empty initialization produces explicit identity and no write/clock/append/account side effect",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "own Recall persists next count before publishing and never appends or crosses",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "failed durable count write preserves bytes and count; retry publishes exactly one increment",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "T6 trace Replay and own Recall share one exact protagonist/event counter",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "legacy T6 no-state Entry keeps original zero vector and supports exact trace binding",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "staged next Ledger derives T6 binding purely for the same durable document",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "absent or wrong trace source never invents binding or mutates records",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "T6 binding rejects wrong actor-only event, nonzero/source/chart/completed facts",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "pure hydration validates clones/freezes and never replays or changes the active count",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "hydrated constructor installs exact persisted count silently and independently",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "foreign first experience appends only ordinary source into current protagonist with fresh Player/time metadata",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "foreign subsequent experience and own Recall use same one record without another Ledger append",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "foreign first durable append failure leaves carrier and counts unchanged",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "missing foreign append capability rejects before clock and carrier mutation",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "foreign actor/event authority rejects same actor unknown actor unknown event and cross-world carrier",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "foreign source cannot carry World choices/completions T6 T7 or premiere completion into own Ledger",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "same event ID with differing source vector or reference rejects and never silently merges",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "ChartReplay never increments RecallCount persists or appends even for known chart",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "own Recall rejects absent and other-character-only events without fabricated zero records",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "strict snapshot rejects wrong version identity extras missing sections and malformed arrays",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "strict count records reject invalid count unknown cross-character reference duplicates and extra properties",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "strict trace references reject absent extra duplicated wrong actor event and unknown trace bindings",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "all snapshot getters symbols prototypes and sparse elements reject without executing getters",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "authority Ledger rejects wrong identity missing protagonist duplicate roles/events and unsafe event data",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "safe integer overflow rejects increment before persistence and preserves exact hydrated count",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "reentrant mutation from persistence is blocked while read sees old published count",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "context IDs and formal regular binding reject malformed or unbound context before side effects",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "unavailable authoritative carrier is rejected instead of fabricated empty initialized state",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "foreign fresh timestamp must be a nonnegative safe integer and rejects before append",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "foreign append callback cannot reenter Recall counter mutation",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "foreign callback must publish exact source candidate in the same authoritative carrier",
+      "result": "PASS",
+      "category": "ContractTest"
+    }
+  ]
+}

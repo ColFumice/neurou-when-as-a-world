@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "chartId": "guidance-b-1",
+  "tier": "Regular",
+  "layoutVersion": "pad-layout-2",
+  "aspectRatio": 1.7777777777777777,
+  "lines": [
+    {
+      "id": "line-b-1",
+      "head": {
+        "id": "head-b-1",
+        "spawnTimeMs": 2000
+      },
+      "path": {
+        "kind": "Polyline",
+        "points": [
+          {
+            "u": 0.18,
+            "v": 0.5
+          },
+          {
+            "u": 0.34,
+            "v": 0.5
+          },
+          {
+            "u": 0.5,
+            "v": 0.7
+          },
+          {
+            "u": 0.82,
+            "v": 0.7
+          }
+        ]
+      },
+      "speed": 0.17777777777777778,
+      "nodes": [
+        {
+          "id": "drag-b-1",
+          "kind": "Drag",
+          "pathDistance": 0.14222222222222225,
+          "keyId": "KeyS"
+        },
+        {
+          "id": "hold-b-1",
+          "kind": "Hold",
+          "pathDistance": 0.2844444444444445,
+          "endPathDistance": 0.8988303110056648,
+          "keyId": "KeyF"
+        },
+        {
+          "id": "tap-b-corner",
+          "kind": "Tap",
+          "pathDistance": 0.6321636443389982
+        },
+        {
+          "id": "tap-b-end",
+          "kind": "Tap",
+          "pathDistance": 1.0943858665612205
+        }
+      ]
+    }
+  ]
+}

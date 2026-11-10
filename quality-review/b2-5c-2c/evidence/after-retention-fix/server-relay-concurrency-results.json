@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "suite": "c-2c-real-loopback-pg-server",
+  "serviceMode": "ExternalService",
+  "databaseVersion": "PostgreSQL17",
+  "isolatedPublicWorldPins": true,
+  "noProductionKeyDeliveryOrReplayClaim": true,
+  "total": 2,
+  "passed": 2,
+  "failed": 0,
+  "results": [
+    {
+      "name": "first enqueue concurrent distinct nonces reserves one durable position and immutable receipt",
+      "pass": true,
+      "clock": "production-real-wall",
+      "elapsedMs": 94
+    },
+    {
+      "name": "first enqueue concurrent identical nonce commits once and both recover the same original wire",
+      "pass": true,
+      "clock": "production-real-wall",
+      "elapsedMs": 61
+    }
+  ]
+}

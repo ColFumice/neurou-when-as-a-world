@@ -1,0 +1,461 @@
+diff --git a/src/chart/KeyboardPadLayout.ts b/src/chart/KeyboardPadLayout.ts
+index b948a5d..1ebd6af 100644
+--- a/src/chart/KeyboardPadLayout.ts
++++ b/src/chart/KeyboardPadLayout.ts
+@@ -63,7 +63,7 @@ export type ChartKeyId =
+  */
+ export type ChartPadKind = 'Regular' | 'Drum' | 'Heavy';
+ 
+-// 物理行序（左→右），保留行序与错位；仅用于生成默认布局。
++// 物理行序（左→右）；每行独立均分全宽，少键行自然更宽。
+ const ROW_TOP: readonly ChartKeyId[] = [
+   'Backquote', 'Digit1', 'Digit2', 'Digit3', 'Digit4', 'Digit5',
+   'Digit6', 'Digit7', 'Digit8', 'Digit9', 'Digit0', 'Minus', 'Equal',
+@@ -141,34 +141,25 @@ export interface KeyboardPadLayout {
+  * 谱面 JSON 的 layoutVersion 必须与此完全一致，
+  * 防止布局变更静默改变既有谱面目标。
+  */
+-export const PAD_LAYOUT_VERSION = 'pad-layout-1';
+-
+-// 行几何：自下而上五条带，统一高度与行距（归一化占位，待表现侧冻结）。
+-const ROW_HEIGHT = 0.16;
+-const ROW_V_SPACE = 0.02;
+-const ROW_V_Z = 0.22;
+-const ROW_V_A = 0.42;
+-const ROW_V_Q = 0.62;
+-const ROW_V_TOP = 0.82;
+-
+-// 错位：越靠上的行左侧起点越靠左，模拟键盘错位（归一化占位）。
+-const LEFT_TOP = 0.0;
+-const LEFT_Q = 0.02;
+-const LEFT_A = 0.05;
+-const LEFT_Z = 0.08;
+-const RIGHT_EDGE = 1.0;
+-
+-/** 由物理行键序生成一行槽位（均匀分布于 [leftU, 1]）。 */
++export const PAD_LAYOUT_VERSION = 'pad-layout-2';
++
++// 用户确认：四行网格铺满区域，不显示 Space，不留行距和错位空白。
++const ROW_HEIGHT = 0.25;
++const ROW_V_Z = 0;
++const ROW_V_A = 0.25;
++const ROW_V_Q = 0.5;
++const ROW_V_TOP = 0.75;
++/** 仅吸收归一化网格边界的浮点计算误差，不扩大一层邻接范围。 */
++const GRID_CONTACT_EPSILON = 1e-9;
++
++/** 由物理行键序生成一行槽位（均匀分布于 [0, 1]）。 */
+ function buildRow(
+   keys: readonly ChartKeyId[],
+   vBottom: number,
+-  leftU: number,
+ ): KeyPadSlot[] {
+-  const span = RIGHT_EDGE - leftU;
+-  const slotWidth = span / keys.length;
+   return keys.map((keyId, index) => {
+-    const u = leftU + index * slotWidth;
+-    const rightU = index + 1 === keys.length ? RIGHT_EDGE : leftU + (index + 1) * slotWidth;
++    const u = index / keys.length;
++    const rightU = (index + 1) / keys.length;
+     return { keyId, padKind: kindOf(keyId), u, v: vBottom,
+       width: rightU - u, height: ROW_HEIGHT };
+   });
+@@ -191,24 +182,15 @@ function assertSlotValid(slot: KeyPadSlot): void {
+ /**
+  * 生成默认键盘打击垫布局（方法名为直译，待追认）。
+  *
+- * 保留行序（顶行符号/数字、Q、A、Z、Space）、错位，
+- * 以及 Space 居中超宽槽位。纯函数、零 cc。
++ * 顶行符号/数字、Q、A、Z 共 47 槽；四行独立铺满全宽。
++ * Space 保留在输入白名单供 Head 启动，默认布局没有 Space 槽。纯函数、零 cc。
+  */
+ export function createDefaultKeyboardPadLayout(): KeyboardPadLayout {
+   const slots: KeyPadSlot[] = [
+-    ...buildRow(ROW_TOP, ROW_V_TOP, LEFT_TOP),
+-    ...buildRow(ROW_Q, ROW_V_Q, LEFT_Q),
+-    ...buildRow(ROW_A, ROW_V_A, LEFT_A),
+-    ...buildRow(ROW_Z, ROW_V_Z, LEFT_Z),
+-    // Heavy：Space 居中超宽槽位。
+-    {
+-      keyId: 'Space',
+-      padKind: 'Heavy',
+-      u: 0.25,
+-      v: ROW_V_SPACE,
+-      width: 0.5,
+-      height: ROW_HEIGHT,
+-    },
++    ...buildRow(ROW_TOP, ROW_V_TOP),
++    ...buildRow(ROW_Q, ROW_V_Q),
++    ...buildRow(ROW_A, ROW_V_A),
++    ...buildRow(ROW_Z, ROW_V_Z),
+   ];
+   slots.forEach(assertSlotValid);
+   return { layoutVersion: PAD_LAYOUT_VERSION, slots };
+@@ -227,6 +209,37 @@ export function getSlot(
+   return layout.slots.find((slot) => slot.keyId === keyId);
+ }
+ 
++/**
++ * 用户确认的邻键容错：目标本键，以及矩形边或角直接接触的第一层邻键。
++ * 只查逻辑布局；Space、缺失键、真实间隙及内部重叠槽均不算邻居。
++ * 不递归传播，不根据距离寻找备用目标，动态目标仍由 resolveGridKeyAt 唯一确定。
++ */
++export function isMatchingGridKey(
++  layout: KeyboardPadLayout,
++  targetKeyId: ChartKeyId,
++  inputKeyId: ChartKeyId,
++): boolean {
++  if (targetKeyId === 'Space' || inputKeyId === 'Space') { return false; }
++  const target = getSlot(layout, targetKeyId);
++  const input = getSlot(layout, inputKeyId);
++  if (target === undefined || input === undefined) { return false; }
++  if ([target, input].some(slot =>
++    ![slot.u, slot.v, slot.width, slot.height].every(Number.isFinite) ||
++    slot.width <= 0 || slot.height <= 0 || slot.u < 0 || slot.v < 0 ||
++    slot.u + slot.width > 1 + GRID_CONTACT_EPSILON ||
++    slot.v + slot.height > 1 + GRID_CONTACT_EPSILON)) { return false; }
++  if (targetKeyId === inputKeyId) { return true; }
++  const horizontalGap = Math.max(target.u, input.u) -
++    Math.min(target.u + target.width, input.u + input.width);
++  const verticalGap = Math.max(target.v, input.v) -
++    Math.min(target.v + target.height, input.v + input.height);
++  // 两轴均有正面积交集是重叠，不是接触邻居；边与角接触都有效。
++  if (horizontalGap < -GRID_CONTACT_EPSILON && verticalGap < -GRID_CONTACT_EPSILON) {
++    return false;
++  }
++  return horizontalGap <= GRID_CONTACT_EPSILON && verticalGap <= GRID_CONTACT_EPSILON;
++}
++
+ /** 半开网格归属；间隙、布局外及 Space 区域无判定键。零最近键兜底。 */
+ export function resolveGridKeyAt(
+   layout: KeyboardPadLayout,
+diff --git a/src/chart/GuidanceLineRuntime.ts b/src/chart/GuidanceLineRuntime.ts
+index fbe61b6..cef5181 100644
+--- a/src/chart/GuidanceLineRuntime.ts
++++ b/src/chart/GuidanceLineRuntime.ts
+@@ -1,7 +1,7 @@
+ // B 步混合单线状态与最终节点判定；逻辑层零 cc，表现只读取快照。
+ import { GOOD_WINDOW_MS, HEAD_WINDOW_MS } from '../../constants';
+ import type { ChartKeyId, KeyboardPadLayout } from './KeyboardPadLayout';
+-import { getSlot, resolveGridKeyAt } from './KeyboardPadLayout';
++import { getSlot, isMatchingGridKey, resolveGridKeyAt } from './KeyboardPadLayout';
+ import type { Strike } from './Strike';
+ import type { ChartJudgeTier } from './ChartScore';
+ import { judgeTimeWindow } from './ChartScore';
+@@ -92,7 +92,7 @@ export class GuidanceLineRuntime {
+     const timeMs = strike.videoTimeMs;
+     const keyId = strike.keyId;
+     if (!Number.isFinite(timeMs) || timeMs < 0 || keyId === undefined ||
+-        getSlot(this.layout, keyId) === undefined || this.state === 'Exited') {
++        (keyId !== 'Space' && getSlot(this.layout, keyId) === undefined) || this.state === 'Exited') {
+       return [];
+     }
+     // 先处理严格早于边沿的到达事件，再应用边沿，最后处理同一时间的事件。
+@@ -104,14 +104,14 @@ export class GuidanceLineRuntime {
+         if (status.node.kind === 'Hold' && status.holdStarted && status.tier === null &&
+             this.getTimeAtDistance(status.node.endPathDistance) === timeMs) {
+           judgements.push(...this.resolveNode(status,
+-            !status.holdInterrupted && this.keysDown.has(status.node.keyId) ? 'Perfect' : 'Miss',
++            !status.holdInterrupted && this.hasHeldGridKey(status.node.keyId) ? 'Perfect' : 'Miss',
+             timeMs, status.node.keyId));
+         }
+       }
+       this.keysDown.delete(keyId);
+       for (const status of this.statuses) {
+         if (status.node.kind === 'Hold' && status.holdStarted && status.tier === null &&
+-            status.node.keyId === keyId && timeMs < this.getTimeAtDistance(status.node.endPathDistance)) {
++            !this.hasHeldGridKey(status.node.keyId) && timeMs < this.getTimeAtDistance(status.node.endPathDistance)) {
+           // 失败不可补救；Hold 判定对象仍持续至尾端，避免早媒体结束时提前回收起点。
+           status.holdInterrupted = true;
+         }
+@@ -138,7 +138,9 @@ export class GuidanceLineRuntime {
+     const position = positionAtPathDistance(this.line.path, this.aspectRatio,
+       this.line.speed * (timeMs - this.startedAtMs) / 1000);
+     const requiredKeyId = resolveGridKeyAt(this.layout, position);
+-    if (requiredKeyId === null || keyId !== requiredKeyId) { return Object.freeze(judgements); }
++    if (requiredKeyId === null || !isMatchingGridKey(this.layout, requiredKeyId, keyId)) {
++      return Object.freeze(judgements);
++    }
+     // 一次新的 Down 只消费一个 Tap；Drag/Hold 按到达时间自主检查按住状态。
+     const candidates = this.statuses.filter(status => status.node.kind === 'Tap' && status.tier === null)
+       .map(status => ({ status, targetTimeMs: this.getTimeAtDistance(status.node.pathDistance),
+@@ -163,7 +165,7 @@ export class GuidanceLineRuntime {
+     this.keysDown.delete(keyId);
+     for (const status of this.statuses) {
+       if (status.node.kind === 'Hold' && status.holdStarted && status.tier === null &&
+-          status.node.keyId === keyId) { status.holdInterrupted = true; }
++          !this.hasHeldGridKey(status.node.keyId)) { status.holdInterrupted = true; }
+     }
+   }
+ 
+@@ -262,14 +264,14 @@ export class GuidanceLineRuntime {
+         judgements.push(...this.resolveNode(status, 'Miss', event.timeMs, null));
+       } else if (event.kind === 'Tail' && node.kind === 'Hold') {
+         judgements.push(...this.resolveNode(status,
+-          status.holdStarted && !status.holdInterrupted && this.keysDown.has(node.keyId) ? 'Perfect' : 'Miss',
++          status.holdStarted && !status.holdInterrupted && this.hasHeldGridKey(node.keyId) ? 'Perfect' : 'Miss',
+           event.timeMs, node.keyId));
+       } else if (node.kind === 'Drag') {
+         judgements.push(...this.resolveNode(status,
+-          this.keysDown.has(node.keyId) ? 'Perfect' : 'Miss', event.timeMs, node.keyId));
++          this.hasHeldGridKey(node.keyId) ? 'Perfect' : 'Miss', event.timeMs, node.keyId));
+       } else if (node.kind === 'Hold') {
+         status.holdStarted = true;
+-        if (!this.keysDown.has(node.keyId)) {
++        if (!this.hasHeldGridKey(node.keyId)) {
+           status.holdInterrupted = true;
+         }
+       }
+@@ -283,6 +285,14 @@ export class GuidanceLineRuntime {
+     return this.startedAtMs! + distance / this.line.speed * 1000;
+   }
+ 
++  /** 目标格及直接接触邻格视为同一判定键；Hold 的有效按住集合不能出现空档。 */
++  private hasHeldGridKey(targetKeyId: ChartKeyId): boolean {
++    for (const keyId of this.keysDown) {
++      if (isMatchingGridKey(this.layout, targetKeyId, keyId)) { return true; }
++    }
++    return false;
++  }
++
+   private updateJudgmentPoint(timeMs: number): void {
+     const pathDistance = Math.max(0, Math.min(this.pathLength,
+       this.line.speed * (timeMs - this.startedAtMs!) / 1000));
+diff --git a/src/chart/ChartPremiere.ts b/src/chart/ChartPremiere.ts
+index 54499bb..7368e32 100644
+--- a/src/chart/ChartPremiere.ts
++++ b/src/chart/ChartPremiere.ts
+@@ -18,7 +18,7 @@
+ import { GOOD_WINDOW_MS } from '../../constants';
+ import type { ChartTier } from '../../constants';
+ import type { ChartKeyId, KeyboardPadLayout } from './KeyboardPadLayout';
+-import { getSlot } from './KeyboardPadLayout';
++import { getSlot, isMatchingGridKey } from './KeyboardPadLayout';
+ import type { Note, ChartData } from './Note';
+ import type { Strike } from './Strike';
+ import type { ChartPlaybackState } from './ChartPlaybackState';
+@@ -289,7 +289,7 @@ export class ChartPremiere implements ChartPremiereReader {
+     if (keyId === undefined) {
+       return; // 谱面消费必须带 keyId
+     }
+-    if (getSlot(this.layout, keyId) === undefined) {
++    if (!(this.guidance !== null && keyId === 'Space') && getSlot(this.layout, keyId) === undefined) {
+       return;
+     }
+     if (this.guidance !== null) {
+@@ -308,7 +308,7 @@ export class ChartPremiere implements ChartPremiereReader {
+       status.resolved = true;
+       status.tier = tier;
+       this.score.applyJudgement(tier, this.guideTransparencyValue);
+-      this.pushFeedback(strike.videoTimeMs, keyId, tier, true);
++      this.pushFeedback(strike.videoTimeMs, status.note.keyId, tier, true);
+       this.currentTimeMsValue = Math.max(this.currentTimeMsValue, strike.videoTimeMs);
+       this.checkCompleted(strike.videoTimeMs);
+       return;
+@@ -423,7 +423,7 @@ export class ChartPremiere implements ChartPremiereReader {
+       : this.noteStatuses.every(status => status.resolved);
+   }
+ 
+-  /** 同槽候选：返回窗内时间最近的未决 Note 下标；无则 -1。 */
++  /** 目标格及紧邻格候选：返回窗内时间最近的未决 Note 下标；无则 -1。 */
+   private findBestCandidateIndex(
+     keyId: ChartKeyId,
+     timeMs: number,
+@@ -432,7 +432,7 @@ export class ChartPremiere implements ChartPremiereReader {
+     let bestAbsolute = Number.POSITIVE_INFINITY;
+     for (let i = 0; i < this.noteStatuses.length; i++) {
+       const status = this.noteStatuses[i];
+-      if (status.resolved || status.note.keyId !== keyId) {
++      if (status.resolved || !isMatchingGridKey(this.layout, status.note.keyId, keyId)) {
+         continue;
+       }
+       const absolute = Math.abs(timeMs - status.note.timeMs);
+diff --git a/src/presentation/ChartPadView.ts b/src/presentation/ChartPadView.ts
+index 0a4c937..7a0b2a9 100644
+--- a/src/presentation/ChartPadView.ts
++++ b/src/presentation/ChartPadView.ts
+@@ -87,24 +87,11 @@ export class ChartPadView extends Component implements FrameRefreshable {
+     this.lastContainerW = 0;
+     this.lastContainerH = 0;
+     this.lineEraseEffect?.clearVisuals();
+-    if ('lines' in data) {
+-      // 引导线动态取键依赖原始网格；显示与逻辑使用同一布局。
+-      this.layout = { ...layout, slots: layout.slots.map(slot => ({ ...slot })) };
+-      this.lineEraseEffect?.bindHeadPosition(data.lines[0]?.path.points[0] ?? null);
+-      return;
+-    }
+-    this.lineEraseEffect?.bindHeadPosition(null);
+-    // Display geometry is a copy; physical key identity and logic layout stay fixed.
+-    const rows = [...new Set(layout.slots.filter(slot => slot.keyId !== 'Space').map(slot => slot.v))]
+-      .sort((a, b) => a - b);
+-    const rowHeight = 0.88 / rows.length;
+-    this.layout = { ...layout, slots: layout.slots.map(slot => {
+-      if (slot.keyId === 'Space') { return { ...slot, v: 0, height: 0.12 }; }
+-      const row = layout.slots.filter(candidate => candidate.keyId !== 'Space' && candidate.v === slot.v)
+-        .sort((a, b) => a.u - b.u);
+-      return { ...slot, u: row.findIndex(candidate => candidate.keyId === slot.keyId) / row.length,
+-        v: 0.12 + rows.indexOf(slot.v) * rowHeight, width: 1 / row.length, height: rowHeight };
+-    }) };
++    // 所有谱面显示同一逻辑网格的只读副本；不再仅在旧 Note 谱面中重排显示几何。
++    this.layout = { ...layout,
++      slots: layout.slots.filter(slot => slot.keyId !== 'Space').map(slot => ({ ...slot })) };
++    this.lineEraseEffect?.bindHeadPosition('lines' in data ? data.lines[0]?.path.points[0] ?? null : null);
++    if (this.built) { this.rebuildSlotLabels(); }
+   }
+ 
+   /** 可替换 Head LOGO 资源入口，由组合根提供 SpriteFrame。 */
+@@ -149,20 +136,7 @@ export class ChartPadView extends Component implements FrameRefreshable {
+     this.infoLabel.color = new Color(235, 240, 250, 255);
+     infoNode.setPosition(0, 0, 0);
+ 
+-    if (this.layout !== null) {
+-      for (const slot of this.layout.slots) {
+-        const labelNode = new Node(`SlotLabel-${slot.keyId}`);
+-        labelNode.layer = this.node.layer;
+-        this.node.addChild(labelNode);
+-        labelNode.addComponent(UITransform).setContentSize(60, 28);
+-        const label = labelNode.addComponent(Label);
+-        label.fontSize = 16;
+-        label.color = new Color(235, 240, 250, 140);
+-        label.string = labelOf(slot.keyId);
+-        this.slotLabelNodes.push(labelNode);
+-        this.slotLabels.push(label);
+-      }
+-    }
++    this.rebuildSlotLabels();
+ 
+     const lineNode = new Node('GuidanceLineVisuals');
+     lineNode.layer = this.node.layer;
+@@ -180,6 +154,26 @@ export class ChartPadView extends Component implements FrameRefreshable {
+     }
+   }
+ 
++  /** 切换谱面时重建可见槽位标签，避免保留旧布局的 Space 标识。 */
++  private rebuildSlotLabels(): void {
++    for (const node of this.slotLabelNodes) { node.destroy(); }
++    this.slotLabelNodes.length = 0;
++    this.slotLabels.length = 0;
++    if (this.layout === null) { return; }
++    for (const slot of this.layout.slots) {
++      const labelNode = new Node(`SlotLabel-${slot.keyId}`);
++      labelNode.layer = this.node.layer;
++      this.node.addChild(labelNode);
++      labelNode.addComponent(UITransform).setContentSize(60, 28);
++      const label = labelNode.addComponent(Label);
++      label.fontSize = 16;
++      label.color = new Color(235, 240, 250, 140);
++      label.string = labelOf(slot.keyId);
++      this.slotLabelNodes.push(labelNode);
++      this.slotLabels.push(label);
++    }
++  }
++
+   /** 帧刷新：依据首演状态绘制（FrameDriver 不停）。 */
+   onFrameRefresh(): void {
+     if (this.premiere === null) {
+@@ -258,8 +252,7 @@ export class ChartPadView extends Component implements FrameRefreshable {
+     if (width <= 0 || height <= 0) {
+       return;
+     }
+-    const aspectRatio = this.data !== null && 'lines' in this.data ? this.data.aspectRatio : null;
+-    const rect = resolveContentRect(width, height, aspectRatio);
++    const rect = resolveContentRect(width, height);
+     this.lineEraseEffect?.bindContentSize(rect.cw, rect.ch);
+     const mapX = (u: number): number => rect.cx - rect.cw / 2 + u * rect.cw;
+     const mapY = (v: number): number => rect.cy - rect.ch / 2 + v * rect.ch;
+@@ -278,7 +271,7 @@ export class ChartPadView extends Component implements FrameRefreshable {
+     this.updateInfo(state, rect, mapX, mapY);
+   }
+ 
+-  /** 绘制全部槽位（每行独立均分，Space 保留底部宽槽）。 */
++  /** 绘制全部可见槽位；默认四行独立均分全宽，键少的行格子更宽。 */
+   private drawSlots(
+     graphics: Graphics,
+     mapX: (u: number) => number,
+@@ -440,12 +433,7 @@ interface ContentRect {
+ function resolveContentRect(
+   containerW: number,
+   containerH: number,
+-  aspectRatio: number | null,
+ ): ContentRect {
+-  if (aspectRatio !== null) {
+-    const contentW = Math.min(containerW, containerH * aspectRatio);
+-    return { cx: 0, cy: 0, cw: contentW, ch: contentW / aspectRatio };
+-  }
+   return { cx: 0, cy: 0, cw: containerW, ch: containerH };
+ }
+ 
+diff --git a/assets/scripts/SceneBuilder.ts b/assets/scripts/SceneBuilder.ts
+index 000c5ca..520a978 100644
+--- a/assets/scripts/SceneBuilder.ts
++++ b/assets/scripts/SceneBuilder.ts
+@@ -1367,11 +1367,11 @@ function parseChartData(raw: unknown, layoutVersion: string): ChartData | null {
+ 
+ /**
+  * 构造确定性回退谱面（资源缺失 / 非法时）。
+- * 覆盖字母 / 数字 / Space / 符号四类槽位，保证无资源时全链路可验证。
++ * 覆盖字母 / 数字 / 符号可见槽位；Space 只用于 Head，不作为回退 Note。
+  */
+ function createFallbackChartData(layoutVersion: string): ChartData {
+   const sequence: ChartKeyId[] = [
+-    'KeyD', 'KeyF', 'Digit1', 'Space', 'KeyJ', 'KeyK', 'Comma', 'Period',
++    'KeyD', 'KeyF', 'Digit1', 'KeyG', 'KeyJ', 'KeyK', 'Comma', 'Period',
+   ];
+   const notes: Note[] = sequence.map((keyId, index) => ({
+     timeMs: 1000 + index * 500,
+diff --git a/assets/resources/chart/guidance_a.json b/assets/resources/chart/guidance_a.json
+index 5ac9e4c..c4f980b 100644
+--- a/assets/resources/chart/guidance_a.json
++++ b/assets/resources/chart/guidance_a.json
+@@ -2,7 +2,7 @@
+   "schemaVersion": 1,
+   "chartId": "guidance-a-1",
+   "tier": "Regular",
+-  "layoutVersion": "pad-layout-1",
++  "layoutVersion": "pad-layout-2",
+   "aspectRatio": 1.7777777777777777,
+   "lines": [
+     {
+diff --git a/assets/resources/chart/guidance_b.json b/assets/resources/chart/guidance_b.json
+index 4369314..19567a4 100644
+--- a/assets/resources/chart/guidance_b.json
++++ b/assets/resources/chart/guidance_b.json
+@@ -2,7 +2,7 @@
+   "schemaVersion": 1,
+   "chartId": "guidance-b-1",
+   "tier": "Regular",
+-  "layoutVersion": "pad-layout-1",
++  "layoutVersion": "pad-layout-2",
+   "aspectRatio": 1.7777777777777777,
+   "lines": [
+     {
+diff --git a/assets/resources/chart/chart_placeholder.json b/assets/resources/chart/chart_placeholder.json
+index d3f14e7..4d78b10 100644
+--- a/assets/resources/chart/chart_placeholder.json
++++ b/assets/resources/chart/chart_placeholder.json
+@@ -1,14 +1,14 @@
+ ﻿{
+   "chartId": "chart-placeholder-1",
+   "tier": "Regular",
+-  "layoutVersion": "pad-layout-1",
++  "layoutVersion": "pad-layout-2",
+   "notes": [
+     { "timeMs": 1000, "keyId": "KeyD" },
+     { "timeMs": 1500, "keyId": "KeyF" },
+     { "timeMs": 2000, "keyId": "KeyJ" },
+     { "timeMs": 2500, "keyId": "KeyK" },
+     { "timeMs": 3000, "keyId": "Digit1" },
+-    { "timeMs": 3500, "keyId": "Space" },
++    { "timeMs": 3500, "keyId": "KeyG" },
+     { "timeMs": 4000, "keyId": "Comma" },
+     { "timeMs": 4500, "keyId": "Period" },
+     { "timeMs": 5000, "keyId": "KeyS" },
+@@ -20,7 +20,7 @@
+     { "timeMs": 7500, "keyId": "Slash" },
+     { "timeMs": 8000, "keyId": "KeyD" },
+     { "timeMs": 8500, "keyId": "KeyF" },
+-    { "timeMs": 9000, "keyId": "Space" },
++    { "timeMs": 9000, "keyId": "KeyG" },
+     { "timeMs": 9500, "keyId": "Digit3" },
+     { "timeMs": 10000, "keyId": "KeyK" }
+   ]

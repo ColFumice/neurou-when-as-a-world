@@ -1,0 +1,222 @@
+{
+  "versions": {
+    "node": "22.20.0",
+    "acorn": "8.15.0",
+    "ada": "2.9.2",
+    "amaro": "1.1.2",
+    "ares": "1.34.5",
+    "brotli": "1.0.9",
+    "cjs_module_lexer": "2.1.0",
+    "cldr": "44.1",
+    "icu": "74.2",
+    "llhttp": "9.3.0",
+    "modules": "140",
+    "napi": "10",
+    "nbytes": "0.1.1",
+    "ncrypto": "0.0.1",
+    "nghttp2": "1.64.0",
+    "openssl": "0.0.0",
+    "simdjson": "3.13.0",
+    "simdutf": "7.3.3",
+    "sqlite": "3.50.4",
+    "tz": "2025b",
+    "undici": "6.21.2",
+    "unicode": "15.1",
+    "uv": "1.51.0",
+    "uvwasi": "0.0.23",
+    "v8": "14.2.231.14-electron.0",
+    "zlib": "1.3.1",
+    "zstd": "1.5.8",
+    "electron": "39.0.0",
+    "chrome": "142.0.7444.52"
+  },
+  "checks": [
+    {
+      "name": "world approach via real keyboard input",
+      "pass": true
+    },
+    {
+      "name": "deep trace after seven seconds with no missed beats",
+      "pass": true
+    },
+    {
+      "name": "world position frozen during reveal",
+      "pass": true
+    },
+    {
+      "name": "pause freezes media, judgement, ledger and world",
+      "pass": true
+    },
+    {
+      "name": "pause continue button resumes playback",
+      "pass": true
+    },
+    {
+      "name": "midway exit preserves entrance without ledger append",
+      "pass": true
+    },
+    {
+      "name": "reentry resets score progress and feedback",
+      "pass": true
+    },
+    {
+      "name": "complete returns world and ledger has exactly two records",
+      "pass": true
+    },
+    {
+      "name": "world keyboard movement restored after chart",
+      "pass": true
+    },
+    {
+      "name": "scene reload recreates single FrameDriver with resources released",
+      "pass": true
+    },
+    {
+      "name": "no runtime or shader errors",
+      "pass": true
+    }
+  ],
+  "ripple": {
+    "center": [
+      0.4973620781515099,
+      0.35603111347435
+    ],
+    "viewport": [
+      1264,
+      687
+    ],
+    "passes": 1,
+    "active": true
+  },
+  "result": {
+    "state": "Exited",
+    "ledger": [
+      {
+        "eventId": "T6_ENDPOINT_PLACEHOLDER",
+        "vector": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "VectorSchemaVersion": 1,
+        "AppendedAt": {
+          "epochMs": 1791548883707
+        },
+        "InputSource": 0,
+        "ChapterTag": {},
+        "ChartRef": {
+          "chartId": "chart-placeholder-1"
+        }
+      },
+      {
+        "eventId": "T7_COMPLETION_PLACEHOLDER",
+        "vector": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "VectorSchemaVersion": 1,
+        "AppendedAt": {
+          "epochMs": 1791548897634
+        },
+        "InputSource": 0,
+        "ChapterTag": {},
+        "ChartRef": {
+          "chartId": "chart-placeholder-1"
+        }
+      }
+    ],
+    "result": {
+      "chartId": "chart-placeholder-1",
+      "tier": "Regular",
+      "perfectCount": 20,
+      "goodCount": 0,
+      "missCount": 0,
+      "totalScore": 2000,
+      "finishedAtMs": 9994.915000000003,
+      "completed": true
+    },
+    "entered": false,
+    "world": true
+  },
+  "logs": [
+    {
+      "level": 2,
+      "message": "%cElectron Security Warning (Insecure Content-Security-Policy) font-weight: bold; This renderer process has either no Content Security\n  Policy set or a policy with \"unsafe-eval\" enabled. This exposes users of\n  this app to unnecessary security risks.\n\nFor more information and help, consult\nhttps://electronjs.org/docs/tutorial/security.\nThis warning will not show up\nonce the app is packaged."
+    },
+    {
+      "level": 0,
+      "message": "Init Base: 0.10107421875 ms"
+    },
+    {
+      "level": 0,
+      "message": "Init Infrastructure: 20.718017578125 ms"
+    },
+    {
+      "level": 0,
+      "message": "Init SubSystem: 105.248046875 ms"
+    },
+    {
+      "level": 0,
+      "message": "Init Project: 58.114013671875 ms"
+    },
+    {
+      "level": 0,
+      "message": "LoadScene scene: 32.10009765625 ms"
+    }
+  ],
+  "before": {
+    "time": 1.059909,
+    "progress": 0.05,
+    "ledger": 1,
+    "pos": {
+      "lateral": -5.935499999988828,
+      "depth": 0,
+      "vertical": 0
+    }
+  },
+  "after": {
+    "time": 1.059909,
+    "progress": 0.05,
+    "ledger": 1,
+    "pos": {
+      "lateral": -5.935499999988828,
+      "depth": 0,
+      "vertical": 0
+    }
+  }
+}

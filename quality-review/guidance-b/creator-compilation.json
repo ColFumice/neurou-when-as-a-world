@@ -1,0 +1,64 @@
+{
+  "creator": "3.8.8",
+  "target": "preview",
+  "capturedAt": "2026-10-09T16:08:34.795Z",
+  "entries": [
+    {
+      "name": "SceneBuilder.ts",
+      "source": "assets/scripts/SceneBuilder.ts",
+      "sourceSha256": "7ede37e6332828ce744ecbab0975faf3d73d83c6db09edf7515ec79d9b7e121c",
+      "chunk": "./chunks/8b/8b7eae5ef325431fd5924802b2c0ea4b14e61744.js",
+      "url": "http://localhost:7456/scripting/x/chunks/8b/8b7eae5ef325431fd5924802b2c0ea4b14e61744.js",
+      "sha256": "986c147ef4984b6d63bdd2dc354fb0335fe54472d11ed3ad6606b845e0386f64",
+      "markers": [
+        "guidance_b",
+        "未决对象沿独立时间"
+      ],
+      "servedEqualsCompilerOutput": true,
+      "pass": true
+    },
+    {
+      "name": "GuidanceLineRuntime.ts",
+      "source": "src/chart/GuidanceLineRuntime.ts",
+      "sourceSha256": "05a0615680eb719e635b47fae22f4cc4ec2bbf42bfb27ab47fd14c2dd2cae580",
+      "chunk": "./chunks/63/63f427a813d2ae759b12cf6d47faef24c479d84a.js",
+      "url": "http://localhost:7456/scripting/x/chunks/63/63f427a813d2ae759b12cf6d47faef24c479d84a.js",
+      "sha256": "022930943e1d7fece0f851da05fdd3ffc28893810e39a88a5a59238f8c9d87c9",
+      "markers": [
+        "holdRemainingPoints",
+        "holdInterrupted = true",
+        "(a.kind === 'Tail' ? 0 : 1) - (b.kind === 'Tail' ? 0 : 1)"
+      ],
+      "servedEqualsCompilerOutput": true,
+      "pass": true
+    },
+    {
+      "name": "LineEraseEffect.ts",
+      "source": "src/presentation/LineEraseEffect.ts",
+      "sourceSha256": "410c3c71949cf2b8e8b689c16e82540c8bc2c9c56d53343d3ac783cdd56896ce",
+      "chunk": "./chunks/33/33602cd2fe563b12ea97df8f9eb23f02908ad871.js",
+      "url": "http://localhost:7456/scripting/x/chunks/33/33602cd2fe563b12ea97df8f9eb23f02908ad871.js",
+      "sha256": "69b4a957dfd2946925a1d1b6e8c4e3b41d9974b43b4ec2ec6dee9d43826a1a62",
+      "markers": [
+        "drawHoldRange"
+      ],
+      "servedEqualsCompilerOutput": true,
+      "pass": true
+    },
+    {
+      "name": "GuidanceChart.ts",
+      "source": "src/chart/GuidanceChart.ts",
+      "sourceSha256": "3006f030202c742f6e606532fbd292ee11c9c4d2ddf8289ce185ab1a7b0b6735",
+      "chunk": "./chunks/2a/2afd45e8bed9e5259eefe439197fb98067934fc2.js",
+      "url": "http://localhost:7456/scripting/x/chunks/2a/2afd45e8bed9e5259eefe439197fb98067934fc2.js",
+      "sha256": "08a3e8c9a55a0caa36e329d8e5f4fbadeafa9aa2ec77d69b0148520e92726f47",
+      "markers": [
+        "slicePathByDistance"
+      ],
+      "servedEqualsCompilerOutput": true,
+      "pass": true
+    }
+  ],
+  "pass": true,
+  "unchangedThroughEvidenceCapture": true
+}

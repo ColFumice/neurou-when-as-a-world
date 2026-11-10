@@ -1,0 +1,116 @@
+{
+  "startedAt": "2026-10-26T05:01:58.065Z",
+  "error": null,
+  "demo": {},
+  "fallback": {},
+  "start": {
+    "themeBg": true,
+    "mediaVideo": {
+      "duration": 72,
+      "readyState": 4
+    },
+    "warning": null
+  },
+  "logo": {
+    "src": "http://asset.localhost/D%3A%5CProject%5CA_New_Begin%5CNeurou_official%5Cassets%5Cresources%5Cguidance%5Chead-logo.png",
+    "complete": true,
+    "naturalWidth": 172,
+    "naturalHeight": 168
+  },
+  "labels": "ASSETS\n引导 / 资源\nhead-logo\n引导 / 图片\nVIDEO\nrain-night-right-loop.mp4\n视频 / 前景\nAUDIO\ntheme.wav\n音频 / 音乐\nSFX\nsfx-hit-layer1.wav\n音频 / SFX\nSFX\nsfx-hit-layer2.wav\n音频 / SFX\nSFX\nsfx-hit-layer3.wav\n音频 / SFX\nEVENT\n事件接口\n事件 / 触发\nTRACE\n痕 / Trace\n痕 / 遮罩触发\nTEXT\n字幕\n资源 / 文本\nDRAG TO KEY\nROU",
+  "loadTheme": {
+    "hasButton": true,
+    "error": null
+  },
+  "manualBefore": {
+    "status": "STATUS / READY\nBPM / 90.00\nOFFSET / 0 ms\nMETER / 4\nCONF / 100%\nSOURCE / Manual",
+    "bpm": "90",
+    "offset": "0",
+    "bars": 64,
+    "downbeats": 16
+  },
+  "export": {
+    "length": 1853,
+    "sourceManual": true,
+    "hasBeats": true
+  },
+  "tapBpm": "116.4",
+  "manualAfter": {
+    "status": "STATUS / READY\nBPM / 90.00\nOFFSET / 0 ms\nMETER / 4\nCONF / 100%\nSOURCE / Manual",
+    "bpm": "90",
+    "offset": "0"
+  },
+  "clock": {
+    "available": true,
+    "textLength": 5769,
+    "capacity": 600,
+    "count": 8,
+    "samples": 8,
+    "first": {
+      "driftMs": -29.745000000744824,
+      "absoluteDriftMs": 29.745000000744824,
+      "status": "Stable",
+      "shouldReanchor": false,
+      "action": "None",
+      "reanchored": false,
+      "inputPaused": false,
+      "seq": 0,
+      "wallMs": 22040.900000000373,
+      "playheadMs": 471.45500000037276,
+      "telemetry": {
+        "contextTime": 4.04,
+        "timestampPerformanceTime": 22037.900000000373,
+        "timestampContextTime": 3.988063,
+        "baseLatency": 0.01,
+        "outputLatency": 0.04,
+        "contextState": "running",
+        "audioReadyState": 4,
+        "visibilityState": "visible",
+        "reanchorCount": 0,
+        "source": "timestamp"
+      }
+    },
+    "last": {
+      "driftMs": -29.637000001118395,
+      "absoluteDriftMs": 29.637000001118395,
+      "status": "Stable",
+      "shouldReanchor": false,
+      "action": "None",
+      "reanchored": false,
+      "inputPaused": false,
+      "seq": 7,
+      "wallMs": 25551.900000000373,
+      "playheadMs": 3982.562999999999,
+      "telemetry": {
+        "contextTime": 7.552,
+        "timestampPerformanceTime": 25547.800000000745,
+        "timestampContextTime": 7.4980709999999995,
+        "baseLatency": 0.01,
+        "outputLatency": 0.04,
+        "contextState": "running",
+        "audioReadyState": 4,
+        "visibilityState": "visible",
+        "reanchorCount": 0,
+        "source": "timestamp"
+      }
+    }
+  },
+  "fallbackPair": {
+    "warning": "MEDIA FALLBACK / activePairId ffffffffffffffff 不存在 · MEDIA FALLBACK / ffffffffffffffff → 58798dbd9bacfa2f",
+    "media": {
+      "duration": 8,
+      "readyState": 4
+    }
+  },
+  "fallbackImage": {
+    "visible": "true",
+    "image": {
+      "complete": true,
+      "naturalWidth": 1920,
+      "naturalHeight": 1080
+    },
+    "warning": "MEDIA FALLBACK / activePairId ffffffffffffffff 不存在 · media pair 58798dbd9bacfa2f 文件不可读，尝试回退 · media/stereoPair 无可用资源"
+  },
+  "restored": true,
+  "finishedAt": "2026-10-26T05:03:28.014Z"
+}

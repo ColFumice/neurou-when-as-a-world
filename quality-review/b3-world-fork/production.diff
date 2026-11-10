@@ -1,0 +1,1393 @@
+--- a/assets/scripts/SceneBuilder.ts
++++ b/assets/scripts/SceneBuilder.ts
+@@ -162,6 +162,7 @@
+ import type { WorldNarrativeContent } from './src/director/WorldNarrativeContent';
+ import { WorldCoreStateView } from './src/presentation/WorldCoreStateView';
+ import { WorldClearSession } from './src/director/WorldClearSession';
++import { ForkWorldClearSession } from './src/director/ForkWorldClearSession';
+ import { parseWorldNarrativeContent } from './src/director/WorldNarrativeContent';
+ import { WorldClearStorage } from './src/presentation/WorldClearStorage';
+ import { AccountMilestoneStorage } from './src/presentation/AccountMilestoneStorage';
+@@ -1410,7 +1411,8 @@
+       const milestones = new AccountMilestoneStorage();
+       const milestoneReader = Object.freeze({ getMilestoneSnapshot: () =>
+         createAccountMilestoneReader(identity.accountId, milestones.readProjection(identity.accountId)).getMilestoneSnapshot() });
+-      const world = new WorldClearSession({ accountId: identity.accountId, worldId: identity.worldId, worldKind: content.worldKind,
++      const WorldSession = this.coreSnapshot?.forkOrigin ? ForkWorldClearSession : WorldClearSession;
++      const world = new WorldSession({ accountId: identity.accountId, worldId: identity.worldId, worldKind: content.worldKind,
+         protagonistCharacterId: content.protagonistCharacterId }, content, legacy, {
+         commitRecord: record => {
+           const operation = storage.commitRecord(record, milestones);
+@@ -1419,7 +1421,7 @@
+         },
+         readRecords: () => storage.readWorldClearRecords(identity.accountId), now: () => Date.now(),
+         persistLedger: ledger => this.persistLedger(ledger),
+-      }, this.coreSnapshot?.sections.Ledger ?? undefined);
++      }, this.coreSnapshot?.sections.Ledger ?? undefined, (this.coreSnapshot?.forkOrigin)!);
+       const enqueue = (intent: PlayerIntent): void => { this.worldIntents.push(intent); };
+       const source = content.worldBossChartSource;
+       const [chartAsset, visualAsset, mediaAsset] = await Promise.all([
+@@ -1510,7 +1512,7 @@
+         this.revealSequence!.enabled = true; this.gameplayInput!.enabled = true; this.gameplayDriver!.enabled = true;
+         published = true; return true;
+       };
+-      this.stateSession = new WorldStateSession(identity.accountId, identity.worldId);
++      this.stateSession = new WorldStateSession(identity.accountId, identity.worldId, Date.now, 'Implemented');
+       this.stateSession.bindCompleteSource(() => {
+         const ledger = world.getLedgerSnapshot(), puzzle = this.capturePuzzle(ledger);
+         if (JSON.stringify(ledger) !== JSON.stringify(this.coreSnapshot?.sections.Ledger) ||
+@@ -1623,6 +1625,7 @@
+     const identity = this.worldIdentity!;
+     const candidate: WorldCoreStateSnapshot = { schemaVersion: 1, kind: 'Core', accountId: identity.accountId,
+       worldId: identity.worldId, worldKind: 'Primary', shoreOrigin: null,
++      ...(this.coreSnapshot?.forkOrigin ? { forkOrigin: this.coreSnapshot.forkOrigin } : {}),
+       revision: this.coreSnapshot === null ? 0 : this.coreSnapshot.revision + 1, capturedAt: Date.now(),
+       sections: { Ledger: ledger, PuzzleProgress: puzzle, FormatTime: this.coreSnapshot?.sections.FormatTime ?? null,
+         RecallCount: updates.RecallCount ?? this.recallSession?.getSnapshot(ledger) ?? null,
+--- a/assets/scripts/WorldFolderBuilder.ts
++++ b/assets/scripts/WorldFolderBuilder.ts
+@@ -30,6 +30,9 @@
+ import { parseWorldNarrativeContent } from './src/director/WorldNarrativeContent';
+ import { parseGuidanceChart } from './src/chart/GuidanceChart';
+ import { createDefaultKeyboardPadLayout, CHART_KEY_IDS } from './src/chart/KeyboardPadLayout';
++import { WorldForkSession, validateWorldForkPlan, rebaseWorldState } from './src/director/WorldForkSession';
++import { chartContentDigest } from './src/director/ChartArchive';
++import { WorldForkStorage } from './src/presentation/WorldForkStorage';
+ 
+ const { ccclass } = _decorator;
+ 
+@@ -66,6 +69,52 @@
+     (raw, accountId, worldId) => new WorldStateCodec().parse(raw, accountId, worldId),
+     (accountId, worldId) => this.isWorldActive(accountId, worldId));
+   private readonly formatStorage = new FormatTimeStorage(this.coreStorage);
++  private readonly forkStorage = new WorldForkStorage(undefined, undefined, {
++    validatePlan: raw => validateWorldForkPlan(raw, (state, accountId, worldId) => {
++      if (!this.directoryCompleteValidator) { throw new Error('分叉完整状态验证器尚未装配'); }
++      return this.directoryCompleteValidator(state, accountId, worldId);
++    }),
++    validateFolder: (raw, accountId) => {
++      if (raw === null) { throw new Error('分叉目录不存在'); }
++      return new WorldFolderSession(accountId, raw, () => { throw new Error('目录验证不可写入'); },
++        () => { throw new Error('目录验证不可创建'); }, () => { throw new Error('目录验证不可采样时间'); }).getSnapshot();
++    },
++    validateSource: plan => {
++      if (!this.coreStorage.hasWorldLease(plan.accountId, plan.sourceWorldId)) { throw new Error('分叉必须持有源世界租约'); }
++      const sourceRecord = this.loadFolderSession(plan.accountId).getWorldRecord(plan.sourceWorldId);
++      const source = this.directoryCompleteValidator!(this.coreStorage.readCoreState(plan.accountId, plan.sourceWorldId),
++        plan.accountId, plan.sourceWorldId);
++      if (source.revision !== plan.sourceRevision || chartContentDigest(source) !== plan.sourceDigest) {
++        throw new Error('源世界完整状态已变化；未发布分叉');
++      }
++      const inherited = rebaseWorldState(source, plan.targetWorldId, plan.targetState.forkOrigin!,
++        (raw, account, world) => this.directoryCompleteValidator!(raw, account, world));
++      if (chartContentDigest(inherited) !== chartContentDigest(plan.targetState)) {
++        throw new Error('目标状态不是当前源世界七项状态的精确继承；未发布分叉');
++      }
++      const suffix = ' 的副本'; let title = '';
++      for (const character of Array.from(sourceRecord.title)) {
++        if (title.length + character.length > 80 - suffix.length) { break; }
++        title += character;
++      }
++      if (plan.targetRecord.title !== title.trimEnd() + suffix || plan.targetRecord.description !== sourceRecord.description) {
++        throw new Error('目标目录文字不是当前来源目录的合法副本；未发布分叉');
++      }
++      const permission = createAccountMilestoneReader(plan.accountId, this.milestoneStorage.readProjection(plan.accountId));
++      if (!permission.getMilestoneSnapshot().CopyPermission) { throw new Error('尚未取得复制权限'); }
++    },
++    assertTargetLease: plan => {
++      if (!this.coreStorage.hasWorldLease(plan.accountId, plan.targetWorldId)) { throw new Error('分叉目标缺少独占租约'); }
++    },
++    writeTarget: state => {
++      if (!this.coreStorage.hasWorldLease(state.accountId, state.worldId) || !state.forkOrigin) { throw new Error('分叉暂存授权无效'); }
++      const reservation = JSON.stringify([state.accountId, state.worldId]);
++      this.creationIds.add(reservation);
++      try { this.coreStorage.saveCoreState(state, null); }
++      finally { this.creationIds.delete(reservation); }
++    },
++    deleteTargetExpected: (state, expectedRaw) => this.coreStorage.removeUnpublishedCoreState(state, expectedRaw),
++  });
+   private runtimeLease: WorldStateLease | null = null;
+   private opening = false;
+   private directoryBusy = false;
+@@ -125,8 +174,9 @@
+     let error: unknown = null;
+     let cleanupError: unknown = null;
+     try {
++      await this.prepareCoreValidator();
++      await this.recoverPendingFork(accountId);
+       await this.initializeDirectory(accountId);
+-      await this.prepareCoreValidator();
+       if (!isValid(this, true)) { return; }
+       this.folderSession = this.loadFolderSession(accountId);
+       // Tombstoned worlds never reopen; any interrupted chart cleanup is retried here.
+@@ -148,12 +198,13 @@
+           void this.createWorld(accountId, intent.title, intent.description);
+         } else if (intent.kind === 'DeleteWorld') {
+           return this.deleteWorld(accountId, intent.worldId);
+-        } else { this.folderSession.submitWorldFolderIntent(intent); }
++        } else if (intent.kind === 'WorldFork') { return this.forkWorld(accountId, intent.worldId); }
++        else { this.folderSession.submitWorldFolderIntent(intent); }
+         return undefined;
+       } }, () => this.showWorldFolder(), this.milestoneReader,
+       worldId => this.getStateSession(accountId, worldId).captureWorldState(),
+       worldId => this.getStateSession(accountId, worldId).restoreWorldState(
+-        this.stateStorage.readSnapshot(accountId, worldId)));
++        this.stateStorage.readSnapshot(accountId, worldId)), () => 'Implemented');
+     this.folderView.mount();
+     if (error !== null) { this.folderView.showStatus('世界目录未能加载：' + String(error)); }
+     else if (cleanupError !== null) { this.folderView.showStatus('世界目录已加载；已删除世界的谱面清理待刷新重试：' + String(cleanupError)); }
+@@ -165,7 +216,7 @@
+     this.loadFolderSession(accountId).getWorldRecord(worldId);
+     let session = this.stateSessions.get(worldId);
+     if (!session) {
+-      session = new WorldStateSession(accountId, worldId);
++      session = new WorldStateSession(accountId, worldId, Date.now, 'Implemented');
+       session.bindCompleteSource(() => this.coreStorage.readValidatedCoreState(accountId, worldId),
+         raw => {
+           if (!this.directoryCompleteValidator) { throw new Error('七项验证器尚未装配'); }
+@@ -179,6 +230,7 @@
+   private loadFolderSession(accountId: string, reservedWorldId?: string): WorldFolderSession {
+     let expected = this.worldStorage.readSnapshot(accountId);
+     return new WorldFolderSession(accountId, expected, snapshot => {
++      this.forkStorage.assertNoPending(accountId);
+       const previousIds = new Set((expected as { records?: readonly { worldId: string }[] } | null)?.records?.map(record => record.worldId) ?? []);
+       for (const record of snapshot.records) {
+         if (!previousIds.has(record.worldId)) { this.initializeCreatedWorld(accountId, record.worldId); }
+@@ -223,9 +275,12 @@
+     const lease = await this.coreStorage.acquireWorldLease(accountId, 'InitialWorld');
+     const creationId = JSON.stringify([accountId, 'InitialWorld']);
+     try {
+-      if (this.worldStorage.readSnapshot(accountId) !== null) { return; }
+-      this.creationIds.add(creationId);
+-      this.loadFolderSession(accountId);
++      await this.forkStorage.withDirectoryLock(accountId, () => {
++        this.forkStorage.assertNoPending(accountId);
++        if (this.worldStorage.readSnapshot(accountId) !== null) { return; }
++        this.creationIds.add(creationId);
++        this.loadFolderSession(accountId);
++      });
+     } finally { this.creationIds.delete(creationId); lease.release(); }
+   }
+ 
+@@ -236,12 +291,16 @@
+     const creationId = JSON.stringify([accountId, worldId]);
+     let lease: WorldStateLease | null = null;
+     try {
++      await this.recoverPendingFork(accountId);
+       lease = await this.coreStorage.acquireWorldLease(accountId, worldId);
+       if (!isValid(this, true)) { return; }
+       this.creationIds.add(creationId);
+-      const session = this.loadFolderSession(accountId, worldId);
+-      session.submitWorldFolderIntent({ kind: 'CreateWorld', title, description });
+-      this.folderSession = session;
++      await this.forkStorage.withDirectoryLock(accountId, () => {
++        this.forkStorage.assertNoPending(accountId);
++        const session = this.loadFolderSession(accountId, worldId);
++        session.submitWorldFolderIntent({ kind: 'CreateWorld', title, description });
++        this.folderSession = session;
++      });
+       this.showWorldFolder();
+     } catch (error: unknown) {
+       if (isValid(this, true)) { this.folderView?.showStatus('世界未能创建：' + String(error)); }
+@@ -255,10 +314,14 @@
+     let failure: unknown = null;
+     try {
+       await this.prepareCoreValidator();
++      await this.recoverPendingFork(accountId);
+       lease = await this.coreStorage.acquireWorldLease(accountId, worldId);
+-      const folder = this.loadFolderSession(accountId);
+-      folder.submitWorldFolderIntent({ kind: 'DeleteWorld', worldId });
+-      this.folderSession = folder;
++      await this.forkStorage.withDirectoryLock(accountId, () => {
++        this.forkStorage.assertNoPending(accountId);
++        const folder = this.loadFolderSession(accountId);
++        folder.submitWorldFolderIntent({ kind: 'DeleteWorld', worldId });
++        this.folderSession = folder;
++      });
+       // Directory tombstone first, then idempotent GC under the same world lease.
+       this.coreStorage.clearDeletedChartState(accountId, worldId);
+     } catch (error: unknown) { failure = error; }
+@@ -279,6 +342,47 @@
+       try { this.coreStorage.clearDeletedChartState(accountId, record.worldId); }
+       finally { lease.release(); }
+     }
++  }
++
++  /** Recovery does not consult or change the source; publication is decided by the directory. */
++  private async recoverPendingFork(accountId: string): Promise<void> {
++    const pending = this.forkStorage.readPending(accountId);
++    if (!pending) { return; }
++    const lease = await this.coreStorage.acquireWorldLease(accountId, pending.plan.targetWorldId, true);
++    try {
++      const result = await this.forkStorage.withDirectoryLock(accountId, () => this.forkStorage.recoverWorldFork(accountId));
++      if (result.kind === 'Pending' || (result.kind === 'Committed' && result.cleanupPending)) {
++        throw new Error('分叉事务待恢复；原数据保留，请刷新重试：' + result.error);
++      }
++    } finally { lease.release(); }
++  }
++
++  private async forkWorld(accountId: string, sourceWorldId: string): Promise<void> {
++    if (this.directoryBusy || this.opening || this.runtimeNode || this.retiring) { throw new Error('请返回世界文件夹后再分叉'); }
++    this.directoryBusy = true;
++    let sourceLease: WorldStateLease | null = null, targetLease: WorldStateLease | null = null;
++    let message = '';
++    try {
++      await this.prepareCoreValidator();
++      await this.recoverPendingFork(accountId);
++      sourceLease = await this.coreStorage.acquireWorldLease(accountId, sourceWorldId, true);
++      if (!isValid(this, true)) { return; }
++      const directory = this.loadFolderSession(accountId).getSnapshot();
++      const source = this.directoryCompleteValidator!(this.coreStorage.readCoreState(accountId, sourceWorldId), accountId, sourceWorldId);
++      const permission = createAccountMilestoneReader(accountId, this.milestoneStorage.readProjection(accountId));
++      const plan = new WorldForkSession(accountId, permission, {
++        createWorldId: () => 'world-' + crypto.randomUUID(), createTransactionId: () => 'fork-' + crypto.randomUUID(),
++        now: () => Date.now(), validateComplete: (raw, account, world) => this.directoryCompleteValidator!(raw, account, world),
++      }).prepareWorldFork(sourceWorldId, directory, source);
++      targetLease = await this.coreStorage.acquireWorldLease(accountId, plan.targetWorldId, true);
++      const result = await this.forkStorage.withDirectoryLock(accountId, () => this.forkStorage.commitWorldFork(plan, directory));
++      if (result.kind === 'Pending') { throw new Error('分叉尚未发布；回滚待刷新重试：' + result.error); }
++      message = result.cleanupPending ? '副本已创建；事务清理待刷新重试：' + result.error : '副本已创建，原世界保留。';
++    } finally {
++      targetLease?.release(); sourceLease?.release(); this.directoryBusy = false;
++    }
++    await this.renderWorldFolder();
++    this.folderView?.showStatus(message);
+   }
+ 
+   private prepareCoreValidator(): Promise<void> {
+@@ -345,15 +449,20 @@
+     this.opening = true;
+     let lease: WorldStateLease | null = null;
+     try {
++      await this.prepareCoreValidator();
++      await this.recoverPendingFork(accountId);
+       lease = await this.coreStorage.acquireWorldLease(accountId, entry.worldId);
+       if (!isValid(this, true)) { lease.release(); return; }
+       // Never trust an old card: re-read the account metadata immediately before opening.
+       this.folderSession = this.loadFolderSession(accountId);
+       const record = this.folderSession.getWorldRecord(entry.worldId);
+-      if (record.template === 'InitialWorld' && !this.worldFactory) { throw new Error('初始世界入口尚未接线'); }
++      const stored = this.coreStorage.readValidatedCoreState(accountId, record.worldId);
++      const isFork = stored?.forkOrigin !== undefined;
++      if (isFork) { this.directoryCompleteValidator!(stored, accountId, record.worldId); }
++      if ((record.template === 'InitialWorld' || isFork) && !this.worldFactory) { throw new Error('正式世界入口尚未接线'); }
+       const runtime = this.createRuntime(record.worldId);
+       this.runtimeLease = lease; lease = null;
+-      if (record.template === 'InitialWorld') { this.worldFactory!(runtime, { accountId, worldId: record.worldId,
++      if (record.template === 'InitialWorld' || isFork) { this.worldFactory!(runtime, { accountId, worldId: record.worldId,
+         coreStorage: this.coreStorage, lease: this.runtimeLease }); }
+       else { runtime.addComponent(MinimalWorldBuilder).bindEntry(record); }
+       this.clearViews();
+--- /dev/null
++++ b/src/director/ForkWorldClearSession.ts
+@@ -0,0 +1,36 @@
++import { WorldClearSession } from './WorldClearSession';
++import type { WorldGameplayContext, WorldClearCallbacks, WorldClearSnapshot } from './WorldClearSession';
++import type { WorldNarrativeContent } from './WorldNarrativeContent';
++import type { IntentPort } from './IntentPort';
++import type { PlayerIntent } from './PlayerIntent';
++import type { LedgerSnapshot } from './LedgerHydration';
++import { validateWorldForkOrigin } from './WorldForkOrigin';
++import type { WorldForkOrigin } from './WorldForkOrigin';
++
++/** Inherited premiere facts keep their music and score, without becoming a new account clear. */
++export class ForkWorldClearSession extends WorldClearSession {
++  private readonly inheritedPremiere: boolean;
++
++  constructor(context: WorldGameplayContext, content: WorldNarrativeContent, legacy: IntentPort,
++    callbacks: WorldClearCallbacks, hydrated: LedgerSnapshot | undefined, origin: WorldForkOrigin) {
++    if (!hydrated) { throw new Error('分叉通关接线必须具备已经校验的继承账本'); }
++    const verified = validateWorldForkOrigin(origin, context.accountId, context.worldId, hydrated);
++    const inherited = verified.inheritedCompletionEventId !== null;
++    super(context, content, legacy, inherited ? {
++      ...callbacks,
++      commitRecord: () => Promise.reject(new Error('继承的首演完成不生成本世界通关记录')),
++    } : callbacks, hydrated);
++    this.inheritedPremiere = inherited;
++  }
++
++  getWorldClearSnapshot(): WorldClearSnapshot {
++    const snapshot = super.getWorldClearSnapshot();
++    return this.inheritedPremiere ? Object.freeze({ ...snapshot, completionStatus: 'Inherited' as const,
++      completionError: null, record: null }) : snapshot;
++  }
++
++  submitFrameIntents(intents: readonly PlayerIntent[], frameDurationSeconds: number): void {
++    super.submitFrameIntents(this.inheritedPremiere ? intents.filter(intent =>
++      intent.kind !== 'EnterWorldChart' && intent.kind !== 'RetryWorldClear') : intents, frameDurationSeconds);
++  }
++}
+--- /dev/null
++++ b/src/director/ForkWorldClearSession.ts.meta
+@@ -0,0 +1 @@
++{"ver":"4.0.24","importer":"typescript","imported":true,"uuid":"70d09a85-310b-4b2e-b3f9-3d5359a58801","files":[],"subMetas":{},"userData":{}}
+--- a/src/director/IntentPort.ts
++++ b/src/director/IntentPort.ts
+@@ -1022,3 +1022,5 @@
+ export type { RecallCountSnapshot } from './RecallCountSession';
+ export type { ChartSnapshotCollection, ChartScoreSnapshot, ChartMediaIdentity, ChartVisualSnapshot } from './ChartArchive';
+ export type { WorldLinkSnapshot } from './WorldLinkSession';
++export type { WorldForkOrigin } from './WorldForkOrigin';
++export type { WorldForkPlan } from './WorldForkSession';
+--- a/src/director/WorldClearSession.ts
++++ b/src/director/WorldClearSession.ts
+@@ -25,7 +25,7 @@
+   readonly protagonistCharacterId: string;
+ }
+ 
+-export type WorldClearCompletionStatus = 'NotCleared' | 'Pending' | 'Failed' | 'Completed';
++export type WorldClearCompletionStatus = 'NotCleared' | 'Pending' | 'Failed' | 'Completed' | 'Inherited';
+ 
+ export interface WorldClearSnapshot {
+   readonly context: WorldGameplayContext;
+--- /dev/null
++++ b/src/director/WorldForkOrigin.ts
+@@ -0,0 +1,124 @@
++import type { LedgerSnapshot } from './LedgerHydration';
++import { validateLedgerNarrativeEvent } from './LedgerHydration';
++import { InputSource } from '../ledger/NarrativeEvent';
++
++/** Immutable instance provenance; this is not an eighth gameplay section. */
++export interface WorldForkOrigin {
++  readonly schemaVersion: 1;
++  readonly accountId: string;
++  readonly sourceWorldId: string;
++  readonly sourceRevision: number;
++  readonly sourceCapturedAt: number;
++  readonly targetWorldId: string;
++  readonly protagonistCharacterId: string;
++  readonly transactionId: string;
++  readonly forkedAt: number;
++  readonly inheritedCompletionEventId: string | null;
++}
++
++/** Pure validation never creates identities, samples time or repeats a premiere. */
++export function validateWorldForkOrigin(raw: unknown, accountId: string, worldId: string,
++  ledger: LedgerSnapshot | null): WorldForkOrigin {
++  identity(accountId, '账号', 64); identity(worldId, '世界');
++  const value = fields(raw, ['schemaVersion', 'accountId', 'sourceWorldId', 'sourceRevision',
++    'sourceCapturedAt', 'targetWorldId', 'protagonistCharacterId', 'transactionId',
++    'forkedAt', 'inheritedCompletionEventId'], '分叉来源');
++  identity(value.accountId, '来源账号', 64); identity(value.sourceWorldId, '来源世界');
++  identity(value.targetWorldId, '目标世界'); identity(value.protagonistCharacterId, '来源主角');
++  identity(value.transactionId, '分叉事务');
++  integer(value.sourceRevision, '来源版本'); integer(value.sourceCapturedAt, '来源捕获时刻');
++  integer(value.forkedAt, '分叉时刻');
++  if (value.schemaVersion !== 1 || value.accountId !== accountId || value.targetWorldId !== worldId ||
++      value.sourceWorldId === value.targetWorldId || value.forkedAt < value.sourceCapturedAt) {
++    throw new Error('分叉来源版本、身份或时序不匹配');
++  }
++  if (value.inheritedCompletionEventId !== null) { identity(value.inheritedCompletionEventId, '继承完成事件'); }
++  if (ledger !== null) {
++    // The content-bound Ledger validator runs first in WorldStateCodec. Read only
++    // own data here as this exported boundary can also be called independently.
++    const carrier = fields(ledger, ['schemaVersion', 'accountId', 'worldId', 'protagonistCharacterId',
++      'contentId', 'contentRevision', 'characters', 'control'], '分叉账本');
++    if (carrier.schemaVersion !== 1 || carrier.accountId !== accountId || carrier.worldId !== worldId ||
++        carrier.protagonistCharacterId !== value.protagonistCharacterId) {
++      throw new Error('分叉来源与目标账本角色身份不匹配');
++    }
++    const control = fields(carrier.control, ['selectedChoiceId', 'sphereCrossed', 'entry',
++      'eventSequence', 'completionEventId'], '分叉账本控制');
++    if (value.inheritedCompletionEventId !== null) {
++      if (control.completionEventId !== value.inheritedCompletionEventId || control.sphereCrossed !== true) {
++        throw new Error('继承完成事件与账本完成事实不匹配');
++      }
++      const entry = fields(control.entry, ['entryId', 'worldId', 'characterId', 'ChartRef', 'tier', 'source'], '继承 World 入口');
++      const reference = fields(entry.ChartRef, ['chartId', 'state'], '继承 World 入口引用');
++      if (entry.worldId !== worldId || entry.characterId !== value.protagonistCharacterId ||
++          entry.tier !== 'World' || entry.source !== 'SphereCrossing' || reference.state !== 'Entry') {
++        throw new Error('继承完成事实缺少同世界同主角的 World 入口');
++      }
++      const protagonists = array(carrier.characters, '分叉角色账本').map(item =>
++        fields(item, ['characterId', 'events'], '分叉角色账本')).filter(item =>
++        item.characterId === value.protagonistCharacterId);
++      if (protagonists.length !== 1) { throw new Error('继承完成事实缺少唯一主角账本'); }
++      const completed = array(protagonists[0].events, '分叉主角事件').map(item =>
++        validateLedgerNarrativeEvent(item)).filter(item => item.eventId === value.inheritedCompletionEventId);
++      if (completed.length !== 1 || completed[0].InputSource !== InputSource.Player ||
++          completed[0].ChartRef.state !== 'PremiereCompleted' ||
++          completed[0].ChartRef.chartId !== reference.chartId ||
++          completed[0].vector.some(component => component !== 0) ||
++          !completed[0].eventId.startsWith('WORLD_PREMIERE_COMPLETED:')) {
++        throw new Error('继承完成事实不是合法 World 首演完成引用');
++      }
++    }
++    // A null inherited witness stays null when this initially unfinished copy
++    // later completes its own first premiere. The origin itself never changes.
++  }
++  return Object.freeze({ schemaVersion: 1, accountId, sourceWorldId: value.sourceWorldId,
++    sourceRevision: value.sourceRevision, sourceCapturedAt: value.sourceCapturedAt,
++    targetWorldId: worldId, protagonistCharacterId: value.protagonistCharacterId,
++    transactionId: value.transactionId, forkedAt: value.forkedAt,
++    inheritedCompletionEventId: value.inheritedCompletionEventId as string | null });
++}
++
++function fields(raw: unknown, names: readonly string[], label: string): Record<string, unknown> {
++  if (raw === null || typeof raw !== 'object' || Array.isArray(raw)) { throw new Error(label + '格式无效'); }
++  const prototype: unknown = Object.getPrototypeOf(raw);
++  if (prototype !== Object.prototype && prototype !== null) { throw new Error(label + '原型无效'); }
++  const descriptors = Object.getOwnPropertyDescriptors(raw);
++  if (Reflect.ownKeys(descriptors).length !== names.length) { throw new Error(label + '字段无效'); }
++  const result: Record<string, unknown> = Object.create(null) as Record<string, unknown>;
++  for (const name of names) {
++    const descriptor = descriptors[name];
++    if (!descriptor || !Object.prototype.hasOwnProperty.call(descriptor, 'value')) {
++      throw new Error(label + '字段不可安全读取');
++    }
++    result[name] = descriptor.value;
++  }
++  return result;
++}
++
++function array(raw: unknown, label: string): readonly unknown[] {
++  if (!Array.isArray(raw) || Object.getPrototypeOf(raw) !== Array.prototype) { throw new Error(label + '数组无效'); }
++  const descriptors: PropertyDescriptorMap = Object.getOwnPropertyDescriptors(raw as object);
++  const length: unknown = descriptors.length?.value;
++  if (typeof length !== 'number' || !Number.isSafeInteger(length) || length < 0 ||
++      Reflect.ownKeys(descriptors).length !== length + 1) { throw new Error(label + '数组结构无效'); }
++  const result: unknown[] = [];
++  for (let index = 0; index < length; index++) {
++    const descriptor = descriptors[String(index)];
++    if (!descriptor || !Object.prototype.hasOwnProperty.call(descriptor, 'value')) {
++      throw new Error(label + '数组不可安全读取');
++    }
++    result.push(descriptor.value);
++  }
++  return result;
++}
++
++function identity(raw: unknown, label: string, maximum = 128): asserts raw is string {
++  if (typeof raw !== 'string' || raw.length < 1 || raw.length > maximum || raw !== raw.trim()) {
++    throw new Error(label + '标识无效');
++  }
++  try { encodeURIComponent(raw); } catch { throw new Error(label + '标识编码无效'); }
++}
++
++function integer(raw: unknown, label: string): asserts raw is number {
++  if (typeof raw !== 'number' || !Number.isSafeInteger(raw) || raw < 0) { throw new Error(label + '须为非负安全整数'); }
++}
+--- /dev/null
++++ b/src/director/WorldForkOrigin.ts.meta
+@@ -0,0 +1,9 @@
++{
++  "ver": "4.0.24",
++  "importer": "typescript",
++  "imported": true,
++  "uuid": "23c40e5f-a3da-42d5-a748-b4fcb6398e26",
++  "files": [],
++  "subMetas": {},
++  "userData": {}
++}
+--- /dev/null
++++ b/src/director/WorldForkSession.ts
+@@ -0,0 +1,259 @@
++import type { AccountMilestoneReader } from './AccountMilestone';
++import type { WorldFolderRecord, WorldFolderSnapshot } from './WorldFolderSession';
++import type { WorldStateSnapshot } from './WorldStateSession';
++import { isValidatedWorldStateSnapshot } from './WorldStateCodec';
++import { chartContentDigest } from './ChartArchive';
++import { validateWorldForkOrigin } from './WorldForkOrigin';
++import type { WorldForkOrigin } from './WorldForkOrigin';
++
++export interface WorldForkPlan {
++  readonly schemaVersion: 1;
++  readonly accountId: string;
++  readonly transactionId: string;
++  readonly sourceWorldId: string;
++  readonly targetWorldId: string;
++  readonly sourceRevision: number;
++  readonly sourceDigest: string;
++  readonly targetRecord: WorldFolderRecord;
++  readonly targetState: WorldStateSnapshot;
++}
++
++export interface WorldForkBindings {
++  readonly createWorldId: () => string;
++  readonly createTransactionId: () => string;
++  readonly now: () => number;
++  readonly validateComplete: (raw: unknown, accountId: string, worldId: string) => WorldStateSnapshot;
++}
++
++/** Prepares an isolated candidate. Journal persistence and publication are injected elsewhere. */
++export class WorldForkSession {
++  constructor(private readonly accountId: string, private readonly milestoneReader: AccountMilestoneReader,
++    private readonly bindings: WorldForkBindings) { identity(accountId, '账号', 64); }
++
++  prepareWorldFork(sourceWorldId: string, folder: WorldFolderSnapshot, source: WorldStateSnapshot): WorldForkPlan {
++    identity(sourceWorldId, '来源世界');
++    requireCertified(source, this.accountId, sourceWorldId);
++    requireSourceKind(source);
++    const validated = this.bindings.validateComplete(source, this.accountId, sourceWorldId);
++    requireCertified(validated, this.accountId, sourceWorldId);
++    requireSourceKind(validated);
++    if (chartContentDigest(validated) !== chartContentDigest(source)) { throw new Error('来源完整校验改变了当前检查点'); }
++    const directory = parseFolder(folder, this.accountId);
++    const record = directory.records.find(item => item.worldId === sourceWorldId);
++    if (!record || record.deletedAt !== null) { throw new Error('来源世界不存在或已删除'); }
++    const milestone = fields(this.milestoneReader.getMilestoneSnapshot(),
++      ['accountId', 'FirstWorldCleared', 'CopyPermission'], '账号里程碑读取');
++    if (milestone.accountId !== this.accountId || typeof milestone.FirstWorldCleared !== 'boolean' ||
++        typeof milestone.CopyPermission !== 'boolean' || milestone.CopyPermission !== milestone.FirstWorldCleared) {
++      throw new Error('复制权限缺少同账号合法只读投影');
++    }
++    if (!milestone.CopyPermission) { throw new Error('CopyPermissionDenied: 尚未完成首次世界通关'); }
++    // No identity/clock callback is reached until every source and permission check succeeds.
++    const targetWorldId = this.bindings.createWorldId();
++    targetId(targetWorldId);
++    if (directory.records.some(item => item.worldId === targetWorldId)) { throw new Error('目标世界标识已存在或已成为墓碑'); }
++    const transactionId = this.bindings.createTransactionId();
++    identity(transactionId, '分叉事务');
++    if (source.forkOrigin?.transactionId === transactionId) { throw new Error('分叉事务不能复用来源事务'); }
++    const forkedAt = this.bindings.now(); integer(forkedAt, '分叉时刻');
++    const origin = validateWorldForkOrigin({ schemaVersion: 1, accountId: this.accountId,
++      sourceWorldId, sourceRevision: validated.revision, sourceCapturedAt: validated.capturedAt,
++      targetWorldId, protagonistCharacterId: validated.sections.Ledger.protagonistCharacterId,
++      transactionId, forkedAt, inheritedCompletionEventId: validated.sections.Ledger.control.completionEventId },
++    this.accountId, targetWorldId, null);
++    const targetState = rebaseWorldState(validated, targetWorldId, origin, this.bindings.validateComplete);
++    const targetRecord: WorldFolderRecord = Object.freeze({ worldId: targetWorldId,
++      title: copyTitle(record.title), description: record.description, createdAt: forkedAt,
++      deletedAt: null, template: 'EmptyWorld' });
++    return validateWorldForkPlan({ schemaVersion: 1, accountId: this.accountId, transactionId,
++      sourceWorldId, targetWorldId, sourceRevision: validated.revision, sourceDigest: chartContentDigest(validated),
++      targetRecord, targetState }, this.bindings.validateComplete);
++  }
++}
++
++/** Exact seven-section inheritance with new account/world composite identities only. */
++export function rebaseWorldState(source: WorldStateSnapshot, targetWorldId: string, rawOrigin: WorldForkOrigin,
++  validateComplete: WorldForkBindings['validateComplete']): WorldStateSnapshot {
++  if (!isValidatedWorldStateSnapshot(source)) { throw new Error('CompleteSourceRequired: 重键要求七项完整认证检查点'); }
++  requireCertified(source, source.accountId, source.worldId); requireSourceKind(source); targetId(targetWorldId);
++  const origin = validateWorldForkOrigin(rawOrigin, source.accountId, targetWorldId, null);
++  if (origin.sourceWorldId !== source.worldId || origin.sourceRevision !== source.revision ||
++      origin.sourceCapturedAt !== source.capturedAt ||
++      origin.protagonistCharacterId !== source.sections.Ledger.protagonistCharacterId ||
++      origin.inheritedCompletionEventId !== source.sections.Ledger.control.completionEventId) {
++    throw new Error('分叉来源与当前完整检查点不匹配');
++  }
++  const sections = source.sections;
++  const entry = sections.Ledger.control.entry;
++  const candidate = cloneData({ schemaVersion: 1, accountId: source.accountId, worldId: targetWorldId,
++    worldKind: source.worldKind, shoreOrigin: source.shoreOrigin, revision: 0, capturedAt: origin.forkedAt,
++    kind: 'Core', forkOrigin: origin, sections: {
++      Ledger: { ...sections.Ledger, worldId: targetWorldId, control: { ...sections.Ledger.control,
++        entry: entry === null ? null : { ...entry, worldId: targetWorldId,
++          entryId: JSON.stringify([source.accountId, targetWorldId, origin.protagonistCharacterId, 'SphereCrossing']) } } },
++      PuzzleProgress: sections.PuzzleProgress.map(puzzle => ({ ...puzzle, worldId: targetWorldId })),
++      FormatTime: sections.FormatTime,
++      RecallCount: { ...sections.RecallCount, worldId: targetWorldId },
++      WorldLink: { ...sections.WorldLink, worldId: targetWorldId },
++      ChartSnapshot: { ...sections.ChartSnapshot, worldId: targetWorldId },
++      ChartScore: { ...sections.ChartScore, worldId: targetWorldId },
++    } });
++  const result = validateComplete(candidate, source.accountId, targetWorldId);
++  requireCertified(result, source.accountId, targetWorldId);
++  if (chartContentDigest(candidate) !== chartContentDigest(result)) { throw new Error('目标完整校验改变了七项继承内容'); }
++  return result;
++}
++
++/** Journal decoders reuse this boundary; storage must additionally reread and compare the source digest. */
++export function validateWorldForkPlan(raw: unknown,
++  validateComplete: WorldForkBindings['validateComplete']): WorldForkPlan {
++  const value = fields(raw, ['schemaVersion', 'accountId', 'transactionId', 'sourceWorldId', 'targetWorldId',
++    'sourceRevision', 'sourceDigest', 'targetRecord', 'targetState'], '分叉计划');
++  identity(value.accountId, '计划账号', 64); identity(value.transactionId, '计划事务');
++  identity(value.sourceWorldId, '计划来源世界'); targetId(value.targetWorldId);
++  integer(value.sourceRevision, '计划来源版本');
++  if (value.schemaVersion !== 1 || value.sourceWorldId === value.targetWorldId ||
++      typeof value.sourceDigest !== 'string' || !/^[a-f0-9]{64}$/.test(value.sourceDigest)) {
++    throw new Error('分叉计划版本、来源或摘要无效');
++  }
++  // Clone unknown data before handing it to the complete validator; accessors and aliases cannot leak through.
++  const rawState = cloneData(value.targetState);
++  const targetState = validateComplete(rawState, value.accountId, value.targetWorldId);
++  requireCertified(targetState, value.accountId, value.targetWorldId); requireSourceKind(targetState);
++  if (chartContentDigest(rawState) !== chartContentDigest(targetState) || !targetState.forkOrigin) {
++    throw new Error('分叉计划目标不是精确完整的来源实例');
++  }
++  const origin = validateWorldForkOrigin(targetState.forkOrigin, value.accountId, value.targetWorldId, targetState.sections.Ledger);
++  const targetRecord = parseRecord(value.targetRecord);
++  if (targetState.revision !== 0 || targetState.capturedAt !== origin.forkedAt ||
++      origin.sourceWorldId !== value.sourceWorldId || origin.sourceRevision !== value.sourceRevision ||
++      origin.transactionId !== value.transactionId ||
++      origin.inheritedCompletionEventId !== targetState.sections.Ledger.control.completionEventId ||
++      targetRecord.worldId !== value.targetWorldId || targetRecord.deletedAt !== null ||
++      targetRecord.template !== 'EmptyWorld' || targetRecord.createdAt !== origin.forkedAt) {
++    throw new Error('分叉计划目标身份、初始版本、目录或继承见证不匹配');
++  }
++  return Object.freeze({ schemaVersion: 1, accountId: value.accountId, transactionId: value.transactionId,
++    sourceWorldId: value.sourceWorldId, targetWorldId: value.targetWorldId, sourceRevision: value.sourceRevision,
++    sourceDigest: value.sourceDigest, targetRecord, targetState });
++}
++
++function requireCertified(raw: unknown, accountId: string, worldId: string): asserts raw is WorldStateSnapshot {
++  if (!isValidatedWorldStateSnapshot(raw) || raw.accountId !== accountId || raw.worldId !== worldId) {
++    throw new Error('CompleteSourceRequired: 分叉要求同账号当前七项完整认证检查点');
++  }
++}
++
++function requireSourceKind(source: WorldStateSnapshot): void {
++  if (source.worldKind === 'Shore' && source.shoreOrigin === 'FinalShore') {
++    throw new Error('FinalShoreForkForbidden: 最终彼岸不可复制');
++  }
++  if (source.worldKind !== 'Primary' || source.shoreOrigin !== null) {
++    throw new Error('UnsupportedSourceKind: 本批正式分叉只装配 Primary 来源');
++  }
++}
++
++function targetId(raw: unknown): asserts raw is string {
++  identity(raw, '新世界');
++  if (!/^world-[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/i.test(raw)) {
++    throw new Error('新世界标识必须由正式 UUID v4 工厂生成');
++  }
++}
++
++function parseFolder(raw: unknown, accountId: string): WorldFolderSnapshot {
++  const value = fields(raw, ['schemaVersion', 'accountId', 'records'], '来源目录');
++  if (value.schemaVersion !== 1 || value.accountId !== accountId) { throw new Error('来源目录版本或账号不匹配'); }
++  const records = array(value.records).map(item => parseRecord(item));
++  if (new Set(records.map(record => record.worldId)).size !== records.length) { throw new Error('来源目录世界标识重复'); }
++  return Object.freeze({ schemaVersion: 1, accountId, records: Object.freeze(records) });
++}
++
++function parseRecord(raw: unknown): WorldFolderRecord {
++  const value = fields(raw, ['worldId', 'title', 'description', 'createdAt', 'deletedAt', 'template'], '世界目录记录');
++  identity(value.worldId, '目录世界');
++  if (value.worldId !== 'InitialWorld' && !/^world-[A-Za-z0-9-]{1,80}$/.test(value.worldId)) { throw new Error('目录世界标识无效'); }
++  const title = text(value.title, 1, 80), description = text(value.description, 0, 300);
++  integer(value.createdAt, '目录创建时刻');
++  if (value.deletedAt !== null) { integer(value.deletedAt, '目录删除时刻'); }
++  const template = value.worldId === 'InitialWorld' ? 'InitialWorld' : 'EmptyWorld';
++  if (value.template !== template || (value.deletedAt !== null && value.deletedAt < value.createdAt)) {
++    throw new Error('目录模板或删除时刻无效');
++  }
++  return Object.freeze({ worldId: value.worldId, title, description, createdAt: value.createdAt,
++    deletedAt: value.deletedAt as number | null, template });
++}
++
++function copyTitle(source: string): string {
++  const suffix = ' 的副本'; let prefix = '';
++  for (const character of Array.from(source)) {
++    if (prefix.length + character.length > 80 - suffix.length) { break; }
++    prefix += character;
++  }
++  return prefix.trimEnd() + suffix;
++}
++
++function fields(raw: unknown, names: readonly string[], label: string): Record<string, unknown> {
++  if (raw === null || typeof raw !== 'object' || Array.isArray(raw)) { throw new Error(label + '格式无效'); }
++  const prototype: unknown = Object.getPrototypeOf(raw);
++  if (prototype !== Object.prototype && prototype !== null) { throw new Error(label + '原型无效'); }
++  const descriptors = Object.getOwnPropertyDescriptors(raw);
++  if (Reflect.ownKeys(descriptors).length !== names.length) { throw new Error(label + '字段无效'); }
++  const result: Record<string, unknown> = Object.create(null) as Record<string, unknown>;
++  for (const name of names) {
++    const descriptor = descriptors[name];
++    if (!descriptor || !Object.prototype.hasOwnProperty.call(descriptor, 'value')) { throw new Error(label + '字段不可安全读取'); }
++    result[name] = descriptor.value;
++  }
++  return result;
++}
++
++function array(raw: unknown): readonly unknown[] {
++  if (!Array.isArray(raw) || Object.getPrototypeOf(raw) !== Array.prototype) { throw new Error('分叉数组格式无效'); }
++  const descriptors: PropertyDescriptorMap = Object.getOwnPropertyDescriptors(raw as object);
++  const length: unknown = descriptors.length?.value;
++  if (typeof length !== 'number' || !Number.isSafeInteger(length) || length < 0 ||
++      Reflect.ownKeys(descriptors).length !== length + 1) { throw new Error('分叉数组结构无效'); }
++  const result: unknown[] = [];
++  for (let index = 0; index < length; index++) {
++    const descriptor = descriptors[String(index)];
++    if (!descriptor || !Object.prototype.hasOwnProperty.call(descriptor, 'value')) { throw new Error('分叉数组不可安全读取'); }
++    result.push(descriptor.value);
++  }
++  return result;
++}
++
++function cloneData(raw: unknown, ancestors = new Set<object>()): unknown {
++  if (raw === null || typeof raw === 'string' || typeof raw === 'boolean') { return raw; }
++  if (typeof raw === 'number' && Number.isFinite(raw)) { return raw; }
++  if (typeof raw !== 'object' || ancestors.has(raw)) { throw new Error('分叉检查点必须是无循环的纯数据'); }
++  ancestors.add(raw);
++  try {
++    if (Array.isArray(raw)) { return array(raw).map(item => cloneData(item, ancestors)); }
++    const prototype: unknown = Object.getPrototypeOf(raw);
++    if (prototype !== Object.prototype && prototype !== null) { throw new Error('分叉检查点原型无效'); }
++    const descriptors = Object.getOwnPropertyDescriptors(raw);
++    const result: Record<string, unknown> = Object.create(null) as Record<string, unknown>;
++    for (const key of Reflect.ownKeys(descriptors)) {
++      if (typeof key !== 'string') { throw new Error('分叉检查点不接受符号字段'); }
++      const descriptor = descriptors[key];
++      if (!Object.prototype.hasOwnProperty.call(descriptor, 'value')) { throw new Error('分叉检查点不接受访问器'); }
++      result[key] = cloneData(descriptor.value, ancestors);
++    }
++    return result;
++  } finally { ancestors.delete(raw); }
++}
++
++function identity(raw: unknown, label: string, maximum = 128): asserts raw is string {
++  if (typeof raw !== 'string' || raw.length < 1 || raw.length > maximum || raw !== raw.trim()) { throw new Error(label + '标识无效'); }
++  try { encodeURIComponent(raw); } catch { throw new Error(label + '标识编码无效'); }
++}
++
++function text(raw: unknown, minimum: number, maximum: number): string {
++  if (typeof raw !== 'string' || raw.length < minimum || raw.length > maximum || raw !== raw.trim()) { throw new Error('分叉目录文字长度无效'); }
++  try { encodeURIComponent(raw); } catch { throw new Error('分叉目录文字编码无效'); }
++  return raw;
++}
++
++function integer(raw: unknown, label: string): asserts raw is number {
++  if (typeof raw !== 'number' || !Number.isSafeInteger(raw) || raw < 0) { throw new Error(label + '须为非负安全整数'); }
++}
+--- /dev/null
++++ b/src/director/WorldForkSession.ts.meta
+@@ -0,0 +1,9 @@
++{
++  "ver": "4.0.24",
++  "importer": "typescript",
++  "imported": true,
++  "uuid": "b5f706d2-476a-4954-93e0-bc0e928e75a9",
++  "files": [],
++  "subMetas": {},
++  "userData": {}
++}
+--- a/src/director/WorldStateCodec.ts
++++ b/src/director/WorldStateCodec.ts
+@@ -4,6 +4,8 @@
+ import type { WorldLinkSnapshot } from './WorldLinkSession';
+ import type { ChartSnapshotCollection, ChartScoreSnapshot } from './ChartArchive';
+ import type { WorldStateSnapshot } from './WorldStateSession';
++import { validateWorldForkOrigin } from './WorldForkOrigin';
++import type { WorldForkOrigin } from './WorldForkOrigin';
+ 
+ /** A three-section document is deliberately distinct from the seven-section brand. */
+ export interface WorldCoreStateSnapshot {
+@@ -15,6 +17,8 @@
+   readonly revision: number;
+   readonly capturedAt: number;
+   readonly kind: 'Core';
++  /** Immutable instance provenance, separate from the seven gameplay sections. */
++  readonly forkOrigin?: WorldForkOrigin;
+   readonly sections: {
+     readonly Ledger: LedgerSnapshot | null;
+     readonly PuzzleProgress: readonly PuzzleProgressSnapshot[] | null;
+@@ -50,8 +54,9 @@
+   parse(raw: unknown, expectedAccountId?: string, expectedWorldId?: string): WorldCoreStateSnapshot {
+     if (expectedAccountId !== undefined) { identity(expectedAccountId, 64, '账号'); }
+     if (expectedWorldId !== undefined) { identity(expectedWorldId, 128, '世界'); }
++    const hasForkOrigin = Object.prototype.hasOwnProperty.call(descriptorsOf(raw), 'forkOrigin');
+     const data = fields(raw, ['schemaVersion', 'accountId', 'worldId', 'worldKind',
+-      'shoreOrigin', 'revision', 'capturedAt', 'kind', 'sections']);
++      'shoreOrigin', 'revision', 'capturedAt', 'kind', 'sections', ...(hasForkOrigin ? ['forkOrigin'] : [])]);
+     if (data.schemaVersion !== 1 || data.kind !== 'Core') { throw new Error('世界三项状态文档版本或种类不受支持'); }
+     identity(data.accountId, 64, '账号'); identity(data.worldId, 128, '世界');
+     if ((expectedAccountId !== undefined && data.accountId !== expectedAccountId) ||
+@@ -139,9 +144,15 @@
+           extensions.ChartSnapshot ?? null, Ledger)) as unknown as ChartScoreSnapshot);
+       }
+     }
++    if (hasForkOrigin && Ledger === null) { throw new Error('分叉来源头部必须关联已校验的权威账本'); }
++    const forkOrigin = hasForkOrigin ? validateWorldForkOrigin(data.forkOrigin, data.accountId, data.worldId, Ledger) : undefined;
++    if (forkOrigin && (worldKind !== 'Primary' || shoreOrigin !== null || data.capturedAt < forkOrigin.forkedAt)) {
++      throw new Error('分叉实例来源必须匹配正式 Primary 身份与创建边界');
++    }
+     return Object.freeze({ schemaVersion: 1, accountId: data.accountId, worldId: data.worldId,
+       worldKind, shoreOrigin: shoreOrigin as WorldCoreStateSnapshot['shoreOrigin'],
+       revision: data.revision, capturedAt: data.capturedAt, kind: 'Core',
++      ...(forkOrigin ? { forkOrigin } : {}),
+       sections: Object.freeze({ Ledger, PuzzleProgress, FormatTime, ...extensions }) });
+   }
+ 
+--- a/src/director/WorldStateSession.ts
++++ b/src/director/WorldStateSession.ts
+@@ -7,6 +7,7 @@
+ import type { RecallCountSnapshot } from './RecallCountSession';
+ import type { WorldLinkSnapshot } from './WorldLinkSession';
+ import type { ChartSnapshotCollection, ChartScoreSnapshot } from './ChartArchive';
++import type { WorldForkOrigin } from './WorldForkOrigin';
+ 
+ /** Only the seven-section codec can certify this brand at runtime. */
+ declare const validatedWorldState: unique symbol;
+@@ -24,6 +25,7 @@
+   readonly revision: number;
+   readonly capturedAt: number;
+   readonly kind: 'Core';
++  readonly forkOrigin?: WorldForkOrigin;
+   readonly sections: {
+     readonly Ledger: LedgerSnapshot;
+     readonly PuzzleProgress: readonly PuzzleProgressSnapshot[];
+@@ -48,7 +50,7 @@
+   readonly detail: string;
+ }
+ 
+-export type WorldForkAvailability = 'NotImplemented';
++export type WorldForkAvailability = 'NotImplemented' | 'Implemented';
+ 
+ /**
+  * Ownership contracts are metadata, never captured gameplay data. Inner indexes
+@@ -147,7 +149,6 @@
+ /** Aggregation boundary in the existing director module; no browser or cc access. */
+ export class WorldStateSession implements WorldStateReader {
+   readonly ownership = stateOwnership;
+-  readonly worldForkAvailability: WorldForkAvailability = 'NotImplemented';
+   private lastCaptureResult: WorldStateCaptureResult | null = null;
+   private coreSource: (() => WorldCoreStateSnapshot | null) | null = null;
+   private completeBinding: {
+@@ -160,6 +161,7 @@
+     private readonly accountId: string,
+     private readonly worldId: string,
+     private readonly now: () => number = Date.now,
++    readonly worldForkAvailability: WorldForkAvailability = 'NotImplemented',
+   ) {
+     validateIdentity(accountId, '账号', 64);
+     validateIdentity(worldId, '世界', 128);
+--- a/src/presentation/WorldClearView.ts
++++ b/src/presentation/WorldClearView.ts
+@@ -65,6 +65,7 @@
+     const root = this.root;
+     if (!root) { return; }
+     const snapshot = this.reader.getWorldClearSnapshot();
++    const inherited = snapshot.completionStatus === 'Inherited';
+     root.hidden = snapshot.chartActive || !this.visible;
+     root.style.display = snapshot.chartActive || !this.visible ? 'none' : 'flex';
+     root.dataset.worldKind = 'Primary';
+@@ -78,27 +79,29 @@
+     root.dataset.completionStatus = snapshot.completionStatus;
+     if (snapshot.entry) { root.dataset.entrySource = snapshot.entry.source; }
+     for (const [choiceId, button] of this.choices) {
+-      button.disabled = snapshot.selectedChoiceId !== null || snapshot.chartActive || snapshot.completionStatus === 'Completed';
++      button.disabled = snapshot.selectedChoiceId !== null || snapshot.chartActive || snapshot.completionStatus === 'Completed' || inherited;
+       button.dataset.selected = String(choiceId === snapshot.selectedChoiceId);
+     }
+     const result = root.querySelector<HTMLElement>('#rain-story-result')!;
+-    result.hidden = snapshot.selectedChoiceId === null;
++    result.hidden = snapshot.selectedChoiceId === null && !inherited;
+     const responses: Record<string, string> = {
+       'share-shelter': '她靠近伞下，轻声说：“原来等候，也可以有人陪。”',
+       'read-ticket': '车票上的字渐渐清晰。她念出那个名字，笑着把约定重新记住。',
+       'keep-promise': '她把车票收好：“那么，我们一起等。这一次，我会记得。”',
+     };
+     root.querySelector('#rain-choice-result')!.textContent = snapshot.selectedChoiceId ? responses[snapshot.selectedChoiceId] ?? '这段同行留在了记忆中。' : '';
+-    root.querySelector('#rain-world-entry-status')!.textContent = snapshot.sphereCrossed
++    root.querySelector('#rain-world-entry-status')!.textContent = inherited
++      ? '这首世界之曲的首演已经随记忆继承。' : snapshot.sphereCrossed
+       ? '记忆越过雨幕，世界之曲已经显现。' : '同行的记忆留在雨声里。';
+     const entry = root.querySelector<HTMLButtonElement>('#enter-world-boss-chart')!;
+-    entry.hidden = !snapshot.entry || snapshot.completionStatus === 'Completed';
++    entry.hidden = !snapshot.entry || snapshot.completionStatus === 'Completed' || inherited;
+     entry.disabled = !snapshot.mediaReady || snapshot.chartActive || snapshot.completionStatus === 'Pending' || snapshot.completionStatus === 'Failed';
+-    root.querySelector('#rain-entry-caption')!.textContent = snapshot.completionStatus === 'Completed'
+-      ? '这首世界之曲已经完整奏响。' : '完整聆听并演奏这首世界之曲；离开后仍可回来。';
++    root.querySelector('#rain-entry-caption')!.textContent = inherited
++      ? '通关记录不会随分叉继承。你可以选中记忆中的这段旋律，继续重演。' : snapshot.completionStatus === 'Completed'
++        ? '这首世界之曲已经完整奏响。' : '完整聆听并演奏这首世界之曲；离开后仍可回来。';
+     const record = root.querySelector<HTMLElement>('#rain-world-clear-record')!;
+     record.textContent = snapshot.record ? '世界通关：已保存 · ' + this.routeLabel(snapshot.record.routeSignature.divergenceAxis)
+-      : snapshot.completionStatus === 'Pending' ? '世界通关：正在保存' : '世界通关：未完成';
++      : inherited ? '世界通关：记录未继承' : snapshot.completionStatus === 'Pending' ? '世界通关：正在保存' : '世界通关：未完成';
+     record.dataset.recordCount = snapshot.record ? '1' : '0';
+     record.dataset.completionEventId = snapshot.record?.completionEventId ?? '';
+     try {
+--- a/src/presentation/WorldCoreStateStorage.ts
++++ b/src/presentation/WorldCoreStateStorage.ts
+@@ -3,6 +3,7 @@
+ /** Browser capability; the callback must remain pending until its lease is released. */
+ export interface WorldStateLock {
+   request<T>(name: string, operation: () => Promise<T>): Promise<T>;
++  requestIfAvailable?<T>(name: string, operation: () => Promise<T>): Promise<T>;
+ }
+ 
+ export interface WorldStateLease {
+@@ -56,17 +57,23 @@
+     return raw === null ? null : this.validate(raw, accountId, worldId);
+   }
+ 
++  hasWorldLease(accountId: string, worldId: string): boolean {
++    return this.leases.get(this.key(accountId, worldId))?.active === true;
++  }
++
+   /** Acquire once per runtime identity. A missing Web Locks capability rejects. */
+-  async acquireWorldLease(accountId: string, worldId: string): Promise<WorldStateLease> {
++  async acquireWorldLease(accountId: string, worldId: string, ifAvailable = false): Promise<WorldStateLease> {
+     const key = this.key(accountId, worldId);
+     if (this.worldLock === null) { throw new Error('当前环境没有世界独占锁；未激活世界或写入存储'); }
++    if (ifAvailable && !this.worldLock.requestIfAvailable) { throw new Error('当前环境不能检查源世界占用状态；未执行分叉'); }
+     if (this.leases.has(key)) { throw new Error('本实例已持有或正在取得该世界独占锁'); }
+     const pending = { active: false, release: null as (() => void) | null };
+     this.leases.set(key, pending);
+     return new Promise<WorldStateLease>((resolve, reject) => {
+       const remove = (): void => { if (this.leases.get(key) === pending) { this.leases.delete(key); } };
+       let request: Promise<void>;
+-      try { request = this.worldLock!.request('neurou-world-state:' + encodeURIComponent(accountId) + ':' +
++      const requestLock = ifAvailable ? this.worldLock!.requestIfAvailable!.bind(this.worldLock) : this.worldLock!.request.bind(this.worldLock);
++      try { request = requestLock('neurou-world-state:' + encodeURIComponent(accountId) + ':' +
+         encodeURIComponent(worldId), async () => {
+         pending.active = true;
+         await new Promise<void>(release => {
+@@ -119,6 +126,9 @@
+       // In particular, an old missing FormatTime cannot be fabricated on re-entry.
+       throw new Error('世界创建时刻不可修改或补写；历史缺失值保持不可用');
+     }
++    if (prior !== null && JSON.stringify(candidate.forkOrigin) !== JSON.stringify(prior.forkOrigin)) {
++      throw new Error('世界分叉实例来源不可补写、改写或删除');
++    }
+     if (prior !== null) { preservePriorState(prior, candidate); }
+     if (prior !== null) { preserveExtendedState(prior, candidate); }
+     this.storage.setItem(key, JSON.stringify(candidate));
+@@ -138,6 +148,22 @@
+     if (!Number.isSafeInteger(revision)) { throw new Error('清理版本溢出'); }
+     const next = this.validate({ ...prior, revision, sections: { ...prior.sections, ChartSnapshot: null, ChartScore: null } }, accountId, worldId);
+     this.storage.setItem(key, JSON.stringify(next));
++  }
++
++  /** Journal rollback only: never removes an active directory world or unrelated bytes. */
++  removeUnpublishedCoreState(expected: WorldCoreStateSnapshot, expectedRaw: string): void {
++    const identity = snapshotIdentity(expected);
++    const key = this.key(identity.accountId, identity.worldId);
++    if (!this.hasWorldLease(identity.accountId, identity.worldId) || !this.isActive ||
++        this.isActive(identity.accountId, identity.worldId)) { throw new Error('仅未发布目标及其世界租约可以回滚暂存状态'); }
++    const candidate = this.validate(expected, identity.accountId, identity.worldId);
++    const currentRaw = this.storage.getItem(key);
++    if (currentRaw === null) { return; }
++    if (currentRaw !== expectedRaw || JSON.stringify(this.readValidatedCoreState(identity.accountId, identity.worldId)) !== JSON.stringify(candidate) ||
++        candidate.revision !== 0 || !candidate.forkOrigin) { throw new Error('回滚目标与分叉暂存候选不匹配；原数据保留'); }
++    const removable = this.storage as Pick<Storage, 'getItem' | 'setItem'> & Partial<Pick<Storage, 'removeItem'>>;
++    if (!removable.removeItem) { throw new Error('持久化适配器未提供分叉回滚删除能力'); }
++    removable.removeItem(key);
+   }
+ 
+   private validate(raw: unknown, accountId: string, worldId: string): WorldCoreStateSnapshot {
+@@ -242,7 +268,12 @@
+ function browserWorldLock(): WorldStateLock | null {
+   if (typeof navigator === 'undefined' || navigator.locks === undefined) { return null; }
+   return { request: <T>(name: string, operation: () => Promise<T>): Promise<T> =>
+-    navigator.locks.request(name, { mode: 'exclusive' }, operation) };
++    navigator.locks.request(name, { mode: 'exclusive' }, operation),
++    requestIfAvailable: <T>(name: string, operation: () => Promise<T>): Promise<T> =>
++      navigator.locks.request(name, { mode: 'exclusive', ifAvailable: true }, lock => {
++        if (lock === null) { throw new Error('源世界正在使用；返回文件夹后再分叉'); }
++        return operation();
++      }) };
+ }
+ 
+ function validId(raw: unknown, maximum: number, label: string): asserts raw is string {
+--- a/src/presentation/WorldFolderView.ts
++++ b/src/presentation/WorldFolderView.ts
+@@ -1,12 +1,13 @@
+ import type { WorldFolderEntry, WorldFolderReader } from './FolderCatalog';
+ import type {
+-  WorldFolderPort, AccountMilestoneReader, WorldStateCaptureResult, WorldStateRestoreResult,
++  WorldFolderPort, AccountMilestoneReader, WorldStateCaptureResult, WorldStateRestoreResult, WorldForkAvailability,
+ } from '../director/IntentPort';
+ import { applyFolderTheme } from './FolderTheme';
+ 
+ // AC-29 灰盒：只读取目录并发出导航回调，不持有世界运行实例。
+ export class WorldFolderView {
+   private root: HTMLElement | null = null;
++  private forkPending = false;
+ 
+   constructor(
+     private readonly reader: WorldFolderReader,
+@@ -17,6 +18,7 @@
+     private readonly milestones?: AccountMilestoneReader,
+     private readonly inspectWorldState?: (worldId: string) => WorldStateCaptureResult,
+     private readonly checkWorldRestore?: (worldId: string) => WorldStateRestoreResult,
++    private readonly forkAvailability?: () => WorldForkAvailability,
+   ) {}
+ 
+   mount(): void {
+@@ -46,7 +48,7 @@
+       #world-folder button.folder-small{padding:8px 14px;min-height:0;width:auto}
+       #world-folder .folder-world-card{background:var(--folder-panel);border:1px solid var(--folder-border);border-radius:4px;overflow:hidden}
+       #world-folder button.folder-open{display:block;min-height:116px;border:0;border-radius:0;padding:20px 24px}
+-      #world-folder .folder-actions{display:flex;gap:10px;padding:10px 24px;border-top:1px solid var(--folder-border)}
++      #world-folder .folder-actions{display:flex;gap:10px;padding:10px 24px;border-top:1px solid var(--folder-border);flex-wrap:wrap;align-items:center}#world-folder .folder-actions button:disabled{cursor:default;opacity:.5}#world-folder .fork-hint{font-size:13px;color:var(--folder-muted);flex-basis:100%}
+       #world-folder .folder-title{overflow-wrap:anywhere}#world-folder .folder-description{overflow-wrap:anywhere;white-space:pre-wrap}
+       #world-folder .folder-panel{padding:20px;background:var(--folder-panel);border:1px solid var(--folder-muted);border-radius:4px;margin-bottom:16px}
+       #world-folder .folder-panel h3{margin:0 0 12px;font-size:19px}#world-folder label{display:grid;gap:6px;margin-bottom:12px}
+@@ -84,7 +86,7 @@
+           <section id="world-state-diagnostics" class="folder-panel folder-state-panel" aria-labelledby="world-state-title" hidden>
+             <h3 id="world-state-title">世界状态诊断</h3><p id="world-state-world-title"></p>
+             <p id="world-state-capture-kind" role="status"></p><ul id="world-state-diagnostic-list"></ul>
+-            <p>状态捕获基础接口已接入；完整状态恢复尚未实施。</p>
++            <p>打开世界以恢复稳定记忆。</p>
+             <button class="folder-small" id="world-state-restore-reject" type="button">检查恢复可用性</button>
+             <p id="world-state-restore-status" role="status" aria-live="polite"></p>
+           </section>
+@@ -118,7 +120,10 @@
+ 
+   refresh(): void {
+     if (!this.root) { return; }
++    if (this.forkAvailability && this.forkPending) { this.root.dataset.pending = 'true'; }
++    else { delete this.root.dataset.pending; }
+     this.refreshMilestones();
++    const availability = this.refreshForkAvailability();
+     this.root.querySelector<HTMLElement>('#world-state-diagnostics')!.hidden = true;
+     const worlds = this.root.querySelector('#folder-worlds')!;
+     worlds.replaceChildren();
+@@ -140,14 +145,31 @@
+       button.onclick = () => this.openWorld(entry);
+       const actions = document.createElement('div'); actions.className = 'folder-actions';
+       const fork = this.actionButton('分叉', 'fork-world', entry.worldId);
+-      fork.onclick = () => {
+-        try { this.port.submitWorldFolderIntent({ kind: 'WorldFork', worldId: entry.worldId }); }
++      if (this.forkAvailability) {
++        const eligibility = this.readForkEligibility(entry, availability);
++        fork.disabled = this.forkPending || !eligibility.available;
++        fork.dataset.available = String(eligibility.available);
++        fork.title = eligibility.message;
++        const hint = document.createElement('span'); hint.className = 'fork-hint'; hint.textContent = eligibility.message;
++        actions.appendChild(hint);
++      }
++      fork.onclick = async () => {
++        if (this.forkPending) { return; }
++        this.forkPending = true;
++        if (this.forkAvailability) { this.refresh(); this.showStatus('正在分叉世界…'); }
++        try {
++          await Promise.resolve(this.port.submitWorldFolderIntent({ kind: 'WorldFork', worldId: entry.worldId }));
++          if (this.forkAvailability && this.root) { this.reload(); this.showStatus('世界已分叉，选择新的世界继续。'); }
++        }
+         catch (error) {
+           if (error instanceof Error && error.message === '分叉尚未开放') {
+             this.refreshMilestones();
+             const permission = this.root!.querySelector('#account-copy-permission')!.textContent;
+             this.showStatus(permission + '；分叉功能尚未实施。');
+           } else { this.showStatus(String(error)); }
++        } finally {
++          this.forkPending = false;
++          if (this.forkAvailability) { this.refresh(); }
+         }
+       };
+       const remove = this.actionButton('删除', 'delete-world', entry.worldId);
+@@ -182,6 +204,37 @@
+       label.textContent = '复制权限读取失败：' + String(error);
+       label.dataset.readState = 'Error';
+     }
++  }
++
++  private refreshForkAvailability(): WorldForkAvailability | null {
++    const label = this.root!.querySelector<HTMLElement>('#world-fork-availability')!;
++    try {
++      const availability = this.forkAvailability?.() ?? 'NotImplemented';
++      label.dataset.availability = availability;
++      label.textContent = availability === 'Implemented' ? '完整的普通世界可以分叉' : '分叉功能尚未实施';
++      return availability;
++    } catch (error) {
++      label.dataset.availability = 'Unavailable'; label.textContent = '分叉状态暂时无法读取';
++      return null;
++    }
++  }
++
++  private readForkEligibility(entry: WorldFolderEntry, availability: WorldForkAvailability | null): {
++    readonly available: boolean; readonly message: string;
++  } {
++    if (availability !== 'Implemented') { return { available: false, message: availability === null ? '分叉状态暂时无法读取，请刷新重试。' : '分叉功能尚未实施。' }; }
++    try {
++      const permission = this.milestones?.getMilestoneSnapshot();
++      if (!permission || permission.accountId !== this.reader.getAccountId()) { throw new Error('复制权限身份不匹配'); }
++      if (!permission.CopyPermission) { return { available: false, message: '完成首个世界后取得复制权限。' }; }
++      const capture = this.inspectWorldState?.(entry.worldId);
++      if (capture?.kind !== 'Complete') { return { available: false, message: '先在世界中留下完整的稳定记忆，再回来分叉。' }; }
++      if (capture.snapshot.accountId !== this.reader.getAccountId() || capture.snapshot.worldId !== entry.worldId) { throw new Error('世界记忆身份不匹配'); }
++      if (capture.snapshot.worldKind !== 'Primary' || capture.snapshot.shoreOrigin !== null) {
++        return { available: false, message: '当前仅支持普通世界分叉。' };
++      }
++      return { available: true, message: '保留这段世界记忆，分叉成一个新的世界。' };
++    } catch (error) { return { available: false, message: '世界记忆或复制权限暂时无法读取，请刷新重试。' }; }
+   }
+ 
+   private showStateDiagnostics(entry: WorldFolderEntry): void {
+--- /dev/null
++++ b/src/presentation/WorldForkStorage.ts
+@@ -0,0 +1,277 @@
++import type { WorldForkPlan, WorldFolderSnapshot, WorldStateSnapshot } from '../director/IntentPort';
++import type { WorldStateLock } from './WorldCoreStateStorage';
++
++export interface WorldForkStorageBindings {
++  validatePlan(raw: unknown): WorldForkPlan;
++  validateFolder(raw: unknown, accountId: string): WorldFolderSnapshot;
++  /** Re-read active, Complete source under the source world lease. */
++  validateSource(plan: WorldForkPlan): void;
++  /** Must reject before a journal write unless this target's world lease is held. */
++  assertTargetLease(plan: WorldForkPlan): void;
++  writeTarget(state: WorldStateSnapshot): void;
++  /** Root verifies the target is unpublished and the exact expected bytes still exist. */
++  deleteTargetExpected(state: WorldStateSnapshot, expectedRaw: string): void;
++}
++
++export type WorldForkCommitResult =
++  | { readonly kind: 'Committed'; readonly transactionId: string; readonly targetWorldId: string;
++      readonly cleanupPending: boolean; readonly error: string | null }
++  | { readonly kind: 'Pending'; readonly transactionId: string; readonly targetWorldId: string;
++      readonly phase: 'Rollback'; readonly error: string };
++
++export type WorldForkRecoveryResult = WorldForkCommitResult
++  | { readonly kind: 'NoPending' }
++  | { readonly kind: 'RolledBack'; readonly transactionId: string; readonly targetWorldId: string };
++
++interface WorldForkJournal {
++  readonly schemaVersion: 1;
++  readonly kind: 'PendingWorldFork';
++  readonly accountId: string;
++  readonly plan: WorldForkPlan;
++}
++
++/**
++ * A short-lived journal bridges two atomic localStorage writes. The target Core
++ * precedes directory publication; the directory append is the sole commit point.
++ * No source state, account fact or long-lived lineage registry is written here.
++ */
++export class WorldForkStorage {
++  private readonly directoryAccounts = new Set<string>();
++  private readonly mutationAccounts = new Set<string>();
++
++  constructor(
++    private readonly storage: Pick<Storage, 'getItem' | 'setItem' | 'removeItem'> = localStorage,
++    private readonly locks: WorldStateLock | null = browserDirectoryLock(),
++    private readonly bindings?: WorldForkStorageBindings,
++  ) {}
++
++  /** World leases are acquired outside this final lock, never inside its callback. */
++  async withDirectoryLock<T>(accountId: string, operation: () => T | Promise<T>): Promise<T> {
++    validId(accountId, 64, '账号');
++    if (this.locks === null) { throw new Error('当前环境没有目录独占锁；未写入世界分叉或目录'); }
++    if (this.directoryAccounts.has(accountId)) { throw new Error('同一账号目录锁不可重入'); }
++    return this.locks.request('neurou-world-folder:' + encodeURIComponent(accountId), async () => {
++      if (this.directoryAccounts.has(accountId)) { throw new Error('目录锁适配器没有提供独占访问'); }
++      this.directoryAccounts.add(accountId);
++      try { return await operation(); }
++      finally { this.directoryAccounts.delete(accountId); }
++    });
++  }
++
++  /** Pure inspection lets the root discover a pending target before taking its lease. */
++  readPending(accountId: string): WorldForkJournal | null {
++    validId(accountId, 64, '账号');
++    const bytes = this.storage.getItem(this.journalKey(accountId));
++    if (bytes === null) { return null; }
++    const raw = parseJson(bytes, '世界分叉日志');
++    const value = fields(raw, ['schemaVersion', 'kind', 'accountId', 'plan']);
++    if (value.schemaVersion !== 1 || value.kind !== 'PendingWorldFork' || value.accountId !== accountId) {
++      throw new Error('世界分叉日志版本、类型或账号不匹配；原始数据已保留');
++    }
++    const plan = this.plan(value.plan);
++    if (plan.accountId !== accountId) { throw new Error('世界分叉日志计划与账号不匹配'); }
++    return Object.freeze({ schemaVersion: 1, kind: 'PendingWorldFork', accountId, plan });
++  }
++
++  /** Every ordinary directory create/delete writer shares this guard and lock. */
++  assertNoPending(accountId: string): void {
++    this.requireDirectoryLock(accountId);
++    if (this.readPending(accountId) !== null) { throw new Error('世界分叉事务尚未恢复；目录操作未发布，请刷新重试'); }
++  }
++
++  /** Synchronous journal, target and folder writes inside the held directory lock. */
++  commitWorldFork(raw: WorldForkPlan, expectedFolder: unknown): WorldForkCommitResult {
++    const plan = this.plan(raw);
++    return this.mutate(plan.accountId, () => {
++      const bindings = this.requireBindings();
++      requireSynchronous(bindings.assertTargetLease(plan), '目标租约检查');
++      this.assertNoPending(plan.accountId);
++      const current = this.readFolder(plan.accountId);
++      if (current.records.some(record => record.worldId === plan.targetWorldId)) {
++        if (this.published(plan)) { this.verifyTarget(plan); return committed(plan, false, null); }
++      }
++      requireSynchronous(bindings.validateSource(plan), '来源权威检查');
++      const expected = bindings.validateFolder(expectedFolder, plan.accountId);
++      if (JSON.stringify(current) !== JSON.stringify(expected)) { throw new Error('世界目录已变化；拒绝陈旧分叉计划'); }
++      if (this.targetBytes(plan) !== null) {
++        throw new Error('分叉目标标识已存在或曾被删除；禁止覆盖');
++      }
++      const folder = bindings.validateFolder({ ...current, records: [...current.records, plan.targetRecord] }, plan.accountId);
++      const journal: WorldForkJournal = { schemaVersion: 1, kind: 'PendingWorldFork', accountId: plan.accountId, plan };
++      // An atomic journal failure has no other side effect and needs no rollback.
++      this.storage.setItem(this.journalKey(plan.accountId), JSON.stringify(journal));
++      try {
++        requireSynchronous(bindings.writeTarget(plan.targetState), '目标持久提交');
++        this.verifyTarget(plan);
++        // Compare again immediately before the commit point; callbacks cannot erase another directory update.
++        if (JSON.stringify(this.readFolder(plan.accountId)) !== JSON.stringify(current)) {
++          throw new Error('世界目录已在暂存期间变化；目标未发布');
++        }
++        this.storage.setItem(this.folderKey(plan.accountId), JSON.stringify(folder));
++      } catch (error: unknown) {
++        // The published record decides the outcome even if an adapter threw after a successful atomic write.
++        const published = this.published(plan);
++        if (published) { return this.finishCommitted(plan); }
++        try { this.rollback(plan); }
++        catch (rollbackError: unknown) { return pending(plan, errorText(error) + '；回滚待重试：' + errorText(rollbackError)); }
++        throw error;
++      }
++      return this.finishCommitted(plan);
++    });
++  }
++
++  /** Recovery only needs the pending target lease; source changes cannot undo a committed fork. */
++  recoverWorldFork(accountId: string): WorldForkRecoveryResult {
++    return this.mutate(accountId, () => {
++      const journal = this.readPending(accountId);
++      if (journal === null) { return Object.freeze({ kind: 'NoPending' as const }); }
++      const plan = journal.plan;
++      requireSynchronous(this.requireBindings().assertTargetLease(plan), '目标租约检查');
++      if (this.published(plan)) {
++        // No gameplay may open a pending target. Its original staged document must still match.
++        if (this.targetBytes(plan) === null) { requireSynchronous(this.requireBindings().writeTarget(plan.targetState), '目标持久提交'); }
++        this.verifyTarget(plan);
++        return this.finishCommitted(plan);
++      }
++      try { this.rollback(plan); }
++      catch (error: unknown) { return pending(plan, errorText(error)); }
++      return Object.freeze({ kind: 'RolledBack' as const, transactionId: plan.transactionId, targetWorldId: plan.targetWorldId });
++    });
++  }
++
++  private published(plan: WorldForkPlan): boolean {
++    const record = this.readFolder(plan.accountId).records.find(value => value.worldId === plan.targetWorldId);
++    if (record === undefined) { return false; }
++    if (JSON.stringify(record) !== JSON.stringify(plan.targetRecord)) {
++      throw new Error('分叉目标目录记录与日志冲突；原始目录、状态与日志均保留');
++    }
++    return true;
++  }
++
++  private verifyTarget(plan: WorldForkPlan): string {
++    const bytes = this.targetBytes(plan);
++    if (bytes === null || JSON.stringify(parseJson(bytes, '分叉目标状态')) !== JSON.stringify(plan.targetState)) {
++      throw new Error('分叉目标状态与完整暂存计划不一致；原始数据已保留');
++    }
++    return bytes;
++  }
++
++  private rollback(plan: WorldForkPlan): void {
++    const bytes = this.targetBytes(plan);
++    if (bytes !== null) {
++      this.verifyTarget(plan);
++      requireSynchronous(this.requireBindings().deleteTargetExpected(plan.targetState, bytes), '目标暂存回滚');
++      if (this.targetBytes(plan) !== null) { throw new Error('分叉暂存状态尚未成功移除'); }
++    }
++    this.removeJournal(plan);
++  }
++
++  private finishCommitted(plan: WorldForkPlan): WorldForkCommitResult {
++    try {
++      this.verifyTarget(plan);
++      this.removeJournal(plan);
++      return committed(plan, false, null);
++    } catch (error: unknown) { return committed(plan, true, errorText(error)); }
++  }
++
++  private removeJournal(plan: WorldForkPlan): void {
++    const current = this.readPending(plan.accountId);
++    if (current === null || JSON.stringify(current.plan) !== JSON.stringify(plan)) {
++      throw new Error('世界分叉日志已变化；禁止清理其他事务');
++    }
++    this.storage.removeItem(this.journalKey(plan.accountId));
++    if (this.storage.getItem(this.journalKey(plan.accountId)) !== null) { throw new Error('世界分叉日志清理未完成'); }
++  }
++
++  private plan(raw: unknown): WorldForkPlan {
++    const value = this.requireBindings().validatePlan(raw);
++    const data = fields(value, ['schemaVersion', 'accountId', 'transactionId', 'sourceWorldId', 'targetWorldId',
++      'sourceRevision', 'sourceDigest', 'targetRecord', 'targetState']);
++    if (data.schemaVersion !== 1) { throw new Error('分叉计划版本不受支持'); }
++    validId(data.accountId, 64, '账号'); validId(data.transactionId, 128, '分叉事务');
++    validId(data.sourceWorldId, 128, '来源世界'); validId(data.targetWorldId, 128, '目标世界');
++    if (data.sourceWorldId === data.targetWorldId || typeof data.sourceRevision !== 'number' ||
++        !Number.isSafeInteger(data.sourceRevision) || data.sourceRevision < 0 ||
++        typeof data.sourceDigest !== 'string' || !/^[0-9a-f]{64}$/u.test(data.sourceDigest)) {
++      throw new Error('分叉来源版本、摘要或新目标身份无效');
++    }
++    const state = data.targetState as WorldStateSnapshot;
++    const record = data.targetRecord as WorldForkPlan['targetRecord'];
++    if (state.accountId !== data.accountId || state.worldId !== data.targetWorldId || state.revision !== 0 ||
++        record.worldId !== data.targetWorldId || record.deletedAt !== null) { throw new Error('分叉目标状态与目录身份不一致'); }
++    return value;
++  }
++
++  private readFolder(accountId: string): WorldFolderSnapshot {
++    const bytes = this.storage.getItem(this.folderKey(accountId));
++    if (bytes === null) { throw new Error('世界目录不存在；分叉事务未发布'); }
++    return this.requireBindings().validateFolder(parseJson(bytes, '世界目录'), accountId);
++  }
++
++  private mutate<T>(accountId: string, operation: () => T): T {
++    this.requireDirectoryLock(accountId);
++    if (this.mutationAccounts.has(accountId)) { throw new Error('世界分叉存储提交不可重入'); }
++    this.mutationAccounts.add(accountId);
++    try { return operation(); }
++    finally { this.mutationAccounts.delete(accountId); }
++  }
++
++  private requireDirectoryLock(accountId: string): void {
++    validId(accountId, 64, '账号');
++    if (!this.directoryAccounts.has(accountId)) { throw new Error('世界分叉和目录操作须持有同一账号目录独占锁'); }
++  }
++  private requireBindings(): WorldForkStorageBindings {
++    if (this.bindings === undefined) { throw new Error('世界分叉完整验证器及持租约写入能力尚未装配'); }
++    return this.bindings;
++  }
++  private targetBytes(plan: WorldForkPlan): string | null {
++    return this.storage.getItem('neurou-world-state-v1:' + encodeURIComponent(plan.accountId) + ':' + encodeURIComponent(plan.targetWorldId));
++  }
++  private folderKey(accountId: string): string { return 'neurou-world-folder-v1:' + encodeURIComponent(accountId); }
++  private journalKey(accountId: string): string { return 'neurou-world-fork-journal-v1:' + encodeURIComponent(accountId); }
++}
++
++function committed(plan: WorldForkPlan, cleanupPending: boolean, error: string | null): WorldForkCommitResult {
++  return Object.freeze({ kind: 'Committed', transactionId: plan.transactionId, targetWorldId: plan.targetWorldId, cleanupPending, error });
++}
++function pending(plan: WorldForkPlan, error: string): WorldForkCommitResult {
++  return Object.freeze({ kind: 'Pending', transactionId: plan.transactionId, targetWorldId: plan.targetWorldId, phase: 'Rollback', error });
++}
++function errorText(error: unknown): string { return error instanceof Error ? error.message : String(error); }
++function requireSynchronous(result: unknown, label: string): void {
++  if (result !== null && (typeof result === 'object' || typeof result === 'function') &&
++      typeof (result as { then?: unknown }).then === 'function') {
++    // Observe accidental async failures, but never treat their unresolved result as durable authority.
++    void Promise.resolve(result).catch(() => undefined);
++    throw new Error(label + '必须同步完成；未将 Promise 当作持久成功');
++  }
++}
++function parseJson(bytes: string, label: string): unknown {
++  try { return JSON.parse(bytes) as unknown; }
++  catch { throw new Error(label + ' JSON 损坏；原始数据已保留'); }
++}
++function validId(value: unknown, maximum: number, label: string): asserts value is string {
++  if (typeof value !== 'string' || !value || value !== value.trim() || value.length > maximum) { throw new Error(label + '标识无效'); }
++  try { encodeURIComponent(value); } catch { throw new Error(label + '标识编码无效'); }
++}
++function fields(raw: unknown, names: readonly string[]): Record<string, unknown> {
++  try {
++    if (raw === null || typeof raw !== 'object' || Array.isArray(raw)) { throw new Error(); }
++    const prototype: unknown = Object.getPrototypeOf(raw);
++    if (prototype !== Object.prototype && prototype !== null) { throw new Error(); }
++    const descriptors = Object.getOwnPropertyDescriptors(raw);
++    if (Reflect.ownKeys(descriptors).length !== names.length) { throw new Error(); }
++    const data: Record<string, unknown> = Object.create(null) as Record<string, unknown>;
++    for (const name of names) {
++      const descriptor = descriptors[name];
++      if (!descriptor || !Object.prototype.hasOwnProperty.call(descriptor, 'value')) { throw new Error(); }
++      data[name] = descriptor.value;
++    }
++    return data;
++  } catch { throw new Error('世界分叉日志或计划须为严格自有数据字段'); }
++}
++function browserDirectoryLock(): WorldStateLock | null {
++  if (typeof navigator === 'undefined' || navigator.locks === undefined) { return null; }
++  return { request: <T>(name: string, operation: () => Promise<T>): Promise<T> =>
++    navigator.locks.request(name, { mode: 'exclusive' }, operation) };
++}
+--- /dev/null
++++ b/src/presentation/WorldForkStorage.ts.meta
+@@ -0,0 +1,9 @@
++{
++  "ver": "4.0.24",
++  "importer": "typescript",
++  "imported": true,
++  "uuid": "65dfeb3b-ab53-4a7c-993e-3f366654a31e",
++  "files": [],
++  "subMetas": {},
++  "userData": {}
++}

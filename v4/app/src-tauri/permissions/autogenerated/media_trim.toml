@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-media-trim"
+description = "Enables the media_trim command without any pre-configured scope."
+commands.allow = ["media_trim"]
+
+[[permission]]
+identifier = "deny-media-trim"
+description = "Denies the media_trim command without any pre-configured scope."
+commands.deny = ["media_trim"]

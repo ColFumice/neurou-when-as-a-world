@@ -1,0 +1,1553 @@
+diff --git a/src/chart/GuidanceChart.ts b/src/chart/GuidanceChart.ts
+index 48eb5a8..33e620d 100644
+--- a/src/chart/GuidanceChart.ts
++++ b/src/chart/GuidanceChart.ts
+@@ -1,9 +1,10 @@
+ // 独立引导线谱面数据；冻结名依据名库 v2.6 / v2.7。
+-// 纯数据与路径数学，零 cc。版本化多线格式：v1 单线，v2 非空多线。
++// 纯数据与路径数学，零 cc。v1 单线/v2 多线固定速率；v3 多线绝对卡点。
+ import type { ChartTier } from '../../constants';
+-import { HEAD_WINDOW_MS } from '../../constants';
++import { GOOD_WINDOW_MS, HEAD_WINDOW_MS } from '../../constants';
+ import type { ChartKeyId, KeyboardPadLayout } from './KeyboardPadLayout';
+ import { CHART_KEY_IDS, getSlot } from './KeyboardPadLayout';
++import { getLineTimeAnchors } from './GuidanceTiming';
+ 
+ /** 仅覆盖路径计算的浮点误差，不改变节点时间或判定窗口。 */
+ const PATH_CALCULATION_EPSILON = Number.EPSILON * 32;
+@@ -57,13 +58,28 @@ export interface GuidanceLine {
+   readonly nodes: readonly GuidanceNode[];
+ }
+ 
++/** v3 时间表与既有节点数据分离；颜色始终不在玩法数据中。 */
++export interface GuidanceNodeTiming {
++  readonly nodeId: string;
++  readonly targetTimeMs: number;
++  readonly endTargetTimeMs?: number;
++}
++
++export interface TimedGuidanceLine {
++  readonly id: string;
++  readonly head: HeadNode & { readonly targetTimeMs: number };
++  readonly path: NodePath;
++  readonly nodes: readonly GuidanceNode[];
++  readonly timing: readonly GuidanceNodeTiming[];
++}
++
+ export interface GuidanceChart {
+-  readonly schemaVersion: 1 | 2;
++  readonly schemaVersion: 1 | 2 | 3;
+   readonly chartId: string;
+   readonly tier: ChartTier;
+   readonly layoutVersion: string;
+   readonly aspectRatio: number;
+-  readonly lines: readonly GuidanceLine[];
++  readonly lines: readonly (GuidanceLine | TimedGuidanceLine)[];
+ }
+ 
+ export interface JudgmentPoint {
+@@ -271,8 +287,8 @@ function assertTurnsHaveNodes(path: NodePath, aspectRatio: number, nodes: readon
+ export function parseGuidanceChart(raw: unknown, layout: KeyboardPadLayout): GuidanceChart {
+   const source = requireRecord(raw, '谱面');
+   requireFields(source, ['schemaVersion', 'chartId', 'tier', 'layoutVersion', 'aspectRatio', 'lines'], '谱面');
+-  if (source.schemaVersion !== 1 && source.schemaVersion !== 2) {
+-    throw new Error('GuidanceChart: 仅支持 schemaVersion=1 或 2');
++  if (source.schemaVersion !== 1 && source.schemaVersion !== 2 && source.schemaVersion !== 3) {
++    throw new Error('GuidanceChart: 仅支持 schemaVersion=1、2 或 3');
+   }
+   if (source.layoutVersion !== layout.layoutVersion) {
+     throw new Error(`GuidanceChart: 布局版本不匹配，拒绝加载 (${String(source.layoutVersion)} / ${layout.layoutVersion})`);
+@@ -288,15 +304,17 @@ export function parseGuidanceChart(raw: unknown, layout: KeyboardPadLayout): Gui
+   }
+   if (!Array.isArray(source.lines) || source.lines.length === 0 ||
+       (source.schemaVersion === 1 && source.lines.length !== 1)) {
+-    throw new Error('GuidanceChart: v1 必须恰一条线，v2 至少一条线');
++    throw new Error('GuidanceChart: v1 必须恰一条线，v2/v3 至少一条线');
+   }
+   const identities = new Set<string>();
+   const lines = source.lines.map(rawLine => {
+     const lineSource = requireRecord(rawLine, '引导线');
+-    requireFields(lineSource, ['id', 'head', 'path', 'speed', 'nodes'], '引导线');
++    const timed = source.schemaVersion === 3;
++    requireFields(lineSource, timed ? ['id', 'head', 'path', 'timing', 'nodes']
++      : ['id', 'head', 'path', 'speed', 'nodes'], '引导线');
+     const id = requireId(lineSource.id, 'line.id', identities);
+     const headSource = requireRecord(lineSource.head, 'Head');
+-    requireFields(headSource, ['id', 'spawnTimeMs'], 'Head');
++    requireFields(headSource, timed ? ['id', 'spawnTimeMs', 'targetTimeMs'] : ['id', 'spawnTimeMs'], 'Head');
+     const headId = requireId(headSource.id, 'head.id', identities);
+     const spawnTimeMs = requireFinite(headSource.spawnTimeMs, 'spawnTimeMs');
+     if (spawnTimeMs < 0) {
+@@ -329,7 +347,7 @@ export function parseGuidanceChart(raw: unknown, layout: KeyboardPadLayout): Gui
+     if (!Number.isFinite(length) || length <= 0) {
+       throw new Error('GuidanceChart: 路径必须包含两个不同点且弧长有限');
+     }
+-    const speed = requireFinite(lineSource.speed, 'speed');
++    const speed = timed ? 1 : requireFinite(lineSource.speed, 'speed');
+     if (speed <= 0) {
+       throw new Error('GuidanceChart: speed 必须为正');
+     }
+@@ -340,6 +358,39 @@ export function parseGuidanceChart(raw: unknown, layout: KeyboardPadLayout): Gui
+     nodes.sort((left, right) => left.pathDistance - right.pathDistance ||
+       (left.id < right.id ? -1 : left.id > right.id ? 1 : 0));
+     assertTurnsHaveNodes(path, aspectRatio, nodes);
++    if (timed) {
++      const targetTimeMs = requireFinite(headSource.targetTimeMs, 'Head.targetTimeMs');
++      if (targetTimeMs !== spawnTimeMs) { throw new Error('GuidanceChart: v3 Head 生成时间必须等于目标时间'); }
++      if (!Array.isArray(lineSource.timing) || lineSource.timing.length !== nodes.length) {
++        throw new Error('GuidanceChart: 每节点必须恰有一项 timing');
++      }
++      const seen = new Set<string>();
++      const timing = lineSource.timing.map(rawTiming => {
++        const item = requireRecord(rawTiming, 'timing');
++        const node = nodes.find(n => n.id === item.nodeId);
++        if (!node) { throw new Error('GuidanceChart: timing 引用未知节点'); }
++        requireFields(item, node.kind === 'Hold' ? ['nodeId', 'targetTimeMs', 'endTargetTimeMs']
++          : ['nodeId', 'targetTimeMs'], 'timing');
++        const nodeId = requireId(item.nodeId, 'timing.nodeId', seen);
++        const time = requireFinite(item.targetTimeMs, 'targetTimeMs');
++        if (time <= targetTimeMs || !Number.isFinite(time + GOOD_WINDOW_MS)) {
++          throw new Error('GuidanceChart: 节点目标必须晚于 Head 且判定窗口有限');
++        }
++        if (node.kind !== 'Hold') { return Object.freeze({ nodeId, targetTimeMs: time }); }
++        const endTargetTimeMs = requireFinite(item.endTargetTimeMs, 'endTargetTimeMs');
++        if (endTargetTimeMs <= time) { throw new Error('GuidanceChart: Hold 尾端时间必须晚于起点'); }
++        return Object.freeze({ nodeId, targetTimeMs: time, endTargetTimeMs });
++      });
++      const line: TimedGuidanceLine = Object.freeze({ id,
++        head: Object.freeze({ id: headId, spawnTimeMs, targetTimeMs }), path,
++        nodes: Object.freeze(nodes), timing: Object.freeze(timing),
++      });
++      const anchors = getLineTimeAnchors(line);
++      if (anchors[anchors.length - 1].pathDistance !== length) {
++        throw new Error('GuidanceChart: v3 最后时间锚点必须覆盖完整路径');
++      }
++      return line;
++    }
+     if (!Number.isFinite((length / speed) * 1000) ||
+         !Number.isFinite(spawnTimeMs + HEAD_WINDOW_MS + (length / speed) * 1000)) {
+       throw new Error('GuidanceChart: 路径运行时间超出有限数值范围');
+
+diff --git a/src/chart/GuidanceLineRuntime.ts b/src/chart/GuidanceLineRuntime.ts
+index d4697b5..960af96 100644
+--- a/src/chart/GuidanceLineRuntime.ts
++++ b/src/chart/GuidanceLineRuntime.ts
+@@ -2,11 +2,12 @@
+ import { GOOD_WINDOW_MS, HEAD_WINDOW_MS } from '../../constants';
+ import type { ChartKeyId, KeyboardPadLayout } from './KeyboardPadLayout';
+ import { getSlot, isMatchingGridKey, resolveGridKeyAt } from './KeyboardPadLayout';
++import { guidanceDistanceAtTime, guidanceNodeTime } from './GuidanceTiming';
+ import type { Strike } from './Strike';
+ import type { ChartJudgeTier } from './ChartScore';
+ import { judgeTimeWindow } from './ChartScore';
+ import type {
+-  GuidanceChart, GuidanceLine, GuidanceNode, GuidancePosition, HeadNode, JudgmentPoint,
++  GuidanceChart, GuidanceLine, TimedGuidanceLine, GuidanceNode, GuidancePosition, HeadNode, JudgmentPoint,
+ } from './GuidanceChart';
+ import {
+   measurePathLength, parseGuidanceChart, positionAtPathDistance, slicePathByDistance,
+@@ -65,7 +66,7 @@ function compareIdentity(a: string, b: string): number {
+ 
+ /** 单线 Polyline；公共生命周期及暂停闸门仍归 ChartPremiere。 */
+ export class GuidanceLineRuntime {
+-  private readonly line: GuidanceLine;
++  private readonly line: GuidanceLine | TimedGuidanceLine;
+   private readonly statuses: GuidanceNodeStatus[];
+   private readonly aspectRatio: number;
+   private readonly pathLength: number;
+@@ -105,7 +106,7 @@ export class GuidanceLineRuntime {
+       // Hold 恰在尾端松开有效：尾端结算先于同时间 Up。
+       for (const status of this.statuses) {
+         if (status.node.kind === 'Hold' && status.holdStarted && status.tier === null &&
+-            this.getTimeAtDistance(status.node.endPathDistance) === timeMs) {
++            guidanceNodeTime(this.line, this.startedAtMs!, status.node, true) === timeMs) {
+           judgements.push(...this.resolveNode(status,
+             !status.holdInterrupted && this.hasHeldGridKey(status.node.keyId) ? 'Perfect' : 'Miss',
+             timeMs, status.node.keyId));
+@@ -114,7 +115,7 @@ export class GuidanceLineRuntime {
+       this.keysDown.delete(keyId);
+       for (const status of this.statuses) {
+         if (status.node.kind === 'Hold' && status.holdStarted && status.tier === null &&
+-            !this.hasHeldGridKey(status.node.keyId) && timeMs < this.getTimeAtDistance(status.node.endPathDistance)) {
++            !this.hasHeldGridKey(status.node.keyId) && timeMs < guidanceNodeTime(this.line, this.startedAtMs!, status.node, true)) {
+           // 失败不可补救；Hold 判定对象仍持续至尾端，避免早媒体结束时提前回收起点。
+           status.holdInterrupted = true;
+         }
+@@ -139,14 +140,14 @@ export class GuidanceLineRuntime {
+       return Object.freeze(judgements);
+     }
+     const position = positionAtPathDistance(this.line.path, this.aspectRatio,
+-      this.line.speed * (timeMs - this.startedAtMs) / 1000);
++      guidanceDistanceAtTime(this.line, this.startedAtMs, timeMs));
+     const requiredKeyId = resolveGridKeyAt(this.layout, position);
+     if (requiredKeyId === null || !isMatchingGridKey(this.layout, requiredKeyId, keyId)) {
+       return Object.freeze(judgements);
+     }
+     // 一次新的 Down 只消费一个 Tap；Drag/Hold 按到达时间自主检查按住状态。
+     const candidates = this.statuses.filter(status => status.node.kind === 'Tap' && status.tier === null)
+-      .map(status => ({ status, targetTimeMs: this.getTimeAtDistance(status.node.pathDistance),
++      .map(status => ({ status, targetTimeMs: guidanceNodeTime(this.line, this.startedAtMs!, status.node),
+         lineId: this.line.id, nodeId: status.node.id }))
+       .filter(item => Math.abs(timeMs - item.targetTimeMs) <= GOOD_WINDOW_MS)
+       .sort((a, b) => Math.abs(timeMs - a.targetTimeMs) - Math.abs(timeMs - b.targetTimeMs) ||
+@@ -168,11 +169,11 @@ export class GuidanceLineRuntime {
+     if (this.state !== 'Running' || this.startedAtMs === null || keyId === undefined ||
+         this.keysDown.has(keyId) || timeMs < this.currentTimeMs) { return null; }
+     const position = positionAtPathDistance(this.line.path, this.aspectRatio,
+-      this.line.speed * (timeMs - this.startedAtMs) / 1000);
++      guidanceDistanceAtTime(this.line, this.startedAtMs, timeMs));
+     const required = resolveGridKeyAt(this.layout, position);
+     if (required === null || !isMatchingGridKey(this.layout, required, keyId)) { return null; }
+     const candidates = this.statuses.filter(item => item.node.kind === 'Tap' && item.tier === null)
+-      .map(item => ({ targetTimeMs: this.getTimeAtDistance(item.node.pathDistance), nodeId: item.node.id }))
++      .map(item => ({ targetTimeMs: guidanceNodeTime(this.line, this.startedAtMs!, item.node), nodeId: item.node.id }))
+       .filter(item => Math.abs(timeMs - item.targetTimeMs) <= GOOD_WINDOW_MS)
+       .sort((a, b) => Math.abs(timeMs - a.targetTimeMs) - Math.abs(timeMs - b.targetTimeMs) ||
+         a.targetTimeMs - b.targetTimeMs || compareIdentity(a.nodeId, b.nodeId));
+@@ -222,10 +223,10 @@ export class GuidanceLineRuntime {
+     const nodes: readonly GuidanceNodeSnapshot[] = Object.freeze(this.statuses.map(status => {
+       const node = status.node;
+       const holdActive = node.kind === 'Hold' && this.startedAtMs !== null &&
+-        this.currentTimeMs >= this.getTimeAtDistance(node.pathDistance) &&
+-        this.currentTimeMs < this.getTimeAtDistance(node.endPathDistance) && this.state === 'Running';
++        this.currentTimeMs >= guidanceNodeTime(this.line, this.startedAtMs!, node) &&
++        this.currentTimeMs < guidanceNodeTime(this.line, this.startedAtMs!, node, true) && this.state === 'Running';
+       const disappearAtMs = status.tier === null ? null : node.kind === 'Hold' && this.startedAtMs !== null
+-        ? this.getTimeAtDistance(node.endPathDistance) : status.resolvedAtMs;
++        ? guidanceNodeTime(this.line, this.startedAtMs!, node, true) : status.resolvedAtMs;
+       const holdRemainingPoints = holdActive && node.kind === 'Hold' && this.judgmentPoint !== null
+         ? slicePathByDistance(this.line.path, this.aspectRatio,
+           Math.max(node.pathDistance, this.judgmentPoint.pathDistance), node.endPathDistance)
+@@ -263,14 +264,14 @@ export class GuidanceLineRuntime {
+       const node = status.node;
+       if (status.tier !== null) { continue; }
+       if (node.kind === 'Tap') {
+-        events.push({ status, timeMs: this.getTimeAtDistance(node.pathDistance) + GOOD_WINDOW_MS,
++        events.push({ status, timeMs: guidanceNodeTime(this.line, this.startedAtMs!, node) + GOOD_WINDOW_MS,
+           distance: node.pathDistance, kind: 'TapTimeout' });
+       } else if (node.kind === 'Drag' || !status.holdStarted) {
+-        events.push({ status, timeMs: this.getTimeAtDistance(node.pathDistance),
++        events.push({ status, timeMs: guidanceNodeTime(this.line, this.startedAtMs!, node),
+           distance: node.pathDistance, kind: 'Arrival' });
+       }
+       if (node.kind === 'Hold') {
+-        events.push({ status, timeMs: this.getTimeAtDistance(node.endPathDistance),
++        events.push({ status, timeMs: guidanceNodeTime(this.line, this.startedAtMs!, node, true),
+           distance: node.endPathDistance, kind: 'Tail' });
+       }
+     }
+@@ -290,10 +291,10 @@ export class GuidanceLineRuntime {
+           event.timeMs, node.keyId));
+       } else if (node.kind === 'Drag') {
+         judgements.push(...this.resolveNode(status,
+-          this.hasHeldGridKey(node.keyId) ? 'Perfect' : 'Miss', event.timeMs, node.keyId));
++          event.timeMs >= this.startedAtMs && this.hasHeldGridKey(node.keyId) ? 'Perfect' : 'Miss', event.timeMs, node.keyId));
+       } else if (node.kind === 'Hold') {
+         status.holdStarted = true;
+-        if (!this.hasHeldGridKey(node.keyId)) {
++        if (event.timeMs < this.startedAtMs || !this.hasHeldGridKey(node.keyId)) {
+           status.holdInterrupted = true;
+         }
+       }
+@@ -303,9 +304,6 @@ export class GuidanceLineRuntime {
+     return Object.freeze(judgements);
+   }
+ 
+-  private getTimeAtDistance(distance: number): number {
+-    return this.startedAtMs! + distance / this.line.speed * 1000;
+-  }
+ 
+   /** 目标格及直接接触邻格视为同一判定键；Hold 的有效按住集合不能出现空档。 */
+   private hasHeldGridKey(targetKeyId: ChartKeyId): boolean {
+@@ -317,7 +315,7 @@ export class GuidanceLineRuntime {
+ 
+   private updateJudgmentPoint(timeMs: number): void {
+     const pathDistance = Math.max(0, Math.min(this.pathLength,
+-      this.line.speed * (timeMs - this.startedAtMs!) / 1000));
++      guidanceDistanceAtTime(this.line, this.startedAtMs!, timeMs)));
+     this.judgmentPoint = Object.freeze({
+       position: positionAtPathDistance(this.line.path, this.aspectRatio, pathDistance), pathDistance,
+     });
+
+diff --git a/src/presentation/LineEraseEffect.ts b/src/presentation/LineEraseEffect.ts
+index 73c55e8..2d94067 100644
+--- a/src/presentation/LineEraseEffect.ts
++++ b/src/presentation/LineEraseEffect.ts
+@@ -23,6 +23,7 @@ export class LineEraseEffect extends Component implements FrameRefreshable {
+   private graphics: Graphics | null = null;
+   private headSprite: Sprite | null = null;
+   private readonly headSprites = new Map<string, Sprite>();
++  private readonly nodeColors = new Map<string, { readonly r: number; readonly g: number; readonly b: number }>();
+   private headLogo: SpriteFrame | null = null;
+   private headPosition: { readonly u: number; readonly v: number } | null = null;
+ 
+@@ -31,6 +32,12 @@ export class LineEraseEffect extends Component implements FrameRefreshable {
+     this.clearVisuals();
+   }
+ 
++  /** 可选表现输入；不把颜色写入 chart 或判定对象。 */
++  bindNodeColors(items: readonly { readonly nodeId: string; readonly color: { readonly r: number; readonly g: number; readonly b: number } }[]): void {
++    this.nodeColors.clear();
++    for (const item of items) { this.nodeColors.set(item.nodeId, { ...item.color }); }
++  }
++
+   /** LOGO 由组合根提供；组件不拥有或销毁该共享资源。 */
+   bindHeadLogo(logo: SpriteFrame): void {
+     this.headLogo = logo;
+@@ -169,6 +176,12 @@ export class LineEraseEffect extends Component implements FrameRefreshable {
+       if (item.holdActive) {
+         this.drawHoldRange(item.holdRemainingPoints, height * NODE_SIZE_RATIO, alpha, height, mapX, mapY);
+       }
++      const color = this.nodeColors.get(item.node.id);
++      if (color !== undefined) {
++        graphics.fillColor = new Color(color.r, color.g, color.b, nodeAlpha);
++        graphics.rect(x - size * 0.2, y - size * 0.2, size * 0.4, size * 0.4);
++        graphics.fill();
++      }
+     }
+ 
+     // 持续区间用白边长条替代圆判定点；只使用逻辑快照中的当前剩余区间。
+
+diff --git a/assets/scripts/SceneBuilder.ts b/assets/scripts/SceneBuilder.ts
+index 099d4f7..4395eb2 100644
+--- a/assets/scripts/SceneBuilder.ts
++++ b/assets/scripts/SceneBuilder.ts
+@@ -141,6 +141,7 @@ import { createDefaultKeyboardPadLayout, CHART_KEY_IDS } from './src/chart/Keybo
+ import { ChartPremiere, CHART_MEDIA_END_TIMEOUT_MS } from './src/chart/ChartPremiere';
+ import { parseGuidanceChart } from './src/chart/GuidanceChart';
+ import type { GuidanceChart } from './src/chart/GuidanceChart';
++import { GuidanceEditorBuilder } from './GuidanceEditorBuilder';
+ import type { RhythmStrike } from './src/trace/RhythmStrike';
+ import type { ChartData, Note } from './src/chart/Note';
+ import type {
+@@ -347,6 +348,11 @@ export class SceneBuilder extends Component {
+     const parentTransform = this.node.parent?.getComponent(UITransform);
+     rootTransform.setContentSize(parentTransform?.width ?? screen.windowSize.width,
+       parentTransform?.height ?? screen.windowSize.height);
++    if (typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('guidanceEditor') === '1') {
++      this.node.addComponent(GuidanceEditorBuilder);
++      this.enabled = false;
++      return;
++    }
+     // —— 输入监听注册（与 onDestroy 的 off 成对；T6） ——
+     // ① autoplay 解锁：浏览器要求 AudioContext 在用户手势内
+     //    启动 / 恢复；首次鼠标按下或键盘按下时起播 BGM 并启动
+
+diff --git a/src/chart/GuidanceTiming.ts b/src/chart/GuidanceTiming.ts
+new file mode 100644
+index 0000000..ca932b6
+--- /dev/null
++++ b/src/chart/GuidanceTiming.ts
+@@ -0,0 +1,51 @@
++import type { GuidanceLine, GuidanceNode, TimedGuidanceLine } from './GuidanceChart';
++
++export interface GuidanceTimeAnchor {
++  readonly pathDistance: number;
++  readonly targetTimeMs: number;
++}
++
++/** 时间升序、弧长非递减：支持原位重复音的停留段，不引入重合路径顶点。 */
++export function getLineTimeAnchors(line: TimedGuidanceLine): readonly GuidanceTimeAnchor[] {
++  const anchors: GuidanceTimeAnchor[] = [{ pathDistance: 0, targetTimeMs: line.head.targetTimeMs }];
++  for (const item of line.timing) {
++    const node = line.nodes.find(n => n.id === item.nodeId)!;
++    anchors.push({ pathDistance: node.pathDistance, targetTimeMs: item.targetTimeMs });
++    if (node.kind === 'Hold') {
++      anchors.push({ pathDistance: node.endPathDistance, targetTimeMs: item.endTargetTimeMs! });
++    }
++  }
++  anchors.sort((a, b) => a.targetTimeMs - b.targetTimeMs || a.pathDistance - b.pathDistance);
++  for (let i = 1; i < anchors.length; i += 1) {
++    if (anchors[i].pathDistance < anchors[i - 1].pathDistance ||
++        (anchors[i].targetTimeMs === anchors[i - 1].targetTimeMs &&
++          anchors[i].pathDistance !== anchors[i - 1].pathDistance)) {
++      throw new Error('GuidanceChart: v3 时间锚点不能倒退，同刻只能对应同一距离');
++    }
++  }
++  return Object.freeze(anchors.map(a => Object.freeze(a)));
++}
++
++export function guidanceDistanceAtTime(line: GuidanceLine | TimedGuidanceLine,
++  startedAtMs: number, timeMs: number): number {
++  if (!('timing' in line)) { return Math.max(0, line.speed * (timeMs - startedAtMs) / 1000); }
++  const anchors = getLineTimeAnchors(line);
++  if (timeMs <= anchors[0].targetTimeMs) { return 0; }
++  for (let i = 1; i < anchors.length; i += 1) {
++    const a = anchors[i - 1], b = anchors[i];
++    if (timeMs <= b.targetTimeMs) {
++      return b.targetTimeMs === a.targetTimeMs ? b.pathDistance : a.pathDistance +
++        (b.pathDistance - a.pathDistance) * (timeMs - a.targetTimeMs) / (b.targetTimeMs - a.targetTimeMs);
++    }
++  }
++  return anchors[anchors.length - 1].pathDistance;
++}
++
++export function guidanceNodeTime(line: GuidanceLine | TimedGuidanceLine,
++  startedAtMs: number, node: GuidanceNode, tail = false): number {
++  if ('timing' in line) {
++    const item = line.timing.find(t => t.nodeId === node.id)!;
++    return tail ? item.endTargetTimeMs! : item.targetTimeMs;
++  }
++  return startedAtMs + (tail && node.kind === 'Hold' ? node.endPathDistance : node.pathDistance) / line.speed * 1000;
++}
+
+diff --git a/src/chart/GuidanceTiming.ts.meta b/src/chart/GuidanceTiming.ts.meta
+new file mode 100644
+index 0000000..17a3b02
+--- /dev/null
++++ b/src/chart/GuidanceTiming.ts.meta
+@@ -0,0 +1,9 @@
++{
++  "ver": "4.0.24",
++  "importer": "typescript",
++  "imported": true,
++  "uuid": "46e534f1-681d-4df1-9c1c-8f7a9607ddc3",
++  "files": [],
++  "subMetas": {},
++  "userData": {}
++}
+\ No newline at end of file
+
+diff --git a/src/editor.meta b/src/editor.meta
+new file mode 100644
+index 0000000..135626e
+--- /dev/null
++++ b/src/editor.meta
+@@ -0,0 +1,9 @@
++{
++  "ver": "1.2.0",
++  "importer": "directory",
++  "imported": true,
++  "uuid": "d104cdc1-6435-49bc-8526-6970642b505c",
++  "files": [],
++  "subMetas": {},
++  "userData": {}
++}
+\ No newline at end of file
+
+diff --git a/src/editor/GuidanceEditorSession.ts b/src/editor/GuidanceEditorSession.ts
+new file mode 100644
+index 0000000..394b816
+--- /dev/null
++++ b/src/editor/GuidanceEditorSession.ts
+@@ -0,0 +1,311 @@
++// 编辑器纯逻辑；不依赖 cc、director、ledger 或文件系统。
++import type { ChartTier } from '../../constants';
++import type { GuidanceChart, GuidancePosition, ChartNodeKind, GuidanceNode } from '../chart/GuidanceChart';
++import { parseGuidanceChart, measurePathLength, positionAtPathDistance } from '../chart/GuidanceChart';
++import { guidanceDistanceAtTime, guidanceNodeTime } from '../chart/GuidanceTiming';
++import type { KeyboardPadLayout, ChartKeyId } from '../chart/KeyboardPadLayout';
++import { resolveGridKeyAt, isMatchingGridKey } from '../chart/KeyboardPadLayout';
++import { ChartPremiere } from '../chart/ChartPremiere';
++import type { ChartPremiereReader } from '../chart/ChartPremiere';
++import type { Strike } from '../chart/Strike';
++
++export interface NoteColor { readonly r: number; readonly g: number; readonly b: number }
++export interface MidiNoteEvent {
++  readonly id: string; readonly trackId: string; readonly lineId: string;
++  readonly timeMs: number; readonly position: GuidancePosition; readonly color: NoteColor;
++  readonly pitch: number | null; readonly drumType: string | null;
++  readonly velocity: number; readonly endTimeMs: number | null; readonly emphasis: boolean;
++}
++export interface ChartSourceData {
++  readonly schemaVersion: 1; readonly sourceId: string; readonly sourceRevision: string;
++  readonly provenance: 'Mock' | 'Midi'; readonly layoutVersion: string; readonly aspectRatio: number;
++  readonly mappingVersion: string; readonly mediaDurationMs: number; readonly events: readonly MidiNoteEvent[];
++}
++export interface GuidanceVisualData {
++  readonly schemaVersion: 1; readonly chartId: string;
++  readonly nodes: readonly { readonly nodeId: string; readonly color: NoteColor }[];
++}
++export interface EditorSelection {
++  readonly heads: Readonly<Record<string, string>>;
++  readonly nodes: Readonly<Record<string, { readonly kind: ChartNodeKind; readonly holdEndEventId: string | null }>>;
++}
++export interface EditorHistory {
++  readonly entries: readonly { readonly label: string; readonly before: EditorSelection; readonly after: EditorSelection }[];
++  readonly cursor: number;
++}
++export interface GuidanceEditorDocument {
++  readonly schemaVersion: 1; readonly documentId: string; readonly chartId: string; readonly tier: ChartTier;
++  readonly source: ChartSourceData; readonly selection: EditorSelection; readonly history: EditorHistory;
++  readonly media: { readonly videoPath: string | null; readonly audioPath: string | null };
++}
++export interface GuidanceEditorReader {
++  getDocument(): GuidanceEditorDocument | null;
++  getPreview(): ChartPremiereReader | null;
++  getLayout(): KeyboardPadLayout;
++  getPreviewData(): { readonly chart: GuidanceChart; readonly visual: GuidanceVisualData } | null;
++  exportChart(): { readonly chart: GuidanceChart; readonly visual: GuidanceVisualData };
++}
++export type GuidanceEditorIntent =
++  | { readonly kind: 'LoadSource'; readonly source: unknown }
++  | { readonly kind: 'LoadDraft'; readonly document: unknown }
++  | { readonly kind: 'LoadPreview'; readonly chart: unknown; readonly visual?: unknown }
++  | { readonly kind: 'SetKind'; readonly eventId: string; readonly nodeKind: ChartNodeKind }
++  | { readonly kind: 'SetHead'; readonly lineId: string; readonly eventId: string }
++  | { readonly kind: 'SetHoldEnd'; readonly eventId: string; readonly endEventId: string }
++  | { readonly kind: 'SetMedia'; readonly videoPath: string | null; readonly audioPath: string | null }
++  | { readonly kind: 'Undo' | 'Redo' | 'StopPreview' }
++  | { readonly kind: 'StartPreview'; readonly mode?: 'Manual' | 'Rehearsal' }
++  | { readonly kind: 'Seek'; readonly timeMs: number }
++  | { readonly kind: 'Advance'; readonly timeMs: number; readonly ended: boolean }
++  | { readonly kind: 'Strike'; readonly strike: Strike }
++  | { readonly kind: 'Pause'; readonly timeMs: number };
++export interface GuidanceEditorPort { submitEditorIntent(intent: GuidanceEditorIntent): void }
++
++function record(value: unknown): Record<string, unknown> {
++  if (!value || typeof value !== 'object' || Array.isArray(value)) { throw new Error('数据必须为对象'); }
++  return value as Record<string, unknown>;
++}
++function exact(value: Record<string, unknown>, keys: readonly string[]): void {
++  if (Object.keys(value).some(k => !keys.includes(k)) || keys.some(k => !(k in value))) {
++    throw new Error('数据字段缺失或包含未知字段');
++  }
++}
++function finite(value: unknown, min: number, max = Number.MAX_VALUE): number {
++  if (typeof value !== 'number' || !Number.isFinite(value) || value < min || value > max) { throw new Error('数值越界'); }
++  return value;
++}
++function id(value: unknown): string {
++  if (typeof value !== 'string' || !/^[\p{L}\p{N}_-]+$/u.test(value) || ['__proto__','constructor','prototype'].includes(value)) { throw new Error('ID 只允许安全的字母、数字、下划线、连字符'); }
++  return value;
++}
++function freeze<T>(value: T): T {
++  if (value && typeof value === 'object') { Object.values(value).forEach(freeze); Object.freeze(value); }
++  return value;
++}
++function copy<T>(value: T): T { return JSON.parse(JSON.stringify(value)) as T; }
++export function parseNoteColor(raw: unknown): NoteColor {
++  const c = record(raw); exact(c, ['r', 'g', 'b']);
++  const channels = [c.r, c.g, c.b].map(v => finite(v, 0, 255));
++  if (channels.some(v => !Number.isInteger(v))) { throw new Error('RGB 必须是 sRGB 8 位整数'); }
++  return freeze({ r: channels[0], g: channels[1], b: channels[2] });
++}
++export function parseChartSourceData(raw: unknown, layout: KeyboardPadLayout): ChartSourceData {
++  const s = record(raw); exact(s, ['schemaVersion','sourceId','sourceRevision','provenance','layoutVersion','aspectRatio','mappingVersion','mediaDurationMs','events']);
++  if (s.schemaVersion !== 1 || (s.provenance !== 'Mock' && s.provenance !== 'Midi') || s.layoutVersion !== layout.layoutVersion) {
++    throw new Error('源版本、来源或布局不匹配');
++  }
++  const duration = finite(s.mediaDurationMs, 1), aspectRatio = finite(s.aspectRatio, Number.MIN_VALUE);
++  if (!Array.isArray(s.events) || s.events.length < 2) { throw new Error('至少需要两个源事件'); }
++  const seen = new Set<string>();
++  const events = s.events.map(rawEvent => {
++    const e = record(rawEvent); exact(e, ['id','trackId','lineId','timeMs','position','color','pitch','drumType','velocity','endTimeMs','emphasis']);
++    const eventId = id(e.id); if (seen.has(eventId)) { throw new Error('源事件 ID 重复'); } seen.add(eventId);
++    const p = record(e.position); exact(p, ['u','v']);
++    const timeMs = finite(e.timeMs, 0, duration), position = { u: finite(p.u, 0, 1), v: finite(p.v, 0, 1) };
++    const pitch = e.pitch === null ? null : finite(e.pitch, 0, 127), velocity = finite(e.velocity, 0, 127);
++    if ((pitch !== null && !Number.isInteger(pitch)) || !Number.isInteger(velocity) || typeof e.emphasis !== 'boolean') { throw new Error('非法 MIDI 音高、力度或强调标记'); }
++    return freeze({ id: eventId, trackId: id(e.trackId), lineId: id(e.lineId), timeMs, position,
++      color: parseNoteColor(e.color), pitch, drumType: e.drumType === null ? null : id(e.drumType), velocity,
++      endTimeMs: e.endTimeMs === null ? null : finite(e.endTimeMs, timeMs, duration), emphasis: e.emphasis });
++  }).sort((a, b) => a.timeMs - b.timeMs || a.id.localeCompare(b.id, 'en'));
++  return freeze({ schemaVersion: 1, sourceId: id(s.sourceId), sourceRevision: id(s.sourceRevision), provenance: s.provenance,
++    layoutVersion: layout.layoutVersion, aspectRatio, mappingVersion: id(s.mappingVersion), mediaDurationMs: duration, events });
++}
++
++export function parseGuidanceVisualData(raw: unknown, chart: GuidanceChart): GuidanceVisualData {
++  const s = record(raw); exact(s, ['schemaVersion','chartId','nodes']);
++  if (s.schemaVersion !== 1 || s.chartId !== chart.chartId || !Array.isArray(s.nodes)) { throw new Error('视觉伴随文件与谱面不匹配'); }
++  const ids = new Set(chart.lines.flatMap(l => l.nodes.map(n => n.id))), seen = new Set<string>();
++  const nodes = s.nodes.map(rawNode => {
++    const n = record(rawNode); exact(n, ['nodeId','color']); const nodeId = id(n.nodeId);
++    if (!ids.has(nodeId) || seen.has(nodeId)) { throw new Error('视觉节点未知或重复'); } seen.add(nodeId);
++    return { nodeId, color: parseNoteColor(n.color) };
++  });
++  return freeze({ schemaVersion: 1, chartId: chart.chartId, nodes });
++}
++
++export class GuidanceEditorSession implements GuidanceEditorReader, GuidanceEditorPort {
++  private document: GuidanceEditorDocument | null = null;
++  private preview: ChartPremiere | null = null;
++  private loadedPreview: { readonly chart: GuidanceChart; readonly visual: GuidanceVisualData } | null = null;
++  private readonly strikes: Strike[] = [];
++  private rehearsal = false;
++  private readonly automaticInputs = new Set<string>();
++  private readonly held = new Set<ChartKeyId>();
++  constructor(private readonly layout: KeyboardPadLayout) {}
++  getDocument(): GuidanceEditorDocument | null { return this.document; }
++  getPreview(): ChartPremiereReader | null { return this.preview; }
++  getLayout(): KeyboardPadLayout { return this.layout; }
++  getPreviewData(): { readonly chart: GuidanceChart; readonly visual: GuidanceVisualData } | null {
++    return this.loadedPreview ?? (this.document ? this.exportChart() : null);
++  }
++  submitEditorIntent(intent: GuidanceEditorIntent): void {
++    if (intent.kind === 'LoadPreview') {
++      const chart = parseGuidanceChart(intent.chart, this.layout);
++      const visual = parseGuidanceVisualData(intent.visual ?? { schemaVersion: 1, chartId: chart.chartId, nodes: [] }, chart);
++      this.stop(); this.loadedPreview = freeze({ chart, visual }); return;
++    }
++    if (intent.kind === 'LoadSource') {
++      const source = parseChartSourceData(intent.source, this.layout), heads: Record<string,string> = {}, nodes: Record<string,{kind:ChartNodeKind;holdEndEventId:string|null}> = {};
++      for (const e of source.events) { if (!heads[e.lineId]) { heads[e.lineId] = e.id; } nodes[e.id] = { kind: 'Tap', holdEndEventId: null }; }
++      this.document = freeze({ schemaVersion: 1, documentId: source.sourceId, chartId: source.sourceId + '-chart', tier: 'Regular', source,
++        selection: { heads, nodes }, history: { entries: [], cursor: 0 }, media: { videoPath: null, audioPath: null } });
++      this.stop(); this.loadedPreview = null; return;
++    }
++    if (intent.kind === 'LoadDraft') { this.loadDraft(intent.document); return; }
++    if (intent.kind === 'StartPreview') { this.stop(); this.rehearsal = intent.mode === 'Rehearsal'; this.rebuildPreview(0); return; }
++    if (intent.kind === 'StopPreview') { this.stop(); return; }
++    if (intent.kind === 'Seek') { finite(intent.timeMs, 0); this.rehearsal = false; this.rebuildPreview(intent.timeMs); return; }
++    if (intent.kind === 'Strike') { if (this.preview?.getState() === 'Playing' || this.preview?.getState() === 'Paused') {
++      if (this.preview.getState() === 'Playing' || intent.strike.phase === 'Up') { this.strikes.push(copy(intent.strike)); }
++      this.preview.submitStrike(intent.strike);
++    } return; }
++    if (intent.kind === 'Advance') {
++      if (this.rehearsal && this.preview?.getState() === 'Playing') { this.autoInput(intent.timeMs); }
++      this.preview?.advance(intent.timeMs); this.preview?.advanceMediaStatus(intent.ended, false, 0); return;
++    }
++    if (intent.kind === 'Pause') { this.preview?.togglePause(intent.timeMs); return; }
++    if (!this.document) { throw new Error('请先加载源数据或草稿'); }
++    if (intent.kind === 'Undo' || intent.kind === 'Redo') {
++      const h = this.document.history, cursor = h.cursor + (intent.kind === 'Undo' ? -1 : 1);
++      if (cursor < 0 || cursor > h.entries.length) { return; }
++      const selection = intent.kind === 'Undo' ? h.entries[cursor].before : h.entries[cursor - 1].after;
++      this.document = freeze({ ...this.document, selection, history: { ...h, cursor } }); this.stop(); this.loadedPreview = null; return;
++    }
++    if (intent.kind === 'SetMedia') {
++      this.document = freeze({ ...this.document, media: { videoPath: intent.videoPath, audioPath: intent.audioPath } }); this.stop(); return;
++    }
++    if (!('eventId' in intent)) { return; }
++    const before = this.document.selection, selection = copy(before);
++    const event = this.document.source.events.find(e => e.id === intent.eventId);
++    if (!event) { throw new Error('未知源事件'); }
++    const mutable = selection as { heads: Record<string,string>; nodes: Record<string,{kind:ChartNodeKind;holdEndEventId:string|null}> };
++    if (intent.kind === 'SetKind') {
++      if (!['Tap','Drag','Hold'].includes(intent.nodeKind)) { throw new Error('未知节点类型'); }
++      mutable.nodes[event.id] = { kind: intent.nodeKind, holdEndEventId: null };
++    } else if (intent.kind === 'SetHead') {
++      if (event.lineId !== intent.lineId) { throw new Error('Head 必须属于该线'); }
++      // 选非首事件会使此前事件失去归属，禁止静默丢音。
++      if (this.document.source.events.find(e => e.lineId === event.lineId)!.id !== event.id) { throw new Error('Head 必须是该线最早事件'); }
++      mutable.heads[event.lineId] = event.id;
++    } else if (intent.kind === 'SetHoldEnd') {
++      const end = this.document.source.events.find(e => e.id === intent.endEventId);
++      if (!end || end.lineId !== event.lineId || end.timeMs <= event.timeMs || mutable.nodes[event.id].kind !== 'Hold') { throw new Error('Hold 尾端必须是同线更晚源事件'); }
++      mutable.nodes[event.id].holdEndEventId = end.id;
++    }
++    const entries = [...this.document.history.entries.slice(0, this.document.history.cursor), { label: intent.kind, before, after: selection }].slice(-100);
++    this.document = freeze({ ...this.document, selection, history: { entries, cursor: entries.length } }); this.stop(); this.loadedPreview = null;
++  }
++  exportChart(): { readonly chart: GuidanceChart; readonly visual: GuidanceVisualData } {
++    if (!this.document) { throw new Error('没有草稿'); }
++    const d = this.document, visual: {nodeId:string;color:NoteColor}[] = [];
++    const lines = Object.entries(d.selection.heads).map(([lineId, headEventId]) => {
++      const events = d.source.events.filter(e => e.lineId === lineId), head = events.find(e => e.id === headEventId);
++      if (!head || events[0].id !== head.id || events.length < 2) { throw new Error(lineId + ': Head 必须是首事件且线至少两事件'); }
++      const points: GuidancePosition[] = [], distances = new Map<string,number>(); let distance = 0;
++      for (const e of events) {
++        const last = points[points.length - 1];
++        if (!last || last.u !== e.position.u || last.v !== e.position.v) {
++          if (last) { distance += measurePathLength({ kind: 'Polyline', points: [last,e.position] }, d.source.aspectRatio); }
++          points.push(e.position);
++        }
++        distances.set(e.id, distance);
++      }
++      const timing: {nodeId:string;targetTimeMs:number;endTargetTimeMs?:number}[] = [];
++      const nodes: GuidanceNode[] = events.filter(e => e.id !== head.id).map(e => {
++        const selection = d.selection.nodes[e.id]; if (!selection) { throw new Error('节点选择缺失'); }
++        const pathDistance = distances.get(e.id)!, nodeId = 'node-' + e.id;
++        visual.push({ nodeId, color: e.color });
++        const t = { nodeId, targetTimeMs: e.timeMs }; timing.push(t);
++        if (selection.kind === 'Tap') { return { id: nodeId, kind: 'Tap', pathDistance }; }
++        const keyId = resolveGridKeyAt(this.layout, e.position);
++        if (!keyId) { throw new Error(e.id + ': 节点位置没有有效网格键'); }
++        if (selection.kind === 'Drag') { return { id: nodeId, kind: 'Drag', pathDistance, keyId }; }
++        const end = events.find(n => n.id === selection.holdEndEventId);
++        if (!end || end.timeMs <= e.timeMs || distances.get(end.id)! <= pathDistance) { throw new Error(e.id + ': 请选更晚且距离更大的 Hold 尾端'); }
++        timing[timing.length - 1] = { ...t, endTargetTimeMs: end.timeMs };
++        return { id: nodeId, kind: 'Hold', pathDistance, endPathDistance: distances.get(end.id)!, keyId };
++      });
++      // Tap 同样必须落入合法网格，避免生成不可命中的谱面。
++      if (events.slice(1).some(e => !resolveGridKeyAt(this.layout, e.position))) { throw new Error('普通节点必须位于有效网格'); }
++      return { id: 'line-' + lineId, head: { id: 'head-' + head.id, spawnTimeMs: head.timeMs, targetTimeMs: head.timeMs },
++        path: { kind: 'Polyline', points }, nodes, timing };
++    });
++    const chart = parseGuidanceChart({ schemaVersion: 3, chartId: d.chartId, tier: d.tier,
++      layoutVersion: d.source.layoutVersion, aspectRatio: d.source.aspectRatio, lines }, this.layout);
++    return freeze({ chart, visual: parseGuidanceVisualData({ schemaVersion: 1, chartId: chart.chartId, nodes: visual }, chart) });
++  }
++  private stop(): void { this.preview = null; this.strikes.length = 0; this.rehearsal = false; this.automaticInputs.clear(); this.held.clear(); }
++  private autoInput(now: number): void {
++    const chart = this.getPreviewData()!.chart, p = this.preview!;
++    const edge = (keyId: ChartKeyId, phase: 'Down' | 'Up'): void => {
++      const strike = { keyId, phase, videoTimeMs: now }; this.strikes.push(strike); p.submitStrike(strike);
++    };
++    for (const line of chart.lines) {
++      if (now >= line.head.spawnTimeMs && now <= line.head.spawnTimeMs + 1000 &&
++          !this.automaticInputs.has(line.head.id)) {
++        this.automaticInputs.add(line.head.id); edge('Space','Down'); edge('Space','Up');
++      }
++    }
++    const desired = new Set<ChartKeyId>();
++    for (const line of chart.lines) {
++      const snapshot = p.getGuidanceSnapshots().find(s => s.id === line.id)!;
++      if (snapshot.startedAtMs === null) { continue; }
++      for (const node of line.nodes) {
++        const target = guidanceNodeTime(line, snapshot.startedAtMs, node);
++        const end = node.kind === 'Hold' ? guidanceNodeTime(line, snapshot.startedAtMs, node, true) : target;
++        if ('keyId' in node && now >= target - 80 && now < end + 80) { desired.add(node.keyId); }
++      }
++    }
++    for (const key of desired) { if (!this.held.has(key)) { this.held.add(key); edge(key,'Down'); } }
++    for (const key of [...this.held]) { if (!desired.has(key)) { this.held.delete(key); edge(key,'Up'); } }
++    for (const line of chart.lines) {
++      const snapshot = p.getGuidanceSnapshots().find(s => s.id === line.id)!;
++      if (snapshot.startedAtMs === null) { continue; }
++      for (const node of line.nodes) {
++        if (node.kind !== 'Tap' || this.automaticInputs.has(node.id) || now < guidanceNodeTime(line, snapshot.startedAtMs, node) - 8) { continue; }
++        if (snapshot.nodes.find(n => n.node.id === node.id)!.tier !== null) { this.automaticInputs.add(node.id); continue; }
++        const position = positionAtPathDistance(line.path,chart.aspectRatio,guidanceDistanceAtTime(line,snapshot.startedAtMs,now));
++        const required = resolveGridKeyAt(this.layout,position);
++        const key = required === null ? undefined : this.layout.slots.find(slot =>
++          !this.held.has(slot.keyId) && isMatchingGridKey(this.layout,required,slot.keyId))?.keyId;
++        if (key !== undefined) { this.automaticInputs.add(node.id); edge(key,'Down'); edge(key,'Up'); }
++      }
++    }
++  }
++  private rebuildPreview(timeMs: number): void {
++    const data = this.getPreviewData(); if (!data) { throw new Error('先加载源数据或导出的谱面'); }
++    const p = new ChartPremiere(data.chart, this.layout); p.begin();
++    for (const strike of this.strikes.filter(s => s.videoTimeMs <= timeMs)) { p.submitStrike(strike); }
++    p.advance(timeMs); this.preview = p;
++    // A new branch after seek cannot inherit future inputs.
++    const past = this.strikes.filter(s => s.videoTimeMs <= timeMs); this.strikes.splice(0, this.strikes.length, ...past);
++  }
++  private loadDraft(raw: unknown): void {
++    const d = record(raw); exact(d,['schemaVersion','documentId','chartId','tier','source','selection','history','media']);
++    if (d.schemaVersion !== 1 || !['Regular','Character','World','Final'].includes(String(d.tier))) { throw new Error('非法草稿版本或 tier'); }
++    const source = parseChartSourceData(d.source, this.layout), media = record(d.media); exact(media,['videoPath','audioPath']);
++    if ([media.videoPath,media.audioPath].some(p => p !== null && typeof p !== 'string')) { throw new Error('媒体引用必须为路径或 null'); }
++    const validateSelection = (rawSelection: unknown): EditorSelection => {
++      const s = record(rawSelection); exact(s,['heads','nodes']); const heads = record(s.heads), nodes = record(s.nodes);
++      const lineIds = new Set(source.events.map(e => e.lineId));
++      if (Object.keys(heads).length !== lineIds.size || [...lineIds].some(l => heads[l] !== source.events.find(e => e.lineId === l)!.id) || Object.keys(nodes).length !== source.events.length) { throw new Error('草稿 Head 或节点引用不完整'); }
++      for (const e of source.events) { const n = record(nodes[e.id]); exact(n,['kind','holdEndEventId']);
++        if (!['Tap','Drag','Hold'].includes(String(n.kind))) { throw new Error('非法节点类型'); }
++        if (n.holdEndEventId !== null && (n.kind !== 'Hold' || !source.events.some(end => end.id === n.holdEndEventId && end.lineId === e.lineId && end.timeMs > e.timeMs))) { throw new Error('非法 Hold 尾端'); }
++      }
++      return freeze(copy(s) as unknown as EditorSelection);
++    };
++    const h = record(d.history); exact(h,['entries','cursor']);
++    if (!Array.isArray(h.entries) || h.entries.length > 100 || !Number.isInteger(h.cursor) || Number(h.cursor) < 0 || Number(h.cursor) > h.entries.length) { throw new Error('非法历史游标'); }
++    const entries = h.entries.map(rawEntry => { const e = record(rawEntry); exact(e,['label','before','after']);
++      if (!['SetKind','SetHead','SetHoldEnd'].includes(String(e.label))) { throw new Error('非法历史操作'); }
++      return { label: String(e.label), before: validateSelection(e.before), after: validateSelection(e.after) };
++    });
++    const selection = validateSelection(d.selection), cursor = Number(h.cursor);
++    for (let i = 1; i < entries.length; i += 1) { if (JSON.stringify(entries[i-1].after) !== JSON.stringify(entries[i].before)) { throw new Error('历史链断裂'); } }
++    if (entries.length && JSON.stringify(selection) !== JSON.stringify(cursor ? entries[cursor-1].after : entries[0].before)) { throw new Error('历史与当前选择不一致'); }
++    this.document = freeze({ schemaVersion: 1, documentId: id(d.documentId), chartId: id(d.chartId), tier: d.tier as ChartTier,
++      source, selection, media: media as unknown as GuidanceEditorDocument['media'], history: {entries,cursor} }); this.stop(); this.loadedPreview = null;
++  }
++}
+
+diff --git a/src/editor/GuidanceEditorSession.ts.meta b/src/editor/GuidanceEditorSession.ts.meta
+new file mode 100644
+index 0000000..9fa4cca
+--- /dev/null
++++ b/src/editor/GuidanceEditorSession.ts.meta
+@@ -0,0 +1,9 @@
++{
++  "ver": "4.0.24",
++  "importer": "typescript",
++  "imported": true,
++  "uuid": "c4409405-d76c-4d16-acb3-de072ad40af4",
++  "files": [],
++  "subMetas": {},
++  "userData": {}
++}
+\ No newline at end of file
+
+diff --git a/src/presentation/GuidanceEditorView.ts b/src/presentation/GuidanceEditorView.ts
+new file mode 100644
+index 0000000..b2a79f0
+--- /dev/null
++++ b/src/presentation/GuidanceEditorView.ts
+@@ -0,0 +1,192 @@
++// Cocos 浏览器编辑界面；只读 editor/chart，通过意图修改草稿。
++import { _decorator, Component, Node, UITransform, SpriteFrame } from 'cc';
++import type { GuidanceEditorReader, GuidanceEditorPort, GuidanceEditorIntent, ChartSourceData } from '../editor/GuidanceEditorSession';
++import type { ChartNodeKind } from '../chart/GuidanceChart';
++import { LineEraseEffect } from './LineEraseEffect';
++import { AudioOutputClock } from './AudioOutputClock';
++const { ccclass } = _decorator;
++interface EditorDirectoryHandle {
++  getFileHandle(name: string, options: { create: boolean }): Promise<{ createWritable(): Promise<{ write(text: string): Promise<void>; close(): Promise<void> }> }>;
++}
++
++@ccclass('GuidanceEditorView')
++export class GuidanceEditorView extends Component {
++  private reader: GuidanceEditorReader | null = null;
++  private port: GuidanceEditorPort | null = null;
++  private root: HTMLElement | null = null;
++  private canvas: HTMLCanvasElement | null = null;
++  private video: HTMLVideoElement | null = null;
++  private readonly clock = new AudioOutputClock();
++  private effect: LineEraseEffect | null = null;
++  private selectedId = '';
++  private lastDocument: unknown = null;
++  private videoUrl: string | null = null;
++  private playing = false;
++  private playingMode: 'Rehearsal' | 'Manual' = 'Manual';
++  private savedAt = '';
++  private directory: EditorDirectoryHandle | null = null;
++  private endedElapsedMs = 0;
++  private mock: ChartSourceData | null = null;
++  private keyDown = (e: KeyboardEvent): void => {
++    if (!this.playing || e.repeat || /INPUT|SELECT|TEXTAREA/.test((e.target as HTMLElement)?.tagName)) { return; }
++    e.preventDefault(); this.send({ kind: 'Strike', strike: { keyId: e.code as never, videoTimeMs: this.time(), phase: 'Down' } });
++  };
++  private keyUp = (e: KeyboardEvent): void => {
++    if (!/INPUT|SELECT|TEXTAREA/.test((e.target as HTMLElement)?.tagName)) {
++      this.send({ kind: 'Strike', strike: { keyId: e.code as never, videoTimeMs: this.time(), phase: 'Up' } });
++    }
++  };
++  bindEditor(reader: GuidanceEditorReader, port: GuidanceEditorPort, mock: ChartSourceData): void {
++    this.reader = reader; this.port = port; this.mock = mock; this.build();
++  }
++  bindHeadLogo(logo: SpriteFrame): void { this.effect?.bindHeadLogo(logo); }
++  private send(intent: GuidanceEditorIntent): void {
++    try { this.port?.submitEditorIntent(intent); if(['LoadSource','LoadDraft','SetKind','SetHead','SetHoldEnd','Undo','Redo'].includes(intent.kind))this.el('preview-file').textContent='预览来自当前草稿；可加载导出的谱面文件。';if(intent.kind!=='Advance')this.status(''); }
++    catch (error) { this.status(error instanceof Error ? error.message : String(error), true); }
++  }
++  private time(): number { const time = this.clock.readChartTimeMs();return this.playing && time >= 0 ? time : (this.video?.currentTime ?? 0) * 1000; }
++  private el<T extends HTMLElement = HTMLElement>(id: string): T { return this.root!.querySelector('#' + id) as T; }
++  private status(message: string, error = false): void {
++    if (!this.root) { return; } const el = this.el('editor-status'); el.textContent = message; el.style.color = error ? '#ffa09a' : '#9ec9af';
++  }
++  private build(): void {
++    if (typeof document === 'undefined' || this.root) { return; }
++    this.root = document.createElement('section'); this.root.id = 'guidance-editor';
++    this.root.innerHTML = `
++      <style>
++      #guidance-editor{position:fixed;inset:0;z-index:100;display:grid;grid-template-rows:66px 1fr 108px;background:transparent;color:#e7ebf1;font:15px/1.5 system-ui,sans-serif;pointer-events:none}
++      #guidance-editor *{box-sizing:border-box}#guidance-editor header,#guidance-editor aside,#guidance-editor footer{background:#121b28;pointer-events:auto}
++      #guidance-editor header{display:flex;align-items:center;gap:14px;padding:12px 24px;border-bottom:1px solid #334157}#guidance-editor h1{font-size:19px;margin:0 20px 0 0}
++      #guidance-editor main{display:grid;grid-template-columns:1fr 350px;min-height:0}#editor-stage{position:relative;pointer-events:auto;background:transparent}
++      #editor-stage canvas{width:100%;height:100%;display:block}#editor-stage .caption{position:absolute;left:22px;top:12px;font-size:12px;color:#94a5bc}
++      #guidance-editor aside{padding:20px;border-left:1px solid #334157;overflow:auto}#guidance-editor h2{font-size:15px;font-weight:600;margin:20px 0 10px}
++      #guidance-editor button,#guidance-editor select{background:#23334b;color:#edf3ff;border:1px solid #405878;border-radius:6px;padding:8px 12px;cursor:pointer;font:inherit}
++      #guidance-editor button:hover{background:#354e70}#guidance-editor button:disabled{opacity:.35;cursor:default}#guidance-editor .primary{background:#4f75ae}
++      #guidance-editor .row{display:flex;gap:8px;margin:8px 0;align-items:center}#guidance-editor select{width:100%}#guidance-editor small{color:#9baabe;display:block}
++      #guidance-editor video{width:100%;height:150px;background:#080d14;border-radius:6px}#editor-events{display:flex;flex-direction:column;gap:4px;max-height:230px;overflow:auto}
++      #editor-events button{text-align:left;font-size:13px}#editor-events button.selected{border-color:#a7c4f4;background:#365079}
++      #guidance-editor footer{border-top:1px solid #334157;padding:12px 24px}#editor-timeline{width:100%;accent-color:#97bbf0}#editor-score{margin-left:auto;color:#c4d5ee}
++      #editor-source{color:#edbd72;border:1px solid #6b573d;border-radius:20px;padding:3px 10px;font-size:12px}#editor-status{font-size:13px;min-height:20px}
++      </style>
++      <header><h1>雨若 / 引导线编辑器</h1><span id="editor-source">尚未加载</span><button id="load-mock">加载 mock</button><button id="load-source">导入 MIDI 输出</button><button id="undo">撤销</button><button id="redo">重做</button><span id="editor-score">位置与时间来自 MIDI</span></header>
++      <main><div id="editor-stage"><canvas id="editor-canvas"></canvas><div class="caption">位置编辑器 · 点选音符以设置类型；位置与卡点只读</div></div>
++      <aside><h2>选中音符</h2><div id="selected-info">先加载源数据</div><div class="row"><select id="node-kind" aria-label="节点类型"><option>Tap</option><option>Drag</option><option>Hold</option></select></div><label>Hold 尾端<select id="hold-end" aria-label="Hold 尾端"></select></label><button id="set-head">设为 Head</button><small id="key-info"></small><h2>源事件</h2><div id="editor-events"></div>
++      <h2>视频卡点器</h2><video id="editor-video" preload="auto" src="/assets/resources/native/96/96162c33-4ecf-492c-b933-6852e6166148.mp4"></video><button id="choose-video">选择视频</button><small id="media-info">预览视频加载中；可选择本地视频。草稿只保存文件名，恢复后需重新选择。</small>
++      <h2>草稿与导出</h2><div class="row"><button id="save-draft">保存草稿</button><button id="restore-draft">恢复草稿</button></div><div class="row"><button id="download-draft">下载草稿</button><button id="import-draft">导入草稿</button></div><div class="row"><button id="choose-output">选择导出文件夹</button></div><button class="primary" id="export-chart">导出玩法 + 颜色 JSON</button><div class="row"><button id="load-export">加载导出谱面</button></div><small id="preview-file">可同时选择玩法 JSON 和可选的 .visual.json，再演奏或试听。</small><small id="save-info">草稿自动保存在此浏览器；导出文件可保存到 编辑器/导出/引导线。</small></aside></main>
++      <footer><div class="row"><button id="play-manual">演奏预览</button><button id="play-auto">自动试听</button><button id="pause-preview">暂停 / 恢复</button><button id="stop-preview">停止</button><span id="editor-time">00:00.000</span><small>演奏预览：Space 启动 Head，再按网格键。自动试听独立标记。</small></div><input id="editor-timeline" type="range" min="0" max="12000" step="1" value="0" aria-label="时间轴"><div id="editor-status"></div></footer>`;
++    document.body.appendChild(this.root); this.canvas = this.el<HTMLCanvasElement>('editor-canvas'); this.video = this.el<HTMLVideoElement>('editor-video');
++    this.clock.attachVideo(this.video);
++    const effectNode = new Node('GuidanceEditorPreview'); effectNode.layer = this.node.layer; this.node.addChild(effectNode); effectNode.addComponent(UITransform);
++    this.effect = effectNode.addComponent(LineEraseEffect);
++    const click = (id: string, run: () => void): void => { this.el(id).onclick = run; };
++    click('load-mock', () => { this.stopPlayback(); this.send({ kind: 'LoadSource', source: this.mock }); this.selectedId = ''; });
++    click('load-source', () => this.importFile('source')); click('import-draft', () => this.importFile('draft'));
++    click('undo', () => { this.stopPlayback(); this.send({ kind: 'Undo' }); }); click('redo', () => { this.stopPlayback(); this.send({ kind: 'Redo' }); });
++    this.el<HTMLSelectElement>('node-kind').onchange = () => { this.stopPlayback(); this.send({ kind: 'SetKind', eventId: this.selectedId, nodeKind: this.el<HTMLSelectElement>('node-kind').value as ChartNodeKind }); };
++    this.el<HTMLSelectElement>('hold-end').onchange = () => { this.stopPlayback(); this.send({ kind: 'SetHoldEnd', eventId: this.selectedId, endEventId: this.el<HTMLSelectElement>('hold-end').value }); };
++    click('set-head', () => { const event = this.reader?.getDocument()?.source.events.find(e => e.id === this.selectedId); if (event) { this.stopPlayback(); this.send({kind:'SetHead',lineId:event.lineId,eventId:event.id}); } });
++    click('save-draft', () => this.saveDraft()); click('restore-draft', () => { const draft = localStorage.getItem('neurou-guidance-draft-v1'); if (draft) { this.stopPlayback(); try { this.send({kind:'LoadDraft',document:JSON.parse(draft)}); } catch { this.status('浏览器草稿损坏，请导入备份',true); } } else { this.status('此浏览器尚无保存的草稿',true); } });
++    click('download-draft', () => { const d = this.reader?.getDocument(); if (d) { this.download(d.documentId+'.draft.json',d); } });
++    click('export-chart', () => this.exportFiles()); click('choose-video', () => this.chooseVideo());
++    click('load-export', () => this.importPreview());
++    click('choose-output', () => { const picker = (window as unknown as { showDirectoryPicker?: () => Promise<EditorDirectoryHandle> }).showDirectoryPicker;
++      if (!picker) { this.status('此浏览器不支持目录选择，将使用常规下载。'); return; }
++      void picker().then(handle => { this.directory = handle; this.status('输出目录已选择；再次导出会覆盖同名文件。'); }).catch(() => this.status('未选择输出目录')); });
++    click('play-manual', () => this.play('Manual')); click('play-auto', () => this.play('Rehearsal'));
++    click('stop-preview', () => { this.stopPlayback(); this.send({kind:'StopPreview'}); });
++    click('pause-preview', () => { const state = this.reader?.getPreview()?.getState(); if (state === 'Playing') { this.video?.pause(); this.send({kind:'Pause',timeMs:this.time()}); } else if (state === 'Paused') { this.send({kind:'Pause',timeMs:this.time()}); void this.video?.play().catch(e => this.status(String(e),true)); } });
++    this.el<HTMLInputElement>('editor-timeline').oninput = () => { this.video?.pause(); this.playing = false; this.clock.resetChart(); const timeMs = Number(this.el<HTMLInputElement>('editor-timeline').value); if (this.video) { this.video.currentTime = timeMs/1000; } this.send({kind:'Seek',timeMs}); this.bindPreview(); };
++    this.video.onloadedmetadata = () => { this.el('media-info').textContent = '视频 ' + this.video!.duration.toFixed(2)+' 秒 · 可替换'; };
++    this.video.onerror = () => this.status('视频不可用，请选择本地视频后预览',true);
++    this.canvas.onclick = e => { const d = this.reader?.getDocument(); if (!d) { return; } const r = this.canvas!.getBoundingClientRect(); const u = (e.clientX-r.left)/r.width, v = 1-(e.clientY-r.top)/r.height; const near = d.source.events.map(n=>({n,d:Math.hypot((u-n.position.u)*r.width,(v-n.position.v)*r.height)})).sort((a,b)=>a.d-b.d)[0]; if (near?.d < 30) { this.selectedId=near.n.id;this.lastDocument=null; } };
++    window.addEventListener('keydown',this.keyDown); window.addEventListener('keyup',this.keyUp);
++    this.update();
++  }
++  private saveDraft(): void {
++    const d=this.reader?.getDocument(); if (!d) { this.status('没有草稿',true); return; }
++    try { localStorage.setItem('neurou-guidance-draft-v1',JSON.stringify(d));this.savedAt=new Date().toLocaleTimeString();this.el('save-info').textContent='草稿已保存 '+this.savedAt+' · 历史一并保存'; }
++    catch { this.status('草稿保存失败：浏览器空间不足。可下载草稿备份。',true); }
++  }
++  private importFile(kind:'source'|'draft'): void {
++    this.root!.querySelector('#editor-import')?.remove();const input=document.createElement('input');input.id='editor-import';input.type='file';input.accept='.json';input.hidden=true;this.root!.appendChild(input);input.onchange=async()=>{const f=input.files?.[0];if(!f)return;try { const data=JSON.parse(await f.text());this.port?.submitEditorIntent(kind==='source'?{kind:'LoadSource',source:data}:{kind:'LoadDraft',document:data});this.stopPlayback();this.selectedId='';this.el('preview-file').textContent='预览来自当前草稿；可加载导出的谱面文件。';this.status('已加载 '+f.name); } catch(e){this.status(e instanceof Error?e.message:String(e),true);} };input.click();
++  }
++  private chooseVideo(): void {
++    const input=document.createElement('input');input.type='file';input.accept='video/*';input.onchange=()=>{const f=input.files?.[0];if(!f)return;this.stopPlayback();if(this.videoUrl)URL.revokeObjectURL(this.videoUrl);this.videoUrl=URL.createObjectURL(f);this.video!.src=this.videoUrl;if(this.reader?.getDocument())this.send({kind:'SetMedia',videoPath:f.name,audioPath:null});};input.click();
++  }
++  private importPreview(): void {
++    this.root!.querySelector('#preview-files')?.remove();
++    const input = document.createElement('input'); input.id = 'preview-files'; input.type = 'file'; input.accept = '.json'; input.multiple = true; input.hidden = true; this.root!.appendChild(input);
++    input.onchange = async () => {
++      try {
++        const files = Array.from(input.files ?? []); if (!files.length) { return; }
++        const values = await Promise.all(files.map(async f => ({ name: f.name, value: JSON.parse(await f.text()) })));
++        const charts = values.filter(f => Array.isArray(f.value?.lines)), visuals = values.filter(f => !Array.isArray(f.value?.lines));
++        if (charts.length !== 1 || visuals.length > 1) { throw new Error('请选择一个玩法 JSON，以及至多一个颜色伴随 JSON'); }
++        this.port!.submitEditorIntent({ kind: 'LoadPreview', chart: charts[0].value, visual: visuals[0]?.value });
++        this.stopPlayback(); this.el('preview-file').textContent = '已加载：' + values.map(f => f.name).join(' + '); this.status('导出谱面已校验；预览将使用加载文件。编辑类型后返回草稿预览。');
++      } catch (e) { this.status(e instanceof Error ? e.message : String(e), true); }
++    }; input.click();
++  }
++  private download(name:string,value:unknown): void {
++    const text=JSON.stringify(value,null,2), url=URL.createObjectURL(new Blob([text],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
++  }
++  private async exportFiles(): Promise<void> {
++    let written = 0;
++    try { const output=this.reader!.exportChart();const files=[{name:output.chart.chartId+'.json',value:output.chart},{name:output.chart.chartId+'.visual.json',value:output.visual}];
++      if (this.directory) { for (const f of files) { const file = await this.directory.getFileHandle(f.name,{create:true});const writer = await file.createWritable();await writer.write(JSON.stringify(f.value,null,2));await writer.close();written += 1; } this.status('两个 JSON 已保存到所选目录。'); }
++      else { for (const f of files) this.download(f.name,f.value);this.status('已请求下载两个 JSON；浏览器若提示多个下载，请允许。'); }
++      }
++    catch(e){this.status((written ? `导出未完成，已有 ${written} 个文件写入；请重新成对导出。` : '') + (e instanceof Error?e.message:String(e)),true);}
++  }
++  private stopPlayback(): void { this.video?.pause();this.playing=false;this.endedElapsedMs=0;this.effect?.clearVisuals(); }
++  private play(mode:'Manual'|'Rehearsal'): void {
++    if (!this.video || !Number.isFinite(this.video.duration)) { this.status('请先加载可播放视频',true);return; }
++    try { const d=this.reader!.getDocument();if(!this.reader!.getPreviewData())throw new Error('先加载源数据或导出谱面');if(d&&Math.abs(this.video.duration*1000-d.source.mediaDurationMs)>100)throw new Error('视频时长与 MIDI 源不匹配');
++      this.stopPlayback();this.clock.resetChart();this.port!.submitEditorIntent({kind:'StartPreview',mode});this.video.currentTime=0;this.playingMode=mode;this.playing=true;this.bindPreview();void this.clock.unlock().then(()=>this.video!.play()).catch(e=>{this.playing=false;this.status(String(e),true);});this.status(mode==='Manual'?'演奏预览：按 Space 启动；绝对卡点不顺延':'自动试听：自动输入，预览不写游戏账本');
++    }catch(e){this.status(e instanceof Error?e.message:String(e),true);}
++  }
++  private bindPreview(): void {
++    const preview=this.reader?.getPreview();if(preview){this.effect?.bindPremiere(preview);this.effect?.bindNodeColors(this.reader!.getPreviewData()!.visual.nodes);}
++  }
++  update(dt = 0): void {
++    if (!this.root || !this.reader) { return; }
++    const d=this.reader.getDocument();if(d!==this.lastDocument){this.lastDocument=d;this.refreshDocument();if(d)this.saveDraft();}
++    const preview=this.reader.getPreview();if(this.playing&&this.video?.ended&&preview?.getState()==='Playing')this.endedElapsedMs+=dt*1000;
++    const now=this.time()+this.endedElapsedMs;
++    if(this.playing && preview?.getState()==='Playing'){
++      
++      this.send({kind:'Advance',timeMs:now,ended:this.video?.ended??false});
++    }
++    const stage=this.el('editor-stage').getBoundingClientRect(),root=this.node.getComponent(UITransform);
++    if(this.effect&&root){const sx=root.width/window.innerWidth,sy=root.height/window.innerHeight;this.effect.bindContentSize(stage.width*sx,stage.height*sy);this.effect.node.setPosition((stage.left+stage.width/2-window.innerWidth/2)*sx,(window.innerHeight/2-stage.top-stage.height/2)*sy);if(preview)this.effect.onFrameRefresh();else this.effect.clearVisuals();}
++    if(preview?.getState()==='Completed'){this.playing=false;this.video?.pause();this.status('预览完成 · 不写游戏账本');}
++    this.el('editor-score').textContent=preview?`${this.playingMode==='Rehearsal'?'自动试听':'演奏预览'} · ${preview.getState()} · P${preview.getPerfectCount()} G${preview.getGoodCount()} M${preview.getMissCount()}`:'位置与时间来自 MIDI';
++    this.el('editor-time').textContent=(preview?.getCurrentTimeMs()??now).toFixed(0)+' ms';
++    this.el<HTMLInputElement>('editor-timeline').max=String(d?.source.mediaDurationMs ?? (Number.isFinite(this.video?.duration) ? this.video!.duration * 1000 : 12000));if(this.playing)this.el<HTMLInputElement>('editor-timeline').value=String(now);
++    if(d)this.draw(d.source,!!preview);
++  }
++  private refreshDocument(): void {
++    const d=this.reader?.getDocument();this.el('editor-source').textContent=d?'数据来源：'+(d.source.provenance==='Mock'?'Mock':'MIDI'):'尚未加载';
++    this.el<HTMLButtonElement>('undo').disabled=!d||d.history.cursor===0;this.el<HTMLButtonElement>('redo').disabled=!d||d.history.cursor===d.history.entries.length;
++    if(!d)return;if(!d.source.events.some(e=>e.id===this.selectedId))this.selectedId=d.source.events[1].id;
++    const event=d.source.events.find(e=>e.id===this.selectedId)!,isHead=d.selection.heads[event.lineId]===event.id,n=d.selection.nodes[event.id];
++    this.el('selected-info').textContent=`${event.id} · 线 ${event.lineId} · ${event.timeMs} ms · (${event.position.u.toFixed(3)}, ${event.position.v.toFixed(3)})${isHead?' · Head':''}`;
++    const kind=this.el<HTMLSelectElement>('node-kind');kind.value=n.kind;kind.disabled=isHead;
++    const tail=this.el<HTMLSelectElement>('hold-end');tail.innerHTML='';const placeholder=document.createElement('option');placeholder.value='';placeholder.textContent='选择同线更晚音符';tail.appendChild(placeholder);
++    for(const e of d.source.events.filter(e=>e.lineId===event.lineId&&e.timeMs>event.timeMs)){const option=document.createElement('option');option.value=e.id;option.textContent=e.id+' · '+e.timeMs+' ms';tail.appendChild(option);}tail.value=n.holdEndEventId??'';tail.disabled=isHead||n.kind!=='Hold';
++    const list=this.el('editor-events');list.innerHTML='';for(const e of d.source.events){const button=document.createElement('button');button.textContent=`${e.id}  ${e.timeMs} ms  ${d.selection.heads[e.lineId]===e.id?'Head':d.selection.nodes[e.id].kind}`;button.className=e.id===this.selectedId?'selected':'';button.dataset.eventId=e.id;button.onclick=()=>{this.selectedId=e.id;this.lastDocument=null;};list.appendChild(button);}
++    try{const chart=this.reader!.exportChart().chart;const node=chart.lines.flatMap(l=>l.nodes).find(n=>n.id==='node-'+event.id);this.el('key-info').textContent=node&&'keyId'in node?'自动键位：'+node.keyId:'Tap：输入时刻按判定点位置取键';}catch(e){this.el('key-info').textContent=e instanceof Error?e.message:String(e);}
++  }
++  private draw(source:ChartSourceData,hasPreview:boolean): void {
++    const c=this.canvas!,r=c.getBoundingClientRect();if(c.width!==Math.round(r.width)||c.height!==Math.round(r.height)){c.width=Math.round(r.width);c.height=Math.round(r.height);}const ctx=c.getContext('2d')!;ctx.clearRect(0,0,c.width,c.height);
++    if(!hasPreview){ctx.fillStyle='#0c1522';ctx.fillRect(0,0,c.width,c.height);}ctx.strokeStyle='#2c3b51';ctx.lineWidth=1;
++    for(const slot of this.reader!.getLayout().slots){ctx.strokeRect(slot.u*c.width,(1-slot.v-slot.height)*c.height,slot.width*c.width,slot.height*c.height);ctx.fillStyle='#53647c';ctx.font='11px system-ui';ctx.fillText(slot.keyId.replace('Key','').replace('Digit',''),(slot.u+slot.width/2)*c.width,(1-slot.v-slot.height/2)*c.height);}
++    if(hasPreview)return;const d=this.reader!.getDocument()!;ctx.strokeStyle='#e8eef6';ctx.lineWidth=2;
++    for(const line of new Set(source.events.map(e=>e.lineId))){ctx.beginPath();source.events.filter(e=>e.lineId===line).forEach((e,i)=>{const x=e.position.u*c.width,y=(1-e.position.v)*c.height;i?ctx.lineTo(x,y):ctx.moveTo(x,y);});ctx.stroke();}
++    for(const e of source.events){const x=e.position.u*c.width,y=(1-e.position.v)*c.height,n=d.selection.nodes[e.id],head=d.selection.heads[e.lineId]===e.id;ctx.strokeStyle=e.id===this.selectedId?'#b9d3ff':'#fff';ctx.lineWidth=e.id===this.selectedId?4:2;ctx.beginPath();if(head||n.kind==='Drag')ctx.arc(x,y,head?14:11,0,Math.PI*2);else ctx.rect(x-11,y-11,22,22);ctx.stroke();
++      if(n.kind==='Hold'&&n.holdEndEventId){const events=source.events.filter(t=>t.lineId===e.lineId),start=events.findIndex(t=>t.id===e.id),end=events.findIndex(t=>t.id===n.holdEndEventId);ctx.strokeStyle='#fff';ctx.lineWidth=2;for(let i=start+1;i<=end;i++){const a=events[i-1].position,b=events[i].position,ax=a.u*c.width,ay=(1-a.v)*c.height,bx=b.u*c.width,by=(1-b.v)*c.height,length=Math.hypot(bx-ax,by-ay);if(!length)continue;const dx=-(by-ay)/length*5,dy=(bx-ax)/length*5;ctx.beginPath();ctx.moveTo(ax+dx,ay+dy);ctx.lineTo(bx+dx,by+dy);ctx.lineTo(bx-dx,by-dy);ctx.lineTo(ax-dx,ay-dy);ctx.closePath();ctx.stroke();}}
++      ctx.fillStyle=`rgb(${e.color.r},${e.color.g},${e.color.b})`;ctx.fillRect(x-5,y-5,10,10);ctx.fillStyle='#9cabc0';ctx.font='12px system-ui';ctx.fillText(e.id+' / '+e.timeMs+' ms',x-25,y+30);
++    }
++  }
++  onDestroy(): void {this.stopPlayback();this.clock.destroy();window.removeEventListener('keydown',this.keyDown);window.removeEventListener('keyup',this.keyUp);this.root?.remove();if(this.videoUrl)URL.revokeObjectURL(this.videoUrl);}
++}
+
+diff --git a/src/presentation/GuidanceEditorView.ts.meta b/src/presentation/GuidanceEditorView.ts.meta
+new file mode 100644
+index 0000000..096168c
+--- /dev/null
++++ b/src/presentation/GuidanceEditorView.ts.meta
+@@ -0,0 +1,9 @@
++{
++  "ver": "4.0.24",
++  "importer": "typescript",
++  "imported": true,
++  "uuid": "2dd9535f-9996-4822-9eb4-00558305384c",
++  "files": [],
++  "subMetas": {},
++  "userData": {}
++}
+\ No newline at end of file
+
+diff --git a/assets/scripts/GuidanceEditorBuilder.ts b/assets/scripts/GuidanceEditorBuilder.ts
+new file mode 100644
+index 0000000..ceeacd7
+--- /dev/null
++++ b/assets/scripts/GuidanceEditorBuilder.ts
+@@ -0,0 +1,23 @@
++import { _decorator, Component, resources, JsonAsset, SpriteFrame } from 'cc';
++import { GuidanceEditorSession } from './src/editor/GuidanceEditorSession';
++import type { ChartSourceData } from './src/editor/GuidanceEditorSession';
++import { createDefaultKeyboardPadLayout } from './src/chart/KeyboardPadLayout';
++import { GuidanceEditorView } from './src/presentation/GuidanceEditorView';
++const { ccclass } = _decorator;
++
++/** 独立组合根，不创建世界 director 或账本。 */
++@ccclass('GuidanceEditorBuilder')
++export class GuidanceEditorBuilder extends Component {
++  private session: GuidanceEditorSession | null = null;
++  start(): void {
++    this.session = new GuidanceEditorSession(createDefaultKeyboardPadLayout());
++    resources.load('editor/mock_midi', JsonAsset, (error, asset) => {
++      if (error || !asset) { console.error('编辑器 mock 资源加载失败',error);return; }
++      const view = this.node.addComponent(GuidanceEditorView); view.bindEditor(this.session!,this.session!,asset.json as ChartSourceData);
++      resources.load('guidance/head-logo/spriteFrame', SpriteFrame, (logoError, logo) => {
++        if (logoError || !logo) { console.error('编辑器 Head LOGO 加载失败', logoError); return; }
++        view.bindHeadLogo(logo);
++      });
++    });
++  }
++}
+
+diff --git a/assets/scripts/GuidanceEditorBuilder.ts.meta b/assets/scripts/GuidanceEditorBuilder.ts.meta
+new file mode 100644
+index 0000000..83672d8
+--- /dev/null
++++ b/assets/scripts/GuidanceEditorBuilder.ts.meta
+@@ -0,0 +1,9 @@
++{
++  "ver": "4.0.24",
++  "importer": "typescript",
++  "imported": true,
++  "uuid": "3eb54b27-c26b-4393-96eb-6b1cdb9fdecb",
++  "files": [],
++  "subMetas": {},
++  "userData": {}
++}
+\ No newline at end of file
+
+diff --git a/assets/resources/editor.meta b/assets/resources/editor.meta
+new file mode 100644
+index 0000000..49ac01c
+--- /dev/null
++++ b/assets/resources/editor.meta
+@@ -0,0 +1,9 @@
++{
++  "ver": "1.2.0",
++  "importer": "directory",
++  "imported": true,
++  "uuid": "00ffd600-aa58-4917-8c83-25cee1d0cb35",
++  "files": [],
++  "subMetas": {},
++  "userData": {}
++}
+\ No newline at end of file
+
+diff --git a/assets/resources/editor/mock_midi.json b/assets/resources/editor/mock_midi.json
+new file mode 100644
+index 0000000..0a35e23
+--- /dev/null
++++ b/assets/resources/editor/mock_midi.json
+@@ -0,0 +1,212 @@
++{
++  "schemaVersion": 1,
++  "sourceId": "editor-mock-1",
++  "sourceRevision": "r1",
++  "provenance": "Mock",
++  "layoutVersion": "pad-layout-2",
++  "aspectRatio": 1.7777777777777777,
++  "mappingVersion": "mock-mapping-1",
++  "mediaDurationMs": 12000,
++  "events": [
++    {
++      "id": "a0",
++      "trackId": "track-a",
++      "lineId": "a",
++      "timeMs": 1000,
++      "position": {
++        "u": 0.15,
++        "v": 0.55
++      },
++      "color": {
++        "r": 248,
++        "g": 174,
++        "b": 80
++      },
++      "pitch": 60,
++      "drumType": null,
++      "velocity": 120,
++      "endTimeMs": 1100,
++      "emphasis": true
++    },
++    {
++      "id": "a1",
++      "trackId": "track-a",
++      "lineId": "a",
++      "timeMs": 2300,
++      "position": {
++        "u": 0.3,
++        "v": 0.55
++      },
++      "color": {
++        "r": 248,
++        "g": 174,
++        "b": 80
++      },
++      "pitch": 61,
++      "drumType": null,
++      "velocity": 90,
++      "endTimeMs": 2400,
++      "emphasis": false
++    },
++    {
++      "id": "a2",
++      "trackId": "track-a",
++      "lineId": "a",
++      "timeMs": 3100,
++      "position": {
++        "u": 0.5,
++        "v": 0.55
++      },
++      "color": {
++        "r": 248,
++        "g": 174,
++        "b": 80
++      },
++      "pitch": 62,
++      "drumType": null,
++      "velocity": 90,
++      "endTimeMs": 3200,
++      "emphasis": false
++    },
++    {
++      "id": "a3",
++      "trackId": "track-a",
++      "lineId": "a",
++      "timeMs": 5000,
++      "position": {
++        "u": 0.65,
++        "v": 0.55
++      },
++      "color": {
++        "r": 248,
++        "g": 174,
++        "b": 80
++      },
++      "pitch": 63,
++      "drumType": null,
++      "velocity": 90,
++      "endTimeMs": 5100,
++      "emphasis": false
++    },
++    {
++      "id": "a4",
++      "trackId": "track-a",
++      "lineId": "a",
++      "timeMs": 6800,
++      "position": {
++        "u": 0.85,
++        "v": 0.55
++      },
++      "color": {
++        "r": 248,
++        "g": 174,
++        "b": 80
++      },
++      "pitch": 64,
++      "drumType": null,
++      "velocity": 90,
++      "endTimeMs": 6900,
++      "emphasis": false
++    },
++    {
++      "id": "b0",
++      "trackId": "track-b",
++      "lineId": "b",
++      "timeMs": 1000,
++      "position": {
++        "u": 0.15,
++        "v": 0.65
++      },
++      "color": {
++        "r": 95,
++        "g": 190,
++        "b": 250
++      },
++      "pitch": 60,
++      "drumType": null,
++      "velocity": 120,
++      "endTimeMs": 1100,
++      "emphasis": true
++    },
++    {
++      "id": "b1",
++      "trackId": "track-b",
++      "lineId": "b",
++      "timeMs": 2300,
++      "position": {
++        "u": 0.3,
++        "v": 0.65
++      },
++      "color": {
++        "r": 95,
++        "g": 190,
++        "b": 250
++      },
++      "pitch": 61,
++      "drumType": null,
++      "velocity": 90,
++      "endTimeMs": 2400,
++      "emphasis": false
++    },
++    {
++      "id": "b2",
++      "trackId": "track-b",
++      "lineId": "b",
++      "timeMs": 3100,
++      "position": {
++        "u": 0.5,
++        "v": 0.65
++      },
++      "color": {
++        "r": 95,
++        "g": 190,
++        "b": 250
++      },
++      "pitch": 62,
++      "drumType": null,
++      "velocity": 90,
++      "endTimeMs": 3200,
++      "emphasis": false
++    },
++    {
++      "id": "b3",
++      "trackId": "track-b",
++      "lineId": "b",
++      "timeMs": 5000,
++      "position": {
++        "u": 0.65,
++        "v": 0.65
++      },
++      "color": {
++        "r": 95,
++        "g": 190,
++        "b": 250
++      },
++      "pitch": 63,
++      "drumType": null,
++      "velocity": 90,
++      "endTimeMs": 5100,
++      "emphasis": false
++    },
++    {
++      "id": "b4",
++      "trackId": "track-b",
++      "lineId": "b",
++      "timeMs": 6800,
++      "position": {
++        "u": 0.85,
++        "v": 0.65
++      },
++      "color": {
++        "r": 95,
++        "g": 190,
++        "b": 250
++      },
++      "pitch": 64,
++      "drumType": null,
++      "velocity": 90,
++      "endTimeMs": 6900,
++      "emphasis": false
++    }
++  ]
++}
+\ No newline at end of file
+
+diff --git a/assets/resources/editor/mock_midi.json.meta b/assets/resources/editor/mock_midi.json.meta
+new file mode 100644
+index 0000000..d269b07
+--- /dev/null
++++ b/assets/resources/editor/mock_midi.json.meta
+@@ -0,0 +1,11 @@
++{
++  "ver": "2.0.1",
++  "importer": "json",
++  "imported": true,
++  "uuid": "bc0b4342-32bd-4ff2-b2c9-8a0d4a866f4a",
++  "files": [
++    ".json"
++  ],
++  "subMetas": {},
++  "userData": {}
++}
+\ No newline at end of file
+
+diff --git a/编辑器/打开引导线编辑器.cmd b/编辑器/打开引导线编辑器.cmd
+new file mode 100644
+index 0000000..f4b1f1e
+--- /dev/null
++++ b/编辑器/打开引导线编辑器.cmd
+@@ -0,0 +1,3 @@
++@echo off
++chcp 65001 >nul
++powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0启动引导线编辑器.ps1"
+
+diff --git a/编辑器/启动引导线编辑器.ps1 b/编辑器/启动引导线编辑器.ps1
+new file mode 100644
+index 0000000..3dc2838
+--- /dev/null
++++ b/编辑器/启动引导线编辑器.ps1
+@@ -0,0 +1,15 @@
++﻿$projectPath = Split-Path -Parent $PSScriptRoot
++$previewUrl = $null
++foreach ($port in @(7457, 7456, 7458)) {
++    try {
++        $response = Invoke-WebRequest -UseBasicParsing -Uri "http://localhost:$port/scripting/x/import-map.json" -TimeoutSec 2
++        if ($response.Content -match 'GuidanceEditorBuilder.ts') { $previewUrl = "http://localhost:$port/?guidanceEditor=1"; break }
++    } catch {}
++}
++if (-not $previewUrl) {
++    Write-Host '请用 Cocos Creator 3.8.8 打开此工程，等待资源编译并开启浏览器预览后，再运行本入口。'
++    Write-Host $projectPath
++    Read-Host '按 Enter 关闭'
++    exit 1
++}
++Start-Process $previewUrl
+
+diff --git a/编辑器/使用说明.md b/编辑器/使用说明.md
+new file mode 100644
+index 0000000..b799f43
+--- /dev/null
++++ b/编辑器/使用说明.md
+@@ -0,0 +1,14 @@
++# 引导线编辑器
++
++本目录对应当前 Neurou_official 工程。用 Creator 3.8.8 打开工程并开启浏览器预览，双击“打开引导线编辑器.cmd”。入口进入游戏内独立编辑器模式，不进入世界或写账本。
++
++世界编辑器下保留完整分类目录；本轮只实现谱面编辑器/引导线编辑器。音乐、地图、剧情、路人、字幕和特殊事件目录只占位。
++
++1. 加载 mock，或导入符合契约的 MIDI 输出 JSON。位置、时间与颜色由源数据决定。
++2. 点击音符或右侧事件列表；选择 Tap、Drag 或 Hold。Hold 必须选择同线更晚的尾端。内部转折不能选 Drag；错误会阻止导出，不会自动改类型。
++3. 撤销/重做修改。草稿自动保存于此浏览器；保存草稿可手动保存，下载草稿后放入“草稿/引导线”；导入草稿可跨浏览器恢复，包括历史。视频文件只保存文件名，恢复后需重新选择本地视频。
++4. 使用演奏预览或明确标记的自动试听。Space 启动 Head；v3 以媒体绝对时间卡点，晚启动不顺延。暂停冻结，拖动时间轴会重建预览并回放已记录输入，未来输入分支丢弃。自动试听不代表玩家成绩。
++5. 导出玩法 JSON 与颜色伴随 JSON；存入“导出/引导线”。默认浏览器下载到自己的下载目录，可手动移动；支持文件夹选择的浏览器可先选该输出目录。
++6. 点击“加载导出谱面”，选择玩法 JSON，可同时选择颜色伴随 JSON，再点击演奏预览或自动试听。此时预览从加载文件创建独立实际运行时。修改类型、撤销/重做后返回当前草稿预览。v1/v2 仍按旧固定速度解释，v3 使用绝对卡点；颜色文件可省略。原 A/B/C 游戏入口未接入伴随颜色，加载玩法 JSON 单独演奏不显示颜色。
++
++编辑器会严格验证数据，禁止手工拖点、改时间、绑定键或写入颜色到玩法数据。实时预览复用实际 ChartPremiere / GuidanceChartRuntime 与 LineEraseEffect；预览结果不写游戏账本。
+
+diff --git a/编辑器/世界编辑器/谱面编辑器/引导线编辑器/mock_midi.json b/编辑器/世界编辑器/谱面编辑器/引导线编辑器/mock_midi.json
+new file mode 100644
+index 0000000..0a35e23
+--- /dev/null
++++ b/编辑器/世界编辑器/谱面编辑器/引导线编辑器/mock_midi.json
+@@ -0,0 +1,212 @@
++{
++  "schemaVersion": 1,
++  "sourceId": "editor-mock-1",
++  "sourceRevision": "r1",
++  "provenance": "Mock",
++  "layoutVersion": "pad-layout-2",
++  "aspectRatio": 1.7777777777777777,
++  "mappingVersion": "mock-mapping-1",
++  "mediaDurationMs": 12000,
++  "events": [
++    {
++      "id": "a0",
++      "trackId": "track-a",
++      "lineId": "a",
++      "timeMs": 1000,
++      "position": {
++        "u": 0.15,
++        "v": 0.55
++      },
++      "color": {
++        "r": 248,
++        "g": 174,
++        "b": 80
++      },
++      "pitch": 60,
++      "drumType": null,
++      "velocity": 120,
++      "endTimeMs": 1100,
++      "emphasis": true
++    },
++    {
++      "id": "a1",
++      "trackId": "track-a",
++      "lineId": "a",
++      "timeMs": 2300,
++      "position": {
++        "u": 0.3,
++        "v": 0.55
++      },
++      "color": {
++        "r": 248,
++        "g": 174,
++        "b": 80
++      },
++      "pitch": 61,
++      "drumType": null,
++      "velocity": 90,
++      "endTimeMs": 2400,
++      "emphasis": false
++    },
++    {
++      "id": "a2",
++      "trackId": "track-a",
++      "lineId": "a",
++      "timeMs": 3100,
++      "position": {
++        "u": 0.5,
++        "v": 0.55
++      },
++      "color": {
++        "r": 248,
++        "g": 174,
++        "b": 80
++      },
++      "pitch": 62,
++      "drumType": null,
++      "velocity": 90,
++      "endTimeMs": 3200,
++      "emphasis": false
++    },
++    {
++      "id": "a3",
++      "trackId": "track-a",
++      "lineId": "a",
++      "timeMs": 5000,
++      "position": {
++        "u": 0.65,
++        "v": 0.55
++      },
++      "color": {
++        "r": 248,
++        "g": 174,
++        "b": 80
++      },
++      "pitch": 63,
++      "drumType": null,
++      "velocity": 90,
++      "endTimeMs": 5100,
++      "emphasis": false
++    },
++    {
++      "id": "a4",
++      "trackId": "track-a",
++      "lineId": "a",
++      "timeMs": 6800,
++      "position": {
++        "u": 0.85,
++        "v": 0.55
++      },
++      "color": {
++        "r": 248,
++        "g": 174,
++        "b": 80
++      },
++      "pitch": 64,
++      "drumType": null,
++      "velocity": 90,
++      "endTimeMs": 6900,
++      "emphasis": false
++    },
++    {
++      "id": "b0",
++      "trackId": "track-b",
++      "lineId": "b",
++      "timeMs": 1000,
++      "position": {
++        "u": 0.15,
++        "v": 0.65
++      },
++      "color": {
++        "r": 95,
++        "g": 190,
++        "b": 250
++      },
++      "pitch": 60,
++      "drumType": null,
++      "velocity": 120,
++      "endTimeMs": 1100,
++      "emphasis": true
++    },
++    {
++      "id": "b1",
++      "trackId": "track-b",
++      "lineId": "b",
++      "timeMs": 2300,
++      "position": {
++        "u": 0.3,
++        "v": 0.65
++      },
++      "color": {
++        "r": 95,
++        "g": 190,
++        "b": 250
++      },
++      "pitch": 61,
++      "drumType": null,
++      "velocity": 90,
++      "endTimeMs": 2400,
++      "emphasis": false
++    },
++    {
++      "id": "b2",
++      "trackId": "track-b",
++      "lineId": "b",
++      "timeMs": 3100,
++      "position": {
++        "u": 0.5,
++        "v": 0.65
++      },
++      "color": {
++        "r": 95,
++        "g": 190,
++        "b": 250
++      },
++      "pitch": 62,
++      "drumType": null,
++      "velocity": 90,
++      "endTimeMs": 3200,
++      "emphasis": false
++    },
++    {
++      "id": "b3",
++      "trackId": "track-b",
++      "lineId": "b",
++      "timeMs": 5000,
++      "position": {
++        "u": 0.65,
++        "v": 0.65
++      },
++      "color": {
++        "r": 95,
++        "g": 190,
++        "b": 250
++      },
++      "pitch": 63,
++      "drumType": null,
++      "velocity": 90,
++      "endTimeMs": 5100,
++      "emphasis": false
++    },
++    {
++      "id": "b4",
++      "trackId": "track-b",
++      "lineId": "b",
++      "timeMs": 6800,
++      "position": {
++        "u": 0.85,
++        "v": 0.65
++      },
++      "color": {
++        "r": 95,
++        "g": 190,
++        "b": 250
++      },
++      "pitch": 64,
++      "drumType": null,
++      "velocity": 90,
++      "endTimeMs": 6900,
++      "emphasis": false
++    }
++  ]
++}
+\ No newline at end of file

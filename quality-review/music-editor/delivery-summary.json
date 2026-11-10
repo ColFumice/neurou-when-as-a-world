@@ -1,0 +1,15 @@
+{
+  "pass": true,
+  "productionFiles": 20,
+  "newDeclarations": 552,
+  "threeGates": true,
+  "realCreatorResolutions": [
+    "1920x1080",
+    "2560x1440"
+  ],
+  "creatorSourceMapsCurrent": true,
+  "sourceProvenance": "Midi",
+  "sourceSchema": 1,
+  "guidanceSchema": 3,
+  "finalizedAt": "2026-10-10T06:38:19.832Z"
+}

@@ -1,0 +1,120 @@
+{
+  "total": 28,
+  "passed": 28,
+  "failed": 0,
+  "evidence": "真实 TypeScript 模块 → MusicEditorSession → buildChartSource → GuidanceEditorSession → schemaVersion=3",
+  "results": [
+    {
+      "name": "M01 默认工程加载、两轨与真实 Midi source → Guidance schema3",
+      "passed": true
+    },
+    {
+      "name": "M02 放置、修改、删除音符保存显式位置/音高/力度/时值",
+      "passed": true
+    },
+    {
+      "name": "M03 undo/redo、redo分支截断、无动作不增 revision",
+      "passed": true
+    },
+    {
+      "name": "M04 100步上限、全部撤销重做、草稿 restore",
+      "passed": true
+    },
+    {
+      "name": "M05 项目、布局、输入、历史、source、试听数据无可变引用泄漏",
+      "passed": true
+    },
+    {
+      "name": "M06 分段 tempo 积分、轨道偏移、含延迟尾端的媒体时长",
+      "passed": true
+    },
+    {
+      "name": "M07 SetTempo 是常数 BPM 事务，undo 恢复完整 tempoMap",
+      "passed": true
+    },
+    {
+      "name": "M08 未知键/危险ID/重复ID/非整数/NaN/Infinity/越界/时间签名严格拒绝",
+      "passed": true
+    },
+    {
+      "name": "M09 失败事务保留项目/历史/版本，LoadDraft和LoadProject失败也原子",
+      "passed": true
+    },
+    {
+      "name": "M10 restore 严格历史链/游标/标签事务/身份/revision/未知字段校验",
+      "passed": true
+    },
+    {
+      "name": "M11 编辑草稿容许未满足发布条件，试听独立，export 不补点、不丢音",
+      "passed": true
+    },
+    {
+      "name": "M12 合法的非首同刻同位重复音完整保留并被 Guidance 消费",
+      "passed": true
+    },
+    {
+      "name": "M13 ColorMusic 纯音高数学 A4/C4、拍号分母语义",
+      "passed": true
+    },
+    {
+      "name": "M14 musicEditor 不含 cc / presentation / director / ledger 运行时依赖",
+      "passed": true
+    },
+    {
+      "name": "M15 稳定快照校验和区分同 revision 不同内容、undo保留版本身份",
+      "passed": true
+    },
+    {
+      "name": "M16 小节首拍强调保留拍位，不受轨道 offset 影响",
+      "passed": true
+    },
+    {
+      "name": "M17 分段 BPM 时间轴逆换算和正偏移尾段钳制",
+      "passed": true
+    },
+    {
+      "name": "M18 导出拒绝 aspectRatio 路径长度下溢/无穷，保留草稿与试听",
+      "passed": true
+    },
+    {
+      "name": "B01 跨轨删除为单事务且一次 undo/redo 恢复完整组",
+      "passed": true
+    },
+    {
+      "name": "B02 跨轨共同 tick/pitch 位移保持相对位置、时值、力度、UV，单事务可消费",
+      "passed": true
+    },
+    {
+      "name": "B03 批量整组越界拒绝，无分音符夹取/部分提交/扩时长",
+      "passed": true
+    },
+    {
+      "name": "B04 重复/未知/危险 IDs、非数组、非整数 delta、NaN/Infinity、未知字段原子拒绝",
+      "passed": true
+    },
+    {
+      "name": "B05 空数组/共同零位移不写历史，不截断已有 redo 分支",
+      "passed": true
+    },
+    {
+      "name": "B06 粘贴整组只增加新 IDs，保留完整内容/隔离输入，一次 undo/redo",
+      "passed": true
+    },
+    {
+      "name": "B07 旧 ID 复用、组内重号、任一坏音符使整组粘贴失败",
+      "passed": true
+    },
+    {
+      "name": "B08 混合旧新意图历史恢复、跨轨批量分支截断、100 步上限",
+      "passed": true
+    },
+    {
+      "name": "B09 restore 拒绝跨轨不共同位移及 duration/velocity/UV/ID 伪造",
+      "passed": true
+    },
+    {
+      "name": "B10 restore 批量删除不能偷改存活音符，粘贴不能新增多轨/编辑旧音符",
+      "passed": true
+    }
+  ]
+}

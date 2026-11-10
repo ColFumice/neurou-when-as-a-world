@@ -1,0 +1,35 @@
+{
+  "startedAt": "2026-10-26T05:04:56.447Z",
+  "error": null,
+  "modes": [
+    "双目",
+    "单目 → 双目"
+  ],
+  "hint": true,
+  "early": {
+    "meta": "NO PAIR\n24%",
+    "error": null
+  },
+  "panel": "MEDIA / MONO→STEREO\n单目转双目\n×\n双目\n单目 → 双目\nproject root\n单目源视频\n选择\noffset / 33ms（请求值）\n\n按视频帧量化，实际生效值由右侧命令返回。静态场景可能无有效视差。 上次实际：33ms\n\nImport mono → stereo\nLoad theme\nPAIR a91c6139e45d0d25\n100%\n\nLoad theme 直接使用 manifest activePair（不重新导入，不会生成静音音轨）。Import stereo 仍走 left/right 转码。",
+  "pair": {
+    "audioAssetId": "051c1e5c928dc341",
+    "createdAt": 1792991125486,
+    "derivedFrom": "bc6a5300f7af449a1f50b015601775c84cd2e6a65a8e53e24bd1bd99e27924b4",
+    "leftAssetId": "47bd3bc9b7341a5a",
+    "offsetFrames": 1,
+    "offsetMs": 33,
+    "pseudoStereo": true,
+    "rightAssetId": "e9fd51571414d5c9",
+    "stereoPairId": "a91c6139e45d0d25"
+  },
+  "files": [
+    "audio.wav",
+    "left.mp4",
+    "right.mp4"
+  ],
+  "durations": {
+    "left": 71967,
+    "right": 71967
+  },
+  "finishedAt": "2026-10-26T05:05:28.464Z"
+}

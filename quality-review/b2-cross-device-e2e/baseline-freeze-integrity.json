@@ -1,0 +1,126 @@
+{
+  "schemaVersion": 1,
+  "phase": "B2.4e baseline integrity",
+  "generatedAtUtc": "2026-10-10T16:47:37.796Z",
+  "frozenAtUtc": "2026-10-10T16:03:57.126Z",
+  "baselineManifestSha256": "e9d0911e7c6f10574932fc43dba2e5dbf24cbdcdc5821dc2cba38bd9a570109b",
+  "originalIndexSha256": "484cce6fd40c77d6a574fd9c1986d329973443f122e39094e1c8167824d6514c",
+  "protectedPathCount": 643,
+  "canonicalSnapshotCount": 369,
+  "snapshotFailures": [],
+  "rootReadHashes": [
+    {
+      "file": "assets/scripts/WorldFolderBuilder.ts",
+      "baselineSha256": "837b75c0355dc595fae1e872d8bcfc85dc914659a5f99e92416cc9231f1caae9",
+      "readSha256": "837b75c0355dc595fae1e872d8bcfc85dc914659a5f99e92416cc9231f1caae9",
+      "matchesFrozenBaseline": true,
+      "readAtUtc": "2026-10-10T16:47:37.794Z"
+    },
+    {
+      "file": "assets/scripts/SceneBuilder.ts",
+      "baselineSha256": "6f0903e6af74187ec2d611607084f736552de7f1ad1bfe80cd3a3310a43f1499",
+      "readSha256": "6f0903e6af74187ec2d611607084f736552de7f1ad1bfe80cd3a3310a43f1499",
+      "matchesFrozenBaseline": true,
+      "readAtUtc": "2026-10-10T16:47:37.794Z"
+    },
+    {
+      "file": "assets/scripts/CrossDevicePrototype.ts",
+      "baselineSha256": "b192b335960ce6ba5f56a6df9daadee5697d294606ef991295aeba95d19a11ce",
+      "readSha256": "b192b335960ce6ba5f56a6df9daadee5697d294606ef991295aeba95d19a11ce",
+      "matchesFrozenBaseline": true,
+      "readAtUtc": "2026-10-10T16:47:37.794Z"
+    },
+    {
+      "file": "assets/scripts/WorldMigrationPrototype.ts",
+      "baselineSha256": "dd647ffef7acd25debed4a65a9c61747384cda947ab4f4dd509760e076910abe",
+      "readSha256": "dd647ffef7acd25debed4a65a9c61747384cda947ab4f4dd509760e076910abe",
+      "matchesFrozenBaseline": true,
+      "readAtUtc": "2026-10-10T16:47:37.795Z"
+    },
+    {
+      "file": "src/director/CoreTransfer.ts",
+      "baselineSha256": "f8af59dc687e605fc7640ae15d8c57857e49d31708ebaead858913cce30fdcc7",
+      "readSha256": "f8af59dc687e605fc7640ae15d8c57857e49d31708ebaead858913cce30fdcc7",
+      "matchesFrozenBaseline": true,
+      "readAtUtc": "2026-10-10T16:47:37.795Z"
+    },
+    {
+      "file": "src/director/WorldMigration.ts",
+      "baselineSha256": "43006e243f11ac2589895bbd1851df5ee5f249734f787fe6b48049a7b8b836c4",
+      "readSha256": "43006e243f11ac2589895bbd1851df5ee5f249734f787fe6b48049a7b8b836c4",
+      "matchesFrozenBaseline": true,
+      "readAtUtc": "2026-10-10T16:47:37.795Z"
+    },
+    {
+      "file": "src/director/RealityPauseBoundary.ts",
+      "baselineSha256": "322c77afaa6084c1cd1492bd5f69710823c1c5c32ab474cea91a5360fa117099",
+      "readSha256": "322c77afaa6084c1cd1492bd5f69710823c1c5c32ab474cea91a5360fa117099",
+      "matchesFrozenBaseline": true,
+      "readAtUtc": "2026-10-10T16:47:37.795Z"
+    },
+    {
+      "file": "src/presentation/SafePointDrainStorage.ts",
+      "baselineSha256": "76fb9391a9aabc553ade293c31bc6aba66e1e2aec986b679151a8068b5c4ea3d",
+      "readSha256": "76fb9391a9aabc553ade293c31bc6aba66e1e2aec986b679151a8068b5c4ea3d",
+      "matchesFrozenBaseline": true,
+      "readAtUtc": "2026-10-10T16:47:37.795Z"
+    },
+    {
+      "file": "src/presentation/CrossDeviceImportStorage.ts",
+      "baselineSha256": "15b16c12daae586a6f7a8bdffbc6289fe42307c4a62140fb91617e2b0a94c4c2",
+      "readSha256": "15b16c12daae586a6f7a8bdffbc6289fe42307c4a62140fb91617e2b0a94c4c2",
+      "matchesFrozenBaseline": true,
+      "readAtUtc": "2026-10-10T16:47:37.795Z"
+    },
+    {
+      "file": "src/presentation/WorldMigrationStorage.ts",
+      "baselineSha256": "bfea840ae818b6b4e443a9a77092b9cfa3f7f96a43014f7bef704ff2551d1d3f",
+      "readSha256": "bfea840ae818b6b4e443a9a77092b9cfa3f7f96a43014f7bef704ff2551d1d3f",
+      "matchesFrozenBaseline": true,
+      "readAtUtc": "2026-10-10T16:47:37.795Z"
+    },
+    {
+      "file": "src/presentation/WorldMigrationContractAdapter.ts",
+      "baselineSha256": "a37a069880e5eb88e1f04c426573df96ccf266bc08ecfa7a9d8b755ddaec0a47",
+      "readSha256": "a37a069880e5eb88e1f04c426573df96ccf266bc08ecfa7a9d8b755ddaec0a47",
+      "matchesFrozenBaseline": true,
+      "readAtUtc": "2026-10-10T16:47:37.795Z"
+    }
+  ],
+  "evidenceReadHashes": [
+    {
+      "file": "quality-review/b2-cross-device-e2e/creator-preview.cjs",
+      "readSha256": "74d93efb28cac8b67dbfdc8b40849837ebef0e7564bafbbcd9c08e3599f8572b",
+      "bytes": 43324,
+      "readAtUtc": "2026-10-10T16:47:37.795Z",
+      "baselineScope": false,
+      "meaning": "Read observation of root acceptance evidence script, not part of immutable protected production baseline."
+    },
+    {
+      "file": "quality-review/b2-cross-device-e2e/prepare-preview-harness.cjs",
+      "readSha256": "0f66a72bba5a3f122bfe242ac1f1310cc9cbf27a322888e42a00cbc4bb788d0e",
+      "bytes": 9664,
+      "readAtUtc": "2026-10-10T16:47:37.795Z",
+      "baselineScope": false,
+      "meaning": "Read observation of root acceptance evidence script, not part of immutable protected production baseline."
+    },
+    {
+      "file": "quality-review/b2-cross-device-e2e/run-preview.cjs",
+      "readSha256": "ba2ba9e0a717bee063060c513cab8b87c2221cba723d433f1491fc6c7221a023",
+      "bytes": 845,
+      "readAtUtc": "2026-10-10T16:47:37.795Z",
+      "baselineScope": false,
+      "meaning": "Read observation of root acceptance evidence script, not part of immutable protected production baseline."
+    },
+    {
+      "file": "quality-review/b2-cross-device-e2e/run-contract-regressions.cjs",
+      "readSha256": "5c62c912d3d09b3e93e71f2ee6f07f24aeff7d8c0ee3f15d716ff3f5d78543b5",
+      "bytes": 9525,
+      "readAtUtc": "2026-10-10T16:47:37.795Z",
+      "baselineScope": false,
+      "meaning": "Read observation of root acceptance evidence script, not part of immutable protected production baseline."
+    }
+  ],
+  "pass": true,
+  "limit": "Checks the immutable original snapshots and read hashes. Evidence scripts may continue to be authored; final source and document drift require the separate end-of-batch audit."
+}

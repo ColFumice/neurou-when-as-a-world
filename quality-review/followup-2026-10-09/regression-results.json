@@ -1,0 +1,14 @@
+[
+  {
+    "name": "AC-20/27 completion returns via director without any presentation callback",
+    "pass": true
+  },
+  {
+    "name": "AC-20 final hit and ExitChart in one frame retain completed result and append once",
+    "pass": true
+  },
+  {
+    "name": "AC-21/28 midway exit and reentry preserve endpoint record and reset score",
+    "pass": true
+  }
+]

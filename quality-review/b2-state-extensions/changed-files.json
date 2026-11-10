@@ -1,0 +1,196 @@
+{
+  "batch": "B2.2d-2",
+  "generatedAt": "2026-10-10T12:07:31.960020+00:00",
+  "baselineCapturedAt": "2026-10-10T11:33:55.135Z",
+  "baselinePathCount": 272,
+  "excludedJunctionAliases": [
+    "assets/scripts/src/",
+    "assets/scripts/constants/"
+  ],
+  "modifiedCount": 10,
+  "addedCount": 16,
+  "files": [
+    {
+      "path": "assets/resources/chart/content-manifest.json",
+      "status": "Added",
+      "beforeSha256": null,
+      "afterSha256": "1361a1068c5fb8ca7433d27a6cf70fc644691d98abc3a3471cf96d2e3becac4e",
+      "bytes": 4322
+    },
+    {
+      "path": "assets/resources/chart/content-manifest.json.meta",
+      "status": "Added",
+      "beforeSha256": null,
+      "afterSha256": "e917f139f8db5bde0f50f2495c1b389564119d04110a4fb45f3f93a1c341985d",
+      "bytes": 142
+    },
+    {
+      "path": "assets/scripts/SceneBuilder.ts",
+      "status": "Modified",
+      "beforeSha256": "29127e27d7363d0174fd5c3852c4f45b51b6108bb5bec44f1ba8bb18cf7c13e8",
+      "afterSha256": "e6ee268af72d9080f0cd6b3856a104733cc7a676e9f696138e7e72246c1bfae4",
+      "bytes": 95795
+    },
+    {
+      "path": "assets/scripts/WorldFolderBuilder.ts",
+      "status": "Modified",
+      "beforeSha256": "58191d6a28da48327e821dc26cec9f621d4f9d77cc8c0361c861a5bd82252923",
+      "afterSha256": "d301e20426141856761d3efc568784ffd8852d42245674f80f1c8c8a4dff2820",
+      "bytes": 25099
+    },
+    {
+      "path": "src/director/ChartArchive.ts",
+      "status": "Added",
+      "beforeSha256": null,
+      "afterSha256": "5b9f40b23ad29ccb96c82c26b0b2ebe6956b4170e578fe35b10e865dcefd5ee8",
+      "bytes": 31502
+    },
+    {
+      "path": "src/director/ChartArchive.ts.meta",
+      "status": "Added",
+      "beforeSha256": null,
+      "afterSha256": "abdd05cd7437d09fd5f84092e732d6ed45d04bc75b492a2c5f1b329246945ba4",
+      "bytes": 142
+    },
+    {
+      "path": "src/director/ChartReplaySession.ts",
+      "status": "Added",
+      "beforeSha256": null,
+      "afterSha256": "dd9d032dbd7d22beeb8f90ee9a6c6e3584f2e846194ed911a22089aceb98cd06",
+      "bytes": 6571
+    },
+    {
+      "path": "src/director/ChartReplaySession.ts.meta",
+      "status": "Added",
+      "beforeSha256": null,
+      "afterSha256": "3fc2fa779d6d48b642b9f7c09ad68ed5901fece9aa4a5bccf5d4684a0dcf882f",
+      "bytes": 171
+    },
+    {
+      "path": "src/director/IntentPort.ts",
+      "status": "Modified",
+      "beforeSha256": "dec9218a4084e5e5a13450e04b9b660c0ed632e88d96c1d3af575284030b9a57",
+      "afterSha256": "db15d91577a4c1b8090872b655c564c4b8631896e0bec3cdc7995317d2b4563e",
+      "bytes": 45544
+    },
+    {
+      "path": "src/director/PlayerIntent.ts",
+      "status": "Modified",
+      "beforeSha256": "c82bdd6a32e01bd68a46bad5164289f26b5e6e0cdf2892dc246cb490648e083b",
+      "afterSha256": "57c66a172ab931002ecb0a63d4d5c5b55f6e7ce83bb0255339464edfc21fae34",
+      "bytes": 5717
+    },
+    {
+      "path": "src/director/PrimaryWorldState.ts",
+      "status": "Added",
+      "beforeSha256": null,
+      "afterSha256": "939088515188fadafe895e7fcf0916dd6222f02bdf667a1ff254730000334a3f",
+      "bytes": 2860
+    },
+    {
+      "path": "src/director/PrimaryWorldState.ts.meta",
+      "status": "Added",
+      "beforeSha256": null,
+      "afterSha256": "e6c18995c15178d4e050db88ef3466742d07cbd1211b11262fead6672fdfdb3d",
+      "bytes": 171
+    },
+    {
+      "path": "src/director/RecallCountSession.ts",
+      "status": "Added",
+      "beforeSha256": null,
+      "afterSha256": "424434ac8ae5522dd1bbeebb0cffb74ff7c4099e1811fbe240f0c9572ebb4ebc",
+      "bytes": 16777
+    },
+    {
+      "path": "src/director/RecallCountSession.ts.meta",
+      "status": "Added",
+      "beforeSha256": null,
+      "afterSha256": "58a9b0016dd75ed531f14c9b0850bbc6ea592d68e5786a0cf5519b860f179a29",
+      "bytes": 171
+    },
+    {
+      "path": "src/director/WorldLinkSession.ts",
+      "status": "Added",
+      "beforeSha256": null,
+      "afterSha256": "f650ed4307a523ba4e24d9801d2e48fc87821f71a67b43f27717a4c496bbcca6",
+      "bytes": 18683
+    },
+    {
+      "path": "src/director/WorldLinkSession.ts.meta",
+      "status": "Added",
+      "beforeSha256": null,
+      "afterSha256": "2e21c25d9f219a82d1d3f76bcbe4fcdbb1945079c5298f36398f6c34f4ed280d",
+      "bytes": 142
+    },
+    {
+      "path": "src/director/WorldStateCodec.ts",
+      "status": "Modified",
+      "beforeSha256": "1355fa1eb523f66c4f390ea4c7eed1a2eec9a3922a130be0c2b9019e36ee56cf",
+      "afterSha256": "9ee4b892791b16510a7e6c8f675c0a16de9e82cfe6b19fc881e10cc545ccde22",
+      "bytes": 14397
+    },
+    {
+      "path": "src/director/WorldStateSession.ts",
+      "status": "Modified",
+      "beforeSha256": "9085af46ee34c6651876c020d2e898d96bdd3e0fc632006279e8307a63aa2b58",
+      "afterSha256": "ba196ea6934ec9f22fe0e8d909daaf520e65a6eb5a48b5de16a6cd2741608017",
+      "bytes": 20810
+    },
+    {
+      "path": "src/presentation/ChartReplayView.ts",
+      "status": "Added",
+      "beforeSha256": null,
+      "afterSha256": "c3cc8dfccc6a796337f9dc07fa1d1b870cac775c7940d8cbc0e7ca82ffb094de",
+      "bytes": 7686
+    },
+    {
+      "path": "src/presentation/ChartReplayView.ts.meta",
+      "status": "Added",
+      "beforeSha256": null,
+      "afterSha256": "524f2205bce0d4b301ea3a26aa72869fc8eeec2005ca7f03c2a0ee949f2ccade",
+      "bytes": 171
+    },
+    {
+      "path": "src/presentation/WorldCoreStateStorage.ts",
+      "status": "Modified",
+      "beforeSha256": "cbb4bdd5e436cf291bbdda83aa2e9761e4e8bd754af439acdbd9c56dbe1e8bee",
+      "afterSha256": "5bb565a844bac60634f0428fd77e02406cba8868c9840f86b8c17a26fed8af3d",
+      "bytes": 15172
+    },
+    {
+      "path": "src/presentation/WorldCoreStateView.ts",
+      "status": "Modified",
+      "beforeSha256": "649aa670338dd4b12ae442b18ee24ec0ea08eaf4f902a9f13a70823ab97ba665",
+      "afterSha256": "520e8223789e67dffcf6bf888b27e8a140884d982dc76dcef81dc4ddbf1d4da8",
+      "bytes": 3621
+    },
+    {
+      "path": "src/presentation/WorldFolderView.ts",
+      "status": "Modified",
+      "beforeSha256": "6d728d3fc775065b46921864f013d9575c964004f60918508f352d2f3e4d9a7d",
+      "afterSha256": "35db2c33f11600136d8823640606582ff693a0a35691ed645c8b2e50ae9081bc",
+      "bytes": 16703
+    },
+    {
+      "path": "src/presentation/WorldMemoryView.ts",
+      "status": "Added",
+      "beforeSha256": null,
+      "afterSha256": "e775673935d3257b57bef8b895bbb9836d84c9c3f38fe74b349724c10f43cbbf",
+      "bytes": 4499
+    },
+    {
+      "path": "src/presentation/WorldMemoryView.ts.meta",
+      "status": "Added",
+      "beforeSha256": null,
+      "afterSha256": "21dd58553943030bc4914a802ab2924e435ffda5bfbd100304ab31ace8458a4e",
+      "bytes": 171
+    },
+    {
+      "path": "src/presentation/WorldStateStorage.ts",
+      "status": "Modified",
+      "beforeSha256": "95e03b7610946041e0aa635d37cf5790b17cdd37d3ed7272080a5b69815e8056",
+      "afterSha256": "eb4b7fd47b9c546fba3959dcea9922324134586a3d2dbdff6a70d67519a74432",
+      "bytes": 2402
+    }
+  ]
+}

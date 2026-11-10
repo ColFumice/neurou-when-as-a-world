@@ -1,0 +1,121 @@
+{
+  "generatedAt": "2026-10-10T09:10:46.506Z",
+  "status": "protocol-required",
+  "productionCodeChanged": false,
+  "b22Implemented": false,
+  "b22Acceptance": false,
+  "protectedFileCount": 3519,
+  "files": [
+    {
+      "path": "quality-review/b2-state-milestones/PROTOCOL-B2.2-001.md",
+      "bytes": 7630,
+      "sha256": "afd9e9314b77bcaee98ac58dd604fd1fdcc076ba4a000947b403a380dd2d5a52"
+    },
+    {
+      "path": "quality-review/b2-state-milestones/VERDICT-211-225.md",
+      "bytes": 14128,
+      "sha256": "57db3284ec72a2786b231b842473f49baba67b6ef6edc03f2e10648ca5fbf59e"
+    },
+    {
+      "path": "quality-review/b2-state-milestones/baseline-checks.cjs",
+      "bytes": 8724,
+      "sha256": "c88a0941d0bc3adad9e39a781d05d311ea862c1e4a27fa398b07a159c0d69e16"
+    },
+    {
+      "path": "quality-review/b2-state-milestones/baseline-gate-dependencies.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "quality-review/b2-state-milestones/baseline-gate-dependencies.stdout.log",
+      "bytes": 500,
+      "sha256": "3783cb106ce81d322684ecf6122c99f98f39e34f5658b540f96a1dc49922df4c"
+    },
+    {
+      "path": "quality-review/b2-state-milestones/baseline-gate-naming.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "quality-review/b2-state-milestones/baseline-gate-naming.stdout.log",
+      "bytes": 3464,
+      "sha256": "9a37fcad5d82410f4a2558bb9822df8fac31716f45a1e5fd2e4205ee45f1f6e9"
+    },
+    {
+      "path": "quality-review/b2-state-milestones/baseline-gate-results.json",
+      "bytes": 1549,
+      "sha256": "69ffca6fe79a40140691104eb423f8b5cf5933b05ff48fe185552449940c40a9"
+    },
+    {
+      "path": "quality-review/b2-state-milestones/baseline-gate-typecheck.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "quality-review/b2-state-milestones/baseline-gate-typecheck.stdout.log",
+      "bytes": 51,
+      "sha256": "47db75ab61e28891e9bd05695ea78e54bf8efbe923ef0568deceae65986ea76c"
+    },
+    {
+      "path": "quality-review/b2-state-milestones/baseline-preview-readonly.json",
+      "bytes": 11028,
+      "sha256": "14d66cb94edf55e72251d8fa0fd5a64d5560ec3b63bcea84326d9ca7c0a6d1d5"
+    },
+    {
+      "path": "quality-review/b2-state-milestones/baseline-protected-files.json",
+      "bytes": 800375,
+      "sha256": "f461bf8fb618c6b251fff4969bc512c3a24155ef9870c7ddea5a399297316c0e"
+    },
+    {
+      "path": "quality-review/b2-state-milestones/baseline-protection-info.json",
+      "bytes": 625,
+      "sha256": "f3461fd214454cb151ffd8d95155fa49d20a66fcbd77e03ecd3d0be83f52bfcd"
+    },
+    {
+      "path": "quality-review/b2-state-milestones/baseline-protection-verification.json",
+      "bytes": 231,
+      "sha256": "6ae54df9db3e203c895e5c5fb9a99c89954a9dd6826b2f287cea0613db63374d"
+    },
+    {
+      "path": "quality-review/b2-state-milestones/final-protection-verification.json",
+      "bytes": 284,
+      "sha256": "45d58f6d2e5d905fb0d654f9c2b11757f0e73a9652489e78addbf30b12888771"
+    },
+    {
+      "path": "quality-review/b2-state-milestones/finalize-evidence.cjs",
+      "bytes": 3825,
+      "sha256": "c21c7b1d7cfe561ebf521779d79ba12b419495eb2d7b8081bf2268c3722c8e1d"
+    },
+    {
+      "path": "quality-review/b2-state-milestones/production-code.diff",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "quality-review/b2-state-milestones/proposal-evidence.diff",
+      "bytes": 60131,
+      "sha256": "d0f3e485fdf8c74d2df206fefe25911ee97e2424dcc99982e52d6caf56d27d1a"
+    },
+    {
+      "path": "quality-review/b2-state-milestones/交付报告.md",
+      "bytes": 9675,
+      "sha256": "87ec810c932ef35fa48f12c777189ffeec38792609ce394abb0c4aa817b75557"
+    },
+    {
+      "path": "quality-review/b2-state-milestones/名库v3.7附录提案.md",
+      "bytes": 4528,
+      "sha256": "ad82f893a5fc338a4ec7d300107f93279be391c21141f3245dcd3dc8c71559fb"
+    },
+    {
+      "path": "quality-review/b2-state-milestones/截图索引.md",
+      "bytes": 993,
+      "sha256": "964e7c6b8e591c49fd690bbcab3779389a5d1533ce1ddf3eb4444280afdf7e56"
+    },
+    {
+      "path": "quality-review/b2-state-milestones/接口契约草案.md",
+      "bytes": 8140,
+      "sha256": "1ef34c69eb046195d959a8c1c9485a100653d424d11deb5ded2950de8248661f"
+    }
+  ],
+  "note": "Manifest excludes itself. proposal-evidence.diff contains review artifacts only; production-code.diff is intentionally empty."
+}

@@ -1,0 +1,13 @@
+{
+  "changed": [
+    "src/chart/KeyboardPadLayout.ts",
+    "src/chart/GuidanceLineRuntime.ts",
+    "src/chart/ChartPremiere.ts",
+    "src/presentation/ChartPadView.ts",
+    "assets/scripts/SceneBuilder.ts",
+    "assets/resources/chart/guidance_a.json",
+    "assets/resources/chart/guidance_b.json",
+    "assets/resources/chart/chart_placeholder.json"
+  ],
+  "baselineMethod": "Direct copies before this user-requested change; workspace has no Git repository"
+}

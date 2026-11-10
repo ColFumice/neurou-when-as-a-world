@@ -1,0 +1,36 @@
+{
+  "capturedUtc": "2026-10-11T01:52:15.5389238Z",
+  "projectRoot": "D:\\Project\\A_New_Begin\\Neurou_official",
+  "userTimezone": "Asia/Shanghai",
+  "localTimeAsiaShanghai": "2026-10-11 09:52:15",
+  "operatingSystem": "Microsoft Windows NT 10.0.26200.0",
+  "powershellVersion": "7.6.5",
+  "nodeVersion": "v24.19.0",
+  "npmVersion": "11.17.0",
+  "typescriptVersion": "5.5.4",
+  "nodeExecutable": "C:\\Program Files\\nodejs\\node.exe",
+  "npmExecutable": "C:\\Program Files\\nodejs\\npm.cmd",
+  "gitProbe": {
+    "exitCode": 128,
+    "command": "git rev-parse --is-inside-work-tree",
+    "output": "fatal: not a git repository (or any of the parent directories): .git"
+  },
+  "agentsFilesChecked": [
+    "D:/AGENTS.md",
+    "D:/Project/AGENTS.md",
+    "D:/Project/A_New_Begin/AGENTS.md",
+    "D:/Project/A_New_Begin/Neurou_official/AGENTS.md"
+  ],
+  "agentsFilesFound": [],
+  "nestedAgentsSearch": {
+    "command": "rg --files -g AGENTS.md -g !node_modules -g !library -g !temp -g !build",
+    "result": "No AGENTS.md found"
+  },
+  "npmInstallPerformed": false,
+  "sourceOrConfigurationModified": false,
+  "gateNames": [
+    "npm run check:naming",
+    "npm run check:dependencies",
+    "npm run typecheck"
+  ]
+}

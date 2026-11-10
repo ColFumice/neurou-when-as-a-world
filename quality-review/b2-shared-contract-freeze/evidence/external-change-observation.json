@@ -1,0 +1,31 @@
+{
+  "observedUtc": "2026-10-11T03:38:47.763Z",
+  "attribution": "UnknownExternal: this agent did not write, revert or rebaseline these protected documents. Last-write timestamps and content do not prove actor identity.",
+  "files": [
+    {
+      "path": "docs/NAMEBOOK.md",
+      "baseline": {
+        "bytes": 95006,
+        "sha256": "a5fd832266894f62ccdde073c028ed3deb5726087802e940311981235278b094"
+      },
+      "observed": {
+        "bytes": 101742,
+        "sha256": "cf1e686fcf56e1f05c9b897a94872da1195390694a7a31b4c1da16cea159850e",
+        "lastWriteUtc": "2026-10-11T03:29:44.092Z"
+      }
+    },
+    {
+      "path": "docs/spec/stage-1.md",
+      "baseline": {
+        "bytes": 68444,
+        "sha256": "24e89f2dfe80d7769151720269bcdc03c7863f5b917ee1a00dcde9b3a564fecb"
+      },
+      "observed": {
+        "bytes": 75156,
+        "sha256": "a11d5be896857a7586d59c3f9dcd6feb1e13861b1a7c279972cc968f23f25aaf",
+        "lastWriteUtc": "2026-10-11T03:38:28.844Z"
+      }
+    }
+  ],
+  "action": "Preserve first protection FAIL. Do not update baseline, exclude changed documents, revert files or claim protected PASS without explicit attribution/authorization."
+}

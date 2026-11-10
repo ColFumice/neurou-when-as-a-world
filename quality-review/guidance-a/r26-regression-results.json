@@ -1,0 +1,26 @@
+[
+  {
+    "name": "20 Notes hit at 10s, still Playing",
+    "pass": true
+  },
+  {
+    "name": "actual end at 12s completes exactly at 12000ms",
+    "pass": true
+  },
+  {
+    "name": "reopen clears mediaEnded",
+    "pass": true
+  },
+  {
+    "name": "30s independent timeout; paused time excluded",
+    "pass": true
+  },
+  {
+    "name": "early media end still waits for all Notes",
+    "pass": true
+  },
+  {
+    "name": "empty chart waits for media end",
+    "pass": true
+  }
+]

@@ -1,0 +1,279 @@
+{
+  "batch": "B2.3-domain",
+  "category": "ContractTest",
+  "total": 54,
+  "passed": 54,
+  "failed": 0,
+  "results": [
+    {
+      "name": "same-account permitted Primary source yields runtime-certified revision-zero independent world",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "all seven inherited payloads are exact except account/world composite keys",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "protagonist, foreign-character, event and ChartRef identities keep exact order and values",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "World entry composite uniqueness key is rebased and its local ChartRef identity retained",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "Puzzle private state, stable flags, chainId and deepTraceId stay exact",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "RecallCount actual count, character/event indexes and trace bindings are inherited",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "FormatTime remains original while new directory creation and capture time use forkedAt",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "Primary WorldLink explicit NotApplicable is inherited with own world key only",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "real frozen World chart, visual, media, owner and contentDigest are retained without regeneration",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "real scores, completed play identities, best/latest and snapshotDigest stay exact",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "no account WorldClearRecord, RouteSignature or permission payload enters target seven sections",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "completed source publishes immutable inherited completion witness and canonical full-source digest",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "unfinished lawful Complete checkpoint inherits null completion and empty real archive collections",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "crossed but unfinished source preserves its real maker choice and available World entry with null witness",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "source, directory and certified target stay deeply frozen and detached without input mutations",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "new directory record retains description and uses safe copy title and EmptyWorld template",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "long title truncation never cuts a surrogate pair and remains within existing 80-unit contract",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "false CopyPermission rejects before any identity or time callback",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "foreign-account milestone reader cannot authorize a fork",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "contradictory mutable permission value is rejected rather than treated as authority",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "source JSON clone and a seven-section Core without runtime Complete brand are rejected",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "Incomplete source cannot be promoted by synthesizing missing empty sections",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "foreign-account and foreign-world runtime certified source identities are rejected",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "source validation failure runs no identities or clocks",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "source validator cannot replace the requested current checkpoint with a different certified revision",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "directory missing source rejects before any identity or time callback",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "directory deleted source rejects before any identity or time callback",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "directory foreign-account source rejects before any identity or time callback",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "directory duplicate source rejects before any identity or time callback",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "directory extra-field source rejects before any identity or time callback",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "folder and milestone accessors are rejected without invoking getters",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "uncertified source and rebase accessor objects fail before evaluating identity getters",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "target identity must use a UUID v4 and reject collisions including tombstones",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "unsafe transaction id and invalid or backwards clock prevent plan publication",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "FinalShore hard ban and BugShore capability limit precede all factories",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "target validator must return certified target identity and exact inherited contents",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "descendant fork names its immediate source but preserves original completion and FormatTime",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "descendant fork cannot reuse the previous immutable transaction id",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "serialized journal plan validates losslessly to a new runtime-certified complete target",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "journal plan rejects tampered header field schemaVersion",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "journal plan rejects tampered header field accountId",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "journal plan rejects tampered header field transactionId",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "journal plan rejects tampered header field sourceWorldId",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "journal plan rejects tampered header field targetWorldId",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "journal plan rejects tampered header field sourceRevision",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "journal plan rejects tampered header field sourceDigest",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "journal plan rejects extra fields, accessor/cyclic payloads and sparse folder arrays",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "journal target record must match target identity, creation time, active state and six-field schema",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "journal target must be initial revision zero with origin capture time and inherited completion witness",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "origin rejects extra, missing, prototype and symbol data fields without invoking accessors",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "origin rejects self-fork, account/target/protagonist mismatch, unsafe values and invalid chronology",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "inherited completion must match one own World premiere event and lawful same-chart entry",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "initial null origin can coexist with later lawful own premiere without changing immutable provenance",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "explicit rebase rejects origin source revision, capture time and completion tampering",
+      "result": "PASS",
+      "category": "ContractTest"
+    }
+  ]
+}

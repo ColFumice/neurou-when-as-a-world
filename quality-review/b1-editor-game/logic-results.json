@@ -1,0 +1,483 @@
+{
+  "generatedAt": "2026-10-10T07:22:06.675Z",
+  "scope": "Actual MusicEditorSession, GuidanceEditorSession, PuzzleChain, DeepTrace, ChartPremiere and DirectorSession. No cc or private state mutation.",
+  "passed": 11,
+  "failed": 0,
+  "artifacts": [
+    {
+      "filename": "quality-review/b1-editor-game/b1-editor-v3-project.json",
+      "sha256": "1cd1a2851efa49e752bc02b5de41a017e4c0d21310eaebfc2bb9d28b2a56e5d0"
+    },
+    {
+      "filename": "quality-review/b1-editor-game/b1-editor-v3-music-draft.json",
+      "sha256": "654df1f3c365ac26ae1b329c085a8de0908012faf12765daa2cb26d808b15ade"
+    },
+    {
+      "filename": "quality-review/b1-editor-game/b1-editor-v3-source.json",
+      "sha256": "77d5b7d547454c632572fdeb0f2fbc986c2db1b3b3fec4cb970b7db24a94d1c1"
+    },
+    {
+      "filename": "quality-review/b1-editor-game/b1-editor-v3-guidance-draft.json",
+      "sha256": "e041fea9bcec2bb343815c9ecf5ced03ece81f2259f7effa7f4efc3c7585c2b6"
+    },
+    {
+      "filename": "quality-review/b1-editor-game/b1-editor-v3-chart.json",
+      "sha256": "00447688aa24204a731eb94942830b81db88093740635d77ee87d51bdd9a817f"
+    },
+    {
+      "filename": "quality-review/b1-editor-game/b1-editor-v3-chart.visual.json",
+      "sha256": "2763b971d742b6335aa91b8cd998af0fc5b0a21ed32ab4e854f1f8b839e00998"
+    }
+  ],
+  "checks": [
+    {
+      "name": "B1-01 real music edit -> Midi source -> guidance editor -> serialized v3 and matching color sidecar",
+      "pass": true,
+      "evidence": {
+        "chartId": "b1-editor-v3-chart",
+        "schemaVersion": 3,
+        "lines": 2,
+        "nodes": 4,
+        "sourceEvents": 6,
+        "mediaDurationMs": 16000,
+        "artifacts": [
+          {
+            "filename": "quality-review/b1-editor-game/b1-editor-v3-project.json",
+            "sha256": "1cd1a2851efa49e752bc02b5de41a017e4c0d21310eaebfc2bb9d28b2a56e5d0"
+          },
+          {
+            "filename": "quality-review/b1-editor-game/b1-editor-v3-music-draft.json",
+            "sha256": "654df1f3c365ac26ae1b329c085a8de0908012faf12765daa2cb26d808b15ade"
+          },
+          {
+            "filename": "quality-review/b1-editor-game/b1-editor-v3-source.json",
+            "sha256": "77d5b7d547454c632572fdeb0f2fbc986c2db1b3b3fec4cb970b7db24a94d1c1"
+          },
+          {
+            "filename": "quality-review/b1-editor-game/b1-editor-v3-guidance-draft.json",
+            "sha256": "e041fea9bcec2bb343815c9ecf5ced03ece81f2259f7effa7f4efc3c7585c2b6"
+          },
+          {
+            "filename": "quality-review/b1-editor-game/b1-editor-v3-chart.json",
+            "sha256": "00447688aa24204a731eb94942830b81db88093740635d77ee87d51bdd9a817f"
+          },
+          {
+            "filename": "quality-review/b1-editor-game/b1-editor-v3-chart.visual.json",
+            "sha256": "2763b971d742b6335aa91b8cd998af0fc5b0a21ed32ab4e854f1f8b839e00998"
+          }
+        ]
+      }
+    },
+    {
+      "name": "B1-02 unauthorized entry rejected; real seven-second deep-trace chain produces only T6 baseline",
+      "pass": true,
+      "evidence": {
+        "triggerDurationMs": 7000,
+        "deepTraceTriggered": true,
+        "baselineLedgerCount": 1,
+        "event": {
+          "eventId": "T6_ENDPOINT_PLACEHOLDER",
+          "vector": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "VectorSchemaVersion": 1,
+          "AppendedAt": {
+            "epochMs": 1791616926605
+          },
+          "InputSource": 0,
+          "ChapterTag": {},
+          "ChartRef": {
+            "chartId": "b1-editor-v3-chart"
+          }
+        }
+      }
+    },
+    {
+      "name": "B1-03 v3 perfect performance through real director completes, returns world in same frame, adds exactly one T7 event",
+      "pass": true,
+      "evidence": {
+        "inputs": [
+          {
+            "timeMs": 1000,
+            "keyId": "Space",
+            "lineId": "line-music-line-1",
+            "head": true
+          },
+          {
+            "timeMs": 1250,
+            "keyId": "Space",
+            "lineId": "line-music-line-2",
+            "head": true
+          },
+          {
+            "timeMs": 2250,
+            "keyId": "KeyT",
+            "nodeId": "node-music-note-5"
+          },
+          {
+            "timeMs": 2500,
+            "keyId": "KeyF",
+            "nodeId": "node-music-note-2"
+          },
+          {
+            "timeMs": 3000,
+            "keyId": "KeyJ",
+            "nodeId": "node-music-note-3"
+          },
+          {
+            "timeMs": 3250,
+            "keyId": "KeyP",
+            "nodeId": "node-music-note-6"
+          }
+        ],
+        "baselineLedgerCount": 1,
+        "finalLedgerCount": 2,
+        "gameCompletionDelta": 1,
+        "sameFrameWorldReturn": true,
+        "result": {
+          "chartId": "b1-editor-v3-chart",
+          "tier": "Regular",
+          "perfectCount": 4,
+          "goodCount": 0,
+          "missCount": 0,
+          "totalScore": 400,
+          "finishedAtMs": 16000,
+          "completed": true
+        },
+        "event": {
+          "eventId": "T7_COMPLETION_PLACEHOLDER",
+          "vector": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "VectorSchemaVersion": 1,
+          "AppendedAt": {
+            "epochMs": 1791616926607
+          },
+          "InputSource": 0,
+          "ChapterTag": {},
+          "ChartRef": {
+            "chartId": "b1-editor-v3-chart"
+          }
+        }
+      }
+    },
+    {
+      "name": "B1-04 zero-score v3 performance writes the same NarrativeEvent shape and exactly one completion",
+      "pass": true,
+      "evidence": {
+        "gameCompletionDelta": 1,
+        "result": {
+          "chartId": "b1-editor-v3-chart",
+          "tier": "Regular",
+          "perfectCount": 0,
+          "goodCount": 0,
+          "missCount": 4,
+          "totalScore": 0,
+          "finishedAtMs": 16000,
+          "completed": true
+        },
+        "event": {
+          "eventId": "T7_COMPLETION_PLACEHOLDER",
+          "vector": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "VectorSchemaVersion": 1,
+          "AppendedAt": {
+            "epochMs": 1791616926608
+          },
+          "InputSource": 0,
+          "ChapterTag": {},
+          "ChartRef": {
+            "chartId": "b1-editor-v3-chart"
+          }
+        }
+      }
+    },
+    {
+      "name": "B1-05 active/paused exits add zero ledger; retained deep-trace entry permits fresh run completion",
+      "pass": true,
+      "evidence": [
+        {
+          "exitedFrom": "Playing",
+          "exitDelta": 0,
+          "replayCompletionDelta": 1,
+          "finalLedgerCount": 2
+        },
+        {
+          "exitedFrom": "Paused",
+          "exitDelta": 0,
+          "replayCompletionDelta": 1,
+          "finalLedgerCount": 2
+        }
+      ]
+    },
+    {
+      "name": "B1-06 duplicate advance/media-end/exit/enter after completion cannot duplicate ledger or reopen finished entry",
+      "pass": true,
+      "evidence": {
+        "repeatedFrames": 20,
+        "finalLedgerCount": 2,
+        "duplicateCompletionDelta": 0
+      }
+    },
+    {
+      "name": "B1-07 editor preview/rehearsal completion remains isolated from live director ledger",
+      "pass": true,
+      "evidence": {
+        "previewRuns": 2,
+        "previewCompleted": true,
+        "previewLedgerDelta": 0,
+        "separatePremiereInstances": true
+      }
+    },
+    {
+      "name": "B1-08 optional color sidecar cannot change gameplay outcome; invalid chartId/node pairing rejects",
+      "pass": true,
+      "evidence": {
+        "identicalWithWithoutVisual": true,
+        "rejectedPairs": [
+          "wrong chartId",
+          "unknown nodeId"
+        ],
+        "result": {
+          "chartId": "b1-editor-v3-chart",
+          "tier": "Regular",
+          "perfectCount": 4,
+          "goodCount": 0,
+          "missCount": 0,
+          "totalScore": 400,
+          "finishedAtMs": 16000,
+          "completed": true
+        }
+      }
+    },
+    {
+      "name": "B1-09 existing A/B/C v1/v2 resources retain actual director entry/completion event contract",
+      "pass": true,
+      "evidence": [
+        {
+          "resource": "chart/guidance_a",
+          "chartId": "guidance-a-1",
+          "schemaVersion": 1,
+          "gameCompletionDelta": 1,
+          "result": {
+            "chartId": "guidance-a-1",
+            "tier": "Regular",
+            "perfectCount": 0,
+            "goodCount": 0,
+            "missCount": 1,
+            "totalScore": 0,
+            "finishedAtMs": 60000,
+            "completed": true
+          }
+        },
+        {
+          "resource": "chart/guidance_b",
+          "chartId": "guidance-b-1",
+          "schemaVersion": 1,
+          "gameCompletionDelta": 1,
+          "result": {
+            "chartId": "guidance-b-1",
+            "tier": "Regular",
+            "perfectCount": 0,
+            "goodCount": 0,
+            "missCount": 4,
+            "totalScore": 0,
+            "finishedAtMs": 60000,
+            "completed": true
+          }
+        },
+        {
+          "resource": "chart/guidance_c",
+          "chartId": "guidance-c-1",
+          "schemaVersion": 2,
+          "gameCompletionDelta": 1,
+          "result": {
+            "chartId": "guidance-c-1",
+            "tier": "Regular",
+            "perfectCount": 0,
+            "goodCount": 0,
+            "missCount": 10,
+            "totalScore": 0,
+            "finishedAtMs": 60000,
+            "completed": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "B1-10 pause freezes v3 clock and judgement; pause itself does not write ledger",
+      "pass": true,
+      "evidence": {
+        "frozenAtMs": 1500,
+        "mediaProbeWhilePausedMs": 5000,
+        "ledgerDelta": 0,
+        "resumed": true
+      }
+    },
+    {
+      "name": "B1-11 normalized chart/strike replay yields identical director outcomes at both target resolutions",
+      "pass": true,
+      "evidence": {
+        "scope": "Pure normalized logic replay only. Actual Cocos viewport evidence is recorded separately.",
+        "evidence": [
+          {
+            "resolution": "1920x1080",
+            "result": {
+              "chartId": "b1-editor-v3-chart",
+              "tier": "Regular",
+              "perfectCount": 4,
+              "goodCount": 0,
+              "missCount": 0,
+              "totalScore": 400,
+              "finishedAtMs": 16000,
+              "completed": true
+            },
+            "chartId": "b1-editor-v3-chart",
+            "gameCompletionDelta": 1,
+            "inputs": [
+              {
+                "timeMs": 1000,
+                "keyId": "Space",
+                "lineId": "line-music-line-1",
+                "head": true
+              },
+              {
+                "timeMs": 1250,
+                "keyId": "Space",
+                "lineId": "line-music-line-2",
+                "head": true
+              },
+              {
+                "timeMs": 2250,
+                "keyId": "KeyT",
+                "nodeId": "node-music-note-5"
+              },
+              {
+                "timeMs": 2500,
+                "keyId": "KeyF",
+                "nodeId": "node-music-note-2"
+              },
+              {
+                "timeMs": 3000,
+                "keyId": "KeyJ",
+                "nodeId": "node-music-note-3"
+              },
+              {
+                "timeMs": 3250,
+                "keyId": "KeyP",
+                "nodeId": "node-music-note-6"
+              }
+            ]
+          },
+          {
+            "resolution": "2560x1440",
+            "result": {
+              "chartId": "b1-editor-v3-chart",
+              "tier": "Regular",
+              "perfectCount": 4,
+              "goodCount": 0,
+              "missCount": 0,
+              "totalScore": 400,
+              "finishedAtMs": 16000,
+              "completed": true
+            },
+            "chartId": "b1-editor-v3-chart",
+            "gameCompletionDelta": 1,
+            "inputs": [
+              {
+                "timeMs": 1000,
+                "keyId": "Space",
+                "lineId": "line-music-line-1",
+                "head": true
+              },
+              {
+                "timeMs": 1250,
+                "keyId": "Space",
+                "lineId": "line-music-line-2",
+                "head": true
+              },
+              {
+                "timeMs": 2250,
+                "keyId": "KeyT",
+                "nodeId": "node-music-note-5"
+              },
+              {
+                "timeMs": 2500,
+                "keyId": "KeyF",
+                "nodeId": "node-music-note-2"
+              },
+              {
+                "timeMs": 3000,
+                "keyId": "KeyJ",
+                "nodeId": "node-music-note-3"
+              },
+              {
+                "timeMs": 3250,
+                "keyId": "KeyP",
+                "nodeId": "node-music-note-6"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

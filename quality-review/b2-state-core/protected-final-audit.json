@@ -1,0 +1,199 @@
+{
+  "generatedAt": "2026-10-10T11:11:43.554Z",
+  "pass": true,
+  "baselineCount": 285,
+  "baselineCapturedAt": "2026-10-10T10:47:38.092Z",
+  "unchangedBaselineCount": 274,
+  "allowedExisting": [
+    "assets/scripts/SceneBuilder.ts",
+    "assets/scripts/WorldFolderBuilder.ts",
+    "src/director/IntentPort.ts",
+    "src/director/WorldClearSession.ts",
+    "src/director/SphereCrossing.ts",
+    "src/director/WorldStateSession.ts",
+    "src/presentation/DeepTraceRevealSequence.ts",
+    "src/trace/PuzzleChain.ts",
+    "src/trace/PuzzleProgress.ts",
+    "src/trace/DeepTrace.ts",
+    "src/world/WorldInstance.ts"
+  ],
+  "allowedAdded": [
+    "src/director/LedgerHydration.ts",
+    "src/director/PuzzleHydration.ts",
+    "src/director/WorldStateCodec.ts",
+    "src/presentation/WorldCoreStateStorage.ts",
+    "src/presentation/FormatTimeStorage.ts",
+    "src/presentation/WorldCoreStateView.ts",
+    "src/director/LedgerHydration.ts.meta",
+    "src/director/PuzzleHydration.ts.meta",
+    "src/director/WorldStateCodec.ts.meta",
+    "src/presentation/WorldCoreStateStorage.ts.meta",
+    "src/presentation/FormatTimeStorage.ts.meta",
+    "src/presentation/WorldCoreStateView.ts.meta"
+  ],
+  "backupFailures": [],
+  "missing": [],
+  "unauthorizedChanges": [],
+  "unauthorizedAdded": [],
+  "absentAdded": [],
+  "productionChanges": [
+    {
+      "path": "src/director/IntentPort.ts",
+      "bytes": 45291,
+      "sha256": "dec9218a4084e5e5a13450e04b9b660c0ed632e88d96c1d3af575284030b9a57",
+      "beforeSha256": "50affce8f2c5c8874ba4cd36b3b32c82f61369e566a0eac10c6dac65208cf1ef",
+      "kind": "Modified"
+    },
+    {
+      "path": "src/director/SphereCrossing.ts",
+      "bytes": 1907,
+      "sha256": "d00362639fc51a1bc367c587231dcfd1ad606c0f96654e6b77bd1b1098a58db6",
+      "beforeSha256": "133963ef2ab6f725b0402c712cd0dc078f74e946414cc269c6b0f5e256149fb1",
+      "kind": "Modified"
+    },
+    {
+      "path": "src/director/WorldClearSession.ts",
+      "bytes": 21078,
+      "sha256": "bc44d9c70f713cc100271d0795b5248f59c0a890178450dc72e1c34f6bc9fddc",
+      "beforeSha256": "245af19f6780bd0a97757f9de842009800fba0287be8bea2e37d4181564df78f",
+      "kind": "Modified"
+    },
+    {
+      "path": "src/director/WorldStateSession.ts",
+      "bytes": 15339,
+      "sha256": "9085af46ee34c6651876c020d2e898d96bdd3e0fc632006279e8307a63aa2b58",
+      "beforeSha256": "dee799181f9216ce6244c0087ba5dba830ea481cd8140591ec0f7ad099ecfecb",
+      "kind": "Modified"
+    },
+    {
+      "path": "src/presentation/DeepTraceRevealSequence.ts",
+      "bytes": 3700,
+      "sha256": "079d660a3a232489e388a65c428507af1d01ded900388c5f9d17da93d790281d",
+      "beforeSha256": "5f5e87ca78973ca7453881cc5fbebc370c31dbfba813489b1d94751c106ed27c",
+      "kind": "Modified"
+    },
+    {
+      "path": "src/trace/DeepTrace.ts",
+      "bytes": 3648,
+      "sha256": "00fc0694f927cae6a63055bbf60fbd407598f4d7c0c95b98e8cc254b6bdc644c",
+      "beforeSha256": "57416414e343a735915bcf7d70e1412cbf2a132f33b01bfe364d10631c6a8d44",
+      "kind": "Modified"
+    },
+    {
+      "path": "src/trace/PuzzleChain.ts",
+      "bytes": 14448,
+      "sha256": "875448d1fb3d91c35a49deee1973a453abeed27931537ea26ec04fb817d55f76",
+      "beforeSha256": "221d0ddb675c1ca07c61e48e73839fd93154f0258ccee69358f72f96d416f9e0",
+      "kind": "Modified"
+    },
+    {
+      "path": "src/trace/PuzzleProgress.ts",
+      "bytes": 3072,
+      "sha256": "835fa748d0751e2f240043ccb39490a40bf847c8d562dbd0d4eaf332d0320208",
+      "beforeSha256": "9930df35b56d7e22faeee2cff6d80f24f2338996c0bc3500aa0ae5544f535411",
+      "kind": "Modified"
+    },
+    {
+      "path": "src/world/WorldInstance.ts",
+      "bytes": 2706,
+      "sha256": "9a4dfd7c33e1e889513b7800367f5dfb3ef43459b2172d6fc3393d85478e842e",
+      "beforeSha256": "c77d3f044a773c72b9b27fd1d208bb0ba42de08a2e077da8212440d3e572954c",
+      "kind": "Modified"
+    },
+    {
+      "path": "assets/scripts/SceneBuilder.ts",
+      "bytes": 82465,
+      "sha256": "29127e27d7363d0174fd5c3852c4f45b51b6108bb5bec44f1ba8bb18cf7c13e8",
+      "beforeSha256": "1d97da14b1957d1c598a626315c0e524841613a48ee9e49e43c711195bc92bc3",
+      "kind": "Modified"
+    },
+    {
+      "path": "assets/scripts/WorldFolderBuilder.ts",
+      "bytes": 21859,
+      "sha256": "58191d6a28da48327e821dc26cec9f621d4f9d77cc8c0361c861a5bd82252923",
+      "beforeSha256": "343565a6a3e7fc2ef1ef6314e8cb1b68621e764558323d589c1146e940b167ce",
+      "kind": "Modified"
+    },
+    {
+      "path": "src/director/LedgerHydration.ts",
+      "bytes": 15031,
+      "sha256": "e8dc01ee89ab01367de4d6a5dd23a8c3eeb72ac426658ff6c0f3eba9121cdc99",
+      "kind": "Added"
+    },
+    {
+      "path": "src/director/LedgerHydration.ts.meta",
+      "bytes": 180,
+      "sha256": "10f542818a9904dcfc783f0170bbd701a1f8e5ff86b40267261ea3302c524863",
+      "kind": "Added"
+    },
+    {
+      "path": "src/director/PuzzleHydration.ts",
+      "bytes": 7454,
+      "sha256": "8160a7a1fa2de741582423c2ecc8f6b3e7791b1dd802d2821ba29c82dd837254",
+      "kind": "Added"
+    },
+    {
+      "path": "src/director/PuzzleHydration.ts.meta",
+      "bytes": 171,
+      "sha256": "01306a6b419f39d55b00387fd50bab43de3a6d2e4b80e5ae9106b4fb3bb610c7",
+      "kind": "Added"
+    },
+    {
+      "path": "src/director/WorldStateCodec.ts",
+      "bytes": 9266,
+      "sha256": "1355fa1eb523f66c4f390ea4c7eed1a2eec9a3922a130be0c2b9019e36ee56cf",
+      "kind": "Added"
+    },
+    {
+      "path": "src/director/WorldStateCodec.ts.meta",
+      "bytes": 171,
+      "sha256": "774289b9c3df686b1c4556b6218f56ca711da4ea85822bce11c727867e913507",
+      "kind": "Added"
+    },
+    {
+      "path": "src/presentation/FormatTimeStorage.ts",
+      "bytes": 1211,
+      "sha256": "ae88dcec14d85510b0c1ffb5b275cbcb4daee5eb8ecca958a72aba6b7bf0e4bd",
+      "kind": "Added"
+    },
+    {
+      "path": "src/presentation/FormatTimeStorage.ts.meta",
+      "bytes": 171,
+      "sha256": "bac4072832f75a7177823b21c85f76d57198cf623daee1437d5beb3848ff260c",
+      "kind": "Added"
+    },
+    {
+      "path": "src/presentation/WorldCoreStateStorage.ts",
+      "bytes": 10706,
+      "sha256": "cbb4bdd5e436cf291bbdda83aa2e9761e4e8bd754af439acdbd9c56dbe1e8bee",
+      "kind": "Added"
+    },
+    {
+      "path": "src/presentation/WorldCoreStateStorage.ts.meta",
+      "bytes": 171,
+      "sha256": "d2e8f77a6a8cbfa3bd6523de130c59c8f491cb58723e7637d7bdfcda940b7009",
+      "kind": "Added"
+    },
+    {
+      "path": "src/presentation/WorldCoreStateView.ts",
+      "bytes": 2454,
+      "sha256": "649aa670338dd4b12ae442b18ee24ec0ea08eaf4f902a9f13a70823ab97ba665",
+      "kind": "Added"
+    },
+    {
+      "path": "src/presentation/WorldCoreStateView.ts.meta",
+      "bytes": 180,
+      "sha256": "0cb01c278fc12e40a0d7e74d0d7c35445c0a391f3f470b6bd41d7bde78aae82e",
+      "kind": "Added"
+    }
+  ],
+  "productionDiffBytes": 130491,
+  "docsNamebookReferenceArchiveUnchanged": true,
+  "sourceRoots": [
+    "src",
+    "constants",
+    "assets/scripts",
+    "assets/resources"
+  ],
+  "note": "No Git history is present. Original bytes and hashes are the immutable pre-implementation baseline; actual no-index source diff is generated. Junctions are skipped."
+}

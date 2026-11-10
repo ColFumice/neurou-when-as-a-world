@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "evidenceKind": "ContractTests",
+  "scope": "B2.2d-1 stable PuzzleProgress capture/hydration",
+  "notProductionPreview": true,
+  "pass": true,
+  "total": 14,
+  "passed": 14,
+  "results": [
+    {
+      "name": "P01 untouched constructor preserves original Step1 and reset timing",
+      "pass": true
+    },
+    {
+      "name": "P02 full stable Step1/Awaiting validation and immutable snapshots",
+      "pass": true
+    },
+    {
+      "name": "P03 active seven-second capture rejects without clearing original progress",
+      "pass": true
+    },
+    {
+      "name": "P04 natural seven-second Completed timers roundtrip as dormant immutable data",
+      "pass": true
+    },
+    {
+      "name": "P05 completed requires unique matching T6 fact and triggered/reveal consistency",
+      "pass": true
+    },
+    {
+      "name": "P06 T7 completion flag requires exact legal explicit or strict legacy Regular completion",
+      "pass": true
+    },
+    {
+      "name": "P07 forged known endpoint vectors/source/chart references cannot authorize hydration",
+      "pass": true
+    },
+    {
+      "name": "P08 unsupported activity and foreign identities/rules fail before state creation",
+      "pass": true
+    },
+    {
+      "name": "P09 strict shape rejects getters, extra keys, NaN, inconsistent completed timing",
+      "pass": true
+    },
+    {
+      "name": "P10 hydrated endpoint retains entry and never appends T6 again on normal frames",
+      "pass": true
+    },
+    {
+      "name": "P11 hydrated completed T7 blocks replay and preserves both ledger facts without score restore",
+      "pass": true
+    },
+    {
+      "name": "P12 hydration rejects already-running/second application and mismatched seeds without mutation",
+      "pass": true
+    },
+    {
+      "name": "P13 active chart capture cannot serialize a fake idle world boundary",
+      "pass": true
+    },
+    {
+      "name": "P14 terminal reveal hydration suppresses playback and never submits EnterChart",
+      "pass": true
+    }
+  ]
+}

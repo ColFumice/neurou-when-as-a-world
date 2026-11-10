@@ -1,0 +1,213 @@
+{
+  "category": "ContractTest",
+  "note": "Actual WorldForkSession, full Primary codecs, WorldForkStorage and WorldCoreStateStorage; injected localStorage/Web Locks/clock fixtures, not production acceptance.",
+  "passed": 41,
+  "failed": 0,
+  "results": [
+    {
+      "name": "real seven-section plan writes journal then target then directory then journal cleanup; source/account bytes unchanged",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "directory lock has exact encoded account key and every primitive write occurs under it",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "unlocked commit, recovery and ordinary directory guard reject without writes",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "missing directory lock capability rejects and never calls operation",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "target lease is mandatory before even journal write",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "source lease is mandatory before even journal write",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "source changed since planned Complete is rejected with no side effects",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "an unresolved async source authority callback is rejected before journal write",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "an unresolved async target lease check is rejected before source check or journal write",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "directory expected CAS mismatch preserves concurrent new record and performs no writes",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "existing unrelated target state is never overwritten",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "journal quota failure leaves directory, target, source and account unchanged",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "target quota failure rolls journal back without publishing directory",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "directory quota failure deletes only exact staged target and journal",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "callback changes directory before commit point: CAS refuses and rollback preserves that newer folder",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "rollback removal failure retains journal and unpublished exact target for idempotent retry",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "rollback journal removal failure keeps a recoverable journal after target removal",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "committed journal cleanup failure remains Committed and never rolls target or directory back",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "an adapter throwing after durable directory append is recognized as committed",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "exact committed plan retry is no-write even if source later changes",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "pending journal blocks new fork and ordinary directory mutations",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "capture actual primitive durable prefixes for restart fault cases",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "fresh adapter restart after actual durable primitive stage 0 resolves deterministically and idempotently",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "fresh adapter restart after actual durable primitive stage 1 resolves deterministically and idempotently",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "fresh adapter restart after actual durable primitive stage 2 resolves deterministically and idempotently",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "fresh adapter restart after actual durable primitive stage 3 resolves deterministically and idempotently",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "fresh adapter restart after actual durable primitive stage 4 resolves deterministically and idempotently",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "committed recovery succeeds without source lease or current source directory membership",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "committed missing target is repaired only from validated journal by leased writer",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "recovery target lease absence rejects without journal or directory changes",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "unpublished conflicting target bytes are retained and reported Pending; no foreign removal",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "committed target modified after journal is a conflict, never silently repaired or erased",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "conflicting or tombstoned target directory record preserves journal and all bytes",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "strict pending reader preserves malformed JSON without cleanup writes",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "strict pending reader preserves JSON null without cleanup writes",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "strict pending reader preserves wrong account without cleanup writes",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "strict pending reader preserves extra journal field without cleanup writes",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "journal plan tampering of account or incomplete section rejects before mutations",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "directory lock wrapper awaits operation completion, releases after rejection and prevents nested deadlock",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "reentrant target write callback cannot start another commit or replace journal",
+      "result": "PASS",
+      "category": "ContractTest"
+    },
+    {
+      "name": "shared directory lock serializes separate adapters and stale second writer cannot erase first fork",
+      "result": "PASS",
+      "category": "ContractTest"
+    }
+  ]
+}

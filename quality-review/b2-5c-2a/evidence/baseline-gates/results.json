@@ -1,0 +1,114 @@
+{
+  "phase": "B2.5c-2a freeze baseline",
+  "generatedUtc": "2026-10-11T06:27:50.244Z",
+  "pass": true,
+  "runs": [
+    {
+      "name": "check-naming",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "scripts/check-naming.js"
+      ],
+      "cwd": "D:\\Project\\A_New_Begin\\Neurou_official",
+      "startedUtc": "2026-10-11T06:27:48.232Z",
+      "completedUtc": "2026-10-11T06:27:48.355Z",
+      "exitCode": 0,
+      "pass": true,
+      "reportedErrors": 0,
+      "reportedWarnings": 45,
+      "warningLines": [
+        "WARN  src\\chart\\ChartPremiere.ts:31 [R7] 含 Window 的命名疑似用作界面窗口（界面窗口必须用 Panel / View） —— 命中: judgeTimeWindow（请人工复核语义）",
+        "WARN  src\\chart\\ChartPremiere.ts:323 [R7] 含 Window 的命名疑似用作界面窗口（界面窗口必须用 Panel / View） —— 命中: hasAnyCandidateInWindow（请人工复核语义）",
+        "WARN  src\\chart\\ChartScore.ts:63 [R7] 含 Window 的命名疑似用作界面窗口（界面窗口必须用 Panel / View） —— 命中: judgeTimeWindow（请人工复核语义）",
+        "WARN  src\\chart\\GuidanceLineRuntime.ts:8 [R7] 含 Window 的命名疑似用作界面窗口（界面窗口必须用 Panel / View） —— 命中: judgeTimeWindow（请人工复核语义）",
+        "WARN  src\\director\\IntentPort.ts:345 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: deepTraceTriggered（请人工复核语义）",
+        "WARN  src\\director\\IntentPort.ts:366 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: deepTraceId（请人工复核语义）",
+        "WARN  src\\director\\IntentPort.ts:392 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: bindDeepTrace（请人工复核语义）",
+        "WARN  src\\director\\IntentPort.ts:942 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: tracePosition（请人工复核语义）",
+        "WARN  src\\director\\IntentPort.ts:1056 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: TraceTouchChange（请人工复核语义）",
+        "WARN  src\\director\\IntentPort.ts:1060 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: TraceTouchAggregate（请人工复核语义）",
+        "WARN  src\\director\\PuzzleHydration.ts:14 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: deepTraceTriggered（请人工复核语义）",
+        "WARN  src\\director\\PuzzleHydration.ts:26 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: deepTraceId（请人工复核语义）",
+        "WARN  src\\director\\SharedCommitCodec.ts:170 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: TraceTouchChange（请人工复核语义）",
+        "WARN  src\\director\\SharedCommitCodec.ts:170 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: traceTouchId（请人工复核语义）",
+        "WARN  src\\director\\SharedCommitCodec.ts:171 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: normalTraceEntityId（请人工复核语义）",
+        "WARN  src\\director\\SharedCommitCodec.ts:175 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: normalTrace（请人工复核语义）",
+        "WARN  src\\director\\SharedCommitCodec.ts:213 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: TraceTouchAggregate（请人工复核语义）",
+        "WARN  src\\director\\SharedCommitCodec.ts:217 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: traceTouches（请人工复核语义）",
+        "WARN  src\\director\\SharedCommitContracts.ts:122 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: TraceTouchChange（请人工复核语义）",
+        "WARN  src\\director\\SharedCommitContracts.ts:125 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: traceTouchId（请人工复核语义）",
+        "WARN  src\\director\\SharedCommitContracts.ts:126 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: normalTraceEntityId（请人工复核语义）",
+        "WARN  src\\director\\SharedCommitContracts.ts:136 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: normalTrace（请人工复核语义）",
+        "WARN  src\\director\\SharedCommitContracts.ts:242 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: TraceTouchAggregate（请人工复核语义）",
+        "WARN  src\\director\\SharedCommitContracts.ts:262 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: traceTouches（请人工复核语义）",
+        "WARN  src\\director\\SharedCommitValidator.ts:157 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: traceTouches（请人工复核语义）",
+        "WARN  src\\director\\SharedCommitValidator.ts:158 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: normalTraceEntityId（请人工复核语义）",
+        "WARN  src\\director\\SharedCommitValidator.ts:159 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: normalTrace（请人工复核语义）",
+        "WARN  src\\director\\SharedCommitValidator.ts:160 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: traceTouchId（请人工复核语义）",
+        "WARN  src\\director\\SharedWorldReducer.ts:5 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: TraceTouchAggregate（请人工复核语义）",
+        "WARN  src\\director\\SharedWorldReducer.ts:95 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: traceTouches（请人工复核语义）",
+        "WARN  src\\director\\SharedWorldReducer.ts:95 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: traceTouchId（请人工复核语义）",
+        "WARN  src\\director\\SharedWorldReducer.ts:150 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: normalTrace（请人工复核语义）",
+        "WARN  src\\director\\SharedWorldReducer.ts:226 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: normalTraceEntityId（请人工复核语义）",
+        "WARN  src\\presentation\\DeepTraceRevealSequence.ts:14 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: DeepTraceRevealSequence（请人工复核语义）",
+        "WARN  src\\trace\\TraceProximityVolume.ts:27 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: TraceProximityVolume（请人工复核语义）",
+        "WARN  assets\\scripts\\SceneBuilder.ts:130 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: DeepTraceRevealSequence（请人工复核语义）",
+        "WARN  assets\\scripts\\SceneBuilder.ts:139 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: TraceProximityVolume（请人工复核语义）",
+        "WARN  assets\\scripts\\SceneBuilder.ts:222 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: DEEP_TRACE_LATERAL（请人工复核语义）",
+        "WARN  assets\\scripts\\SceneBuilder.ts:223 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: DEEP_TRACE_DEPTH（请人工复核语义）",
+        "WARN  assets\\scripts\\SceneBuilder.ts:314 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: deepTraceId（请人工复核语义）",
+        "WARN  assets\\scripts\\SceneBuilder.ts:671 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: concealedTraceEntity（请人工复核语义）",
+        "WARN  assets\\scripts\\SceneBuilder.ts:757 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: deepTraceTriggered（请人工复核语义）",
+        "WARN  assets\\scripts\\SceneBuilder.ts:758 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: deepTraceNode（请人工复核语义）",
+        "WARN  assets\\scripts\\SceneBuilder.ts:775 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: bindDeepTrace（请人工复核语义）",
+        "WARN  assets\\scripts\\SceneBuilder.ts:1228 [R4] 含 Trace 的命名疑似用作日志（日志必须用 Log；若非痕域语义请改名） —— 命中: tracePos（请人工复核语义）"
+      ],
+      "log": "baseline-gates/check-naming.log",
+      "sha256": "0fdbd75e7e1a750145776b57de17f1a67024613538b6fe294e6412bfcc2a0909",
+      "summary": [
+        "汇总: 0 ERROR / 45 WARN"
+      ]
+    },
+    {
+      "name": "check-dependencies",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "scripts/check-dependencies.js"
+      ],
+      "cwd": "D:\\Project\\A_New_Begin\\Neurou_official",
+      "startedUtc": "2026-10-11T06:27:48.245Z",
+      "completedUtc": "2026-10-11T06:27:48.361Z",
+      "exitCode": 0,
+      "pass": true,
+      "reportedErrors": 0,
+      "reportedWarnings": null,
+      "warningLines": [],
+      "log": "baseline-gates/check-dependencies.log",
+      "sha256": "fdfb2848f2e5e2c44be5931635b5ce17bf868f6e2fcd5d75beda9833213cdf74",
+      "summary": [
+        "扫描: 127 个 .ts 文件，约 437 条静态依赖子句",
+        "汇总: 0 ERROR"
+      ]
+    },
+    {
+      "name": "typecheck",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "cwd": "D:\\Project\\A_New_Begin\\Neurou_official",
+      "startedUtc": "2026-10-11T06:27:48.257Z",
+      "completedUtc": "2026-10-11T06:27:50.243Z",
+      "exitCode": 0,
+      "pass": true,
+      "reportedErrors": null,
+      "reportedWarnings": null,
+      "warningLines": [],
+      "log": "baseline-gates/typecheck.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "summary": []
+    }
+  ],
+  "scope": "Exactly the three existing repository gates; scripts and allowlists are unchanged. This is a freeze round: no isolated-contract rerun or server HTTP claim is made."
+}

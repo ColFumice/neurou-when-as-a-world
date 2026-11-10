@@ -1,0 +1,155 @@
+/* 全局全屏准星；层级高于 GlobalGlitch（12000）与拖拽区（9999）。 */
+.crosshair {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  pointer-events: none;
+  color: var(--lg-crosshair-core, #fff);
+  --crosshair-x: 50vw;
+  --crosshair-y: 50vh;
+  opacity: 1;
+  transition: opacity 120ms var(--lg-ease, cubic-bezier(0.4, 0, 0.2, 1));
+  contain: layout style;
+}
+
+.crosshair[data-visible='false'],
+body[data-crosshair-hidden='true'] .crosshair {
+  opacity: 0;
+}
+
+/* 横线 / 竖线：100vw / 100vh 固定尺寸，只平移，不改变长度。 */
+.crosshair__line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  pointer-events: none;
+  background: var(--lg-crosshair-line, rgba(255, 255, 255, 0.3));
+  will-change: transform;
+  filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.12));
+}
+
+.crosshair__line--x {
+  width: 100vw;
+  height: 1px;
+  transform: translate3d(0, var(--crosshair-y), 0);
+  /* 边缘渐隐：暗角从中间向四边变暗，但线仍可辨认。 */
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.16) 0%,
+    #000 7%,
+    #000 93%,
+    rgba(0, 0, 0, 0.16) 100%
+  );
+  mask-image: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.16) 0%,
+    #000 7%,
+    #000 93%,
+    rgba(0, 0, 0, 0.16) 100%
+  );
+}
+
+.crosshair__line--y {
+  width: 1px;
+  height: 100vh;
+  transform: translate3d(var(--crosshair-x), 0, 0);
+  -webkit-mask-image: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.16) 0%,
+    #000 7%,
+    #000 93%,
+    rgba(0, 0, 0, 0.16) 100%
+  );
+  mask-image: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.16) 0%,
+    #000 7%,
+    #000 93%,
+    rgba(0, 0, 0, 0.16) 100%
+  );
+}
+
+.crosshair__center {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  transform: translate3d(var(--crosshair-x), var(--crosshair-y), 0);
+  will-change: transform;
+}
+
+/* 中心径向微光；80px 渐变，优先 60fps。 */
+.crosshair__glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(
+    circle,
+    var(--lg-crosshair-glow, rgba(255, 255, 255, 0.14)) 0%,
+    rgba(255, 255, 255, 0.03) 32%,
+    transparent 68%
+  );
+  filter: blur(3px);
+  transition: transform 120ms var(--lg-ease, cubic-bezier(0.4, 0, 0.2, 1));
+}
+
+/* 中心小十字：8×8，比 1px 主线略粗，不再使用镜片/长粗臂。 */
+.crosshair__core {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  transition: transform 120ms var(--lg-ease, cubic-bezier(0.4, 0, 0.2, 1));
+}
+
+.crosshair__core::before,
+.crosshair__core::after {
+  content: '';
+  position: absolute;
+  display: block;
+  background: var(--lg-crosshair-core, #fff);
+  border-radius: 1px;
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.65);
+}
+
+.crosshair__core::before {
+  top: 0;
+  left: 3px;
+  width: 2px;
+  height: 8px;
+}
+
+.crosshair__core::after {
+  top: 3px;
+  left: 0;
+  width: 8px;
+  height: 2px;
+}
+
+/* 点击 / 拖拽反馈：只缩中心，四条线保持贴边。 */
+.crosshair.is-pressed .crosshair__core {
+  transform: translate(-50%, -50%) scale(0.9);
+}
+
+.crosshair.is-pressed .crosshair__glow {
+  transform: translate(-50%, -50%) scale(0.92);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .crosshair,
+  .crosshair__glow,
+  .crosshair__core {
+    transition: none;
+  }
+}

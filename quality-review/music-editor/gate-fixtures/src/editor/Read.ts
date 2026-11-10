@@ -1,0 +1,1 @@
+export interface Source { readonly id: string }; export const parse = () => 1;

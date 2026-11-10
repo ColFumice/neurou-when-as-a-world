@@ -1,0 +1,735 @@
+======================================================================
+《雨若》重构 R1 · 裁定草案 v2（DSH）
+======================================================================
+
+文档性质：非冻结草案。供 PROTOCOL 审阅；不替代 NAMEBOOK-v4.0 / stage-4 / verdicts。
+作者：DSH（ARCHITECT + IMPLEMENTER）
+生成：2026-10-19（Asia/Shanghai）
+上一版：R1 草案 v1（2026-10-19）
+本轮输入：
+  - 交接说明（ARCHITECT + IMPLEMENTER）
+  - docs/refactor-r0/scope-statement.md（定稿 v1）
+  - 用户澄清 A（层数）/ B（真随机）/ C（Rain）
+  - PROTOCOL P1~P8 裁定
+  - 细节 6.1（层分值整数化）/ 6.2（Rain 降级）最终裁定
+状态：等待 PROTOCOL 审阅。本轮不写代码、不落盘 docs、不改 scope-statement。
+本轮无 [待用户确认] 项；6.1 / 6.2 已闭合。
+
+======================================================================
+0. v1 → v2 变更摘要
+======================================================================
+
+| 项 | v1 | v2 |
+|---|---|---|
+| PerceptionMode.Rain | 是否保留待定（P3 撤回前） | 保留，独立第三态视觉模式（P3 撤回） |
+| CloudProvider | C 类（排除） | A 类（客户端直连，用户自填 API Key） |
+| 随机 | 种子可复现（笼统） | 编辑预览 Seeded；运行时 Live 真随机 |
+| WorldKind | Shore 按“重命名”处理 | Shore 为废止值（C）；Secondary 为新增值（A，无继承标注） |
+| GridKeyId / GridPadKind | 未决重叠 | 不引入（P1）；统一 ChartKeyId / GridCellId / ChartPadKind |
+| Strike | chart 域 | director 域；GridStrike 在 trace 域；二者不互相引用（P8） |
+| A 类总数 | 211（v1 文字误写 210，漏计 PerceptionMode） | 262（净增 51） |
+| AC 数 | 28 | 41（修订 6 项，新增 13 项） |
+| 依赖矩阵 | 16 模块 | 16 模块 + console / weather / rain-visual / ai-adapter 子域 |
+| 待确认项 | 2（层分值、Rain 降级） | 0（6.1 / 6.2 已闭合） |
+
+计数勘误说明：v1 实际为 211 项（原稿 210 漏计 PerceptionMode）。v2 净增 51 =
+名义追加 60 − v1 已列 7 项（DynamicGridScale、HoldGridLine、VisualFrameRect、
+VisualFrameParallaxFactor、LocalProvider、TemplateProvider、AITaskRoute）
+− 合并退场 2 项（FrameSaturation、GridLayer）。
+
+======================================================================
+1. 裁定原则（v2 继承并补充）
+======================================================================
+
+1. scope-statement 是唯一边界；35 项既定裁定不再讨论。
+2. v4.0 是全新命名空间；A 类之外的 v3.21 名字一律不进入 v4.0 代码，不做兼容层。
+3. 每个名有且只有一个归属模块；同名不得跨模块重复冻结。
+4. 名字必须可机械检查：保留字规则 + 新禁名表进 check-naming；依赖矩阵进
+   check-dependencies。
+5. 逻辑层零引擎：constants ~ director 不得值引用 React / PixiJS / Web Audio /
+   Tauri / Node fs；presentation 是唯一允许引用 React/Pixi/WebAudio 的层；
+   app 是唯一允许引用 Tauri 的组合根。
+6. “服务端不留”指不运营任何 Neurou 服务端；不禁止客户端直连用户自有第三方
+   API（CloudProvider / 天气 API）。这类直连必须由 app/adapters 实现，逻辑层
+   只依赖注入端口。
+7. 双图分工：EventGraph 是世界内动作蓝图；EventTreeDAG 是项目级世界编排。
+8. 层判定与随机必须区分“编辑预览”与“运行时”：预览可复现，运行时真随机。
+
+======================================================================
+2. R1 交付物规划（不变，P7 单文件）
+======================================================================
+
+| 文件 | 结构 |
+|---|---|
+| docs/NAMEBOOK-v4.0.md | §0 版本轴与规则；§1 A 类（按模块）；§2 B 类；§3 C 类；§4 D 类；§5 继承/重命名对照；§6 保留字与禁名；§7 统计与审计 |
+| docs/spec/stage-4.md | §1 目标与非目标；§2 技术基线；§3 模块职责；§4 数据与存储；§5 依赖矩阵；§6 常量；§7 AC4-01~41；§8 证据与门禁；§9 范围外 |
+| docs/refactor-r1/verdicts-refactor-r1.md | 单文件 V-R1-001~010 |
+
+写入方式：DSH 出全文 → Trae 落盘 → PROTOCOL 审阅 → 用户确认。
+R1 退出条件：三份文档经审阅确认；旧三条门禁保持绿色；R1 不改任何 src/、
+server/、assets/ 代码。
+
+======================================================================
+3. 七项未决事项裁定（v2 更新）
+======================================================================
+
+3.1 账号概念 → 无账号，单机 StudioProfile
+- 没有账号、登录、认证、云端身份；不引入 AccountProfile。
+- StudioProfile：本机唯一创作者身份，仅存显示名、界面语言、默认导出目录；
+  不参与权限、归属、里程碑、账本判定。
+- 落地：应用数据目录 studio-profile.json；一个安装 = 一个 profile。
+
+3.2 事件树数据 → 项目目录 + event-tree.json
+项目即目录：
+  <Project>/
+    project.json
+    event-tree.json
+    worlds/<worldId>/world.json
+    worlds/<worldId>/ledger.ndjson
+    worlds/<worldId>/ledger.head.json
+    worlds/<worldId>/charts/<chartId>.json
+    media/manifest.json
+    media/<assetId>.<ext>
+    drafts/
+- event-tree.json 只存 DAG：nodes[]（nodeId、worldId、entryAnchor、画布坐标）、
+  edges[]、rootNodeId；节点不内嵌世界。
+- 原子写：临时文件 + fsync + rename；JSON 文档保留一代 .bak。
+- SQLite 列 D 类（节点规模上千再评估）。
+
+3.3 20 维账本载体 → 每世界 append-only NDJSON + head
+- ledger.ndjson：一行一条 NarrativeEvent，只追加。
+- ledger.head.json：schemaVersion / eventCount / lastEventId / positionSum /
+  checksum。
+- 接口：LedgerStore（唯一写入口 appendNarrativeEvent）、LedgerReader、
+  LedgerCheckpoint（周期性摘要，不是全量快照）。
+- 废止旧七项壳：WorldState*、LedgerSnapshot、LedgerHydration、租约/锁/journal
+  全部 C 类。
+- 损坏策略：head 与末行不一致 → 拒绝加载并给只读诊断，不自动截断、不静默重建。
+- 写者纪律：全工程只有 director 可调用 appendNarrativeEvent；LedgerStore 不暴露
+  update/delete。
+
+3.4 导演身份 → 单 profile，不做多 profile
+- 只有 StudioProfile 单例；多 profile 列 D 类。
+- 不以 profileId 进入任何数据 schema；项目目录本身是隔离单位。
+
+3.5 WorldKind(Shore) → Primary / Secondary；Shore 废止
+- WorldKind 名字保留。
+- Primary：继承值，项目入口世界；全项目恰好一个，且等于 EventTreeDAG.rootNodeId
+  指向的世界。
+- Secondary：新增值（A 类，无继承标注）；其余世界。
+- Shore：废止值，进 C 类；不是 Secondary 的重命名源（P2）。
+
+3.6 ChartSourceData → v2，支持动态图层
+- schemaVersion = 2；外壳保留 chartId / provenance / layers[] / notes[]。
+- 音符字段：timeMs / durationMs / chartLayerIndex / gridCellId? / chartKeyId? /
+  chartPadKind。
+- Hold：durationMs；第 2 层用 HoldGridLine；第 1/3+ 层用 SpaceHoldOverflow。
+- 不做 v1 兼容：parseChartSourceData 只接受 v2；旧文件拒绝并给明确诊断；
+  ChartSourceBuilder 输出 v2。
+
+3.7 五个 AI 任务命名（不变）
+- ParallaxExtractionTask（视差提取）
+- NarrativeVectorTask（向量生成）
+- RhythmGenerationTask（节奏生成）
+- SceneVisionTask（视觉 AI）
+- SubtitleGenerationTask（字幕生成）
+统一 Task 后缀，与 AITaskRoute 同族。
+
+======================================================================
+4. 三处硬冲突修正（本轮必须项）
+======================================================================
+
+4.1 PerceptionMode.Rain 保留（P3 撤回）
+- PerceptionMode = Normal / Triggered / Rain；Rain 是独立第三态视觉模式。
+- PerceptionMode.Rain 是模式状态；RainModeState 是该模式的天气/视觉运行态
+  （active、intensity、degradedReason、lastResolvedAt、source）。
+- Rain 由玩家 IP 地天气驱动，不由蓝图触发；下雨不可蓝图触发，实拍雨景可作为
+  蓝图事件剪辑（NarrativeAction / DynamicAction）触发，但不改变 PerceptionMode。
+- Rain 强度：RainIntensity = Light / Moderate / Heavy。
+- Rain 视觉：低饱和 + logo 发光（NoteLogoGlow，使周围雨丝清晰可见）+ 色调由
+  视频谱面决定（RainTintSource）；logo 可见；视差框可见（主要用于非谱面场景）。
+- 天气 API 失败时降级：RainModeState.degradedReason 记录
+  LocationUnavailable / WeatherUnavailable / NetworkUnavailable；PerceptionMode
+  仍保持 Rain，仅有效视觉降为 Normal，不回写为 Normal；不改变玩家当前感知模式
+  选择；网络恢复后自动重试，成功回到 Rain。
+
+4.2 CloudProvider 保留（P26 撤回）
+- CloudProvider 进 A 类；客户端直连用户自填 API Key，不改变“服务端不留”。
+- 边界：
+  - 不运营 Neurou 服务端；无账号、无 Relay、无认证服务。
+  - 请求只发往用户配置的第三方 LLM endpoint。
+  - API Key 由 app/adapters 存 OS 钥匙串；不写项目文件、账本、日志。
+  - CloudProvider 通过注入的 AIHttpPort（B 类）发请求；ai 模块保持纯逻辑。
+  - 失败时按 FallbackChain 降级到 LocalProvider / TemplateProvider。
+  - AI 输出只作建议，不得直接写账本；账本仍只由 director 追加。
+- AIProviderMode = Local / Cloud；AIProviderSettings 保存 mode / endpoint / model /
+  keyRef / timeout / fallback。
+
+4.3 真随机：编辑预览种子可复现，运行时真随机
+- RandomPreviewMode = Seeded / Live；RandomSeed 为种子类型。
+- 编辑预览：Seeded；同种子 + 同输入 + 同时间轴 → 同结果。
+- 运行时试玩：Live；使用 OS CSPRNG，不可复现。
+- RandomAction 读取 RandomPreviewMode；预览传种子，运行时不传。
+- 已写入账本的结果在重放/读取时不重算；随机只影响当场生成。
+- AC4-21 / AC4-22 / AC4-41 按此修订。
+
+======================================================================
+5. 用户澄清 A / B / C 落地
+======================================================================
+
+5.1 澄清 A：动态图层与分层判定
+1. 层数不固定；ChartLayerIndex 从 1 开始。
+2. 第 1 层 = TopMost：空格全屏判定；固定，不可删除。
+3. 第 2 层 = 8 格网格判定；固定，不可删除。
+4. 第 3 层及更高层 = 全屏判定（任意区域点击）；可增删。
+5. 每层分值 = max(1, floor(上一层 × 0.5))；基准分由 ChartLayerScoring 配置。
+   示例（TopMost=800）：800 → 400 → 200 → 100 → 50 → 25 → 12 → 6 → 3 → 1 → 1…
+6. AddChartLayer：在末尾追加全屏层；RemoveChartLayer：只允许删除第 3 层及以上的
+   空层；删除后高层索引下移、分值重算；第 1/2 层不可删。
+7. 同一音符只属于一个 ChartLayerIndex；禁止跨层 Hold。
+8. GridLayer 不再作为独立层名：8 格的行由 GridRow（Top / Bottom）表达；
+   TopMost 由 ChartLayerIndex=1 表达。GridLayer 退场（见 C.0）。
+9. ChartPadKind = Light / Heavy / TopMost：第 2 层用 Light/Heavy；第 1/3+ 层用
+   TopMost。
+10. 新增 A：ChartLayer / ChartLayerIndex / ChartLayerScoring /
+    FullScreenJudgementLayer / AddChartLayer / RemoveChartLayer。
+
+5.2 澄清 B：真随机
+1. 编辑预览：RandomPreviewMode.Seeded + RandomSeed；随机放置、AI 关键帧生成、
+   随机动作均使用该种子。
+2. 运行时试玩：RandomPreviewMode.Live；真随机，不可复现。
+3. 新增 A：RandomSeed / RandomPreviewMode。
+4. AC4-22 修订；AC4-41 新增。
+
+5.3 澄清 C：Rain 模式
+1. 独立第三态：Normal / Triggered / Rain。
+2. 状态跟随玩家 IP 地天气（第三方 IP 定位 + 天气 API）。
+3. 强度：Light / Moderate / Heavy。
+4. 视觉：低饱和 + logo 发光 + 色调由视频谱面决定；logo 可见；视差框可见
+   （视差框主要用于非谱面场景）。
+5. 下雨不可蓝图触发；实拍雨景可作为蓝图事件剪辑触发。
+6. 降级：IP 定位失败 / 天气 API 失败 / 网络不可用 → RainModeState.degradedReason
+   记录原因；有效视觉降为 Normal；不改变玩家当前感知模式选择；恢复网络后自动
+   重试，成功回到 Rain；失败保持 Normal。
+7. 新增 A：RainIntensity / RainModeState / LocationResolver / WeatherResolver /
+   RainVisualConfig / NoteLogoGlow / RainTintSource。
+8. 新增 AC：AC4-36 ~ 39。
+
+5.4 白皮书追加：cmd 风格世界文件夹（12 项）
+- WorldFolderConsole / ConsoleCommand / ConsoleOutput / ConsolePrompt /
+  WorldFileEntry / WorldFolderEntryKind / ConsoleEnvironmentText / ConsoleEffect /
+  WorldExportIntent / WorldImportAuto / WorldLoadingSequence / SettingsConsole。
+- console 是 presentation 子域；依赖 K / W / S（S 只读或意图）。
+- AC4-29 新增。
+
+5.5 白皮书追加：Logo 引导（8 项）
+- NoteLogoGuide / NoteLogoAppearance / NoteLogoDisappear / NoteLogoMiss /
+  NoteLogoLeadTimeMs / NoteLogoLifetimeMs / NoteLogoHoldExtensionMs /
+  GridLineVisibility。
+- 规则：logo 提前 NoteLogoLeadTimeMs 出现；存活 NoteLogoLifetimeMs；Hold 期间
+  延长 NoteLogoHoldExtensionMs；Miss 触发 NoteLogoMiss；BlindMode 与
+  GridLineVisibility 控制可见性，不改变判定。
+- AC4-31 新增。
+
+5.6 白皮书追加：动态网格与长按（5 项）
+- DynamicGridScale：1.0 ~ 1.5；Hold 越界时放大到 1.5。
+- GridScaleRestoreCondition：HoldReleased / OverflowCleared / TimelineBoundary /
+  Manual。
+- HoldGridLine / HoldGridOverflow / SpaceHoldOverflow。
+- 放大不改变 cell → key 映射与判定窗口。
+- AC4-32 / AC4-33 新增。
+
+5.7 白皮书追加：编辑器谱面编辑（9 项）
+- ChartEditMode / KeyframeTrack / ChartKeyframe / ChartKeyframeAnimation /
+  ChartKeyframeProperty / LogoPositionPicker / LogoRandomPlacement / ChartEditUndo /
+  AIKeyframeGeneration。
+- AC4-34 新增。
+
+5.8 白皮书追加：视差框补充（5 项）
+- VisualFrameSaturation（框内）/ GlobalSaturation（全场景）/
+  VisualFrameTargetLock / VisualFrameRect / VisualFrameParallaxFactor。
+- v1 的 FrameSaturation 退场，由 VisualFrameSaturation 取代（见 C.0）。
+- AC4-09 扩展。
+
+5.9 白皮书追加：AI 双模式（6 项）
+- AIProviderMode / AIProviderSettings / CloudProvider / LocalProvider /
+  TemplateProvider / AITaskRoute。
+- AC4-35 新增。
+
+======================================================================
+6. v4.0 A 类（262 项）
+======================================================================
+状态说明：继承 / 改名 / 重定义（名字保留、语义重定义）/ 新增。
+v1 实为 211；v2 262；净增 51（口径见第 0 节）。
+
+6.1 constants（4）
+| 名称 | 状态 | 语义 |
+|---|---|---|
+| VectorSchemaVersion | 继承 | 20 维向量版本，固定 1 |
+| GRID_PERFECT_WINDOW_MS / GRID_GOOD_WINDOW_MS | 改名自 PERFECT_WINDOW_MS / GOOD_WINDOW_MS | 8 格 Perfect / Good 窗口 |
+| FRAME_ALIGNED_WINDOW_MS | 新增 | 视差框对准窗口 |
+
+6.2 ledger（19）
+| 名称 | 状态 | 语义 |
+|---|---|---|
+| NarrativeEvent / Ledger / LedgerPosition / NarrativeDimension / AppendedAt | 继承 | 记录 / 容器 / 累计位置 / 20 维 / 追加时刻 |
+| RecallCount / Recall / Replay | 继承 | 回忆计数与重玩 |
+| RouteSignature / RouteCoverage / DivergenceAxis / classifyDivergenceAxis / deriveRouteSignature / deriveLedgerPosition / validateNarrativeVector | 继承 | 路线签名 / 覆盖 / 六情感 / 派生与校验 |
+| LedgerStore / LedgerReader / LedgerCheckpoint / appendNarrativeEvent | 新增 | 单机 append-only 存储 / 读取 / 摘要 / 唯一追加函数 |
+
+6.3 trace（13）
+| 名称 | 状态 | 语义 |
+|---|---|---|
+| Trace / TraceTier / TraceOrigin / DeepTrace / EchoTrace / TraceTouch | 继承 | 痕核心 |
+| AnomalyDisclosure / AnomalyCause / WitnessSight | 继承 | 异痕披露 / 成因 / 目击 |
+| VisibilityState | 继承 | Revealed / Concealed |
+| VisibilityTransitionReason | 改名值 | FrameAligned / FrameLost / EnterPerception / ExitPerception |
+| FrameAlignedStrike / GridStrike | 改名自 RhythmStrike | 框对准判定 / 8 格判定；trace 域，只含数值与判定枚举，不 import chart，不引用 Strike |
+
+6.4 world（24）
+| 名称 | 状态 | 语义 |
+|---|---|---|
+| WorldInstance | 重定义 | 2.5D 视差配置 + 时间轴状态 |
+| WorldKind | 继承 | 名字保留；值 Primary（继承）+ Secondary（新增值，无继承标注）；Shore 见 C |
+| WorldMap / Layer / WorldThemeColor | 重定义 | PixiJS 挂载点 / 视差层 / 主题色 |
+| SpawnPoint / SpawnZone / MapCenter / CenterDistance / EventDistance | 继承 | 生成点/区、中点、两类距离 |
+| WorldMeter / ScaleRef / MapScaleCalibration / LateralAxis | 继承 | 长度单位 / 刻度 / 横轴 |
+| WorldFolder / InitialWorld / EmptyWorld | 继承 | 节点指向容器 / 入口模板 / 空模板 |
+| moveAlongAxes / MoveInput / MovementResult / calculateCenterDistance | 重定义 | 单轴移动推进与距离（DepthAxis 废止） |
+| PerceptionMode | 继承 | Normal / Triggered / Rain |
+| RainIntensity / RainModeState | 新增 | 雨强 Light/Moderate/Heavy；雨态（含 degradedReason 字段，值 LocationUnavailable / WeatherUnavailable / NetworkUnavailable） |
+
+6.5 视差框（8）
+| 名称 | 状态 | 语义 |
+|---|---|---|
+| VisualFrame / VisualFrameRect / VisualFrameParallaxFactor | 新增 | 屏幕框 / 矩形 / 每层视差因子 |
+| VisualFrameSaturation / GlobalSaturation | 新增 | 框内饱和度 / 全场景饱和度（只读反馈） |
+| FrameTarget / FrameTracking / VisualFrameTargetLock | 新增 | 目标 / 跟踪状态 / 目标锁定 |
+
+6.6 触发器（10）
+| 名称 | 状态 | 语义 |
+|---|---|---|
+| TriggerInstance | 改名自 Trigger | 触发器运行实例 |
+| TriggerId / EventSignalId / TriggerRegion | 新增 | ID / 信号 ID / 区域 |
+| TriggerEnter / TriggerExit / TriggerDwell / TriggerOccupancy / TriggerParallax | 新增 | 五类触发信号 |
+| ParallaxLayer | 新增 | 视差层定义（前景/中景/背景） |
+
+6.7 timeline（6）
+| 名称 | 状态 | 语义 |
+|---|---|---|
+| TimelineStateMachine / TimelineProgress / TimelineDirection / TimelineMovementMapping / TimelineBoundary | 新增 | 状态机 / 进度 / 方向 / 移动→时间映射 / 边界 |
+| PlaybackState | 改名自 ChartPlaybackState | Ready / Playing / Paused / Completed / Exited |
+
+6.8 chart 与动态图层（28）
+| 名称 | 状态 | 语义 |
+|---|---|---|
+| ChartRef / ChartTier / ChartPremiere / ChartReplay / ChartSnapshot / ChartScore / ChartEntry | 继承 | 引用 / 层级 / 首演 / 重演 / 快照 / 成绩 / 入口 |
+| WorldBossChart / CharacterBossChart / FinalBossChart / WorldBossChartSource | 继承 | 三级魔王曲 |
+| ChartKeyId / ChartPadKind | 继承 + 重定义 | 逻辑键身份；Pad 类型 Light / Heavy / TopMost |
+| ChartLayer / ChartLayerIndex / ChartLayerScoring / FullScreenJudgementLayer | 新增 | 动态层 / 1 基索引 / 分值（max(1, floor(prev×0.5))）/ 全屏层（Space 或 Pointer） |
+| GridScaleRestoreCondition / HoldGridOverflow / SpaceHoldOverflow | 新增 | 网格恢复条件 / 网格越界 / 空格越界 |
+| NoteLogoGuide / NoteLogoAppearance / NoteLogoDisappear / NoteLogoMiss | 新增 | Logo 引导 / 出现 / 消失 / Miss |
+| NoteLogoLeadTimeMs / NoteLogoLifetimeMs / NoteLogoHoldExtensionMs / GridLineVisibility | 新增 | 提前量 / 存活 / Hold 延长 / 网格线可见性 |
+
+6.9 8 格网格（10）
+| 名称 | 状态 | 语义 |
+|---|---|---|
+| GridLayout / GridCell / GridRow / GridCellId | 新增 | 2×4 布局 / 格 / 行（Top/Bottom）/ 格位 1..8 |
+| DynamicGridScale / HoldGridLine / GridKeyHold / BlindMode / GridNote | 新增 | 动态缩放 1.0~1.5 / 跨格 Hold / 按住 / 盲打 / 音符 |
+| AudioOutputClock | 重写 | Web Audio 输出时钟 |
+
+6.10 media（8）
+| 名称 | 状态 | 语义 |
+|---|---|---|
+| MediaSource / MediaImport / MediaTrim | 新增 | 媒体源 / 导入 / 裁剪 |
+| DepthMap / DepthThreshold / AudioSegment / AudioMarker / Downbeat | 新增 | 深度图 / 阈值 / 音频段 / 标记 / 重拍 |
+
+6.11 事件蓝图（19）
+| 名称 | 状态 | 语义 |
+|---|---|---|
+| EventGraph / EventNode / EventGraphPort / EventGraphConnection / InputPort / EventSignalInput | 新增 | 蓝图 / 节点 / 端口 / 连接 / 输入 |
+| AndGate / OrGate / NotGate / CycleWarning | 新增 | 逻辑门 / 环告警 |
+| NarrativeAction / DynamicAction / EmergentAction / RandomAction / DelayAction / LoopAction | 新增 | 六类动作 |
+| EventGraphBuilder | 新增 | 文档 → 运行时装配 |
+| RandomSeed / RandomPreviewMode | 新增 | 种子 / Seeded 或 Live |
+
+6.12 事件树（5）
+| 名称 | 状态 | 语义 |
+|---|---|---|
+| EventTreeNode / EventTreeEdge / EventTreeDAG / EventTreeDocument / EventTreeBuilder | 新增 | 项目级世界编排 DAG / 文档 / 装配 |
+
+6.13 editor（26）
+| 名称 | 状态 | 语义 |
+|---|---|---|
+| EditorTimeline / EditorPlayhead / EditorTrack / EditorClip / EditorCanvas / EditorInspector | 新增 | 编辑器视图模型 |
+| EditorProjectFile / EditorWorldFile | 新增 | 项目 / 世界文件描述 |
+| NoteColor / MidiNoteEvent / ChartSourceData / EditorSelection / EditorHistory / parseNoteColor / parseChartSourceData | 继承（ChartSourceData 升 v2） | 源数据 / 选择 / 有界历史 / 解析 |
+| AddChartLayer / RemoveChartLayer | 新增 | 图层增删命令（编辑域） |
+| ChartEditMode / KeyframeTrack / ChartKeyframe / ChartKeyframeAnimation / ChartKeyframeProperty | 新增 | 谱面编辑模式 / 关键帧 |
+| LogoPositionPicker / LogoRandomPlacement / ChartEditUndo / AIKeyframeGeneration | 新增 | logo 放置 / 随机放置 / 撤销 / AI 关键帧 |
+
+6.14 musicEditor（22）
+| 名称 | 状态 | 语义 |
+|---|---|---|
+| MusicProjectData / TrackDefinition / NoteDefinition / TempoPoint / MusicTimeSignature | 继承 | 工程 / 轨 / 音符 / 速度 / 拍号 |
+| MusicEditorDocument / MusicEditorHistory / MusicEditorSession / MusicEditorReader / MusicEditorPort / MusicEditorIntent | 继承 | 草稿 / 历史 / 会话 / 读写 / 意图 |
+| ChartSourceBuilder / buildChartSource / MusicPlaybackNote | 继承 | 导出 v2 / 试听 |
+| parseMusicProjectData / createDefaultMusicProject / parseMusicEditorDocument / tickToTimeMs / timeMsToTick / musicProjectDurationMs / musicMeasureTicks / midiPitchToFrequency | 继承 | 纯函数组 |
+
+6.15 AI（22）
+| 名称 | 状态 | 语义 |
+|---|---|---|
+| AIProvider / LocalProvider / TemplateProvider / CloudProvider / AITaskRoute / FallbackChain | 继承 + 恢复 CloudProvider | 提供者与路由；Cloud 客户端直连 |
+| AIProviderMode / AIProviderSettings | 新增 | Local 或 Cloud / 设置（endpoint、model、keyRef、timeout、fallback） |
+| RealityHint / StudioPoem / PoemProfile | 继承 | 现实提示 / 诗 |
+| TextArchive / ArchiveEntry / TextProvenance / TextKind / ProvenanceRecord / ProvenanceStatus | 继承 | 文本档案 |
+| ParallaxExtractionTask / NarrativeVectorTask / RhythmGenerationTask / SceneVisionTask / SubtitleGenerationTask | 新增 | 五类 AI 任务 |
+
+6.16 studio（3）
+| 名称 | 状态 | 语义 |
+|---|---|---|
+| StudioProfile / StudioProject / ProjectStore | 新增 | 单机身份 / 项目清单 / 项目读写（端口注入，不直接碰 fs） |
+
+6.17 director（5）
+| 名称 | 状态 | 语义 |
+|---|---|---|
+| PlayerIntent / IntentPort / submitFrameIntents / getCurrentPerceptionMode | 继承 | 玩家意图窄口 |
+| Strike | 继承（P8 归 director） | 敲击意图载荷（timeMs + chartKeyId / gridCellId）；不得引用 GridStrike |
+
+6.18 character（5）
+| 名称 | 状态 | 语义 |
+|---|---|---|
+| Protagonist / MoveSpeed / TrailLength / HairColor / DecorationPalette | 继承 | 去 Cocos 的纯逻辑 |
+
+6.19 presentation（23）
+| 名称 | 状态 | 语义 |
+|---|---|---|
+| ParallaxRenderer / ParallaxCamera / ForegroundUV / MidgroundUV / BackgroundUV | 新增 | Pixi 视差渲染 |
+| EventGraphView / EventTreeView / MainScreenView | 新增 | 蓝图 / 事件树 / 主界面 |
+| WorldFolderConsole / ConsoleCommand / ConsoleOutput / ConsolePrompt / WorldFileEntry / WorldFolderEntryKind | 新增 | cmd 风格世界文件夹 |
+| ConsoleEnvironmentText / ConsoleEffect / WorldExportIntent / WorldImportAuto / WorldLoadingSequence / SettingsConsole | 新增 | 环境文本 / 效果 / 导出 / 自动导入 / 加载序列 / 设置 |
+| RainVisualConfig / NoteLogoGlow / RainTintSource | 新增 | Rain 视觉配置 / logo 发光 / 视频谱面色调源 |
+
+6.20 app/adapters（2）
+| 名称 | 状态 | 语义 |
+|---|---|---|
+| LocationResolver / WeatherResolver | 新增 | IP 定位 / 天气 API 适配；app/adapters 层，依赖 K |
+
+======================================================================
+7. B 类（候选，不冻结）
+======================================================================
+
+| 候选名 | 说明 |
+|---|---|
+| RainTrace / RainTraceTint | 雨痕是否作为独立痕类型保留，待用户确认 |
+| WallClock | 本地时间类型是否保留 |
+| ToggleChartPause | 是否作为独立意图 |
+| CHART_LAYER_BASE_SCORE / scoring knobs | 层基准分与计分参数（示例 TopMost=800 不冻结） |
+| GridJudgement / GridScore | 判定结果与计分明细 |
+| AITaskRequest / AITaskResult / AITaskKind | 5 类任务统一载荷 |
+| AIHttpPort / AIKeyStorePort | CloudProvider 注入端口 |
+| PlaySession / PlaySessionState | 试玩运行时（替代旧 DirectorSession） |
+| WorldStore / MediaStore / StudioSettings | 项目内其余存储 |
+| GridKeyBinding | ChartKeyId ↔ GridCellId 重映射表 |
+| EventGraphDocument / EventGraphEditorSession | 蓝图文档与编辑会话 |
+| TimelineCue / SubtitleCue / SubtitleTrack | 时间轴提示与字幕 |
+| ProjectId / WorldId / MediaAssetId | 品牌化 ID |
+| EmotionToTrailColor / TrailColor | 20 维 → 拖尾色的纯映射是否保留 |
+| WorldPackage / ExportManifest | 世界导出/导入包格式 |
+| LocationResult / WeatherResult | 天气适配返回结构 |
+
+======================================================================
+8. C 类（明确排除）
+======================================================================
+
+8.0 未引入的提议名 / v1 草案退场
+- GridKeyId / GridPadKind：P1 不引入，统一 ChartKeyId / GridCellId / ChartPadKind。
+- GridLayer：与 ChartLayer / GridRow 重叠，退场；TopMost 由 ChartLayerIndex=1 表达。
+- FrameSaturation：v1 草案名，由 VisualFrameSaturation 取代。
+
+8.1 服务端 / 账号 / 里程碑
+Account* / SightSource / FirstWorldCleared / CopyPermission / WorldClearRecord* /
+AccountStartup* / AccountMilestone* / WorldState* / LedgerSnapshot / LedgerHydration /
+RecallCountSession* / WorldLink* / AIProfile* / ChartArchive* / ChartReplaySession。
+
+8.2 跨设备 / 分叉 / 迁移
+WorldHome* / HomeDevice / CrossDevice* / CoreTransfer* / WorldRegistry /
+DuplicateWorld / WorldFork* / WorldMigration* / RealityPause / SafePoint / OfflineGrace。
+
+8.3 共享契约 / 真实服务
+Shared* / Real* / Relay* / AuthService / server/ 全部 / neurou-* key 与锁名。
+
+8.4 Cocos 表现层
+FrameDriver / CameraRig / InputCollector / *View / TrailRender / LineEraseEffect /
+PerceptionFilter / DebugPanel / SceneBuilder / *Builder 组合根。
+
+8.5 引导线谱面
+Guidance* / HeadNode / TapNode / DragNode / HoldNode / ChartNodeKind / NodePath /
+JudgmentPoint / HEAD_WINDOW_MS / GuidanceEditor*。
+
+8.6 解谜 / 元素 / 共情
+ElementEntity* / PuzzleChain* / PuzzleProgress* / evaluatePuzzleApproach /
+EmpathyScaling / ScalingBasis / ElementType。
+
+8.7 旧状态壳
+WorldState* / WorldCoreState* / FormatTimeStorage / WorldStateLock / WorldStateLease /
+七项载体全部。
+
+8.8 旧主界面 / 彼岸
+ShoreHub* / ConstellationGate* / Star* / Autopilot* / VectorScramble* / Shore* /
+FinalShore* / SourceCube* / Ending*。
+
+8.9 旧意图 / 导演 / 谱面
+DirectorSession / Chapter / ChapterTag / InputSource / Jump / tickVertical /
+KeyboardPadLayout / KeyPadSlot / PAD_LAYOUT_VERSION / Note / CHART_* 旧常量。
+
+8.10 旧 AI 配置
+AIProfile / AIProfileSnapshot / AIProviderConfiguration / validateAIProfile
+（CloudProvider 已恢复为 A，不在 C）。
+
+8.11 WorldKind.Shore
+Shore 为废止值，C 类；不是 Secondary 的重命名源（P2）。
+
+R0 已判废止 167 项全部进 C；scope §4.1~4.6 的领域级废止全部进 C。
+
+======================================================================
+9. D 类（延期）
+======================================================================
+
+| 项 | 说明 |
+|---|---|
+| 多 profile | 本机多创作者身份 |
+| SQLite 事件存储 | 节点规模上千后再评估 |
+| Live2D / Spine / 角色光照 | Live2DBinding / SpineBinding / CharacterLighting |
+| 异常着色器 | AnomalyShader / GhostOverlay / SpatialDistortion |
+| 云端 AI 托管 | 仅保留用户自填 Key 直连；不做 Neurou 托管 |
+| 协作 / 分享 / 创意工坊 | 单机沙盒之外的发布链 |
+| v1 谱面兼容 | 不提供 |
+| TTS / 配音 | 字幕生成之后的语音层 |
+| 移动端 / 触控 | 只做桌面 |
+| 插件系统 | 第三方扩展 |
+
+======================================================================
+10. AC（AC4-01 ~ AC4-41）
+======================================================================
+标记：[修订] = v1 已有、v2 修改；[新增] = v2 新增；无标记 = v1 原样。
+
+AC4-01 单机无账号：无登录 UI、无网络请求；StudioProfile 单例。
+AC4-02 项目目录布局固定：project.json / event-tree.json / worlds/ / media/。
+AC4-03 JSON 原子写 + .bak 回退；崩溃后重开一致。
+AC4-04 事件树 DAG：增删节点/边、环检测、单根。
+AC4-05 节点只存 worldId；世界删除 → 节点标 orphan，不静默级联删除。
+AC4-06 全项目恰好一个 Primary 世界，且等于 rootNodeId 指向世界。
+AC4-07 世界至少三层视差；层速比可配且不影响判定。
+AC4-08 左右移动映射时间轴进度；方向/边界/暂停冻结。
+AC4-09 [修订] 视差框：矩形、每层因子、目标入框判定、FrameTracking、
+         VisualFrameTargetLock；VisualFrameSaturation / GlobalSaturation 只读，
+         逻辑层不读取渲染颜色。
+AC4-10 痕显现：FrameAligned + 节拍才 Revealed；FrameLost / 退出恢复；
+         四类转换原因。
+AC4-11 账本 append-only：无 update/delete API；单写者；序号连续。
+AC4-12 head 与末行不一致 → 只读诊断，不截断、不重建。
+AC4-13 20 维顺序 / 非负 / VectorSchemaVersion=1；validateNarrativeVector 拒绝非法。
+AC4-14 [修订] 8 格仅用于 ChartLayerIndex=2；布局 2 行 × 4 列 = 8 格；
+         第 1 层与第 3+ 层为全屏判定，不使用 8 格。
+AC4-15 GRID_PERFECT_WINDOW_MS / GRID_GOOD_WINDOW_MS 生效；同音符至多一次；
+         暂停冻结。
+AC4-16 [修订] Hold 归属单一 ChartLayerIndex；第 2 层用 HoldGridLine；
+         第 1/3+ 层用 SpaceHoldOverflow；禁止跨层 Hold。
+AC4-17 [修订] 第 1 层 TopMost 空格全屏判定；第 2 层 8 格；第 3+ 层任意区域
+         点击；同刻冲突按层序先判，同一输入不重复计分。
+AC4-18 BlindMode：隐藏视觉引导（含 NoteLogoGuide 与网格线），判定窗口不变。
+AC4-19 首演完成恰好 +1 条带 ChartRef 的 NarrativeEvent；中途退出 0；重演不重复首演。
+AC4-20 蓝图 And/Or/Not 真值表正确。
+AC4-21 [修订] 随机：编辑预览用 RandomSeed 可复现；运行时真随机；延时按时间轴；
+         循环有上限并产生 CycleWarning。
+AC4-22 [修订] 编辑预览同种子 + 同输入 + 同时间轴 → 同结果；运行时不可复现；
+         重放不承诺一致。
+AC4-23 媒体导入视频/音频/深度；trim；失败回滚。
+AC4-24 AudioOutputClock 对齐媒体；漂移阈值；Downbeat 标记。
+AC4-25 编辑器 undo/redo 有界；保存/加载 round-trip；导出 v2。
+AC4-26 五类 AI 任务路由；失败降级 Local/Template；AI 不写账本。
+AC4-27 逻辑层零 React/Pixi/WebAudio/Tauri/fs；依赖门禁 E1~E9 = 0 ERROR。
+AC4-28 端到端：新建 → 世界 → 事件树 → 谱面 → 试玩 → 账本 +1 → 重开一致；
+         外部网络 0（Cloud AI / 天气仅按用户配置显式触发）。
+AC4-29 [新增] cmd 风格世界文件夹：prompt、命令、输出、环境文本、效果、世界文件
+         条目、导出/导入、加载序列、设置；键盘可完成打开项目/进入世界/导出/
+         导入/设置；不出现账号与登录。
+AC4-30 [新增] 分层判定：第 1 层空格全屏；第 2 层 8 格；第 3+ 层全屏点击；
+         AddChartLayer 追加全屏层；RemoveChartLayer 只删第 3+ 空层；
+         第 1/2 层不可删；索引与分值同步重算。
+AC4-31 [新增] Logo 引导：提前 NoteLogoLeadTimeMs 出现；存活 NoteLogoLifetimeMs；
+         Hold 延长 NoteLogoHoldExtensionMs；Miss 触发 NoteLogoMiss；
+         GridLineVisibility 控制网格线；BlindMode 隐藏引导但不改判定。
+AC4-32 [新增] 动态网格：Hold 越界时 DynamicGridScale 放大到 1.5；
+         满足 GridScaleRestoreCondition 恢复 1.0；放大不改变 cell → key 映射
+         与判定窗口。
+AC4-33 [新增] 长按越界重按：HoldGridOverflow / SpaceHoldOverflow 终止当前段，
+         必须重新按下才能续接；重按成功延续，失败记 Miss；不重复计分。
+AC4-34 [新增] 编辑器谱面编辑：ChartEditMode 切换；KeyframeTrack / ChartKeyframe
+         编辑；LogoPositionPicker / LogoRandomPlacement；ChartEditUndo；
+         AIKeyframeGeneration；预览使用 RandomSeed。
+AC4-35 [新增] AI 双模式：AIProviderMode 切换 Local / Cloud；Cloud 使用用户
+         自填 Key 直连；失败按 FallbackChain 降级；Key 不写项目/账本/日志；
+         无 Neurou 服务端。
+AC4-36 [新增] Rain 激活：PerceptionMode.Rain 跟随 IP 地天气进入/退出；蓝图不得
+         触发 Rain；实拍雨景可作为蓝图事件剪辑触发，但不改变 PerceptionMode。
+AC4-37 [新增] Rain 强度：天气映射到 RainIntensity（Light/Moderate/Heavy）；
+         强度驱动雨丝密度与音量，不改变判定。
+AC4-38 [新增] Rain 视觉：低饱和 + NoteLogoGlow（雨丝可见）+ RainTintSource
+         （视频谱面色调）；logo 可见；视差框可见（主要用于非谱面场景）。
+AC4-39 [新增] Rain 降级：LocationUnavailable / WeatherUnavailable /
+         NetworkUnavailable → RainModeState.degradedReason；PerceptionMode 仍保持
+         Rain，仅有效视觉降为 Normal（不回写）；不改变玩家当前感知模式选择；
+         恢复网络自动重试，成功回 Rain，失败保持 Normal。
+AC4-40 [新增] 层分值：score(1)=base；score(n)=max(1, floor(score(n-1)×0.5))；
+         示例 800→400→200→100→50→25→12→6→3→1→1…；增删层后重算。
+AC4-41 [新增] 随机分流：编辑预览 RandomPreviewMode.Seeded + RandomSeed 可复现；
+         运行时 RandomPreviewMode.Live 真随机；同一输入运行两次结果可不同。
+
+======================================================================
+11. 依赖矩阵（v2）
+======================================================================
+模块：constants(K)、ledger(L)、trace(T)、world(W)、timeline(M)、chart(C)、
+eventgraph(G)、media(D)、ai(A)、studio(S)、editor(E)、musicEditor(U)、
+character(H)、director(R)、presentation(P)、app(X)。
+
+| 模块 | 可值依赖 | 仅类型（R / I） |
+|---|---|---|
+| K | — | — |
+| L | K | — |
+| T | K | W |
+| W | K、M | — |
+| M | K | — |
+| C | K | M |
+| D | K | — |
+| G | K | W、C、D |
+| A | K | D、G |
+| S | K、L | W、G、C、D、E |
+| E | K、C、M | W、D、U |
+| U | K、C | E |
+| H | K、W | — |
+| R | K、L（append）、T、W、M、C、G、D、A、H | S |
+| P | K | 全部逻辑模块 R/I |
+| X | 全部 | — |
+
+规则：
+1. director 是唯一可值引用 appendNarrativeEvent 的模块；LedgerStore 可被
+   studio/app 构造，但写方法只由 director 调用。
+2. presentation → director 只允许 IntentPort / PlayerIntent 类型（I 边）；
+   presentation → editor/musicEditor 只允许 R+I 类型。
+3. 逻辑模块（K~R）零 React / PixiJS / Web Audio / Tauri / Node fs；
+   presentation 是唯一值引用 React/Pixi/WebAudio 的层；app 是唯一值引用 Tauri
+   的组合根。
+4. editor 不得依赖 director / ledger；musicEditor 不得依赖 director / ledger。
+5. studio 只定义存储端口，不直接碰文件系统；文件适配器在 app/adapters，由
+   组合根注入。
+6. EventGraph 与 EventTreeDAG 是两张图；eventgraph 不得反向依赖 presentation。
+7. Strike（director）与 GridStrike（trace）不得互相引用；chart 不得 import
+   trace；trace 不得 import chart。
+8. ChartLayer 的类型与分值在 chart；AddChartLayer / RemoveChartLayer 在 editor；
+   editor → chart 为值依赖，chart 不反向依赖 editor。
+
+11.1 本轮新增子域允许边
+| 子域 | 归属 | 允许依赖 |
+|---|---|---|
+| console | presentation | K（值）、W（R）、S（R/I） |
+| rain-visual | presentation | K（值）、W（R） |
+| weather | app/adapters | K（值） |
+| ai-adapter | app/adapters | K（值）、A（R） |
+
+11.2 禁止边（新增/强调）
+- chart → trace；trace → chart。
+- trace → eventgraph / director；eventgraph → director。
+- editor → director / ledger；musicEditor → director / ledger。
+- 逻辑模块 → React / PixiJS / Web Audio / Tauri / Node fs。
+- console 绕过 presentation 直接 import studio 的写方法。
+- 任何模块直接调用 LedgerStore.append 以外的账本写路径。
+
+======================================================================
+12. 阶段拆分
+======================================================================
+
+| 阶段 | 范围 | 出口 |
+|---|---|---|
+| R1 | 三份文档冻结 | NAMEBOOK-v4.0 / stage-4 / verdicts 经审阅确认；零代码变更 |
+| R2 | 核心骨架（无 UI） | K/L/T/W/M/C/H + 存储端口 + 层分值 + 新门禁；AC4-01/02/03/11/12/13/27/40 |
+| R3 | 编辑器与渲染外壳 | app（Tauri/React）、studio、console、editor、media 导入、Pixi 视差预览；AC4-04~09、23、29、34 |
+| R4 | 玩法闭环 | 分层判定、8 格、Logo、动态网格、Hold、视差框、触发器、蓝图运行时、AI 双模式、Rain、随机分流、端到端；AC4-10、14~22、24~26、28、30~33、35~39、41 |
+| R5 | 延期项 | D 类（Live2D/Spine、着色器、协作、移动端等） |
+
+======================================================================
+13. 细节裁定 6.1 / 6.2（已闭合，本轮无待确认）
+======================================================================
+
+13.1 层分值整数化（6.1）
+- 公式：score(1) = base；score(n) = max(1, floor(score(n-1) × 0.5))。
+- 向下取整 + 最低保护值 1；不允许 0 或负数。
+- 示例（base=800）：800 → 400 → 200 → 100 → 50 → 25 → 12 → 6 → 3 → 1 → 1…
+- 实现位置：ChartLayerScoring；增删层后重算；整数分值进入 ChartScore。
+- 基准 base 不冻结（示例 800 仅说明）；候选常量 CHART_LAYER_BASE_SCORE 进 B。
+
+13.2 Rain 降级（6.2）
+- 触发：IP 定位失败 / 天气 API 失败 / 网络不可用。
+- 记录：RainModeState.degradedReason = LocationUnavailable / WeatherUnavailable /
+  NetworkUnavailable。
+- 行为：PerceptionMode 仍为 Rain；仅有效视觉降为 Normal（不回写 Normal）；
+  不改变玩家当前感知模式选择；只改变 Rain 的视觉呈现。
+- 恢复：网络恢复后自动尝试重新获取；成功回到 Rain；失败保持 Normal。
+- 视觉实现：presentation 读取 RainModeState（R 边）；逻辑层不读渲染颜色。
+
+======================================================================
+14. 需 PROTOCOL 知悉（实现口径，非重新裁定）
+======================================================================
+
+1. v1 计数勘误：v1 实际 211（漏计 PerceptionMode），v2 262；净增 51。
+2. GridLayer 退场：8 格行由 GridRow（Top/Bottom）表达；TopMost 由
+   ChartLayerIndex=1 表达；GridLayer 进 C.0（未引入）。
+3. FrameSaturation 退场：由 VisualFrameSaturation（框内）+ GlobalSaturation
+   （全场景）取代；FrameSaturation 进 C.0。
+4. Strike 归 director、GridStrike 归 trace（P8）；chart 不再拥有 Strike；
+   GridStrike 只含数值与判定枚举，不 import chart。
+5. WorldKind：Primary 继承；Secondary 新增值（无继承标注）；Shore 废止值进 C。
+6. A 类 262 项全量冻结（P6）；名义追加 60 项，净增 51（口径见第 0 节）。
+7. ChartLayer 1/2 固定不可删；第 3+ 层可增删；RemoveChartLayer 只删空层。
+8. AddChartLayer / RemoveChartLayer 归 editor；ChartLayer / ChartLayerScoring /
+   FullScreenJudgementLayer 归 chart。
+9. RainDegradedReason 是 RainModeState 的字段联合，不单列顶层 A 名。
+10. CloudProvider 归 ai 名册，网络与钥匙串适配在 app/adapters；ai 保持纯逻辑。
+11. console 是 presentation 子域，不新增顶层模块；weather 是 app/adapters 子域。
+12. 本轮无 [待用户确认] 项；6.1 / 6.2 已闭合。
+
+======================================================================
+15. 自检
+======================================================================
+
+| 检查 | 结果 |
+|---|---|
+| 3 处硬冲突 | Rain 保留；CloudProvider 保留；预览种子/运行时真随机 —— 已修正 |
+| P1 | 不引入 GridKeyId / GridPadKind；统一 ChartKeyId / GridCellId / ChartPadKind |
+| P2 | Shore 进 C；Secondary 新增值；无“重命名自 Shore”标注 |
+| P3 | Rain 保留，独立第三态 |
+| P4 | EventGraph / EventTreeDAG 双名保留，stage-4 写分工 |
+| P5 | 5 个 AI 任务统一 Task 后缀 |
+| P6 | A 类 262 项全量冻结 |
+| P7 | 单文件 verdicts-refactor-r1.md（V-R1-001~010） |
+| P8 | Strike（director）/ GridStrike（trace）并存，不互相引用 |
+| 澄清 A | 动态层、1=TopMost、2=8 格、3+=全屏、分值 0.5 递减 + 最低 1 |
+| 澄清 B | RandomSeed / RandomPreviewMode；AC4-22 / AC4-41 |
+| 澄清 C | RainIntensity / RainModeState / LocationResolver / WeatherResolver / RainVisualConfig / NoteLogoGlow / RainTintSource；AC4-36~39 |
+| A 类计数 | 262（模块合计复核：4+19+13+24+8+10+6+28+10+8+19+5+26+22+22+3+5+5+23+2 = 262） |
+| AC 计数 | 41（v1 28 + 新增 13；修订 6 项） |
+| 依赖矩阵 | 16 模块 + 4 子域；新增禁止边 6 条 |
+| 待确认项 | 0 |
+| 代码/文档/scope | 未写代码、未落盘 docs、未改 scope-statement |
+| 名称冲突 | 未发现同名跨模块重复；GridLayer / FrameSaturation 已退场并记录 |
+
+======================================================================
+16. 结论
+======================================================================
+
+v2 已闭合本轮全部输入：3 处硬冲突、P1~P8、澄清 A/B/C、细节 6.1/6.2。
+等待 PROTOCOL 审阅；审阅通过后由 Trae 落盘 NAMEBOOK-v4.0 / stage-4 /
+verdicts-refactor-r1.md，再进入 R2。
+
+—— DSH（ARCHITECT + IMPLEMENTER）2026-10-19

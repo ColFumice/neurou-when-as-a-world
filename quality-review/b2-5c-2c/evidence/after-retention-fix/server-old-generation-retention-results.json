@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "suite": "c-2c-real-loopback-pg-server",
+  "serviceMode": "ExternalService",
+  "databaseVersion": "PostgreSQL17",
+  "isolatedPublicWorldPins": true,
+  "noProductionKeyDeliveryOrReplayClaim": true,
+  "total": 2,
+  "passed": 2,
+  "failed": 0,
+  "results": [
+    {
+      "name": "old generation surviving ciphertext stays intact before its admitted retention boundary",
+      "pass": true,
+      "clock": "production-real-wall",
+      "elapsedMs": 154
+    },
+    {
+      "name": "new generation request lazily clears all expired old generation payloads without corrupting current floor or facts",
+      "pass": true,
+      "clock": "isolated-injected-clock-and-explicit-test-storage-loss",
+      "elapsedMs": 140
+    }
+  ]
+}

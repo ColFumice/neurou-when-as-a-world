@@ -1,0 +1,103 @@
+{
+  "schemaVersion": 3,
+  "chartId": "music-project-1-chart",
+  "tier": "Regular",
+  "layoutVersion": "pad-layout-2",
+  "aspectRatio": 1.7777777777777777,
+  "lines": [
+    {
+      "id": "line-music-line-1",
+      "head": {
+        "id": "head-music-note-1",
+        "spawnTimeMs": 1200,
+        "targetTimeMs": 1200
+      },
+      "path": {
+        "kind": "Polyline",
+        "points": [
+          {
+            "u": 0.045454545454545456,
+            "v": 0.375
+          },
+          {
+            "u": 0.3181818181818182,
+            "v": 0.375
+          },
+          {
+            "u": 0.5909090909090908,
+            "v": 0.375
+          }
+        ]
+      },
+      "nodes": [
+        {
+          "id": "node-music-note-2",
+          "kind": "Tap",
+          "pathDistance": 0.4848484848484848
+        },
+        {
+          "id": "node-music-note-3",
+          "kind": "Tap",
+          "pathDistance": 0.9696969696969695
+        }
+      ],
+      "timing": [
+        {
+          "nodeId": "node-music-note-2",
+          "targetTimeMs": 2700
+        },
+        {
+          "nodeId": "node-music-note-3",
+          "targetTimeMs": 3600
+        }
+      ]
+    },
+    {
+      "id": "line-music-line-2",
+      "head": {
+        "id": "head-music-note-4",
+        "spawnTimeMs": 1500,
+        "targetTimeMs": 1500
+      },
+      "path": {
+        "kind": "Polyline",
+        "points": [
+          {
+            "u": 0.038461538461538464,
+            "v": 0.625
+          },
+          {
+            "u": 0.34615384615384615,
+            "v": 0.625
+          },
+          {
+            "u": 0.7307692307692308,
+            "v": 0.625
+          }
+        ]
+      },
+      "nodes": [
+        {
+          "id": "node-music-note-5",
+          "kind": "Tap",
+          "pathDistance": 0.5470085470085471
+        },
+        {
+          "id": "node-music-note-6",
+          "kind": "Tap",
+          "pathDistance": 1.2307692307692308
+        }
+      ],
+      "timing": [
+        {
+          "nodeId": "node-music-note-5",
+          "targetTimeMs": 2700
+        },
+        {
+          "nodeId": "node-music-note-6",
+          "targetTimeMs": 3900
+        }
+      ]
+    }
+  ]
+}

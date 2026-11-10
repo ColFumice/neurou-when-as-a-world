@@ -1,0 +1,22 @@
+{
+  "observedUtc": "2026-10-11T02:55:49.3112118Z",
+  "source": "server/.local",
+  "protected": true,
+  "access": [
+    {
+      "identity": "NT AUTHORITY\\SYSTEM",
+      "rights": "FullControl",
+      "inherited": false
+    },
+    {
+      "identity": "BUILTIN\\Administrators",
+      "rights": "FullControl",
+      "inherited": false
+    },
+    {
+      "identity": "WIN-2GVHBE78OU1\\Administrator",
+      "rights": "FullControl",
+      "inherited": false
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+[
+  {
+    "path": "src/musicEditor/MusicEditorSession.ts",
+    "kind": "Modified",
+    "sha256": "ef6f514f37a34c715117ed871b4c1a8525e5a85c3d0c3d3a754bf17a7dbac97b"
+  },
+  {
+    "path": "src/presentation/MusicEditorView.ts",
+    "kind": "Modified",
+    "sha256": "fc5a6d4c774d841177b264d67fdac2658226f2df976cb5f95cef3d7fb50e425d"
+  }
+]

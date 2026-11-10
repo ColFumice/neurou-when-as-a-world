@@ -1,0 +1,320 @@
+{
+  "generatedAt": "2026-10-10T09:33:01.196789+00:00",
+  "scope": "B2.2a + B2.2b foundations only",
+  "productionSources": [
+    {
+      "path": "src/director/IntentPort.ts",
+      "kind": "Modified",
+      "baselineSha256": "4eba8835849c789636a67fc01ceb1ff27fd5c53c4c161bf25cb447f7aa17b21c",
+      "sha256": "b6ec38dbf2e9915cfc3a70d9ab41ac501dd14d22ec49ba94af5763caf3f1365c",
+      "bytes": 40815
+    },
+    {
+      "path": "src/presentation/WorldFolderView.ts",
+      "kind": "Modified",
+      "baselineSha256": "27f77dd8d0bee09d7b872b10d27625f9746faa50593d00bc71a2325b04dcb05b",
+      "sha256": "6d728d3fc775065b46921864f013d9575c964004f60918508f352d2f3e4d9a7d",
+      "bytes": 16607
+    },
+    {
+      "path": "assets/scripts/WorldFolderBuilder.ts",
+      "kind": "Modified",
+      "baselineSha256": "257b9e07a416bac089f3c5fa1845c028ecf3b56aa80198406a70514657581b6d",
+      "sha256": "1f27ca70c8ce82fefca4731fb3655edb8d542937933313faf3985362bbab52d2",
+      "bytes": 10457
+    },
+    {
+      "path": "src/director/AccountMilestone.ts",
+      "kind": "Added",
+      "baselineSha256": null,
+      "sha256": "ea937e6676b97cafd8a726d051db54d16077a9fe82438cce8374a4635d1b846e",
+      "bytes": 3276
+    },
+    {
+      "path": "src/director/AccountMilestone.ts.meta",
+      "kind": "Added",
+      "baselineSha256": null,
+      "sha256": "de335bf0d6acd4d37384104db36573b7396d25ac82d8eadeed13188c7558c149",
+      "bytes": 171
+    },
+    {
+      "path": "src/director/WorldStateSession.ts",
+      "kind": "Added",
+      "baselineSha256": null,
+      "sha256": "dee799181f9216ce6244c0087ba5dba830ea481cd8140591ec0f7ad099ecfecb",
+      "bytes": 12033
+    },
+    {
+      "path": "src/director/WorldStateSession.ts.meta",
+      "kind": "Added",
+      "baselineSha256": null,
+      "sha256": "829a580b743dbc5f3a665ff37eb09300e320020405b3924369fda402c373a2ab",
+      "bytes": 171
+    },
+    {
+      "path": "src/presentation/AccountMilestoneStorage.ts",
+      "kind": "Added",
+      "baselineSha256": null,
+      "sha256": "ec36e1490443d5ca59c983119e56f5273a0d62e8522f9171fb21be7b05c0ac19",
+      "bytes": 4160
+    },
+    {
+      "path": "src/presentation/AccountMilestoneStorage.ts.meta",
+      "kind": "Added",
+      "baselineSha256": null,
+      "sha256": "6496fd4ded03821d6bc4eae86aec0be60f874be7f2a2eaf5cbd493bba7da96c2",
+      "bytes": 171
+    },
+    {
+      "path": "src/presentation/WorldStateStorage.ts",
+      "kind": "Added",
+      "baselineSha256": null,
+      "sha256": "95e03b7610946041e0aa635d37cf5790b17cdd37d3ed7272080a5b69815e8056",
+      "bytes": 1906
+    },
+    {
+      "path": "src/presentation/WorldStateStorage.ts.meta",
+      "kind": "Added",
+      "baselineSha256": null,
+      "sha256": "2a52c9c41a868e92da84519f635ab2c3a4358a3f806921addd999a782597b0a1",
+      "bytes": 171
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "VERDICT-211-225.md",
+      "sha256": "2abb6757ad466c07f6eb1f19f21e5c39be9e499415ebcbf78f6d8e33f4443e2a"
+    },
+    {
+      "path": "名库v3.7附录提案.md",
+      "sha256": "a855cdfa790cb2fbc49c1c0520357bce6876e479ad16976897402985139e9f7e"
+    },
+    {
+      "path": "交付报告.md",
+      "sha256": "a405ec15f4d0bd2d9fc1bdf0f15c23977637fb48ac2026e83deaa2431a29ba74"
+    },
+    {
+      "path": "修改文件清单.md",
+      "sha256": "f680ef404e0dd4b9c8b84a7dc0ff8d6b2e3bdd9681860fb2a102dad9b5b73547"
+    },
+    {
+      "path": "production.diff",
+      "sha256": "3d31d9dca6cd9c7ed3d5086d9f659c824842da6ea59422689e3f9392e4d896fd"
+    },
+    {
+      "path": "截图索引.md",
+      "sha256": "bde9f78b71ebfa5f68e9f780bd1a263663e62763a14b8c2eba407145f7641190"
+    },
+    {
+      "path": "code-review.md",
+      "sha256": "c93525465acb42830f5c42ed0dcd82dbc549653c4c88c5ea0dbb0ffc64719a49"
+    },
+    {
+      "path": "source-audit.json",
+      "sha256": "5b2376929c41a71218672c2b06e0cc30be0c19d98ef345760807646bc9d552b2"
+    },
+    {
+      "path": "gate-results.json",
+      "sha256": "13076b7aabd3123b58f8a5d662083a24ab3a93f83d29bb634748a5aea859e966"
+    },
+    {
+      "path": "gate-naming.log",
+      "sha256": "5dbb2afa4f26e2d02b66e718989628fe2efcac3347275965a4322d313e1f3047"
+    },
+    {
+      "path": "gate-dependencies.log",
+      "sha256": "0594af6fcd024065a4e59979efee7289e184b39f3b81621ae0f6998efd92eae1"
+    },
+    {
+      "path": "gate-typecheck.log",
+      "sha256": "47db75ab61e28891e9bd05695ea78e54bf8efbe923ef0568deceae65986ea76c"
+    },
+    {
+      "path": "account-milestone.contract.cjs",
+      "sha256": "0d023889c0d20dba32a64b820458009406a759456a896dc2385ba9f5394a309e"
+    },
+    {
+      "path": "account-milestone.contract-results.json",
+      "sha256": "a141ee268580702ae02fee534b4c19e4130280151b59658c0fd4a6b952a2064f"
+    },
+    {
+      "path": "world-state.contract.cjs",
+      "sha256": "60480042d9ec037f4a297cdd833d4da833a2ef4b27c9bdc3f8a5e2158bfe92ac"
+    },
+    {
+      "path": "world-state.contract-results.json",
+      "sha256": "d5cb71f54c93b4dbe67d846b8109283afa124a530e7720a4c620946370b92744"
+    },
+    {
+      "path": "folder-foundation.contract.cjs",
+      "sha256": "2411c530396c89d84b0491d4f3e6a8ce2cfa2f928507ea5ba95a256c190177e6"
+    },
+    {
+      "path": "folder-foundation.contract-results.json",
+      "sha256": "85d294a763279762517d2bdb1c9aa0873125c285c7d5c73cf9dc5ed28e7d2a38"
+    },
+    {
+      "path": "creator-preview.cjs",
+      "sha256": "64b1a9b554fc98ce5d01c3badcbd6a0a8353954f3bb66ee1e537005ce041da08"
+    },
+    {
+      "path": "creator-preview-results.json",
+      "sha256": "797b435c11fb0d86fea91b1bd44cbf92eb4cbf0c577fa676ffb2c530e083bc04"
+    },
+    {
+      "path": "creator-preview.log",
+      "sha256": "4024086b05337573943b6d088343723b27a29edd1a8f26e75655b91ff382d3e9"
+    },
+    {
+      "path": "creator-refresh-evidence.json",
+      "sha256": "2808a3798150061c3f9a32c7975e78ed1b5fb85313ce85ef043c5a106d5269d4"
+    },
+    {
+      "path": "visual-qa-results.json",
+      "sha256": "48bdf6e0d6752bdb248089407e46c0a25c33c061c0e14bbc91cd480d31752e7a"
+    }
+  ],
+  "screenshots": [
+    {
+      "path": "1920x1080-00-directory-permission-derived-false.png",
+      "sha256": "3c6b176718f517b5959024437d56d12a1d02100b23b619df6c3ea066bf53932a",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "evidenceClass": "ProductionUIAcceptance",
+      "clearInjection": false
+    },
+    {
+      "path": "1920x1080-01-incomplete-diagnostics.png",
+      "sha256": "566bdaf3546b7a7d19504333f97d2391d3c913669040e138bf5c9c04ccae4bbf",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "evidenceClass": "ProductionUIAcceptance",
+      "clearInjection": false
+    },
+    {
+      "path": "1920x1080-02-complete-restore-rejected.png",
+      "sha256": "e266bec368c378c34b2905aeb15d02c295454586265643092340eb358cd9c2f9",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "evidenceClass": "ProductionUIAcceptance",
+      "clearInjection": false
+    },
+    {
+      "path": "1920x1080-03-copy-permission-derived-read.png",
+      "sha256": "3c6b176718f517b5959024437d56d12a1d02100b23b619df6c3ea066bf53932a",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "evidenceClass": "ProductionUIAcceptance",
+      "clearInjection": false
+    },
+    {
+      "path": "2560x1440-00-directory-permission-derived-false.png",
+      "sha256": "ba77830f678826430b2947161e44e1e79c1a8eab84cac6383bf765ad0c07df76",
+      "dimensions": [
+        2560,
+        1440
+      ],
+      "evidenceClass": "ProductionUIAcceptance",
+      "clearInjection": false
+    },
+    {
+      "path": "2560x1440-01-incomplete-diagnostics.png",
+      "sha256": "12aa02736a93dedfacf6d0d1809156bbc888d810fa4cf93f8f687c7f0ae4d1d1",
+      "dimensions": [
+        2560,
+        1440
+      ],
+      "evidenceClass": "ProductionUIAcceptance",
+      "clearInjection": false
+    },
+    {
+      "path": "2560x1440-02-complete-restore-rejected.png",
+      "sha256": "44b776428c0b453a04ce4be40b8366debc2c7fbfe4c44dc5b2bbcc97489be41e",
+      "dimensions": [
+        2560,
+        1440
+      ],
+      "evidenceClass": "ProductionUIAcceptance",
+      "clearInjection": false
+    },
+    {
+      "path": "2560x1440-03-copy-permission-derived-read.png",
+      "sha256": "ba77830f678826430b2947161e44e1e79c1a8eab84cac6383bf765ad0c07df76",
+      "dimensions": [
+        2560,
+        1440
+      ],
+      "evidenceClass": "ProductionUIAcceptance",
+      "clearInjection": false
+    }
+  ],
+  "contractTests": {
+    "milestone": 26,
+    "worldState": 42,
+    "directoryDOM": 8,
+    "total": 76,
+    "failed": 0
+  },
+  "gates": [
+    {
+      "command": "npm run check:naming",
+      "exitCode": 0,
+      "pass": true,
+      "log": "gate-naming.log"
+    },
+    {
+      "command": "npm run typecheck",
+      "exitCode": 0,
+      "pass": true,
+      "log": "gate-typecheck.log"
+    },
+    {
+      "command": "npm run check:dependencies",
+      "exitCode": 0,
+      "pass": true,
+      "log": "gate-dependencies.log"
+    }
+  ],
+  "productionPreviewChecks": 18,
+  "boundaries": {
+    "realClearWritten": false,
+    "completeCaptureProducer": false,
+    "gameplayRestoreImplemented": false,
+    "fullStateSaveImplemented": false,
+    "worldForkImplemented": false,
+    "forkAvailability": "NotImplemented"
+  },
+  "knownExternalProtectedDeltas": [
+    {
+      "path": "docs/NAMEBOOK.md",
+      "kind": "ConcurrentExternalProtectedDelta",
+      "baselineSha256": "a179ba444b24db1529b504560c35f53a27135d244b61573e9958e81354e6ed8c",
+      "sha256": "1f9f2c7ad622f7551f8539d1882aa47e7c73cf5014cad02ba5c8439c7c8ad170",
+      "observedLastWriteTime": "2026-10-10T17:15:00.269801+08:00"
+    },
+    {
+      "path": "docs/spec/stage-1.md",
+      "kind": "ConcurrentExternalProtectedDelta",
+      "baselineSha256": "404f466dd71a3be15e7d175cd921ceaacbd09d507e85f367445a2c96f798e6be",
+      "sha256": "2169145d5bcc0ead9da062cd0170ddfa85044679d8dfa811ce65fa158b3c4b88",
+      "observedLastWriteTime": "2026-10-10T17:15:23.179650+08:00"
+    }
+  ],
+  "checks": {
+    "finalSourcesMatchAuditAndCompiledPreview": true,
+    "worldStateAndDOMTestsMatchSourceHashes": true,
+    "logicAdditionsZeroCC": true,
+    "intentPortOriginalPrefixPreserved": true,
+    "allScreenshotsOriginalAndVisuallyInspected": true,
+    "noFirstWorldClearedFixtureInProductionPreview": true
+  },
+  "pass": true
+}

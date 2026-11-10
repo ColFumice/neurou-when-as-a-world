@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "phase": "B2.4b final implementation",
+  "generatedAt": "2026-10-10T13:34:35.688Z",
+  "pass": true,
+  "runs": [
+    {
+      "command": "npm run check:naming",
+      "startedAt": "2026-10-10T13:34:33.490Z",
+      "finishedAt": "2026-10-10T13:34:34.077Z",
+      "exitCode": 0,
+      "pass": true,
+      "log": "final-gates/check-naming.log",
+      "summary": [
+        "汇总: 0 ERROR / 22 WARN"
+      ]
+    },
+    {
+      "command": "npm run typecheck",
+      "startedAt": "2026-10-10T13:34:33.526Z",
+      "finishedAt": "2026-10-10T13:34:35.688Z",
+      "exitCode": 0,
+      "pass": true,
+      "log": "final-gates/typecheck.log",
+      "summary": []
+    },
+    {
+      "command": "npm run check:dependencies",
+      "startedAt": "2026-10-10T13:34:33.550Z",
+      "finishedAt": "2026-10-10T13:34:34.111Z",
+      "exitCode": 0,
+      "pass": true,
+      "log": "final-gates/check-dependencies.log",
+      "summary": [
+        "扫描: 111 个 .ts 文件，约 388 条静态依赖子句",
+        "汇总: 0 ERROR"
+      ]
+    }
+  ],
+  "validationLimit": "Static gates. Two logical-device contracts are separate; no external service or Cocos acceptance is claimed."
+}

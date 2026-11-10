@@ -1,0 +1,159 @@
+{
+  "schemaVersion": 3,
+  "chartId": "editor-mock-1-chart",
+  "tier": "Regular",
+  "layoutVersion": "pad-layout-2",
+  "aspectRatio": 1.7777777777777777,
+  "lines": [
+    {
+      "id": "line-a",
+      "head": {
+        "id": "head-a0",
+        "spawnTimeMs": 1000,
+        "targetTimeMs": 1000
+      },
+      "path": {
+        "kind": "Polyline",
+        "points": [
+          {
+            "u": 0.15,
+            "v": 0.55
+          },
+          {
+            "u": 0.3,
+            "v": 0.55
+          },
+          {
+            "u": 0.5,
+            "v": 0.55
+          },
+          {
+            "u": 0.65,
+            "v": 0.55
+          },
+          {
+            "u": 0.85,
+            "v": 0.55
+          }
+        ]
+      },
+      "nodes": [
+        {
+          "id": "node-a1",
+          "kind": "Drag",
+          "pathDistance": 0.26666666666666666,
+          "keyId": "KeyR"
+        },
+        {
+          "id": "node-a2",
+          "kind": "Hold",
+          "pathDistance": 0.6222222222222222,
+          "endPathDistance": 0.888888888888889,
+          "keyId": "KeyU"
+        },
+        {
+          "id": "node-a3",
+          "kind": "Tap",
+          "pathDistance": 0.888888888888889
+        },
+        {
+          "id": "node-a4",
+          "kind": "Tap",
+          "pathDistance": 1.2444444444444445
+        }
+      ],
+      "timing": [
+        {
+          "nodeId": "node-a1",
+          "targetTimeMs": 2300
+        },
+        {
+          "nodeId": "node-a2",
+          "targetTimeMs": 3100,
+          "endTargetTimeMs": 5000
+        },
+        {
+          "nodeId": "node-a3",
+          "targetTimeMs": 5000
+        },
+        {
+          "nodeId": "node-a4",
+          "targetTimeMs": 6800
+        }
+      ]
+    },
+    {
+      "id": "line-b",
+      "head": {
+        "id": "head-b0",
+        "spawnTimeMs": 1000,
+        "targetTimeMs": 1000
+      },
+      "path": {
+        "kind": "Polyline",
+        "points": [
+          {
+            "u": 0.15,
+            "v": 0.65
+          },
+          {
+            "u": 0.3,
+            "v": 0.65
+          },
+          {
+            "u": 0.5,
+            "v": 0.65
+          },
+          {
+            "u": 0.65,
+            "v": 0.65
+          },
+          {
+            "u": 0.85,
+            "v": 0.65
+          }
+        ]
+      },
+      "nodes": [
+        {
+          "id": "node-b1",
+          "kind": "Tap",
+          "pathDistance": 0.26666666666666666
+        },
+        {
+          "id": "node-b2",
+          "kind": "Tap",
+          "pathDistance": 0.6222222222222222
+        },
+        {
+          "id": "node-b3",
+          "kind": "Tap",
+          "pathDistance": 0.888888888888889
+        },
+        {
+          "id": "node-b4",
+          "kind": "Tap",
+          "pathDistance": 1.2444444444444445
+        }
+      ],
+      "timing": [
+        {
+          "nodeId": "node-b1",
+          "targetTimeMs": 2300
+        },
+        {
+          "nodeId": "node-b2",
+          "targetTimeMs": 3100
+        },
+        {
+          "nodeId": "node-b3",
+          "targetTimeMs": 5000
+        },
+        {
+          "nodeId": "node-b4",
+          "targetTimeMs": 6800
+        }
+      ]
+    }
+  ]
+}

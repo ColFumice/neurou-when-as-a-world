@@ -1,0 +1,18 @@
+{
+  "command": "npm run typecheck",
+  "executedVia": "npm.cmd run typecheck",
+  "workingDirectory": "D:\\Project\\A_New_Begin\\Neurou_official",
+  "startedUtc": "2026-10-11T01:51:45.3528673Z",
+  "completedUtc": "2026-10-11T01:51:47.7144444Z",
+  "durationSeconds": 2.345,
+  "exitCode": 0,
+  "passed": true,
+  "warningLineCount": 0,
+  "warningLines": [],
+  "log": "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-real-service-freeze\\evidence\\typecheck.log",
+  "logSha256": "9f2bab2463813e9a56349637afe2aa57e3c2fea0fcaa52dcf755b96655224bda",
+  "warningCountingMethod": "Emitted warning entries whose line begins with WARN, WARNING, npm WARN or npm WARNING; the summary line is excluded and its reported counts are stored separately.",
+  "limitation": "The existing repository gate checks existing implementation paths; it does not compile or validate the new Markdown contract draft and does not attest real service deployment or security.",
+  "reportedErrorCount": null,
+  "reportedWarningCount": null
+}

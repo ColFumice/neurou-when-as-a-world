@@ -1,0 +1,14 @@
+{
+  "preservedUtc": "2026-10-11T02:58:52.8739979Z",
+  "reason": "Subsequent client expiry-after-async-verification fix requires rechecking final production source; prior point-in-time PASS evidence retained.",
+  "sourceState": "Before final client verification-deadline review fix",
+  "supersededRecords": [
+    "final-gates",
+    "code.diff",
+    "changed-files.json",
+    "protected-comparison.json",
+    "shareable-and-warning-audit.json",
+    "三条门禁结果.md"
+  ],
+  "server16EvidenceUnchanged": true
+}

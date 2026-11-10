@@ -1,0 +1,25 @@
+{
+  "observedUtc": "2026-10-11T07:46:53.4068956Z",
+  "pgVersion": "17.11",
+  "nodeVersion": "v24.19.0",
+  "listener": [
+    {
+      "LocalAddress": "127.0.0.1",
+      "LocalPort": 55437
+    }
+  ],
+  "privateAcl": [
+    {
+      "identity": "WIN-2GVHBE78OU1\\Administrator",
+      "rights": "FullControl",
+      "inherited": false
+    }
+  ],
+  "databases": [
+    "c2b_authority",
+    "c2b_history_auth"
+  ],
+  "role": "c2b_app",
+  "passwordRecorded": false,
+  "oldDataTouched": false
+}

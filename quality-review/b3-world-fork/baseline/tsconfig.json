@@ -1,0 +1,26 @@
+{
+  // ============================================================
+  // TypeScript 检查配置（HANDOFF-ROUND-11 / T1）
+  //
+  // 使用 Creator 导入工程时生成的 temp/declarations/cc 与 cc.env。
+  // 首次运行 tsc 前须由 Creator 3.8.8 打开工程生成真实引擎声明。
+  // src 逻辑域保持零 cc；presentation 与 assets/scripts 组合根可用 cc。
+  // target/module 保持既有 Cocos 兼容选项；检查包含两个组合根脚本。
+  "compilerOptions": {
+    "target": "ES2015",
+    "module": "ES2015",
+    "moduleResolution": "node",
+    "lib": ["ES2020", "DOM"],
+    "strict": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "experimentalDecorators": true,
+    "isolatedModules": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "types": ["./temp/declarations/cc", "./temp/declarations/cc.env"]
+  },
+  "include": ["src/**/*.ts", "constants/**/*.ts", "assets/scripts/*.ts"],
+  "exclude": ["node_modules", "temp", "tmp", "library", "local", "build", "scripts"]
+}

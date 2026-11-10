@@ -1,0 +1,98 @@
+{
+  "phase": "B2.5c-2c complete implementation source diff",
+  "generatedUtc": "2026-10-11T09:15:14.568Z",
+  "status": "FinalScopedDiff",
+  "stageComplete": false,
+  "files": [
+    {
+      "path": "server/src/RelayRoute.ts",
+      "change": "added",
+      "bytes": 3840,
+      "sha256": "d15e6323479eb36b8f7ada83578c628d287db252e2eb78e6f27799236971bd6b",
+      "beforeBytes": null,
+      "beforeSha256": null
+    },
+    {
+      "path": "server/src/RelayService.ts",
+      "change": "added",
+      "bytes": 31208,
+      "sha256": "55ffe45f60aeb69b9c32c1b4a3e498c8e184f921fdd4db23554f8baf85491549",
+      "beforeBytes": null,
+      "beforeSha256": null
+    },
+    {
+      "path": "server/src/RelayStorage.ts",
+      "change": "added",
+      "bytes": 4687,
+      "sha256": "a5cbd6ea1635ca347aaa11fd9f3c2040fe16212739d2f78e277a0bbf0508e9e5",
+      "beforeBytes": null,
+      "beforeSha256": null
+    },
+    {
+      "path": "server/src/buildRelayServer.ts",
+      "change": "added",
+      "bytes": 2603,
+      "sha256": "89f08e60c8c1a699c585384047bf003e981f19ba6b8043193712f10aa9798430",
+      "beforeBytes": null,
+      "beforeSha256": null
+    },
+    {
+      "path": "src/director/IntentPort.ts",
+      "change": "modified",
+      "bytes": 50374,
+      "sha256": "4348f4bdc950f1f9c6e224364fa77a80adeb0f2722c608e1dd961c0fe5a4e0a2",
+      "beforeBytes": 50175,
+      "beforeSha256": "1e29ebc8f7cf1bfef700eea7fc1bae8a09e6cdb4e1f39d9e2ef07549991649a3"
+    },
+    {
+      "path": "src/presentation/RealCommitRelayAdapter.ts",
+      "change": "added",
+      "bytes": 12005,
+      "sha256": "ec4b5d8cb11caf06f499d65706a64cd880ce8c7f3ba849ff557225cebd9fd9a9",
+      "beforeBytes": null,
+      "beforeSha256": null
+    },
+    {
+      "path": "src/presentation/RealSharedServiceSessionAdapter.ts",
+      "change": "modified",
+      "bytes": 44528,
+      "sha256": "8a1b8d778fc1d25e4c93855a2929b2c7fe3dded476599b250863a163edd2c452",
+      "beforeBytes": 44370,
+      "beforeSha256": "46238bab2bd3d082622d0b22ba2e3cb82f0330b40f77d70c4de6b229b8af1f8e"
+    }
+  ],
+  "sourceFileCount": 7,
+  "addedFiles": 5,
+  "modifiedFiles": 2,
+  "generatedFiles": [
+    {
+      "path": "server/shared-dist/src/buildRelayServer.js",
+      "change": "added-generated-copy",
+      "bytes": 2168,
+      "sha256": "3be00b89204a779fbe9ebe20d825a1a5396ce6936db90f310c15adae31e3ced4"
+    },
+    {
+      "path": "server/shared-dist/src/RelayRoute.js",
+      "change": "added-generated-copy",
+      "bytes": 3653,
+      "sha256": "a1a99f9fd5da9c01d4b60096ae172ea50de9ff418bd135aa26b5227f6e3bfed2"
+    },
+    {
+      "path": "server/shared-dist/src/RelayService.js",
+      "change": "added-generated-copy",
+      "bytes": 31706,
+      "sha256": "a7573043381d8a39597160f9aed3b9aaadd35858ba545e663f1b8c84eaf74f19"
+    },
+    {
+      "path": "server/shared-dist/src/RelayStorage.js",
+      "change": "added-generated-copy",
+      "bytes": 3824,
+      "sha256": "69d98143544dd557427ace6dc1251f9705a862244f2e3e5f6ca8314902b33c87"
+    }
+  ],
+  "codeDiffBytes": 61156,
+  "codeDiffSha256": "cb8c2e9037974fe2fef09e833daa4e7b1c048f9f63ba42fb0c1646653e113c84",
+  "finalProtectionAuditSha256": "7b3f89d6a4e7cada743af1f951ac2d2569f3859ea61ab64d6121a8c2aa92947d",
+  "pass": true,
+  "scope": "All production implementation changes: five exact added TS source files plus IntentPort type-only suffix and approved P10 session local deadline rewrite. Four generated JS copies are hashed separately; all pre-existing generated files stay protected. New quality-review harness/evidence/delivery files are indexed separately, not counted as production source. No secrets or runtime DB values are exported."
+}

@@ -1,0 +1,63 @@
+{
+  "node": "v24.19.0",
+  "loopbackOrigin": "http://127.0.0.1:43126",
+  "database": "PostgreSQL 17 (real)",
+  "transport": "actual TCP HTTP with test-only cookie jar",
+  "requests": [
+    {
+      "method": "POST",
+      "path": "/api/v1/device/challenge",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/login",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/verify",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/verify",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/time",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/account/facts",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/verify",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/verify",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/logout",
+      "status": 200
+    }
+  ]
+}

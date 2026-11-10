@@ -1,0 +1,15 @@
+{
+  "comparedUtc": "2026-10-11T02:05:47.9881061Z",
+  "baselineFile": "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-real-service-freeze\\evidence\\protected-files-before.json",
+  "baselineSha256": "879c393ae1cd9fa5d386c559c86e29762792c12e1d9ce97451454f801c358e20",
+  "beforeCount": 6937,
+  "afterCount": 6939,
+  "removed": [],
+  "added": [
+    "docs/B2.4-overall-report.md",
+    "quality-review/B2.4-overall-report.md"
+  ],
+  "changed": [],
+  "unchanged": false,
+  "limitation": "This verifies byte stability since the initial B2.5a snapshot, not the origin or correctness of files that predated this work. Runtime caches/dependencies and the new delivery directory are excluded."
+}

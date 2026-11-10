@@ -1,0 +1,8 @@
+{
+  "generatedUtc": "2026-10-11T08:11:36.498Z",
+  "scope": "Exact evidence file paths appearing as single inline-code tokens in final top-level c-2b documents, separate from Markdown-link audit",
+  "documentCount": 5,
+  "exactEvidencePathMentions": 12,
+  "missing": [],
+  "pass": true
+}

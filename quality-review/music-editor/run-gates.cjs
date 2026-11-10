@@ -1,0 +1,3 @@
+const fs=require('fs'),cp=require('child_process'),path=require('path');const output='quality-review/music-editor',runs=[];
+for(const name of ['check:naming','typecheck','check:dependencies']){const r=cp.spawnSync('npm.cmd',['run',name],{encoding:'utf8',shell:true,windowsHide:true});const log='gate-'+name.replace('check:','')+'.log';fs.writeFileSync(path.join(output,log),(r.stdout||'')+(r.stderr||''));runs.push({command:'npm run '+name,exitCode:r.status,pass:r.status===0,log});}
+const report={pass:runs.every(r=>r.pass),runs};fs.writeFileSync(path.join(output,'gate-results.json'),JSON.stringify(report,null,2));console.log(JSON.stringify(report));process.exitCode=report.pass?0:1;

@@ -1,0 +1,1255 @@
+[
+  {
+    "name": "AccountStartupSnapshot",
+    "kind": "InterfaceDeclaration",
+    "file": "src/director/AccountStartupSession.ts",
+    "line": 2,
+    "exported": true
+  },
+  {
+    "name": "accountId",
+    "kind": "PropertySignature",
+    "file": "src/director/AccountStartupSession.ts",
+    "line": 3,
+    "exported": false
+  },
+  {
+    "name": "phase",
+    "kind": "PropertySignature",
+    "file": "src/director/AccountStartupSession.ts",
+    "line": 4,
+    "exported": false
+  },
+  {
+    "name": "PrologueCompleted",
+    "kind": "PropertySignature",
+    "file": "src/director/AccountStartupSession.ts",
+    "line": 6,
+    "exported": false
+  },
+  {
+    "name": "AccountStartupIntent",
+    "kind": "TypeAliasDeclaration",
+    "file": "src/director/AccountStartupSession.ts",
+    "line": 9,
+    "exported": true
+  },
+  {
+    "name": "kind",
+    "kind": "PropertySignature",
+    "file": "src/director/AccountStartupSession.ts",
+    "line": 10,
+    "exported": false
+  },
+  {
+    "name": "accountId",
+    "kind": "PropertySignature",
+    "file": "src/director/AccountStartupSession.ts",
+    "line": 10,
+    "exported": false
+  },
+  {
+    "name": "PrologueCompleted",
+    "kind": "PropertySignature",
+    "file": "src/director/AccountStartupSession.ts",
+    "line": 10,
+    "exported": false
+  },
+  {
+    "name": "kind",
+    "kind": "PropertySignature",
+    "file": "src/director/AccountStartupSession.ts",
+    "line": 11,
+    "exported": false
+  },
+  {
+    "name": "AccountStartupReader",
+    "kind": "InterfaceDeclaration",
+    "file": "src/director/AccountStartupSession.ts",
+    "line": 13,
+    "exported": true
+  },
+  {
+    "name": "getStartupSnapshot",
+    "kind": "MethodSignature",
+    "file": "src/director/AccountStartupSession.ts",
+    "line": 14,
+    "exported": false
+  },
+  {
+    "name": "getPrologueText",
+    "kind": "MethodSignature",
+    "file": "src/director/AccountStartupSession.ts",
+    "line": 15,
+    "exported": false
+  },
+  {
+    "name": "AccountStartupPort",
+    "kind": "InterfaceDeclaration",
+    "file": "src/director/AccountStartupSession.ts",
+    "line": 18,
+    "exported": true
+  },
+  {
+    "name": "submitStartupIntent",
+    "kind": "MethodSignature",
+    "file": "src/director/AccountStartupSession.ts",
+    "line": 19,
+    "exported": false
+  },
+  {
+    "name": "intent",
+    "kind": "Parameter",
+    "file": "src/director/AccountStartupSession.ts",
+    "line": 19,
+    "exported": false
+  },
+  {
+    "name": "AccountStartupSession",
+    "kind": "ClassDeclaration",
+    "file": "src/director/AccountStartupSession.ts",
+    "line": 22,
+    "exported": true
+  },
+  {
+    "name": "persistCompletion",
+    "kind": "Parameter",
+    "file": "src/director/AccountStartupSession.ts",
+    "line": 23,
+    "exported": false
+  },
+  {
+    "name": "snapshot",
+    "kind": "Parameter",
+    "file": "src/director/AccountStartupSession.ts",
+    "line": 23,
+    "exported": false
+  },
+  {
+    "name": "snapshot",
+    "kind": "PropertyDeclaration",
+    "file": "src/director/AccountStartupSession.ts",
+    "line": 24,
+    "exported": false
+  },
+  {
+    "name": "getStartupSnapshot",
+    "kind": "MethodDeclaration",
+    "file": "src/director/AccountStartupSession.ts",
+    "line": 28,
+    "exported": false
+  },
+  {
+    "name": "getPrologueText",
+    "kind": "MethodDeclaration",
+    "file": "src/director/AccountStartupSession.ts",
+    "line": 30,
+    "exported": false
+  },
+  {
+    "name": "submitStartupIntent",
+    "kind": "MethodDeclaration",
+    "file": "src/director/AccountStartupSession.ts",
+    "line": 34,
+    "exported": false
+  },
+  {
+    "name": "intent",
+    "kind": "Parameter",
+    "file": "src/director/AccountStartupSession.ts",
+    "line": 34,
+    "exported": false
+  },
+  {
+    "name": "accountId",
+    "kind": "VariableDeclaration",
+    "file": "src/director/AccountStartupSession.ts",
+    "line": 36,
+    "exported": false
+  },
+  {
+    "name": "completed",
+    "kind": "VariableDeclaration",
+    "file": "src/director/AccountStartupSession.ts",
+    "line": 45,
+    "exported": false
+  },
+  {
+    "name": "EditorFolderView",
+    "kind": "ClassDeclaration",
+    "file": "src/presentation/EditorFolderView.ts",
+    "line": 5,
+    "exported": true
+  },
+  {
+    "name": "root",
+    "kind": "PropertyDeclaration",
+    "file": "src/presentation/EditorFolderView.ts",
+    "line": 6,
+    "exported": false
+  },
+  {
+    "name": "catalog",
+    "kind": "Parameter",
+    "file": "src/presentation/EditorFolderView.ts",
+    "line": 9,
+    "exported": false
+  },
+  {
+    "name": "openEditor",
+    "kind": "Parameter",
+    "file": "src/presentation/EditorFolderView.ts",
+    "line": 10,
+    "exported": false
+  },
+  {
+    "name": "entry",
+    "kind": "Parameter",
+    "file": "src/presentation/EditorFolderView.ts",
+    "line": 10,
+    "exported": false
+  },
+  {
+    "name": "back",
+    "kind": "Parameter",
+    "file": "src/presentation/EditorFolderView.ts",
+    "line": 11,
+    "exported": false
+  },
+  {
+    "name": "mount",
+    "kind": "MethodDeclaration",
+    "file": "src/presentation/EditorFolderView.ts",
+    "line": 14,
+    "exported": false
+  },
+  {
+    "name": "root",
+    "kind": "VariableDeclaration",
+    "file": "src/presentation/EditorFolderView.ts",
+    "line": 16,
+    "exported": false
+  },
+  {
+    "name": "renderEntry",
+    "kind": "MethodDeclaration",
+    "file": "src/presentation/EditorFolderView.ts",
+    "line": 43,
+    "exported": false
+  },
+  {
+    "name": "entry",
+    "kind": "Parameter",
+    "file": "src/presentation/EditorFolderView.ts",
+    "line": 43,
+    "exported": false
+  },
+  {
+    "name": "details",
+    "kind": "VariableDeclaration",
+    "file": "src/presentation/EditorFolderView.ts",
+    "line": 45,
+    "exported": false
+  },
+  {
+    "name": "summary",
+    "kind": "VariableDeclaration",
+    "file": "src/presentation/EditorFolderView.ts",
+    "line": 47,
+    "exported": false
+  },
+  {
+    "name": "badge",
+    "kind": "VariableDeclaration",
+    "file": "src/presentation/EditorFolderView.ts",
+    "line": 51,
+    "exported": false
+  },
+  {
+    "name": "button",
+    "kind": "VariableDeclaration",
+    "file": "src/presentation/EditorFolderView.ts",
+    "line": 56,
+    "exported": false
+  },
+  {
+    "name": "click",
+    "kind": "Parameter",
+    "file": "src/presentation/EditorFolderView.ts",
+    "line": 57,
+    "exported": false
+  },
+  {
+    "name": "children",
+    "kind": "VariableDeclaration",
+    "file": "src/presentation/EditorFolderView.ts",
+    "line": 68,
+    "exported": false
+  },
+  {
+    "name": "child",
+    "kind": "VariableDeclaration",
+    "file": "src/presentation/EditorFolderView.ts",
+    "line": 70,
+    "exported": false
+  },
+  {
+    "name": "entryButton",
+    "kind": "MethodDeclaration",
+    "file": "src/presentation/EditorFolderView.ts",
+    "line": 75,
+    "exported": false
+  },
+  {
+    "name": "entry",
+    "kind": "Parameter",
+    "file": "src/presentation/EditorFolderView.ts",
+    "line": 75,
+    "exported": false
+  },
+  {
+    "name": "button",
+    "kind": "VariableDeclaration",
+    "file": "src/presentation/EditorFolderView.ts",
+    "line": 76,
+    "exported": false
+  },
+  {
+    "name": "title",
+    "kind": "VariableDeclaration",
+    "file": "src/presentation/EditorFolderView.ts",
+    "line": 80,
+    "exported": false
+  },
+  {
+    "name": "badge",
+    "kind": "VariableDeclaration",
+    "file": "src/presentation/EditorFolderView.ts",
+    "line": 82,
+    "exported": false
+  },
+  {
+    "name": "activate",
+    "kind": "MethodDeclaration",
+    "file": "src/presentation/EditorFolderView.ts",
+    "line": 90,
+    "exported": false
+  },
+  {
+    "name": "entry",
+    "kind": "Parameter",
+    "file": "src/presentation/EditorFolderView.ts",
+    "line": 90,
+    "exported": false
+  },
+  {
+    "name": "destroy",
+    "kind": "MethodDeclaration",
+    "file": "src/presentation/EditorFolderView.ts",
+    "line": 98,
+    "exported": false
+  },
+  {
+    "name": "WorldFolderEntry",
+    "kind": "TypeAliasDeclaration",
+    "file": "src/presentation/FolderCatalog.ts",
+    "line": 2,
+    "exported": true
+  },
+  {
+    "name": "worldId",
+    "kind": "PropertySignature",
+    "file": "src/presentation/FolderCatalog.ts",
+    "line": 3,
+    "exported": false
+  },
+  {
+    "name": "title",
+    "kind": "PropertySignature",
+    "file": "src/presentation/FolderCatalog.ts",
+    "line": 4,
+    "exported": false
+  },
+  {
+    "name": "description",
+    "kind": "PropertySignature",
+    "file": "src/presentation/FolderCatalog.ts",
+    "line": 5,
+    "exported": false
+  },
+  {
+    "name": "WorldFolderReader",
+    "kind": "InterfaceDeclaration",
+    "file": "src/presentation/FolderCatalog.ts",
+    "line": 8,
+    "exported": true
+  },
+  {
+    "name": "getAccountId",
+    "kind": "MethodSignature",
+    "file": "src/presentation/FolderCatalog.ts",
+    "line": 9,
+    "exported": false
+  },
+  {
+    "name": "getWorlds",
+    "kind": "MethodSignature",
+    "file": "src/presentation/FolderCatalog.ts",
+    "line": 10,
+    "exported": false
+  },
+  {
+    "name": "EditorFolderEntry",
+    "kind": "InterfaceDeclaration",
+    "file": "src/presentation/FolderCatalog.ts",
+    "line": 13,
+    "exported": true
+  },
+  {
+    "name": "entryId",
+    "kind": "PropertySignature",
+    "file": "src/presentation/FolderCatalog.ts",
+    "line": 14,
+    "exported": false
+  },
+  {
+    "name": "title",
+    "kind": "PropertySignature",
+    "file": "src/presentation/FolderCatalog.ts",
+    "line": 15,
+    "exported": false
+  },
+  {
+    "name": "availability",
+    "kind": "PropertySignature",
+    "file": "src/presentation/FolderCatalog.ts",
+    "line": 16,
+    "exported": false
+  },
+  {
+    "name": "children",
+    "kind": "PropertySignature",
+    "file": "src/presentation/FolderCatalog.ts",
+    "line": 17,
+    "exported": false
+  },
+  {
+    "name": "EditorCatalog",
+    "kind": "InterfaceDeclaration",
+    "file": "src/presentation/FolderCatalog.ts",
+    "line": 20,
+    "exported": true
+  },
+  {
+    "name": "getRoot",
+    "kind": "MethodSignature",
+    "file": "src/presentation/FolderCatalog.ts",
+    "line": 21,
+    "exported": false
+  },
+  {
+    "name": "InitialWorld",
+    "kind": "VariableDeclaration",
+    "file": "src/presentation/FolderCatalog.ts",
+    "line": 24,
+    "exported": false
+  },
+  {
+    "name": "createWorldFolderReader",
+    "kind": "FunctionDeclaration",
+    "file": "src/presentation/FolderCatalog.ts",
+    "line": 30,
+    "exported": true
+  },
+  {
+    "name": "accountId",
+    "kind": "Parameter",
+    "file": "src/presentation/FolderCatalog.ts",
+    "line": 30,
+    "exported": false
+  },
+  {
+    "name": "worlds",
+    "kind": "VariableDeclaration",
+    "file": "src/presentation/FolderCatalog.ts",
+    "line": 31,
+    "exported": false
+  },
+  {
+    "name": "createEditorFolderEntry",
+    "kind": "FunctionDeclaration",
+    "file": "src/presentation/FolderCatalog.ts",
+    "line": 38,
+    "exported": false
+  },
+  {
+    "name": "entryId",
+    "kind": "Parameter",
+    "file": "src/presentation/FolderCatalog.ts",
+    "line": 39,
+    "exported": false
+  },
+  {
+    "name": "title",
+    "kind": "Parameter",
+    "file": "src/presentation/FolderCatalog.ts",
+    "line": 40,
+    "exported": false
+  },
+  {
+    "name": "availability",
+    "kind": "Parameter",
+    "file": "src/presentation/FolderCatalog.ts",
+    "line": 41,
+    "exported": false
+  },
+  {
+    "name": "children",
+    "kind": "Parameter",
+    "file": "src/presentation/FolderCatalog.ts",
+    "line": 42,
+    "exported": false
+  },
+  {
+    "name": "editorRoot",
+    "kind": "VariableDeclaration",
+    "file": "src/presentation/FolderCatalog.ts",
+    "line": 47,
+    "exported": false
+  },
+  {
+    "name": "editorCatalog",
+    "kind": "VariableDeclaration",
+    "file": "src/presentation/FolderCatalog.ts",
+    "line": 69,
+    "exported": false
+  },
+  {
+    "name": "AccountStartupStorage",
+    "kind": "ClassDeclaration",
+    "file": "src/presentation/FolderStartupView.ts",
+    "line": 5,
+    "exported": true
+  },
+  {
+    "name": "readCompletion",
+    "kind": "MethodDeclaration",
+    "file": "src/presentation/FolderStartupView.ts",
+    "line": 6,
+    "exported": false
+  },
+  {
+    "name": "accountId",
+    "kind": "Parameter",
+    "file": "src/presentation/FolderStartupView.ts",
+    "line": 6,
+    "exported": false
+  },
+  {
+    "name": "value",
+    "kind": "VariableDeclaration",
+    "file": "src/presentation/FolderStartupView.ts",
+    "line": 7,
+    "exported": false
+  },
+  {
+    "name": "parsed",
+    "kind": "VariableDeclaration",
+    "file": "src/presentation/FolderStartupView.ts",
+    "line": 9,
+    "exported": false
+  },
+  {
+    "name": "PrologueCompleted",
+    "kind": "PropertySignature",
+    "file": "src/presentation/FolderStartupView.ts",
+    "line": 11,
+    "exported": false
+  },
+  {
+    "name": "saveCompletion",
+    "kind": "MethodDeclaration",
+    "file": "src/presentation/FolderStartupView.ts",
+    "line": 17,
+    "exported": false
+  },
+  {
+    "name": "snapshot",
+    "kind": "Parameter",
+    "file": "src/presentation/FolderStartupView.ts",
+    "line": 17,
+    "exported": false
+  },
+  {
+    "name": "key",
+    "kind": "MethodDeclaration",
+    "file": "src/presentation/FolderStartupView.ts",
+    "line": 24,
+    "exported": false
+  },
+  {
+    "name": "accountId",
+    "kind": "Parameter",
+    "file": "src/presentation/FolderStartupView.ts",
+    "line": 24,
+    "exported": false
+  },
+  {
+    "name": "FolderStartupView",
+    "kind": "ClassDeclaration",
+    "file": "src/presentation/FolderStartupView.ts",
+    "line": 30,
+    "exported": true
+  },
+  {
+    "name": "root",
+    "kind": "PropertyDeclaration",
+    "file": "src/presentation/FolderStartupView.ts",
+    "line": 31,
+    "exported": false
+  },
+  {
+    "name": "showLogin",
+    "kind": "MethodDeclaration",
+    "file": "src/presentation/FolderStartupView.ts",
+    "line": 33,
+    "exported": false
+  },
+  {
+    "name": "login",
+    "kind": "Parameter",
+    "file": "src/presentation/FolderStartupView.ts",
+    "line": 33,
+    "exported": false
+  },
+  {
+    "name": "accountId",
+    "kind": "Parameter",
+    "file": "src/presentation/FolderStartupView.ts",
+    "line": 33,
+    "exported": false
+  },
+  {
+    "name": "body",
+    "kind": "VariableDeclaration",
+    "file": "src/presentation/FolderStartupView.ts",
+    "line": 35,
+    "exported": false
+  },
+  {
+    "name": "e",
+    "kind": "Parameter",
+    "file": "src/presentation/FolderStartupView.ts",
+    "line": 37,
+    "exported": false
+  },
+  {
+    "name": "showPrologue",
+    "kind": "MethodDeclaration",
+    "file": "src/presentation/FolderStartupView.ts",
+    "line": 42,
+    "exported": false
+  },
+  {
+    "name": "accountId",
+    "kind": "Parameter",
+    "file": "src/presentation/FolderStartupView.ts",
+    "line": 42,
+    "exported": false
+  },
+  {
+    "name": "text",
+    "kind": "Parameter",
+    "file": "src/presentation/FolderStartupView.ts",
+    "line": 42,
+    "exported": false
+  },
+  {
+    "name": "complete",
+    "kind": "Parameter",
+    "file": "src/presentation/FolderStartupView.ts",
+    "line": 42,
+    "exported": false
+  },
+  {
+    "name": "body",
+    "kind": "VariableDeclaration",
+    "file": "src/presentation/FolderStartupView.ts",
+    "line": 44,
+    "exported": false
+  },
+  {
+    "name": "account",
+    "kind": "VariableDeclaration",
+    "file": "src/presentation/FolderStartupView.ts",
+    "line": 45,
+    "exported": false
+  },
+  {
+    "name": "line",
+    "kind": "VariableDeclaration",
+    "file": "src/presentation/FolderStartupView.ts",
+    "line": 47,
+    "exported": false
+  },
+  {
+    "name": "p",
+    "kind": "VariableDeclaration",
+    "file": "src/presentation/FolderStartupView.ts",
+    "line": 47,
+    "exported": false
+  },
+  {
+    "name": "button",
+    "kind": "VariableDeclaration",
+    "file": "src/presentation/FolderStartupView.ts",
+    "line": 48,
+    "exported": false
+  },
+  {
+    "name": "showError",
+    "kind": "MethodDeclaration",
+    "file": "src/presentation/FolderStartupView.ts",
+    "line": 52,
+    "exported": false
+  },
+  {
+    "name": "message",
+    "kind": "Parameter",
+    "file": "src/presentation/FolderStartupView.ts",
+    "line": 52,
+    "exported": false
+  },
+  {
+    "name": "destroy",
+    "kind": "MethodDeclaration",
+    "file": "src/presentation/FolderStartupView.ts",
+    "line": 56,
+    "exported": false
+  },
+  {
+    "name": "build",
+    "kind": "MethodDeclaration",
+    "file": "src/presentation/FolderStartupView.ts",
+    "line": 58,
+    "exported": false
+  },
+  {
+    "name": "title",
+    "kind": "Parameter",
+    "file": "src/presentation/FolderStartupView.ts",
+    "line": 58,
+    "exported": false
+  },
+  {
+    "name": "FolderPresentationTheme",
+    "kind": "InterfaceDeclaration",
+    "file": "src/presentation/FolderTheme.ts",
+    "line": 2,
+    "exported": true
+  },
+  {
+    "name": "background",
+    "kind": "PropertySignature",
+    "file": "src/presentation/FolderTheme.ts",
+    "line": 3,
+    "exported": false
+  },
+  {
+    "name": "panel",
+    "kind": "PropertySignature",
+    "file": "src/presentation/FolderTheme.ts",
+    "line": 4,
+    "exported": false
+  },
+  {
+    "name": "foreground",
+    "kind": "PropertySignature",
+    "file": "src/presentation/FolderTheme.ts",
+    "line": 5,
+    "exported": false
+  },
+  {
+    "name": "muted",
+    "kind": "PropertySignature",
+    "file": "src/presentation/FolderTheme.ts",
+    "line": 6,
+    "exported": false
+  },
+  {
+    "name": "border",
+    "kind": "PropertySignature",
+    "file": "src/presentation/FolderTheme.ts",
+    "line": 7,
+    "exported": false
+  },
+  {
+    "name": "fontFamily",
+    "kind": "PropertySignature",
+    "file": "src/presentation/FolderTheme.ts",
+    "line": 8,
+    "exported": false
+  },
+  {
+    "name": "folderPresentationTheme",
+    "kind": "VariableDeclaration",
+    "file": "src/presentation/FolderTheme.ts",
+    "line": 11,
+    "exported": false
+  },
+  {
+    "name": "applyFolderTheme",
+    "kind": "FunctionDeclaration",
+    "file": "src/presentation/FolderTheme.ts",
+    "line": 20,
+    "exported": true
+  },
+  {
+    "name": "root",
+    "kind": "Parameter",
+    "file": "src/presentation/FolderTheme.ts",
+    "line": 20,
+    "exported": false
+  },
+  {
+    "name": "WorldFolderView",
+    "kind": "ClassDeclaration",
+    "file": "src/presentation/WorldFolderView.ts",
+    "line": 5,
+    "exported": true
+  },
+  {
+    "name": "root",
+    "kind": "PropertyDeclaration",
+    "file": "src/presentation/WorldFolderView.ts",
+    "line": 6,
+    "exported": false
+  },
+  {
+    "name": "reader",
+    "kind": "Parameter",
+    "file": "src/presentation/WorldFolderView.ts",
+    "line": 9,
+    "exported": false
+  },
+  {
+    "name": "openWorld",
+    "kind": "Parameter",
+    "file": "src/presentation/WorldFolderView.ts",
+    "line": 10,
+    "exported": false
+  },
+  {
+    "name": "entry",
+    "kind": "Parameter",
+    "file": "src/presentation/WorldFolderView.ts",
+    "line": 10,
+    "exported": false
+  },
+  {
+    "name": "openEditors",
+    "kind": "Parameter",
+    "file": "src/presentation/WorldFolderView.ts",
+    "line": 11,
+    "exported": false
+  },
+  {
+    "name": "mount",
+    "kind": "MethodDeclaration",
+    "file": "src/presentation/WorldFolderView.ts",
+    "line": 14,
+    "exported": false
+  },
+  {
+    "name": "root",
+    "kind": "VariableDeclaration",
+    "file": "src/presentation/WorldFolderView.ts",
+    "line": 16,
+    "exported": false
+  },
+  {
+    "name": "worlds",
+    "kind": "VariableDeclaration",
+    "file": "src/presentation/WorldFolderView.ts",
+    "line": 45,
+    "exported": false
+  },
+  {
+    "name": "entry",
+    "kind": "VariableDeclaration",
+    "file": "src/presentation/WorldFolderView.ts",
+    "line": 46,
+    "exported": false
+  },
+  {
+    "name": "button",
+    "kind": "VariableDeclaration",
+    "file": "src/presentation/WorldFolderView.ts",
+    "line": 47,
+    "exported": false
+  },
+  {
+    "name": "title",
+    "kind": "VariableDeclaration",
+    "file": "src/presentation/WorldFolderView.ts",
+    "line": 51,
+    "exported": false
+  },
+  {
+    "name": "description",
+    "kind": "VariableDeclaration",
+    "file": "src/presentation/WorldFolderView.ts",
+    "line": 54,
+    "exported": false
+  },
+  {
+    "name": "destroy",
+    "kind": "MethodDeclaration",
+    "file": "src/presentation/WorldFolderView.ts",
+    "line": 65,
+    "exported": false
+  },
+  {
+    "name": "folderWorld",
+    "kind": "PropertyDeclaration",
+    "file": "assets/scripts/SceneBuilder.ts",
+    "line": 251,
+    "exported": false
+  },
+  {
+    "name": "folders",
+    "kind": "VariableDeclaration",
+    "file": "assets/scripts/SceneBuilder.ts",
+    "line": 349,
+    "exported": false
+  },
+  {
+    "name": "node",
+    "kind": "Parameter",
+    "file": "assets/scripts/SceneBuilder.ts",
+    "line": 350,
+    "exported": false
+  },
+  {
+    "name": "world",
+    "kind": "VariableDeclaration",
+    "file": "assets/scripts/SceneBuilder.ts",
+    "line": 351,
+    "exported": false
+  },
+  {
+    "name": "worldSceneRoot",
+    "kind": "VariableDeclaration",
+    "file": "assets/scripts/SceneBuilder.ts",
+    "line": 399,
+    "exported": false
+  },
+  {
+    "name": "onDisable",
+    "kind": "MethodDeclaration",
+    "file": "assets/scripts/SceneBuilder.ts",
+    "line": 1169,
+    "exported": false
+  },
+  {
+    "name": "WorldFolderBuilder",
+    "kind": "ClassDeclaration",
+    "file": "assets/scripts/WorldFolderBuilder.ts",
+    "line": 15,
+    "exported": true
+  },
+  {
+    "name": "storage",
+    "kind": "PropertyDeclaration",
+    "file": "assets/scripts/WorldFolderBuilder.ts",
+    "line": 16,
+    "exported": false
+  },
+  {
+    "name": "startup",
+    "kind": "PropertyDeclaration",
+    "file": "assets/scripts/WorldFolderBuilder.ts",
+    "line": 17,
+    "exported": false
+  },
+  {
+    "name": "snapshot",
+    "kind": "Parameter",
+    "file": "assets/scripts/WorldFolderBuilder.ts",
+    "line": 17,
+    "exported": false
+  },
+  {
+    "name": "startupView",
+    "kind": "PropertyDeclaration",
+    "file": "assets/scripts/WorldFolderBuilder.ts",
+    "line": 18,
+    "exported": false
+  },
+  {
+    "name": "folderView",
+    "kind": "PropertyDeclaration",
+    "file": "assets/scripts/WorldFolderBuilder.ts",
+    "line": 19,
+    "exported": false
+  },
+  {
+    "name": "catalogView",
+    "kind": "PropertyDeclaration",
+    "file": "assets/scripts/WorldFolderBuilder.ts",
+    "line": 20,
+    "exported": false
+  },
+  {
+    "name": "runtimeNode",
+    "kind": "PropertyDeclaration",
+    "file": "assets/scripts/WorldFolderBuilder.ts",
+    "line": 21,
+    "exported": false
+  },
+  {
+    "name": "worldFactory",
+    "kind": "PropertyDeclaration",
+    "file": "assets/scripts/WorldFolderBuilder.ts",
+    "line": 22,
+    "exported": false
+  },
+  {
+    "name": "node",
+    "kind": "Parameter",
+    "file": "assets/scripts/WorldFolderBuilder.ts",
+    "line": 22,
+    "exported": false
+  },
+  {
+    "name": "exitControl",
+    "kind": "PropertyDeclaration",
+    "file": "assets/scripts/WorldFolderBuilder.ts",
+    "line": 23,
+    "exported": false
+  },
+  {
+    "name": "retiring",
+    "kind": "PropertyDeclaration",
+    "file": "assets/scripts/WorldFolderBuilder.ts",
+    "line": 24,
+    "exported": false
+  },
+  {
+    "name": "folderPending",
+    "kind": "PropertyDeclaration",
+    "file": "assets/scripts/WorldFolderBuilder.ts",
+    "line": 25,
+    "exported": false
+  },
+  {
+    "name": "bindWorldFactory",
+    "kind": "MethodDeclaration",
+    "file": "assets/scripts/WorldFolderBuilder.ts",
+    "line": 27,
+    "exported": false
+  },
+  {
+    "name": "factory",
+    "kind": "Parameter",
+    "file": "assets/scripts/WorldFolderBuilder.ts",
+    "line": 27,
+    "exported": false
+  },
+  {
+    "name": "node",
+    "kind": "Parameter",
+    "file": "assets/scripts/WorldFolderBuilder.ts",
+    "line": 27,
+    "exported": false
+  },
+  {
+    "name": "start",
+    "kind": "MethodDeclaration",
+    "file": "assets/scripts/WorldFolderBuilder.ts",
+    "line": 29,
+    "exported": false
+  },
+  {
+    "name": "accountId",
+    "kind": "Parameter",
+    "file": "assets/scripts/WorldFolderBuilder.ts",
+    "line": 30,
+    "exported": false
+  },
+  {
+    "name": "completed",
+    "kind": "VariableDeclaration",
+    "file": "assets/scripts/WorldFolderBuilder.ts",
+    "line": 33,
+    "exported": false
+  },
+  {
+    "name": "error",
+    "kind": "VariableDeclaration",
+    "file": "assets/scripts/WorldFolderBuilder.ts",
+    "line": 40,
+    "exported": false
+  },
+  {
+    "name": "error",
+    "kind": "VariableDeclaration",
+    "file": "assets/scripts/WorldFolderBuilder.ts",
+    "line": 42,
+    "exported": false
+  },
+  {
+    "name": "clearViews",
+    "kind": "MethodDeclaration",
+    "file": "assets/scripts/WorldFolderBuilder.ts",
+    "line": 46,
+    "exported": false
+  },
+  {
+    "name": "showWorldFolder",
+    "kind": "MethodDeclaration",
+    "file": "assets/scripts/WorldFolderBuilder.ts",
+    "line": 51,
+    "exported": false
+  },
+  {
+    "name": "accountId",
+    "kind": "VariableDeclaration",
+    "file": "assets/scripts/WorldFolderBuilder.ts",
+    "line": 53,
+    "exported": false
+  },
+  {
+    "name": "entry",
+    "kind": "Parameter",
+    "file": "assets/scripts/WorldFolderBuilder.ts",
+    "line": 56,
+    "exported": false
+  },
+  {
+    "name": "showEditorFolder",
+    "kind": "MethodDeclaration",
+    "file": "assets/scripts/WorldFolderBuilder.ts",
+    "line": 60,
+    "exported": false
+  },
+  {
+    "name": "entry",
+    "kind": "Parameter",
+    "file": "assets/scripts/WorldFolderBuilder.ts",
+    "line": 62,
+    "exported": false
+  },
+  {
+    "name": "createRuntime",
+    "kind": "MethodDeclaration",
+    "file": "assets/scripts/WorldFolderBuilder.ts",
+    "line": 66,
+    "exported": false
+  },
+  {
+    "name": "name",
+    "kind": "Parameter",
+    "file": "assets/scripts/WorldFolderBuilder.ts",
+    "line": 66,
+    "exported": false
+  },
+  {
+    "name": "node",
+    "kind": "VariableDeclaration",
+    "file": "assets/scripts/WorldFolderBuilder.ts",
+    "line": 67,
+    "exported": false
+  },
+  {
+    "name": "parentTransform",
+    "kind": "VariableDeclaration",
+    "file": "assets/scripts/WorldFolderBuilder.ts",
+    "line": 68,
+    "exported": false
+  },
+  {
+    "name": "uiRoot",
+    "kind": "VariableDeclaration",
+    "file": "assets/scripts/WorldFolderBuilder.ts",
+    "line": 70,
+    "exported": false
+  },
+  {
+    "name": "openWorld",
+    "kind": "MethodDeclaration",
+    "file": "assets/scripts/WorldFolderBuilder.ts",
+    "line": 74,
+    "exported": false
+  },
+  {
+    "name": "entry",
+    "kind": "Parameter",
+    "file": "assets/scripts/WorldFolderBuilder.ts",
+    "line": 74,
+    "exported": false
+  },
+  {
+    "name": "openEditor",
+    "kind": "MethodDeclaration",
+    "file": "assets/scripts/WorldFolderBuilder.ts",
+    "line": 80,
+    "exported": false
+  },
+  {
+    "name": "entry",
+    "kind": "Parameter",
+    "file": "assets/scripts/WorldFolderBuilder.ts",
+    "line": 80,
+    "exported": false
+  },
+  {
+    "name": "showExitControl",
+    "kind": "MethodDeclaration",
+    "file": "assets/scripts/WorldFolderBuilder.ts",
+    "line": 86,
+    "exported": false
+  },
+  {
+    "name": "title",
+    "kind": "Parameter",
+    "file": "assets/scripts/WorldFolderBuilder.ts",
+    "line": 86,
+    "exported": false
+  },
+  {
+    "name": "exitRuntime",
+    "kind": "MethodDeclaration",
+    "file": "assets/scripts/WorldFolderBuilder.ts",
+    "line": 94,
+    "exported": false
+  },
+  {
+    "name": "runtime",
+    "kind": "VariableDeclaration",
+    "file": "assets/scripts/WorldFolderBuilder.ts",
+    "line": 97,
+    "exported": false
+  },
+  {
+    "name": "finishRetirement",
+    "kind": "MethodDeclaration",
+    "file": "assets/scripts/WorldFolderBuilder.ts",
+    "line": 103,
+    "exported": false
+  },
+  {
+    "name": "camera",
+    "kind": "VariableDeclaration",
+    "file": "assets/scripts/WorldFolderBuilder.ts",
+    "line": 106,
+    "exported": false
+  },
+  {
+    "name": "onDestroy",
+    "kind": "MethodDeclaration",
+    "file": "assets/scripts/WorldFolderBuilder.ts",
+    "line": 113,
+    "exported": false
+  }
+]

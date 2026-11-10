@@ -1,0 +1,177 @@
+{
+  "phase": "B2.5c-2b isolated c-1 historical regression",
+  "runName": "final",
+  "generatedUtc": "2026-10-11T07:43:19.665Z",
+  "nodeVersion": "v24.19.0",
+  "copies": [
+    {
+      "source": "quality-review/b2-5c-1/tests/codec-tests.cjs",
+      "copy": "quality-review/b2-5c-2b/evidence/history-c1/final/tests/codec-tests.cjs",
+      "sourceSha256": "c4d3e7fd37cdf3d7db60d7fbc0331cc5da40387827d756b05ff7865f62960166",
+      "copySha256": "c4d3e7fd37cdf3d7db60d7fbc0331cc5da40387827d756b05ff7865f62960166",
+      "exactBytes": true
+    },
+    {
+      "source": "quality-review/b2-5c-1/tests/replay-tests.cjs",
+      "copy": "quality-review/b2-5c-2b/evidence/history-c1/final/tests/replay-tests.cjs",
+      "sourceSha256": "b3157f0b0feb71e16bc49cd31a9bfcb8c1317def367823344be0638ca7aa8df7",
+      "copySha256": "b3157f0b0feb71e16bc49cd31a9bfcb8c1317def367823344be0638ca7aa8df7",
+      "exactBytes": true
+    },
+    {
+      "source": "quality-review/b2-5c-1/evidence/validator-tests.cjs",
+      "copy": "quality-review/b2-5c-2b/evidence/history-c1/final/evidence/validator-tests.cjs",
+      "sourceSha256": "95977c043fddd391f3a760794dad5c0da880acffacb408a25796761cd2d602c2",
+      "copySha256": "95977c043fddd391f3a760794dad5c0da880acffacb408a25796761cd2d602c2",
+      "exactBytes": true
+    },
+    {
+      "source": "quality-review/b2-5c-1/evidence/fixtures.cjs",
+      "copy": "quality-review/b2-5c-2b/evidence/history-c1/final/evidence/fixtures.cjs",
+      "sourceSha256": "1926c37fcfac3ed12b76c3335148d041961161f606046bc2cbf5575fd1959bbe",
+      "copySha256": "1926c37fcfac3ed12b76c3335148d041961161f606046bc2cbf5575fd1959bbe",
+      "exactBytes": true
+    },
+    {
+      "source": "quality-review/b2-5c-1/evidence/no-network.cjs",
+      "copy": "quality-review/b2-5c-2b/evidence/history-c1/final/evidence/no-network.cjs",
+      "sourceSha256": "304106476c3437e8366b0419a7fd22fa8a8f217b69696a81c29de123c5934ff4",
+      "copySha256": "304106476c3437e8366b0419a7fd22fa8a8f217b69696a81c29de123c5934ff4",
+      "exactBytes": true
+    }
+  ],
+  "sourceStability": [
+    {
+      "path": "src/director/SharedCommitContracts.ts",
+      "sha256": "e0682252df74a4767cdeac5a79bebb33dbdd88343af0d0f4ebb362a1e41cd291",
+      "finalSha256": "e0682252df74a4767cdeac5a79bebb33dbdd88343af0d0f4ebb362a1e41cd291"
+    },
+    {
+      "path": "src/director/SharedCanonicalBytes.ts",
+      "sha256": "1cd132ab68ee3a5c30989cd4e5464743c4223ba3141ae7dc16dd4e27c2fbe27c",
+      "finalSha256": "1cd132ab68ee3a5c30989cd4e5464743c4223ba3141ae7dc16dd4e27c2fbe27c"
+    },
+    {
+      "path": "src/director/SharedCommitCodec.ts",
+      "sha256": "ed55c2ba48857b7a75c45f2e887b541ebf2fb68fb50cd48233f64dd343ee77cd",
+      "finalSha256": "ed55c2ba48857b7a75c45f2e887b541ebf2fb68fb50cd48233f64dd343ee77cd"
+    },
+    {
+      "path": "src/director/SharedCommitValidator.ts",
+      "sha256": "8443e792b9f4c2b12c9a8f053240d3d15bc47303cec993438ff4d9466588b31a",
+      "finalSha256": "8443e792b9f4c2b12c9a8f053240d3d15bc47303cec993438ff4d9466588b31a"
+    },
+    {
+      "path": "src/director/SharedWorldReducer.ts",
+      "sha256": "cb9449c0160eea3aae1217f17125d23538ec202a9340e49eee4ff469684fa6d9",
+      "finalSha256": "cb9449c0160eea3aae1217f17125d23538ec202a9340e49eee4ff469684fa6d9"
+    }
+  ],
+  "inputStability": [
+    {
+      "source": "quality-review/b2-5c-1/tests/codec-tests.cjs",
+      "beforeSha256": "c4d3e7fd37cdf3d7db60d7fbc0331cc5da40387827d756b05ff7865f62960166",
+      "finalSha256": "c4d3e7fd37cdf3d7db60d7fbc0331cc5da40387827d756b05ff7865f62960166"
+    },
+    {
+      "source": "quality-review/b2-5c-1/tests/replay-tests.cjs",
+      "beforeSha256": "b3157f0b0feb71e16bc49cd31a9bfcb8c1317def367823344be0638ca7aa8df7",
+      "finalSha256": "b3157f0b0feb71e16bc49cd31a9bfcb8c1317def367823344be0638ca7aa8df7"
+    },
+    {
+      "source": "quality-review/b2-5c-1/evidence/validator-tests.cjs",
+      "beforeSha256": "95977c043fddd391f3a760794dad5c0da880acffacb408a25796761cd2d602c2",
+      "finalSha256": "95977c043fddd391f3a760794dad5c0da880acffacb408a25796761cd2d602c2"
+    },
+    {
+      "source": "quality-review/b2-5c-1/evidence/fixtures.cjs",
+      "beforeSha256": "1926c37fcfac3ed12b76c3335148d041961161f606046bc2cbf5575fd1959bbe",
+      "finalSha256": "1926c37fcfac3ed12b76c3335148d041961161f606046bc2cbf5575fd1959bbe"
+    },
+    {
+      "source": "quality-review/b2-5c-1/evidence/no-network.cjs",
+      "beforeSha256": "304106476c3437e8366b0419a7fd22fa8a8f217b69696a81c29de123c5934ff4",
+      "finalSha256": "304106476c3437e8366b0419a7fd22fa8a8f217b69696a81c29de123c5934ff4"
+    }
+  ],
+  "compiledComparison": [
+    {
+      "name": "SharedCommitContracts",
+      "historicalSha256": "d43aa81f5bc89faa359e0f97c814ba25155591ff078fbb9bfd40f8c7c9683230",
+      "currentSha256": "d43aa81f5bc89faa359e0f97c814ba25155591ff078fbb9bfd40f8c7c9683230"
+    },
+    {
+      "name": "SharedCanonicalBytes",
+      "historicalSha256": "ceaa486b54f0c7ca1096c301149514124940fcdf9b6acca1ece9e902b0c71cb2",
+      "currentSha256": "ceaa486b54f0c7ca1096c301149514124940fcdf9b6acca1ece9e902b0c71cb2"
+    },
+    {
+      "name": "SharedCommitCodec",
+      "historicalSha256": "7ec12d746e544e095b41dbe4717700e280a38c007bbd77918fabec585d4cef5b",
+      "currentSha256": "7ec12d746e544e095b41dbe4717700e280a38c007bbd77918fabec585d4cef5b"
+    },
+    {
+      "name": "SharedCommitValidator",
+      "historicalSha256": "cee78e4716cbee619d304e8123bb2a29ee28b5d8698a0bab6edd4829bfebcdbe",
+      "currentSha256": "cee78e4716cbee619d304e8123bb2a29ee28b5d8698a0bab6edd4829bfebcdbe"
+    },
+    {
+      "name": "SharedWorldReducer",
+      "historicalSha256": "16959cf9c23a56d4dfdcd020c1bf372658087ec7f4e738d456063335a6fbbe61",
+      "currentSha256": "16959cf9c23a56d4dfdcd020c1bf372658087ec7f4e738d456063335a6fbbe61"
+    }
+  ],
+  "build": {
+    "name": "isolated-build",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "node_modules/typescript/bin/tsc",
+      "-p",
+      "quality-review/b2-5c-1/evidence/tsconfig-isolated.json",
+      "--outDir",
+      "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-2b\\evidence\\history-c1\\final\\evidence\\build"
+    ],
+    "startedUtc": "2026-10-11T07:43:18.362Z",
+    "completedUtc": "2026-10-11T07:43:18.830Z",
+    "exitCode": 0,
+    "pass": true,
+    "log": "history-c1/final/isolated-build.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "tests": {
+    "name": "regression",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "--require",
+      "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-2b\\evidence\\history-c1\\final\\evidence\\no-network.cjs",
+      "--test",
+      "--test-reporter=tap",
+      "--test-reporter-destination=stdout",
+      "--test-reporter=junit",
+      "--test-reporter-destination=D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-2b\\evidence\\history-c1\\final\\junit.xml",
+      "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-2b\\evidence\\history-c1\\final\\tests\\codec-tests.cjs",
+      "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-2b\\evidence\\history-c1\\final\\tests\\replay-tests.cjs",
+      "D:\\Project\\A_New_Begin\\Neurou_official\\quality-review\\b2-5c-2b\\evidence\\history-c1\\final\\evidence\\validator-tests.cjs"
+    ],
+    "startedUtc": "2026-10-11T07:43:18.831Z",
+    "completedUtc": "2026-10-11T07:43:19.664Z",
+    "exitCode": 0,
+    "pass": true,
+    "log": "history-c1/final/regression.log",
+    "sha256": "8b685c8e9bb79a742e0159a03a61670b62675cb73e4b8ca695d2746d7585d12a"
+  },
+  "counts": {
+    "tests": 154,
+    "pass": 154,
+    "fail": 0,
+    "skipped": 0
+  },
+  "networkAttempts": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "pass": true,
+  "limits": "Exact historical case/helper bytes against newly compiled unchanged c-1 five modules. All outputs redirected to c-2b; no historical evidence mutation. Native-memory crypto and network-denial instrumentation are contract checks, not real shared HTTP/production authority acceptance."
+}
