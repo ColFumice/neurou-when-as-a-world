@@ -55,7 +55,7 @@ python -m http.server 4173 --directory release/neurou
 # http://127.0.0.1:4173/
 ```
 
-Release asset: `neurou-v4.0.0-web.zip`.
+Release asset: `neurou-4.0.0-web.zip`.
 
 ## Screenshots
 
@@ -131,7 +131,7 @@ only the C0 contract plan exists.
 - Version: **v4.0.0**
 - Tag: `v4.0.0`
 - Static package: `release/neurou/`
-- Release asset: `neurou-v4.0.0-web.zip`
+- Release asset: `neurou-4.0.0-web.zip`
 
 ## Known limitations
 

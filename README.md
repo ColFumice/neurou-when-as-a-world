@@ -54,7 +54,7 @@ python -m http.server 4173 --directory release/neurou
 # http://127.0.0.1:4173/
 ```
 
-Release 资产：`neurou-v4.0.0-web.zip`（同一静态包）。
+Release 资产：`neurou-4.0.0-web.zip`（同一静态包）。
 
 ## 截图
 
@@ -146,7 +146,7 @@ cd v4/app/src-tauri && cargo test
 - 当前版本：**v4.0.0**
 - Git tag：`v4.0.0`
 - 静态包：`release/neurou/`
-- Release 资产：`neurou-v4.0.0-web.zip`
+- Release 资产：`neurou-4.0.0-web.zip`
 
 发布流程由 `.github/workflows/release.yml` 在 `v*` tag 上构建并附加静态包。
 
